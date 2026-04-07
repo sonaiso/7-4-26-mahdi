@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from typing import List
 
-from arabic_engine.core.enums import IrabCase, IrabRole, POS
+from arabic_engine.core.enums import POS, IrabCase, IrabRole
 from arabic_engine.core.types import LexicalClosure, SyntaxNode
 
 

@@ -19,7 +19,7 @@ import importlib
 from dataclasses import dataclass, field
 from enum import Enum, auto
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List
 
 import yaml
 
@@ -29,7 +29,6 @@ from arabic_engine.core.enums import (
     GuidanceState,
     IrabCase,
     IrabRole,
-    SemanticType,
     SpaceRef,
     TimeRef,
     TruthState,
@@ -38,14 +37,10 @@ from arabic_engine.core.types import (
     Concept,
     DalalaLink,
     EvalResult,
-    InferenceResult,
     LexicalClosure,
     Proposition,
     SyntaxNode,
-    TimeSpaceTag,
-    WorldFact,
 )
-
 
 # ── Closure result types ────────────────────────────────────────────
 
@@ -510,14 +505,6 @@ def _check_decomposability() -> bool:
     to ``arabic_engine.core.types``.
     """
     # Check key dataclass fields resolve to primitive types
-    from arabic_engine.core.types import (
-        LexicalClosure,
-        Concept,
-        DalalaLink,
-        Proposition,
-        EvalResult,
-        SyntaxNode,
-    )
 
     for cls in [LexicalClosure, Concept, DalalaLink, Proposition, EvalResult, SyntaxNode]:
         if not hasattr(cls, "__dataclass_fields__"):
