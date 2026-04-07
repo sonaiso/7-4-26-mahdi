@@ -62,11 +62,11 @@ def detect_time(closures: List[LexicalClosure]) -> Tuple[TimeRef, str]:
     for cl in closures:
         if cl.pos == POS.FI3L:
             if cl.pattern in _PAST_PATTERNS:
-                return TimeRef.PAST, time_detail
+                return TimeRef.PAST, cl.surface
             if cl.pattern in _PRESENT_PATTERNS:
-                return TimeRef.PRESENT, time_detail
+                return TimeRef.PRESENT, cl.surface
         if cl.surface in _FUTURE_MARKERS:
-            return TimeRef.FUTURE, time_detail
+            return TimeRef.FUTURE, cl.surface
     return TimeRef.UNSPECIFIED, time_detail
 
 
