@@ -8,6 +8,7 @@ dalāla links, judgment, time/space tags, evaluation, and inference.
 
 from __future__ import annotations
 
+from arabic_engine.closure import verify_general_closure, format_closure_report
 from arabic_engine.core.enums import TruthState
 from arabic_engine.cognition.world_model import WorldModel
 from arabic_engine.cognition.inference_rules import InferenceEngine
@@ -118,6 +119,11 @@ def main() -> None:
 
     print("\n" + "=" * 60)
     print("Pipeline complete.")
+
+    # ── General Closure Verification (Ch. 19) ───────────────
+    print()
+    closure_result = verify_general_closure()
+    print(format_closure_report(closure_result))
 
 
 if __name__ == "__main__":
