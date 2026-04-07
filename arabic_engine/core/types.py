@@ -12,18 +12,17 @@ from typing import List, Optional, Tuple
 
 from .enums import (
     POS,
-    SemanticType,
+    ConstraintType,
     DalalaType,
-    TruthState,
     GuidanceState,
     IrabCase,
     IrabRole,
-    TimeRef,
-    SpaceRef,
-    ConstraintType,
     MafhumType,
+    SemanticType,
+    SpaceRef,
+    TimeRef,
+    TruthState,
 )
-
 
 # ── Signifier layer ─────────────────────────────────────────────────
 

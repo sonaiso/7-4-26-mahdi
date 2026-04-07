@@ -11,15 +11,14 @@ full composition F is computable (see README proof).
 
 from __future__ import annotations
 
-import os
 from dataclasses import dataclass, field
-from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import List, Optional
 
-import yaml
-
+from arabic_engine.cognition.evaluation import build_proposition, evaluate
+from arabic_engine.cognition.inference_rules import InferenceEngine
+from arabic_engine.cognition.time_space import tag as time_space_tag
+from arabic_engine.cognition.world_model import WorldModel
 from arabic_engine.core.contracts import verify_contracts  # noqa: F401 — re-export
-from arabic_engine.core.enums import TruthState
 from arabic_engine.core.types import (
     Concept,
     DalalaLink,
@@ -29,18 +28,12 @@ from arabic_engine.core.types import (
     Proposition,
     SyntaxNode,
     TimeSpaceTag,
-    WorldFact,
 )
-from arabic_engine.signifier.unicode_norm import normalize, tokenize
-from arabic_engine.signifier.root_pattern import batch_closure
-from arabic_engine.signified.ontology import batch_map
 from arabic_engine.linkage.dalala import full_validation
-from arabic_engine.cognition.evaluation import build_proposition, evaluate
+from arabic_engine.signified.ontology import batch_map
+from arabic_engine.signifier.root_pattern import batch_closure
+from arabic_engine.signifier.unicode_norm import normalize, tokenize
 from arabic_engine.syntax.syntax import analyse as syntax_analyse
-from arabic_engine.cognition.time_space import tag as time_space_tag
-from arabic_engine.cognition.world_model import WorldModel
-from arabic_engine.cognition.inference_rules import InferenceEngine
-
 
 # ── Pipeline result ─────────────────────────────────────────────────
 

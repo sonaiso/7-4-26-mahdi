@@ -67,8 +67,8 @@ def verify_contracts(contracts_path: Optional[str] = None) -> bool:
     for i in range(len(layers) - 1):
         current = layers[i]
         nxt = layers[i + 1]
-        out_t = current["output_type"]
-        in_t = nxt["input_type"]
+        current["output_type"]
+        nxt["input_type"]
         # The contracts are documentation-level; full static analysis
         # would require a type-checker.  We verify invariants at
         # runtime inside the pipeline instead.

@@ -8,10 +8,10 @@ dalāla links, judgment, time/space tags, evaluation, and inference.
 
 from __future__ import annotations
 
-from arabic_engine.closure import verify_general_closure, format_closure_report
-from arabic_engine.core.enums import TruthState
-from arabic_engine.cognition.world_model import WorldModel
+from arabic_engine.closure import format_closure_report, verify_general_closure
 from arabic_engine.cognition.inference_rules import InferenceEngine
+from arabic_engine.cognition.world_model import WorldModel
+from arabic_engine.core.enums import TruthState
 from arabic_engine.pipeline import run, verify_contracts
 
 
@@ -103,7 +103,7 @@ def main() -> None:
         f"confidence={ev.confidence}"
     )
 
-    print(f"\n── World-Model Adjustment ──")
+    print("\n── World-Model Adjustment ──")
     print(f"  factor={result.world_adjustment}")
 
     if result.inferences:

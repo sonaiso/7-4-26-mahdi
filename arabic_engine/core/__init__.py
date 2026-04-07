@@ -1,27 +1,65 @@
 """Core enums and types used across the engine."""
 
 from .enums import (
-    POS,
-    SemanticType,
-    DalalaType,
-    TruthState,
-    GuidanceState,
-    IrabCase,
-    IrabRole,
-    TimeRef,
-    SpaceRef,
+    POS as POS,
+)
+from .enums import (
+    DalalaType as DalalaType,
+)
+from .enums import (
+    GuidanceState as GuidanceState,
+)
+from .enums import (
+    IrabCase as IrabCase,
+)
+from .enums import (
+    IrabRole as IrabRole,
+)
+from .enums import (
+    SemanticType as SemanticType,
+)
+from .enums import (
+    SpaceRef as SpaceRef,
+)
+from .enums import (
+    TimeRef as TimeRef,
+)
+from .enums import (
+    TruthState as TruthState,
 )
 from .types import (
-    Grapheme,
-    Syllable,
-    RootPattern,
-    LexicalClosure,
-    Concept,
-    DalalaLink,
-    Proposition,
-    EvalResult,
-    SyntaxNode,
-    TimeSpaceTag,
-    WorldFact,
-    InferenceResult,
+    Concept as Concept,
+)
+from .types import (
+    DalalaLink as DalalaLink,
+)
+from .types import (
+    EvalResult as EvalResult,
+)
+from .types import (
+    Grapheme as Grapheme,
+)
+from .types import (
+    InferenceResult as InferenceResult,
+)
+from .types import (
+    LexicalClosure as LexicalClosure,
+)
+from .types import (
+    Proposition as Proposition,
+)
+from .types import (
+    RootPattern as RootPattern,
+)
+from .types import (
+    Syllable as Syllable,
+)
+from .types import (
+    SyntaxNode as SyntaxNode,
+)
+from .types import (
+    TimeSpaceTag as TimeSpaceTag,
+)
+from .types import (
+    WorldFact as WorldFact,
 )
