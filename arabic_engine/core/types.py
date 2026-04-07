@@ -8,7 +8,7 @@ structure — satisfying the computability proof in the README.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import List, Optional, Tuple
+from typing import FrozenSet, List, Optional, Tuple
 
 from .enums import (
     POS,
@@ -18,6 +18,10 @@ from .enums import (
     IrabCase,
     IrabRole,
     MafhumType,
+    PhonCategory,
+    PhonFeature,
+    PhonGroup,
+    PhonTransform,
     SemanticType,
     SpaceRef,
     TimeRef,
@@ -207,3 +211,85 @@ class MafhumResult:
     derived_meaning: str       # the derived implied meaning
     valid: bool                # whether all four pillars hold
     confidence: float          # confidence in [0, 1]
+
+
+# ── D_min — Minimal Complete Phonological Representation ────────────
+
+@dataclass(frozen=True)
+class DMin:
+    """Minimal Complete Representation — الأدنى المكتمل.
+
+    Implements the mathematical function::
+
+        D_min(x) = (u, c, g, f, t)
+
+    where every field maps to a computable integer, making the full
+    5-tuple a numeric vector in ℕ⁵:
+
+    =========  ======================  ================================
+    Field       Type                    Encoding
+    =========  ======================  ================================
+    unicode     int                     u — Unicode code-point
+    category    PhonCategory            c — enum integer value
+    group       PhonGroup               g — enum integer value
+    features    FrozenSet[PhonFeature]  f — bitmask (2^(v-1) per bit)
+    transforms  FrozenSet[PhonTransform] t — bitmask (2^(v-1) per bit)
+    =========  ======================  ================================
+
+    The ``code`` field holds the human-readable MinCode string
+    (e.g. ``'C:SHF:SHD:MJH'``) and is not part of the numeric vector.
+    """
+
+    unicode: int
+    category: PhonCategory
+    group: PhonGroup
+    features: FrozenSet[PhonFeature]
+    transforms: FrozenSet[PhonTransform]
+    code: str = ""
+
+    # ── Derived string / numeric properties ─────────────────────────
+
+    @property
+    def char(self) -> str:
+        """Unicode character for this phonological unit."""
+        return chr(self.unicode)
+
+    @property
+    def feature_mask(self) -> int:
+        """Integer bitmask encoding ``features``.
+
+        Bit ``f.value - 1`` is set for each ``f`` in ``self.features``,
+        so the result is a unique integer in ``[0, 2^|PhonFeature| - 1]``.
+        """
+        mask = 0
+        for f in self.features:
+            mask |= 1 << (f.value - 1)
+        return mask
+
+    @property
+    def transform_mask(self) -> int:
+        """Integer bitmask encoding ``transforms``."""
+        mask = 0
+        for t in self.transforms:
+            mask |= 1 << (t.value - 1)
+        return mask
+
+    @property
+    def vector(self) -> Tuple[int, int, int, int, int]:
+        """Numeric 5-vector ``(u, c, g, f_mask, t_mask) ∈ ℕ⁵``.
+
+        This is the core numeric encoding of ``D_min(x)``:
+
+        * ``u``      — Unicode code-point (identity)
+        * ``c``      — ``PhonCategory`` ordinal
+        * ``g``      — ``PhonGroup`` ordinal
+        * ``f_mask`` — feature bitmask
+        * ``t_mask`` — transform bitmask
+        """
+        return (
+            self.unicode,
+            self.category.value,
+            self.group.value,
+            self.feature_mask,
+            self.transform_mask,
+        )

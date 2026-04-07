@@ -4,6 +4,9 @@ from .enums import (
     POS as POS,
 )
 from .enums import (
+    ConstraintType as ConstraintType,
+)
+from .enums import (
     DalalaType as DalalaType,
 )
 from .enums import (
@@ -14,6 +17,21 @@ from .enums import (
 )
 from .enums import (
     IrabRole as IrabRole,
+)
+from .enums import (
+    MafhumType as MafhumType,
+)
+from .enums import (
+    PhonCategory as PhonCategory,
+)
+from .enums import (
+    PhonFeature as PhonFeature,
+)
+from .enums import (
+    PhonGroup as PhonGroup,
+)
+from .enums import (
+    PhonTransform as PhonTransform,
 )
 from .enums import (
     SemanticType as SemanticType,
@@ -32,6 +50,9 @@ from .types import (
 )
 from .types import (
     DalalaLink as DalalaLink,
+)
+from .types import (
+    DMin as DMin,
 )
 from .types import (
     EvalResult as EvalResult,

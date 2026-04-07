@@ -148,3 +148,145 @@ class MafhumType(Enum):
     ADAD = auto()       # مفهوم العدد
     WASF = auto()       # مفهوم الوصف
     ISHARA = auto()     # مفهوم الإشارة
+
+
+# ── D_min Phonological layer ─────────────────────────────────────────
+# Implements: D_min(x) = (u, c, g, f, t)
+# where every field maps to a computable integer, making the full
+# 5-tuple a numeric vector over ℕ⁵.
+
+class PhonCategory(Enum):
+    """Major phonological category — الفئة الكبرى (c in D_min)."""
+    CONSONANT = auto()      # صامت
+    SEMI_VOWEL = auto()     # شبه صامت / صائت ذو تحولات (و ي)
+    LONG_VOWEL = auto()     # صائت طويل / حامل كتابي (ا)
+    SHORT_VOWEL = auto()    # صائت قصير (فتحة ضمة كسرة)
+    SUKUN = auto()          # علامة انعدام حركة (ْ)
+    SHADDA = auto()         # علامة بنيوية / تضعيف (ّ)
+    TANWIN = auto()         # حركة/علامة مركبة / تنوين (ً ٌ ٍ)
+    SPECIAL_MARK = auto()   # علامة مدّ/همز خاصة (ٰ ٓ)
+
+
+class PhonGroup(Enum):
+    """Phonological/articulatory group — المجموعة الكبرى (g in D_min)."""
+    # ── Consonant articulation groups (مجموعات الصوامت) ────────────
+    HNJ_MZM = auto()        # حنجري/مزمَري — ء
+    HNJ_HLQ = auto()        # حنجري/حلقي   — ه
+    HLQ = auto()            # حلقي          — ح ع غ
+    HLQ_LHW = auto()        # حلقي/لهوي     — خ
+    LHW = auto()            # لهوي          — ق
+    TBQ_LHW = auto()        # طبقي/لهوي     — ك
+    SHJR = auto()           # شجري/حنكي     — ج ش
+    ASN_LTH = auto()        # أسناني-لثوي   — ت د
+    ASN_LTH_MTPQ = auto()   # أسناني-لثوي مطبق — ط
+    BAYNASN = auto()        # بين-أسناني    — ث ذ
+    BAYNASN_MTPQ = auto()   # بين-أسناني مطبق — ظ
+    LTH = auto()            # لثوي          — ر ل ن (with feature distinctions)
+    LTH_MTPQ = auto()       # لثوي مطبق     — ض
+    ASLI = auto()           # أسلي/صفيري    — ز س
+    ASLI_MTPQ = auto()      # أسلي مطبق     — ص
+    SHF = auto()            # شفوي          — ب م (with feature distinctions)
+    SHF_ASN = auto()        # شفوي-أسناني   — ف
+    SHF_LYN = auto()        # شفوي لين      — و (semi-vowel)
+    HNK_LYN = auto()        # حنكي لين      — ي (semi-vowel)
+    # ── Long vowel (الصوائت الطويلة) ──────────────────────────────
+    ALF_LV = auto()         # ألف           — ا
+    # ── Short vowel / diacritic groups (الحركات والعلامات) ─────────
+    FTH = auto()            # فتح           — َ (U+064E)
+    DMM = auto()            # ضم            — ُ (U+064F)
+    KSR = auto()            # كسر           — ِ (U+0650)
+    SKN_GRP = auto()        # سكون          — ْ (U+0652)
+    SHD_GRP = auto()        # شدة           — ّ (U+0651)
+    TAN_FTH = auto()        # تنوين فتح     — ً (U+064B)
+    TAN_DMM = auto()        # تنوين ضم      — ٌ (U+064C)
+    TAN_KSR = auto()        # تنوين كسر     — ٍ (U+064D)
+    ALF_KHNJ = auto()       # ألف خنجرية    — ٰ (U+0670)
+    MDD_GRP = auto()        # مدة           — ٓ (U+0653)
+
+
+class PhonFeature(Enum):
+    """Minimal phonological features — السمات الدنيا (f in D_min).
+
+    Each value is a unique power-of-two bit-position, enabling a compact
+    integer bitmask: feature_mask = Σ 2^(f.value-1) for f in features.
+    """
+    # Manner of articulation (طريقة النطق)
+    SHADID = auto()         # شديد   — stop / plosive
+    RAKHW = auto()          # رخو    — fricative / continuant
+    MURAKKAB = auto()       # مركب   — affricate
+    MUTAWASSIT = auto()     # متوسط  — intermediate manner
+    TAKRIR = auto()         # مكرر   — trill / vibrant
+    MUNHARIF = auto()       # منحرف  — lateral
+    TAFSHI = auto()         # تفشٍّ  — diffuse / spread
+    # Voicing (الجهر والهمس)
+    MAJHUR = auto()         # مجهور  — voiced
+    MAHMOUS = auto()        # مهموس  — voiceless
+    # Secondary articulation (الصفات الثانوية)
+    ITBAQ = auto()          # مطبق   — pharyngealization / emphatic
+    MSTALI = auto()         # مستعلٍ — dorsal elevation
+    SAFIR = auto()          # صفيري  — sibilant / whistling
+    ANFI = auto()           # أنفي   — nasal
+    GHUNNA = auto()         # غنّي   — nasality / resonance
+    LAYIN = auto()          # لين    — sonorant
+    ASTTALA = auto()        # استطالة — prolongation (ض)
+    HMZ = auto()            # همزي   — hamza-bearing
+    # Vowel / nucleus features (الصوائت)
+    NUWAWI = auto()         # نووي   — nuclear / syllabic
+    QASIR = auto()          # قصير   — short vowel
+    TAWIL = auto()          # طويل   — long vowel
+    ITLAL = auto()          # اعتلال — defective / weak
+    # Mark features (العلامات)
+    SIFR_HARAKA = auto()    # صفر حركة — zero-vowel
+    QAFIL = auto()          # قفل      — syllable closure
+    TADFIF = auto()         # تضعيف   — gemination mark
+    MD_KHAS = auto()        # مدّ خاص  — special extension mark
+
+
+class PhonTransform(Enum):
+    """Minimal transformations and functions — التحولات/الوظائف الدنيا (t in D_min).
+
+    Each value is a unique power-of-two bit-position enabling a bitmask:
+    transform_mask = Σ 2^(t.value-1) for t in transforms.
+    """
+    # Phonological processes (العمليات الصوتية)
+    TAHQIQ = auto()             # تحقيق       — full realization
+    TASHIL = auto()             # تسهيل       — facilitation / weakening
+    IBDAL = auto()              # إبدال       — phonemic substitution
+    HADHF = auto()              # حذف         — deletion / elision
+    HAMLI_HAMZI = auto()        # حمل همزي    — hamza hosting
+    IDGHAM = auto()             # إدغام       — assimilation / merging
+    IDGHAM_SHAMSI = auto()      # إدغام شمسي  — solar (regressive) assimilation
+    IZHAR_QAMARI = auto()       # إظهار قمري  — lunar clarity
+    IZHAR = auto()              # إظهار       — clear articulation
+    IKHFAA = auto()             # إخفاء       — nasalized concealment
+    IQLAB = auto()              # إقلاب       — metamorphosis (ن → م before ب)
+    TAFKHIM = auto()            # تفخيم       — velarization / emphasis
+    TARQIQ = auto()             # ترقيق       — thinning / palatalization
+    TAKRIR_TR = auto()          # تكرير       — trill articulation
+    TAFSHI_TR = auto()          # تفشٍّ صوتي  — acoustic diffusion
+    TAMATHUL = auto()           # تماثل       — progressive assimilation
+    MADD = auto()               # مدّ         — vowel lengthening
+    ITLAL_TR = auto()           # اعتلال      — weak-letter process
+    ASTTALA_TR = auto()         # استطالة     — prolongation process
+    # Morphological functions (الوظائف الصرفية)
+    ASAL_JADHARI = auto()       # أصل جذري    — root-radical origin
+    ZIYADA = auto()             # زيادة       — morphological augmentation
+    BINA_SARFI = auto()         # بنية صرفية  — morphological structure
+    BINA_ISHTIQAQI = auto()     # بناء اشتقاقي — derivational structure
+    WAZIFA_SARFIYYA = auto()    # وظيفة صرفية — morphological function marker
+    WAZN = auto()               # بناء وزني   — prosodic-pattern building
+    # Syntactic / grammatical functions (الوظائف النحوية)
+    TAAREF = auto()             # تعريف       — definiteness (لام التعريف)
+    TAWKID = auto()             # توكيد       — emphasis marker
+    TANWIN_FUNC = auto()        # تنوين       — nunation function
+    JAZM = auto()               # جزم         — apocopation / jussive
+    IIRAB = auto()              # إعراب       — grammatical case marking
+    TANKIR = auto()             # تنكير       — indefiniteness
+    JAM = auto()                # جمع         — pluralization marker
+    ATAF = auto()               # عطف         — coordination marker
+    NISBAH = auto()             # نسبة        — relational adjective marker
+    MUTAKALLIM = auto()         # متكلم       — first-person marker
+    DAMIR_FUNC = auto()         # هاء ضمير    — pronoun function
+    TADFIF_TR = auto()          # تضعيف       — gemination function
+    MAQTAA = auto()             # بناء مقطع مغلق — closed-syllable building
+    HAMZA_CARRIER = auto()      # حامل كتابي  — orthographic hamza carrier
