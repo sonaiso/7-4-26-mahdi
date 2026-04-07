@@ -39,7 +39,28 @@ from arabic_engine.syntax.syntax import analyse as syntax_analyse
 
 @dataclass
 class PipelineResult:
-    """Container for the full analysis of a single sentence."""
+    """Container for the full analysis of a single sentence.
+
+    Every field maps directly to the output of a named pipeline layer,
+    so the object forms a complete audit trail of the computation.
+
+    Attributes:
+        raw: The original, unmodified input string.
+        normalised: The string after Unicode normalisation (L0).
+        tokens: Whitespace-delimited tokens (L1).
+        closures: Lexical closures for each token (L2).
+        syntax_nodes: I'rāb-annotated syntax nodes (L3).
+        concepts: Ontological concept nodes for each closure (L4).
+        dalala_links: Signification (dalāla) validation links (L5).
+        proposition: The structured judgment built from the sentence (L6).
+        time_space: Temporal and spatial anchoring tag (L7).
+        eval_result: Truth/guidance/confidence evaluation vector (L8).
+        inferences: Derived propositions from the rule engine (L9).
+            Empty list when no inference engine was provided.
+        world_adjustment: Confidence multiplier from the world model (L10).
+            Defaults to ``0.5`` when no world model was provided.
+    """
+
     raw: str
     normalised: str
     tokens: List[str]
@@ -64,14 +85,30 @@ def run(
 ) -> PipelineResult:
     """Execute the full v2 pipeline on *text*.
 
-    Parameters
-    ----------
-    text : str
-        Raw Arabic input (may include tashkīl).
-    world : WorldModel, optional
-        An external world model for confidence adjustment.
-    inference_engine : InferenceEngine, optional
-        A rule engine for deriving new propositions.
+    The pipeline runs eleven sequential layers (L0–L10):
+
+    * L0  — Unicode normalisation
+    * L1  — Tokenisation
+    * L2  — Lexical closure (root/pattern extraction)
+    * L3  — Syntax (i'rāb assignment and dependency linking)
+    * L4  — Ontological mapping (signifier → signified)
+    * L5  — Dalāla validation (signification links)
+    * L6  — Judgment / proposition construction
+    * L7  — Time/space anchoring
+    * L8  — Truth and guidance evaluation
+    * L9  — Inference rule application (optional)
+    * L10 — World-model confidence adjustment (optional)
+
+    Args:
+        text: Raw Arabic input (may include tashkīl).
+        world: An external world model for confidence adjustment.
+            When ``None``, the world-adjustment factor defaults to 0.5.
+        inference_engine: A rule engine for deriving new propositions.
+            When ``None``, the ``inferences`` list in the result is empty.
+
+    Returns:
+        A :class:`PipelineResult` containing the outputs of all pipeline
+        layers.
     """
     # L0 — Normalise
     normalised = normalize(text)

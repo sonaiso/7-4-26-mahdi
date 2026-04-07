@@ -61,7 +61,19 @@ _next_concept_id = 900
 
 
 def map_concept(closure: LexicalClosure) -> Concept:
-    """Map a :class:`LexicalClosure` to a :class:`Concept`."""
+    """Map a :class:`~arabic_engine.core.types.LexicalClosure` to a concept node.
+
+    First consults the internal concept database keyed on the lemma.
+    When no match is found, auto-generates a new concept with an
+    incrementing ID and a semantic type inferred from the POS tag.
+
+    Args:
+        closure: The lexical closure whose lemma is used as the lookup key.
+
+    Returns:
+        A :class:`~arabic_engine.core.types.Concept` node.  The concept
+        is either retrieved from the database or freshly created.
+    """
     concept = _CONCEPT_DB.get(closure.lemma)
     if concept is not None:
         return concept
@@ -76,5 +88,17 @@ def map_concept(closure: LexicalClosure) -> Concept:
 
 
 def batch_map(closures: List[LexicalClosure]) -> List[Concept]:
-    """Map a list of closures to concepts."""
+    """Map a list of closures to concept nodes.
+
+    Convenience wrapper around :func:`map_concept` for a list of lexical
+    closures (as produced by
+    :func:`~arabic_engine.signifier.root_pattern.batch_closure`).
+
+    Args:
+        closures: List of lexical closures to map.
+
+    Returns:
+        A list of :class:`~arabic_engine.core.types.Concept` objects,
+        one per input closure, preserving order.
+    """
     return [map_concept(c) for c in closures]

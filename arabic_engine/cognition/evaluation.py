@@ -33,12 +33,26 @@ def build_proposition(
     concepts: List[Concept],
     links: List[DalalaLink],
 ) -> Proposition:
-    """Compose a :class:`Proposition` from the analysis layers.
+    """Compose a :class:`~arabic_engine.core.types.Proposition` from the analysis layers.
 
-    Minimal heuristic:
-      • first verb  → predicate
-      • first noun  → subject (فاعل)
-      • second noun → object  (مفعول به)
+    Applies a minimal heuristic over the token list:
+
+    * First verb closure → ``predicate`` (and sets ``time`` from its pattern).
+    * First noun closure → ``subject`` (فاعل).
+    * Second noun closure → ``object`` (مفعول به).
+
+    Args:
+        closures: Lexical closures for the sentence tokens.
+        concepts: Corresponding concept nodes (not used directly, kept
+            for API symmetry with other pipeline steps).
+        links: Dalāla links (not used directly; available for future
+            refinement).
+
+    Returns:
+        A :class:`~arabic_engine.core.types.Proposition` with ``subject``,
+        ``predicate``, ``obj``, ``time``, and ``polarity`` populated.
+        Fields that cannot be filled are left as empty strings or their
+        enum defaults.
     """
     subject = ""
     predicate = ""
@@ -76,9 +90,29 @@ def evaluate(
 ) -> EvalResult:
     """Evaluate a proposition, producing truth/guidance/confidence.
 
-    • Confidence is the average of dalāla-link confidences.
-    • Truth state is derived from confidence thresholds.
-    • Guidance state defaults to NOT_APPLICABLE for declaratives.
+    The truth state is derived from the average confidence of all
+    dalāla links using the following thresholds:
+
+    ================  ============
+    avg_confidence    TruthState
+    ================  ============
+    ≥ 0.9             CERTAIN
+    0.7 – 0.9         PROBABLE
+    0.4 – 0.7         POSSIBLE
+    < 0.4             DOUBTFUL
+    ================  ============
+
+    Guidance state defaults to ``NOT_APPLICABLE`` for declarative
+    propositions; normative evaluation requires additional context.
+
+    Args:
+        proposition: The proposition to evaluate.
+        links: Dalāla links whose confidence scores drive the result.
+            An empty list yields confidence 0.0 and ``DOUBTFUL``.
+
+    Returns:
+        An :class:`~arabic_engine.core.types.EvalResult` with
+        ``truth_state``, ``guidance_state``, and ``confidence`` set.
     """
     if links:
         avg_conf = sum(lk.confidence for lk in links) / len(links)

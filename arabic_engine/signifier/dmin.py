@@ -37,10 +37,12 @@ _T = PhonTransform
 # ── Helper: build a frozen feature set ──────────────────────────────
 
 def _f(*feats: PhonFeature) -> FrozenSet[PhonFeature]:
+    """Return a frozen set of phonological features (shorthand helper)."""
     return frozenset(feats)
 
 
 def _t(*transforms: PhonTransform) -> FrozenSet[PhonTransform]:
+    """Return a frozen set of phonological transforms (shorthand helper)."""
     return frozenset(transforms)
 
 

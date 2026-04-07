@@ -19,7 +19,27 @@ def _assign_case_and_role(
     verb_seen: bool,
     subject_seen: bool,
 ) -> SyntaxNode:
-    """Heuristic i'rāb assignment for a single token."""
+    """Heuristic i'rāb assignment for a single token.
+
+    Applies the following priority rules:
+
+    * **FI3L** (verb) → case=SUKUN (مبني), role=FI3L.
+    * **ZARF** (adverb) → case=NASB (ظرف منصوب), role=ZARF.
+    * **ISM**, first after verb → case=RAF3 (مرفوع), role=FA3IL.
+    * **ISM**, second after verb → case=NASB (منصوب), role=MAF3UL_BIH.
+    * **ISM**, no verb yet → case=RAF3, role=MUBTADA (nominal sentence).
+    * Fallback → case=UNKNOWN, role=UNKNOWN.
+
+    Args:
+        closure: Lexical closure for the token.
+        position: Zero-based position of the token in the sentence.
+        verb_seen: Whether a verb has already been encountered.
+        subject_seen: Whether a subject (فاعل) has already been assigned.
+
+    Returns:
+        A :class:`~arabic_engine.core.types.SyntaxNode` with case and
+        role populated.
+    """
     if closure.pos == POS.FI3L:
         return SyntaxNode(
             token=closure.surface,
@@ -80,9 +100,19 @@ def _assign_case_and_role(
 def analyse(closures: List[LexicalClosure]) -> List[SyntaxNode]:
     """Perform syntactic analysis on a list of lexical closures.
 
-    Returns a list of :class:`SyntaxNode` with case and role assigned.
-    Dependency links (governor / dependents) are wired so that nouns
-    depend on the governing verb.
+    Produces a flat dependency list where all nouns and adverbs depend
+    on the governing verb.  Case and role are assigned by
+    :func:`_assign_case_and_role`.
+
+    Args:
+        closures: Lexical closures for all tokens in the sentence, as
+            produced by
+            :func:`~arabic_engine.signifier.root_pattern.batch_closure`.
+
+    Returns:
+        A list of :class:`~arabic_engine.core.types.SyntaxNode` objects
+        in the same order as *closures*, with ``case``, ``role``,
+        ``governor``, and ``dependents`` fields populated.
     """
     nodes: List[SyntaxNode] = []
     verb_seen = False
