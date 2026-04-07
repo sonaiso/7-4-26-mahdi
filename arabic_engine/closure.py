@@ -347,10 +347,18 @@ def _check_dalala_types() -> ClosureVerdict:
 
 def _check_propositional_closure() -> ClosureVerdict:
     """Verify that the propositional layer covers judgment and evaluation."""
-    # Check that TruthState and GuidanceState exist and are non-trivial
+    # The minimal required truth states for propositional closure:
+    # CERTAIN, PROBABLE, POSSIBLE, FALSE — covering the full epistemic range
+    _REQUIRED_TRUTH = {TruthState.CERTAIN, TruthState.PROBABLE,
+                       TruthState.POSSIBLE, TruthState.FALSE}
+    # The minimal required guidance states:
+    # OBLIGATORY, RECOMMENDED, PERMISSIBLE, FORBIDDEN — covering normative range
+    _REQUIRED_GUIDANCE = {GuidanceState.OBLIGATORY, GuidanceState.RECOMMENDED,
+                          GuidanceState.PERMISSIBLE, GuidanceState.FORBIDDEN}
+
     truth_values = set(TruthState) - {TruthState.UNKNOWN}
     guidance_values = set(GuidanceState) - {GuidanceState.NOT_APPLICABLE}
-    if len(truth_values) >= 4 and len(guidance_values) >= 4:
+    if _REQUIRED_TRUTH.issubset(truth_values) and _REQUIRED_GUIDANCE.issubset(guidance_values):
         return ClosureVerdict(
             layer_name="propositional",
             layer_name_ar="البنية القضوية",
@@ -497,6 +505,9 @@ def _check_decomposability() -> bool:
 
     This is verified by checking that every typed record in the system
     traces back to string or integer fields (i.e. Unicode code-points).
+
+    NOTE: This list must be updated when new core dataclasses are added
+    to ``arabic_engine.core.types``.
     """
     # Check key dataclass fields resolve to primitive types
     from arabic_engine.core.types import (
