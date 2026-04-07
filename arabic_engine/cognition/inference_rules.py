@@ -69,9 +69,39 @@ def _negation_rule(propositions: List[Proposition]) -> Optional[InferenceResult]
     return None
 
 
+def _event_existence_rule(propositions: List[Proposition]) -> Optional[InferenceResult]:
+    """Derive event_existence: if S did P to O, then the event P exists.
+
+    From a proposition with subject, predicate, and object, conclude
+    that the event denoted by the predicate actually took place.
+    """
+    for p in propositions:
+        if p.subject and p.predicate and p.polarity:
+            conclusion = Proposition(
+                subject=p.predicate,
+                predicate="وُجِدَ",     # "existed"
+                obj="",
+                time=p.time,
+                space=p.space,
+                polarity=True,
+            )
+            return InferenceResult(
+                rule_name="event_existence",
+                premises=[p],
+                conclusion=conclusion,
+                confidence=0.9,
+                valid=True,
+            )
+    return None
+
+
 # ── Rule engine ─────────────────────────────────────────────────────
 
-_DEFAULT_RULES: List[RuleFunc] = [_transitivity_rule, _negation_rule]
+_DEFAULT_RULES: List[RuleFunc] = [
+    _event_existence_rule,
+    _transitivity_rule,
+    _negation_rule,
+]
 
 
 class InferenceEngine:

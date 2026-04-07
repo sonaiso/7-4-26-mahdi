@@ -69,6 +69,52 @@ _LEXICON: Dict[str, dict] = {
         "pattern_id": 3,
         "lemma_id": 3,
     },
+    # ── Time adverbs (v2) ───────────────────────────────────────
+    "أَمْسَ": {
+        "lemma": "أَمْس",
+        "root": ("أ", "م", "س"),
+        "pattern": "فَعْل",
+        "pos": POS.ZARF,
+        "root_id": 4,
+        "pattern_id": 2,
+        "lemma_id": 4,
+    },
+    "أَمْسِ": {
+        "lemma": "أَمْس",
+        "root": ("أ", "م", "س"),
+        "pattern": "فَعْل",
+        "pos": POS.ZARF,
+        "root_id": 4,
+        "pattern_id": 2,
+        "lemma_id": 4,
+    },
+    "أمس": {
+        "lemma": "أَمْس",
+        "root": ("أ", "م", "س"),
+        "pattern": "فَعْل",
+        "pos": POS.ZARF,
+        "root_id": 4,
+        "pattern_id": 2,
+        "lemma_id": 4,
+    },
+    "غَدًا": {
+        "lemma": "غَد",
+        "root": ("غ", "د", "و"),
+        "pattern": "فَعْل",
+        "pos": POS.ZARF,
+        "root_id": 5,
+        "pattern_id": 2,
+        "lemma_id": 5,
+    },
+    "غدا": {
+        "lemma": "غَد",
+        "root": ("غ", "د", "و"),
+        "pattern": "فَعْل",
+        "pos": POS.ZARF,
+        "root_id": 5,
+        "pattern_id": 2,
+        "lemma_id": 5,
+    },
 }
 
 # Auto-generate pos_id from enum value

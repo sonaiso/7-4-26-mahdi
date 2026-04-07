@@ -69,6 +69,12 @@ class LexicalClosure:
     pattern_id: int = 0
     pos_id: int = 0
     features: dict = field(default_factory=dict)
+    # ── v2 fields ───────────────────────────────────────────────
+    case_mark: IrabCase = IrabCase.UNKNOWN
+    syntax_role: IrabRole = IrabRole.UNKNOWN
+    temporal: TimeRef = TimeRef.UNSPECIFIED
+    spatial: SpaceRef = SpaceRef.UNSPECIFIED
+    confidence: float = 1.0
 
 
 # ── Signified layer ─────────────────────────────────────────────────

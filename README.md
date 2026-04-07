@@ -1,34 +1,45 @@
 بنيت لك النواة التنفيذية الأولى كحزمة قابلة للتشغيل، وربطت تصميمها بالمبدأين اللذين ظهرَا في المرفقات:
 الأول أن الإدراك العقلي لا يتم إلا بـ **واقع + حس + معلومات سابقة + ربط + حكم**، لا بمجرد الحس الخام. والثاني أن الألفاظ ليست موضوعة للحقيقة الخارجية مباشرة، بل للتعبير عما في الذهن، وإفادة النسب الإسنادية والتقييدية والإضافية؛ ولذلك فصلتُ في الحزمة بين **signifier** و**signified** و**linkage** و**evaluation**. كما جعلت التقييم منفصلًا عن التحليل؛ لأن الملف يفرّق بين الحكم على وجود الشيء بوصفه قطعيًا، والحكم على حقيقته أو صفته بوصفه قابلًا للخطأ.
 
-الملفات الجاهزة:
-[الحزمة كاملة ZIP](sandbox:/mnt/data/arabic_engine_starter.zip)
-[pipeline.py](sandbox:/mnt/data/arabic_engine_starter/arabic_engine/pipeline.py)
-[example_run.py](sandbox:/mnt/data/arabic_engine_starter/example_run.py)
-[README](sandbox:/mnt/data/arabic_engine_starter/README.md)
+## النسخة الثانية (v2)
 
-بنية البداية داخل الحزمة:
+تم تحويل الحزمة إلى النسخة الثانية، مع إضافة الوحدات التالية وربطها بالمشغّل `pipeline.py`:
+
+### ما أضيف فعليًا:
+
+* **طبقة نحو heuristic** (`syntax/syntax.py`): تعيّن الفعل/الفاعل/المفعول/ظرف الزمان/ظرف المكان.
+* **تثبيت مراسي زمانية ومكانية** (`cognition/time_space.py`): من الصيغة الفعلية والظروف.
+* **نموذج عالم in-memory** (`cognition/world_model.py`): يرفع أو يخفض قيمة الصدق.
+* **قواعد استدلال أمامي** (`cognition/inference_rules.py`): منها اشتقاق `event_existence` وكشف التناقض.
+* **عقود طبقية declarative** (`contracts.yaml`) مع تحقق آلي عند تشغيل المحرك (`core/contracts.py`).
+* **تحديث الأنواع الأساسية** (`core/types.py`): لاستيعاب `case_mark`, `syntax_role`, `temporal`, `spatial`, `confidence`.
+
+### اختبار النسخة:
+
+```
+كَتَبَ زَيْدٌ الرِّسَالَةَ أَمْسَ
+```
+
+وهي تمر الآن بالنحو، ثم الزمن/المكان، ثم التقييم، ثم الاستدلال، ثم تحديث نموذج العالم بنجاح.
+
+بنية الحزمة:
 
 * `arabic_engine/core/enums.py`
 * `arabic_engine/core/types.py`
+* `arabic_engine/core/contracts.py`
 * `arabic_engine/signifier/unicode_norm.py`
 * `arabic_engine/signifier/phonology.py`
 * `arabic_engine/signifier/root_pattern.py`
 * `arabic_engine/signified/ontology.py`
 * `arabic_engine/linkage/dalala.py`
+* `arabic_engine/syntax/syntax.py`
 * `arabic_engine/cognition/evaluation.py`
+* `arabic_engine/cognition/time_space.py`
+* `arabic_engine/cognition/world_model.py`
+* `arabic_engine/cognition/inference_rules.py`
+* `arabic_engine/contracts.yaml`
 * `arabic_engine/pipeline.py`
 * `example_run.py`
-
-الحزمة تعمل الآن على المثال:
-`كَتَبَ زَيْدٌ الرِّسَالَةَ`
-وتنتج:
-
-* lexical closure للكلمات
-* concepts وجودية/حدثية
-* روابط دلالية من نوع `mutabaqa` و`isnad`
-* judgment أولي
-* truth/guidance state
 
 ## برهان أن الخوارزمية تبني اللغة وفق حساب رقمي
 

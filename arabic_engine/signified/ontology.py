@@ -34,6 +34,19 @@ _CONCEPT_DB: Dict[str, Concept] = {
         semantic_type=SemanticType.ENTITY,
         properties={"animacy": False, "countable": True},
     ),
+    # ── Time adverbs (v2) ───────────────────────────────────────
+    "أَمْس": Concept(
+        concept_id=401,
+        label="أَمْس",
+        semantic_type=SemanticType.ATTRIBUTE,
+        properties={"temporal": True, "time_ref": "past"},
+    ),
+    "غَد": Concept(
+        concept_id=402,
+        label="غَد",
+        semantic_type=SemanticType.ATTRIBUTE,
+        properties={"temporal": True, "time_ref": "future"},
+    ),
 }
 
 _POS_TO_STYPE = {
@@ -41,6 +54,7 @@ _POS_TO_STYPE = {
     POS.ISM: SemanticType.ENTITY,
     POS.SIFA: SemanticType.ATTRIBUTE,
     POS.HARF: SemanticType.RELATION,
+    POS.ZARF: SemanticType.ATTRIBUTE,
 }
 
 _next_concept_id = 900

@@ -29,6 +29,16 @@ def _assign_case_and_role(
             role=IrabRole.FI3L,
         )
 
+    if closure.pos == POS.ZARF:
+        # Adverbs of time/place → ظرف (منصوب)
+        return SyntaxNode(
+            token=closure.surface,
+            lemma=closure.lemma,
+            pos=closure.pos,
+            case=IrabCase.NASB,
+            role=IrabRole.ZARF,
+        )
+
     if closure.pos == POS.ISM:
         if verb_seen and not subject_seen:
             # First noun after verb → فاعل (مرفوع)
@@ -85,6 +95,11 @@ def analyse(closures: List[LexicalClosure]) -> List[SyntaxNode]:
         if cl.pos == POS.FI3L:
             verb_seen = True
             verb_node = node
+        elif cl.pos == POS.ZARF:
+            # Adverbs of time/place depend on the verb
+            if verb_node is not None:
+                node.governor = verb_node.lemma
+                verb_node.dependents.append(node.lemma)
         elif cl.pos == POS.ISM and verb_seen and not subject_seen:
             subject_seen = True
             if verb_node is not None:

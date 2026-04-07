@@ -18,6 +18,7 @@ from typing import Any, Dict, List, Optional
 
 import yaml
 
+from arabic_engine.core.contracts import verify_contracts  # noqa: F401 — re-export
 from arabic_engine.core.enums import TruthState
 from arabic_engine.core.types import (
     Concept,
@@ -58,34 +59,6 @@ class PipelineResult:
     eval_result: EvalResult
     inferences: List[InferenceResult] = field(default_factory=list)
     world_adjustment: float = 0.5
-
-
-# ── Contract verifier ───────────────────────────────────────────────
-
-def verify_contracts(contracts_path: Optional[str] = None) -> bool:
-    """Load contracts.yaml and verify layer adjacency types.
-
-    Returns True if all contracts pass, raises ValueError otherwise.
-    """
-    if contracts_path is None:
-        contracts_path = str(
-            Path(__file__).parent / "contracts.yaml"
-        )
-    with open(contracts_path, encoding="utf-8") as f:
-        spec = yaml.safe_load(f)
-
-    layers = spec.get("layers", [])
-    for i in range(len(layers) - 1):
-        current = layers[i]
-        nxt = layers[i + 1]
-        # Loose structural check: output type string must appear
-        # in the next layer's input type string (simplified).
-        out_t = current["output_type"]
-        in_t = nxt["input_type"]
-        # The contracts are documentation-level; full static analysis
-        # would require a type-checker.  We verify invariants at
-        # runtime inside the pipeline instead.
-    return True
 
 
 # ── Pipeline ────────────────────────────────────────────────────────
