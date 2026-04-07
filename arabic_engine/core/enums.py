@@ -116,3 +116,36 @@ class SpaceRef(Enum):
     THERE = auto()      # هناك
     NAMED = auto()      # مكان محدد بالاسم
     UNSPECIFIED = auto()
+
+
+# ── Mafhūm types (Ch. 21) ───────────────────────────────────────────
+
+class ConstraintType(Enum):
+    """Structural constraint types in the Manṭūq (أنواع القيد البنيوي).
+
+    Each constraint type generates a corresponding Mafhūm type when
+    combined with a mental counterpart and a transition rule.
+    """
+    SHART = auto()      # شرط — condition (تعليق الحكم)
+    GHAYA = auto()      # غاية — goal / endpoint (تحديد المنتهى)
+    ADAD = auto()       # عدد — number (التحديد الكمي)
+    WASF = auto()       # وصف — description (التقييد الوصفي)
+    ISHARA = auto()     # إشارة — reference / deixis (التخصيص الإحالي)
+
+
+class MafhumType(Enum):
+    """Minimal types of Mafhūm (الأنواع الدنيا للمفهوم — Ch. 21).
+
+    These are the five irreducible concept types that arise from the
+    structure of the Manṭūq itself, each covering an independent domain:
+      • SHART  — domain of suspension (تعليق)
+      • GHAYA  — domain of limit / endpoint (حد ومنتهى)
+      • ADAD   — domain of quantitative restriction (تحديد كمي)
+      • WASF   — domain of qualitative restriction (تقييد نوعي)
+      • ISHARA — domain of referential specification (تخصيص مرجعي)
+    """
+    SHART = auto()      # مفهوم الشرط
+    GHAYA = auto()      # مفهوم الغاية
+    ADAD = auto()       # مفهوم العدد
+    WASF = auto()       # مفهوم الوصف
+    ISHARA = auto()     # مفهوم الإشارة

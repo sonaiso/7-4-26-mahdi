@@ -20,6 +20,8 @@ from .enums import (
     IrabRole,
     TimeRef,
     SpaceRef,
+    ConstraintType,
+    MafhumType,
 )
 
 
@@ -170,3 +172,39 @@ class InferenceResult:
     conclusion: Proposition
     confidence: float
     valid: bool
+
+
+# ── Mafhūm layer (Ch. 21) ──────────────────────────────────────────
+
+@dataclass
+class MafhumPillar:
+    """The four pillars (أركان) required for a Mafhūm to hold.
+
+    A Mafhūm is valid only when all four pillars are present:
+      1. closed_mantuq   — the Manṭūq is closed (منطوق مغلق)
+      2. constraint_type — a structural constraint exists (قيد بنيوي)
+      3. mental_counterpart — a mental counterpart can be formed (مقابل ذهني)
+      4. transition_rule — a transition rule applies (قاعدة انتقال)
+    """
+    closed_mantuq: bool
+    constraint_type: ConstraintType
+    mental_counterpart: str
+    transition_rule: str
+
+
+@dataclass
+class MafhumResult:
+    """Result of Mafhūm (implied meaning) analysis (Ch. 21).
+
+    Captures the derivation of an implied concept from the explicit
+    text (Manṭūq) via one of the five minimal Mafhūm types.
+    """
+    mafhum_type: MafhumType
+    constraint_type: ConstraintType
+    pillars: MafhumPillar
+    source_text: str           # the original Manṭūq fragment
+    constraint_value: str      # the specific constraint detected
+    counterpart: str           # the mental counterpart (المقابل الذهني)
+    derived_meaning: str       # the derived implied meaning
+    valid: bool                # whether all four pillars hold
+    confidence: float          # confidence in [0, 1]
