@@ -6,7 +6,7 @@ derived from verb morphology, adverbs, and explicit place names.
 
 from __future__ import annotations
 
-from typing import List, Optional
+from typing import List, Optional, Tuple
 
 from arabic_engine.core.enums import POS, TimeRef, SpaceRef
 from arabic_engine.core.types import (
@@ -21,6 +21,19 @@ _PAST_PATTERNS = {"فَعَلَ", "فَعِلَ", "فَعُلَ", "اِفْتَ�
 _PRESENT_PATTERNS = {"يَفْعَلُ", "يَفْعِلُ", "يَفْعُلُ"}
 _FUTURE_MARKERS = {"سَ", "سَوْفَ"}
 
+# ── Temporal adverbs (v2) ───────────────────────────────────────────
+
+_TEMPORAL_ADVERBS = {
+    "أَمْس": TimeRef.PAST,
+    "أَمْسِ": TimeRef.PAST,
+    "أمس": TimeRef.PAST,
+    "الْيَوْمَ": TimeRef.PRESENT,
+    "اليوم": TimeRef.PRESENT,
+    "غَدًا": TimeRef.FUTURE,
+    "غدا": TimeRef.FUTURE,
+    "غَد": TimeRef.FUTURE,
+}
+
 # ── Spatial markers (demo set) ──────────────────────────────────────
 
 _SPATIAL_NOUNS = {
@@ -31,26 +44,42 @@ _SPATIAL_NOUNS = {
 }
 
 
-def detect_time(closures: List[LexicalClosure]) -> TimeRef:
-    """Infer temporal reference from verb patterns and particles."""
+def detect_time(closures: List[LexicalClosure]) -> Tuple[TimeRef, str]:
+    """Infer temporal reference from verb patterns, particles, and adverbs.
+
+    Returns a (TimeRef, detail_string) tuple.
+    """
+    time_detail = ""
+
+    # Check adverbs first — they give the most explicit signal
+    for cl in closures:
+        if cl.pos == POS.ZARF:
+            ref = _TEMPORAL_ADVERBS.get(cl.surface) or _TEMPORAL_ADVERBS.get(cl.lemma)
+            if ref is not None:
+                return ref, cl.lemma
+
+    # Fall back to verb morphology
     for cl in closures:
         if cl.pos == POS.FI3L:
             if cl.pattern in _PAST_PATTERNS:
-                return TimeRef.PAST
+                return TimeRef.PAST, cl.surface
             if cl.pattern in _PRESENT_PATTERNS:
-                return TimeRef.PRESENT
+                return TimeRef.PRESENT, cl.surface
         if cl.surface in _FUTURE_MARKERS:
-            return TimeRef.FUTURE
-    return TimeRef.UNSPECIFIED
+            return TimeRef.FUTURE, cl.surface
+    return TimeRef.UNSPECIFIED, time_detail
 
 
-def detect_space(closures: List[LexicalClosure]) -> SpaceRef:
-    """Infer spatial reference from adverbs and place nouns."""
+def detect_space(closures: List[LexicalClosure]) -> Tuple[SpaceRef, str]:
+    """Infer spatial reference from adverbs and place nouns.
+
+    Returns a (SpaceRef, detail_string) tuple.
+    """
     for cl in closures:
         ref = _SPATIAL_NOUNS.get(cl.surface) or _SPATIAL_NOUNS.get(cl.lemma)
         if ref is not None:
-            return ref
-    return SpaceRef.UNSPECIFIED
+            return ref, cl.lemma
+    return SpaceRef.UNSPECIFIED, ""
 
 
 def tag(
@@ -62,10 +91,15 @@ def tag(
     If a *proposition* is supplied its ``time`` and ``space`` fields
     are updated in-place as well.
     """
-    t = detect_time(closures)
-    s = detect_space(closures)
+    t, t_detail = detect_time(closures)
+    s, s_detail = detect_space(closures)
 
-    ts_tag = TimeSpaceTag(time_ref=t, space_ref=s)
+    ts_tag = TimeSpaceTag(
+        time_ref=t,
+        space_ref=s,
+        time_detail=t_detail,
+        space_detail=s_detail,
+    )
 
     if proposition is not None:
         # Propositions are mutable dataclasses

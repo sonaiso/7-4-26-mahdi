@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Example run — demonstrates the full v2 pipeline on a sample sentence.
 
-Sentence: كَتَبَ زَيْدٌ الرِّسَالَةَ
+Sentence: كَتَبَ زَيْدٌ الرِّسَالَةَ أَمْسَ
 Expected output includes lexical closures, syntax nodes, concepts,
 dalāla links, judgment, time/space tags, evaluation, and inference.
 """
@@ -39,7 +39,7 @@ def main() -> None:
     engine = InferenceEngine()
 
     # ── Run pipeline ────────────────────────────────────────────
-    sentence = "كَتَبَ زَيْدٌ الرِّسَالَةَ"
+    sentence = "كَتَبَ زَيْدٌ الرِّسَالَةَ أَمْسَ"
     print("=" * 60)
     print(f"Input: {sentence}")
     print("=" * 60)
