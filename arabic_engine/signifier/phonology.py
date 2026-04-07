@@ -80,13 +80,16 @@ def syllabify(graphemes: List[Grapheme]) -> List[Syllable]:
                 nucleus = (vowel, graphemes[i + 1].base)
                 weight = 3
                 i += 1
-            # Check for coda consonant
-            if i + 1 < n and get_short_vowel(graphemes[i + 1]) is None and i + 1 < n:
-                if i + 2 >= n or get_short_vowel(graphemes[i + 1]) is None:
-                    # Only treat as coda if it's truly syllable-final
-                    pass
-            if weight == 1:
-                weight = 1  # CV = light
+            # Check for coda consonant: next grapheme has no vowel
+            # and is not the onset of a following syllable
+            elif (
+                i + 1 < n
+                and get_short_vowel(graphemes[i + 1]) is None
+                and (i + 2 >= n or get_short_vowel(graphemes[i + 2]) is not None)
+            ):
+                coda = (graphemes[i + 1].base,)
+                weight = 2  # CVC = heavy
+                i += 1
         else:
             nucleus = ()
             weight = 1
