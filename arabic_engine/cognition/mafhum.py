@@ -24,7 +24,7 @@ from __future__ import annotations
 
 from typing import List, Optional
 
-from arabic_engine.core.enums import ConstraintType, MafhumType, POS
+from arabic_engine.core.enums import POS, ConstraintType, MafhumType
 from arabic_engine.core.types import (
     LexicalClosure,
     MafhumPillar,

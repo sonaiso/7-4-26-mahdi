@@ -16,9 +16,9 @@ concepts within a proposition.
 
 from __future__ import annotations
 
-from typing import List, Tuple
+from typing import List
 
-from arabic_engine.core.enums import DalalaType, POS, SemanticType
+from arabic_engine.core.enums import POS, DalalaType
 from arabic_engine.core.types import Concept, DalalaLink, LexicalClosure
 
 

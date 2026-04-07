@@ -13,13 +13,10 @@ from __future__ import annotations
 from typing import List
 
 from arabic_engine.core.enums import (
-    DalalaType,
-    GuidanceState,
     POS,
-    SemanticType,
-    TruthState,
+    GuidanceState,
     TimeRef,
-    SpaceRef,
+    TruthState,
 )
 from arabic_engine.core.types import (
     Concept,
@@ -28,7 +25,6 @@ from arabic_engine.core.types import (
     LexicalClosure,
     Proposition,
 )
-
 
 # ── Judgment ────────────────────────────────────────────────────────
 
