@@ -1,3 +1,9 @@
+# Arabic Engine
+
+[![CI](https://github.com/sonaiso/7-4-26-mahdi/actions/workflows/ci.yml/badge.svg)](https://github.com/sonaiso/7-4-26-mahdi/actions/workflows/ci.yml)
+[![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+
 بنيت لك النواة التنفيذية الأولى كحزمة قابلة للتشغيل، وربطت تصميمها بالمبدأين اللذين ظهرَا في المرفقات.
 
 > **الوثيقة الأساسية**: انظر [`docs/atomic_beginning_law.md`](docs/atomic_beginning_law.md) — إعادة بناء الوثيقة وفق قانون البداية الذرية والإغلاق الصاعد، بصيغة مرقمة صارمة (X.1 المجال — X.5 حدود الصلاحية).
@@ -241,3 +247,37 @@ F = E \circ J \circ D \circ O \circ L \circ S \circ N
 * `world_model.py`
 * `inference_rules.py`
 * وملف `contracts.yaml` لإثبات الإغلاق الطبقي آليًا.
+
+---
+
+## Quick Start
+
+```bash
+# Clone the repository
+git clone https://github.com/sonaiso/7-4-26-mahdi.git
+cd 7-4-26-mahdi
+
+# Create a virtual environment
+python -m venv .venv
+source .venv/bin/activate
+
+# Install with dev dependencies
+pip install -e ".[dev]"
+
+# Run the example
+python example_run.py
+
+# Run the tests
+pytest -v
+
+# Lint the code
+ruff check .
+```
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+
+## License
+
+[MIT](LICENSE)
