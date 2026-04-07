@@ -8,9 +8,7 @@ from __future__ import annotations
 
 from typing import Callable, List, Optional
 
-from arabic_engine.core.enums import TruthState, TimeRef, SpaceRef
 from arabic_engine.core.types import InferenceResult, Proposition
-
 
 # ── Rule type ───────────────────────────────────────────────────────
 

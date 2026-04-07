@@ -8,7 +8,6 @@ from __future__ import annotations
 
 from enum import Enum, auto
 
-
 # ── Part of Speech ──────────────────────────────────────────────────
 
 class POS(Enum):

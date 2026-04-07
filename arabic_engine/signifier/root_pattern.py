@@ -7,7 +7,7 @@ hard-coded dictionary with a full morphological database.
 
 from __future__ import annotations
 
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional
 
 from arabic_engine.core.enums import POS
 from arabic_engine.core.types import LexicalClosure, RootPattern

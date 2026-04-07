@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from typing import List, Optional, Tuple
 
-from arabic_engine.core.enums import POS, TimeRef, SpaceRef
+from arabic_engine.core.enums import POS, SpaceRef, TimeRef
 from arabic_engine.core.types import (
     LexicalClosure,
     Proposition,
