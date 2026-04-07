@@ -130,3 +130,15 @@ layers:
 # The composition F = L10 ∘ L9 ∘ … ∘ L0 is well-typed if for every
 # adjacent pair (Lᵢ, Lᵢ₊₁), output_type(Lᵢ) ⊆ input_type(Lᵢ₊₁).
 # The pipeline.verify_contracts() function checks this at startup.
+
+# ── General Closure (Ch. 19) ────────────────────────────────────────
+# The Manṭūq system is closed when:
+#   1. Every layer Lᵢ is locally closed (module + function exist)
+#   2. The layer chain is ascending: L_{n+1} = Γ_n(L_n)
+#   3. No inter-layer contradiction exists
+#   4. Every structure is decomposable to Unicode atoms
+#   5. The Manṭūq/Mafhūm boundary is clear
+#
+# Verified by: arabic_engine.closure.verify_general_closure()
+#
+# Closed_Mantūq(U₀, G, Σ, R, W, C_min, 𝔊, 𝔖, ℰ_min, 𝒫⁺_min, ℳ⁺_min)
