@@ -32,6 +32,11 @@ from arabic_engine.core.types import (
     Proposition,
 )
 
+# Default confidence for a valid Mafhūm result.  Set at 0.85 to reflect
+# that the structural detection is high-confidence but below 1.0 because
+# pragmatic/contextual factors (not modelled at this layer) may override.
+_DEFAULT_MAFHUM_CONFIDENCE: float = 0.85
+
 
 # ── Constraint markers ──────────────────────────────────────────────
 # Known Arabic particles/constructs that signal each constraint type.
@@ -137,7 +142,7 @@ def _detect_reference(
     for i, cl in enumerate(closures):
         if cl.lemma in _REFERENCE_MARKERS or cl.surface in _REFERENCE_MARKERS:
             return i, cl.lemma
-        if cl.pos in _REFERENCE_POS and cl.lemma not in {""}:
+        if cl.pos in _REFERENCE_POS and cl.lemma:
             return i, cl.lemma
     return None
 
@@ -300,7 +305,7 @@ def analyse_mafhum(
             counterpart=counterpart,
             derived_meaning=derived,
             valid=valid,
-            confidence=0.85 if valid else 0.0,
+            confidence=_DEFAULT_MAFHUM_CONFIDENCE if valid else 0.0,
         ))
 
     return results
