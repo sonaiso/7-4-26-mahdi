@@ -10,6 +10,9 @@ Public sub-modules
   morphological pattern extraction.
 * :mod:`arabic_engine.signifier.dmin` — D_min minimal complete
   phonological model (الأدنى المكتمل).
+* :mod:`arabic_engine.signifier.transition` — قانون الانتقال بين الخانات:
+  formal cell-transition engine with matrix, stability check, and
+  optimality-driven transition solver.
 """
 
 __all__ = [
@@ -17,4 +20,5 @@ __all__ = [
     "phonology",
     "root_pattern",
     "dmin",
+    "transition",
 ]

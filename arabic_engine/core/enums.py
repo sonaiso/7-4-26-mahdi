@@ -290,3 +290,52 @@ class PhonTransform(Enum):
     TADFIF_TR = auto()          # تضعيف       — gemination function
     MAQTAA = auto()             # بناء مقطع مغلق — closed-syllable building
     HAMZA_CARRIER = auto()      # حامل كتابي  — orthographic hamza carrier
+
+
+# ── Transition Engine — قانون الانتقال بين الخانات ──────────────────
+
+class TransitionType(Enum):
+    """الأنواع الكبرى للانتقال — the four major classes of cell transition."""
+    FUNCTIONAL = auto()         # انتقال وظيفي    — same element, changed function
+    RANK = auto()               # انتقال رتبي     — movement between phonetic tiers
+    CONTEXTUAL = auto()         # انتقال تجاوري   — neighbour-driven transition
+    MORPHO_STRUCTURAL = auto()  # انتقال بنيوي صرفي — pattern/template-driven
+
+
+class TransitionLaw(Enum):
+    """القوانين الجزئية للانتقال — the seven partial transition laws."""
+    ITLAL = auto()      # اعتلال  — weak-letter transformation (ا و ي)
+    IDGHAM = auto()     # إدغام   — gemination: C+C → Shadda
+    IBDAL = auto()      # إبدال   — substitution within phonetic family
+    HADHF = auto()      # حذف     — deletion from surface to deep structure
+    WAQF = auto()       # وقف     — pause-final phonological reduction
+    ZIYADA = auto()     # زيادة   — root element re-slotted as augment
+    INZILAQ = auto()    # انزلاق  — glide ↔ long-vowel transition (و / ي)
+
+
+class TransitionCondition(Enum):
+    """شروط الانتقال — the five conditions required for a valid transition."""
+    STRUCTURAL_VALIDITY = auto()    # بقاء داخل الأنماط المسموحة
+    PHONETIC_BALANCE = auto()       # التخفيف دون الإفساد
+    ROOT_PRESERVATION = auto()      # إمكان استرجاع الجذر بعد الانتقال
+    FUNCTION_PRESERVATION = auto()  # وضوح الوظيفة بعد الانتقال
+    NON_CONTRADICTION = auto()      # عدم الوقوع في صورة ممنوعة
+
+
+class SyllablePosition(Enum):
+    """موضع العنصر في المقطع — element's position inside the syllable."""
+    ONSET = auto()      # بداية المقطع  — syllable onset (C)
+    NUCLEUS = auto()    # نواة المقطع   — syllable nucleus (V)
+    CODA = auto()       # نهاية المقطع  — syllable coda (C)
+    INTER_WORD = auto() # حدّ الكلمة    — word boundary
+
+
+class FunctionRole(Enum):
+    """الدور الوظيفي للعنصر — element's morpho-syntactic role in the word."""
+    ROOT_RADICAL = auto()   # أصل جذري   — part of the tri-literal root
+    AUGMENT = auto()        # زيادة      — morphological augment
+    VOWEL_CARRIER = auto()  # حامل صائتي — vowel / nucleus carrier
+    CASE_MARKER = auto()    # علامة إعراب — case / mood marker
+    DEFINITENESS = auto()   # أداة تعريف  — definiteness particle
+    PRONOUN = auto()        # ضمير       — pronominal clitic
+    UNKNOWN = auto()        # غير محدد   — undetermined
