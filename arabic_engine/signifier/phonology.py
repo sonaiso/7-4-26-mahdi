@@ -33,22 +33,60 @@ _TANWIN = {_FATHATAN, _DAMMATAN, _KASRATAN}
 
 
 def is_consonant(g: Grapheme) -> bool:
-    """Return True if the grapheme represents a consonant."""
+    """Return ``True`` if the grapheme represents a consonant.
+
+    A grapheme is considered a consonant when its base code-point is
+    *not* one of the long-vowel letters (ا و ي).
+
+    Args:
+        g: The grapheme cluster to test.
+
+    Returns:
+        ``True`` for consonants; ``False`` for long-vowel letters.
+    """
     return g.base not in _LONG_VOWELS
 
 
 def is_vowel_mark(cp: int) -> bool:
-    """Return True if *cp* is a short-vowel combining mark."""
+    """Return ``True`` if *cp* is a short-vowel combining mark.
+
+    The short-vowel marks are fatha (U+064E), damma (U+064F), and
+    kasra (U+0650).
+
+    Args:
+        cp: Unicode code-point to test.
+
+    Returns:
+        ``True`` when *cp* is one of the three short-vowel marks.
+    """
     return cp in _SHORT_VOWELS
 
 
 def has_shadda(g: Grapheme) -> bool:
-    """Return True if the grapheme carries a shaddah (gemination)."""
+    """Return ``True`` if the grapheme carries a shaddah (gemination mark).
+
+    Args:
+        g: The grapheme cluster to test.
+
+    Returns:
+        ``True`` when U+0651 (shaddah) is present in ``g.marks``.
+    """
     return _SHADDA in g.marks
 
 
 def get_short_vowel(g: Grapheme) -> int | None:
-    """Return the short-vowel mark on *g*, or None."""
+    """Return the short-vowel mark code-point on *g*, or ``None``.
+
+    Scans ``g.marks`` for the first code-point that is a short-vowel
+    mark (fatha, damma, or kasra).
+
+    Args:
+        g: The grapheme cluster to inspect.
+
+    Returns:
+        The code-point of the first short-vowel mark found, or ``None``
+        if *g* carries no short-vowel mark.
+    """
     for m in g.marks:
         if m in _SHORT_VOWELS:
             return m
@@ -58,10 +96,25 @@ def get_short_vowel(g: Grapheme) -> int | None:
 def syllabify(graphemes: List[Grapheme]) -> List[Syllable]:
     """Produce a list of syllables from a grapheme sequence.
 
-    Simplified model:
-      • CV  → light  (weight 1)
-      • CVC → heavy  (weight 2)
-      • CVCC / CVV → super-heavy (weight 3)
+    Uses a simplified consonant-vowel (CV) model:
+
+    =========  =======  ==============
+    Pattern    Weight   Description
+    =========  =======  ==============
+    CV         1        Light syllable
+    CVC        2        Heavy syllable
+    CVV / CVCC 3        Super-heavy syllable
+    =========  =======  ==============
+
+    Args:
+        graphemes: Ordered list of
+            :class:`~arabic_engine.core.types.Grapheme` clusters
+            representing a single token.
+
+    Returns:
+        A list of :class:`~arabic_engine.core.types.Syllable` objects
+        in the same left-to-right order as the input graphemes.  Returns
+        an empty list for an empty input.
     """
     syllables: List[Syllable] = []
     i = 0

@@ -1,4 +1,16 @@
-"""Core enums and types used across the engine."""
+"""Core enums and types used across the engine.
+
+This package re-exports all public enumerations from
+:mod:`arabic_engine.core.enums` and all dataclass types from
+:mod:`arabic_engine.core.types` so that client code can import from a
+single namespace::
+
+    from arabic_engine.core import POS, LexicalClosure, DMin
+
+The :mod:`arabic_engine.core.contracts` module is intentionally *not*
+re-exported here because it is a utility/verification module, not a data
+type.
+"""
 
 from .enums import (
     POS as POS,

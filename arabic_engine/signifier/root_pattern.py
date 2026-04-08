@@ -123,7 +123,15 @@ for _entry in _LEXICON.values():
 
 
 def extract_root_pattern(token: str) -> Optional[RootPattern]:
-    """Try to extract root and pattern from *token* via the mini-lexicon."""
+    """Try to extract root and pattern from *token* via the mini-lexicon.
+
+    Args:
+        token: A single Arabic token string (with or without tashkīl).
+
+    Returns:
+        A :class:`~arabic_engine.core.types.RootPattern` when the token
+        is found in the lexicon, or ``None`` if it is unknown.
+    """
     entry = _LEXICON.get(token)
     if entry is None:
         return None
@@ -136,9 +144,18 @@ def extract_root_pattern(token: str) -> Optional[RootPattern]:
 
 
 def lexical_closure(token: str) -> LexicalClosure:
-    """Build a full :class:`LexicalClosure` for *token* (التعريف 4).
+    """Build a full :class:`~arabic_engine.core.types.LexicalClosure` for *token* (التعريف 4).
 
-    Falls back to ``POS.UNKNOWN`` when the token is not in the lexicon.
+    Looks up *token* in the internal lexicon.  Unknown tokens receive a
+    fallback closure with ``POS.UNKNOWN`` and empty root/pattern fields.
+
+    Args:
+        token: A single Arabic token string.
+
+    Returns:
+        A fully populated :class:`~arabic_engine.core.types.LexicalClosure`
+        when the token is in the lexicon, or a minimal fallback closure
+        otherwise.
     """
     entry = _LEXICON.get(token)
     if entry is not None:
@@ -164,5 +181,17 @@ def lexical_closure(token: str) -> LexicalClosure:
 
 
 def batch_closure(tokens: List[str]) -> List[LexicalClosure]:
-    """Return lexical closures for every token in *tokens*."""
+    """Return lexical closures for every token in *tokens*.
+
+    Convenience wrapper around :func:`lexical_closure` for a list of
+    tokens (as produced by
+    :func:`~arabic_engine.signifier.unicode_norm.tokenize`).
+
+    Args:
+        tokens: List of Arabic token strings.
+
+    Returns:
+        A list of :class:`~arabic_engine.core.types.LexicalClosure`
+        objects, one per input token, preserving order.
+    """
     return [lexical_closure(t) for t in tokens]

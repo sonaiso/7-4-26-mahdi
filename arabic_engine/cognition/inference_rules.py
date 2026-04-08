@@ -103,13 +103,54 @@ _DEFAULT_RULES: List[RuleFunc] = [
 
 
 class InferenceEngine:
-    """A simple forward-chaining inference engine."""
+    """A simple forward-chaining inference engine.
+
+    The engine holds an ordered list of :data:`RuleFunc` callables.
+    Each rule receives the current proposition list and may return a
+    single :class:`~arabic_engine.core.types.InferenceResult`, or
+    ``None`` if the rule does not fire.
+
+    Default rules (applied in order):
+
+    1. ``event_existence_rule`` — derives that the event denoted by the
+       predicate actually took place.
+    2. ``transitivity_rule`` — applies A→B, B→C ⇒ A→C.
+    3. ``negation_rule`` — flags a contradiction when both P and ¬P exist.
+
+    Example::
+
+        engine = InferenceEngine()
+        results = engine.run([proposition])
+
+    Args:
+        rules: Optional list of rule callables to use instead of the
+            defaults.  Each callable must match the :data:`RuleFunc`
+            signature ``(List[Proposition]) -> Optional[InferenceResult]``.
+    """
 
     def __init__(self, rules: Optional[List[RuleFunc]] = None) -> None:
+        """Initialise the engine with *rules* (or the built-in defaults).
+
+        Args:
+            rules: Custom rule list.  When ``None``, :data:`_DEFAULT_RULES`
+                is used.
+        """
         self.rules: List[RuleFunc] = rules if rules is not None else list(_DEFAULT_RULES)
 
     def run(self, propositions: List[Proposition]) -> List[InferenceResult]:
-        """Apply all rules once and return derived results."""
+        """Apply all rules once to *propositions* and return derived results.
+
+        Each rule in :attr:`rules` is called with the full proposition list.
+        Rules that fire (return a non-``None`` result) contribute to the
+        output; rules that do not fire are silently skipped.
+
+        Args:
+            propositions: Current set of propositions to reason over.
+
+        Returns:
+            A list of :class:`~arabic_engine.core.types.InferenceResult`
+            objects, one per rule that fired.  May be empty.
+        """
         results: List[InferenceResult] = []
         for rule in self.rules:
             result = rule(propositions)
@@ -122,7 +163,22 @@ class InferenceEngine:
         propositions: List[Proposition],
         max_iterations: int = 10,
     ) -> List[InferenceResult]:
-        """Repeatedly apply rules until no new conclusions are derived."""
+        """Repeatedly apply rules until no new conclusions are derived.
+
+        At each iteration the derived conclusions (from valid results) are
+        appended to the working proposition set and the rules are re-run.
+        The loop terminates when no rule fires *or* after *max_iterations*
+        rounds, whichever comes first.
+
+        Args:
+            propositions: Initial proposition set.
+            max_iterations: Upper bound on the number of rule-application
+                rounds.  Prevents infinite loops in cyclic rule sets.
+
+        Returns:
+            All :class:`~arabic_engine.core.types.InferenceResult` objects
+            derived across all iterations (accumulated, not de-duplicated).
+        """
         all_results: List[InferenceResult] = []
         current = list(propositions)
 
