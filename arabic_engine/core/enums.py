@@ -341,79 +341,178 @@ class FunctionRole(Enum):
     UNKNOWN = auto()        # غير محدد   — undetermined
 
 
-# ── AEU — Alphabetic Encoding Unit (وحدة الترميز الأبجدي) ────────────
-# Implements the Master Minimal Alphabetic Encoding Architecture:
-#   AMU = (R, B, N, G, E)
-# extended to the full periodic-table 7-axis form.
+# ── Functional Transition Schema — الانتقال الوظيفي المنضبط ──────────
+# The following enums mirror the JSON Schema defined in
+# arabic_engine/data/transition_record.schema.json and form the
+# Python side of the formal functional-transition layer.
 
-class ElementClass(Enum):
-    """Structural class of an alphabetic encoding element (صنف العنصر).
+class CellType(Enum):
+    """خانة الانتقال — cell identifier in the functional transition schema.
 
-    Axis 1 of the Alphabetic Periodic Table.
+    Consonants (صوامت):
+        C_ROOT_PLAIN       — plain root consonant (صامت جذري سهل)
+        C_MULTI_FUNCTION   — multi-function / ambiguous consonant (صامت متعدد الوظائف)
+        C_AUGMENTATIVE     — augmentative consonant (صامت زيادة)
+        C_GLIDE_BACK       — back glide و (حرف لين خلفي)
+        C_GLIDE_FRONT      — front glide ي (حرف لين أمامي)
+
+    Long vowels (صوائت طويلة):
+        V_LONG_A           — long /aː/ — ا
+        V_LONG_W           — long /uː/ — و
+        V_LONG_Y           — long /iː/ — ي
+
+    Diacritics / short vowels (حركات):
+        D_FATHA            — فتحة
+        D_DAMMA            — ضمة
+        D_KASRA            — كسرة
+        D_SUKUN            — سكون
+        D_SHADDA           — شدة
+        D_TANWEEN_FATH     — تنوين فتح
+        D_TANWEEN_DAMM     — تنوين ضم
+        D_TANWEEN_KASR     — تنوين كسر
+
+    Meta-cells (خانات بنيوية):
+        CELL_ILLA                  — weak/defective letter structure (علّة)
+        CELL_IMPLICIT              — deleted-but-recoverable element (ضمني)
+        CELL_WAQF_COMPRESSED       — pause-compressed ending (وقف مضغوط)
+        CELL_EXISTENTIAL           — pure existential state (وجود مطلق)
+        CELL_EXISTENTIAL_TEMPORAL  — time-bound existential state (وجود زمني)
+        CELL_EVENT_SOURCE          — abstract event / maṣdar source (حدث مصدري)
+        CELL_EVENT_TEMPORAL        — temporalised event / verb form (حدث زمني)
+        CELL_CAUSAL_INTERNAL       — self-contained causation (تسبب داخلي)
+        CELL_CAUSAL_EXTERNAL       — external causation (تسبب خارجي)
     """
-    BASE_LETTER = auto()              # حرف أساسي — consonant / semi-vowel
-    VOWEL_MARKER = auto()             # علامة صائتة — short vowel diacritic
-    STRUCTURAL_MARKER = auto()        # علامة بنيوية — sukun / shadda / tanwin
-    COMPOSITE_DECISION_UNIT = auto()  # وحدة قرار مركبة — hamza
-    CARRIER_RELATED_UNIT = auto()     # وحدة حامل — superscript alef etc.
+    # Consonants
+    C_ROOT_PLAIN = auto()
+    C_MULTI_FUNCTION = auto()
+    C_AUGMENTATIVE = auto()
+    C_GLIDE_BACK = auto()
+    C_GLIDE_FRONT = auto()
+    # Long vowels
+    V_LONG_A = auto()
+    V_LONG_W = auto()
+    V_LONG_Y = auto()
+    # Diacritics
+    D_FATHA = auto()
+    D_DAMMA = auto()
+    D_KASRA = auto()
+    D_SUKUN = auto()
+    D_SHADDA = auto()
+    D_TANWEEN_FATH = auto()
+    D_TANWEEN_DAMM = auto()
+    D_TANWEEN_KASR = auto()
+    # Meta-cells
+    CELL_ILLA = auto()
+    CELL_IMPLICIT = auto()
+    CELL_WAQF_COMPRESSED = auto()
+    CELL_EXISTENTIAL = auto()
+    CELL_EXISTENTIAL_TEMPORAL = auto()
+    CELL_EVENT_SOURCE = auto()
+    CELL_EVENT_TEMPORAL = auto()
+    CELL_CAUSAL_INTERNAL = auto()
+    CELL_CAUSAL_EXTERNAL = auto()
 
 
-class ElementLayer(Enum):
-    """Layer in the orthographic-phonological architecture (الطبقة).
+class FuncTransitionClass(Enum):
+    """صنف الانتقال الوظيفي — broad classification of a functional transition."""
+    PHONOLOGICAL = auto()    # صوتي
+    MORPHOLOGICAL = auto()   # صرفي
+    ORTHOGRAPHIC = auto()    # إملائي / وقفي
+    CAUSAL = auto()          # سببي
+    TEMPORAL = auto()        # زمني
+    EXISTENTIAL = auto()     # وجودي
+    ABSTRACTIVE = auto()     # تجريدي
 
-    Axis 2 of the Alphabetic Periodic Table.
+
+class EvidenceType(Enum):
+    """نوع الدليل — the kind of evidence supporting a transition record."""
+    LEXICAL = auto()              # معجمي
+    PATTERN = auto()              # نمطي / وزني
+    PHONOLOGICAL_CONTEXT = auto() # سياق صوتي
+    MORPH_CONTEXT = auto()        # سياق صرفي
+    SURFACE_ONLY = auto()         # سطحي فقط
+    DEEP_ANALYSIS = auto()        # تحليل عميق
+
+
+class ReversibleValue(Enum):
+    """قابلية الانتقال للعكس — whether a transition can be reversed."""
+    YES = auto()         # قابل للعكس دائمًا
+    NO = auto()          # غير قابل للعكس
+    CONDITIONAL = auto() # قابل للعكس بشرط
+
+
+class ConditionToken(Enum):
+    """رمز الشرط — atomic DSL token for preconditions and blocking conditions.
+
+    Each value is a computable, snake_case label that can be evaluated
+    against a context object.  The tokens cover:
+      * phonological structure conditions (بنية صوتية)
+      * morphological and lexical conditions (صرف ومعجم)
+      * syllabic / positional conditions (مقطع وموضع)
+      * causal / temporal / existential conditions (سبب / زمن / وجود)
     """
-    PHONOLOGICAL = auto()   # صوتي  — phonological layer
-    ORTHOGRAPHIC = auto()   # كتابي — orthographic layer
-    STRUCTURAL = auto()     # بنيوي — structural / diacritic layer
-    ENCODING = auto()       # ترميزي — pure encoding layer
-    MIXED = auto()          # مختلط — multi-layer element
-
-
-class ElementFunction(Enum):
-    """Governing function of the element in the encoding system (الوظيفة الحاكمة).
-
-    Axis 3 of the Alphabetic Periodic Table.
-    """
-    IDENTITY_BEARING = auto()       # حامل هوية — carries consonant identity
-    MOTION_BEARING = auto()         # حامل حركة — marks vocalic motion
-    CLOSURE_BEARING = auto()        # حامل إغلاق — marks syllable closure
-    LENGTH_BEARING = auto()         # حامل إطالة — marks vowel length
-    DUPLICATION_BEARING = auto()    # حامل تضعيف — marks gemination
-    INDEFINITENESS_BEARING = auto() # حامل تنكير — marks indefiniteness
-    SEAT_BEARING = auto()           # حامل كرسي — hamza seat function
-    ENCODING_BEARING = auto()       # حامل ترميز — orthographic encoding unit
-
-
-class CombinationType(Enum):
-    """How the element combines with others in the structure (نمط الاتحاد).
-
-    Axis 4 of the Alphabetic Periodic Table.
-    """
-    STANDALONE = auto()          # مستقل — free-standing letter
-    ATTACHES_TO_BASE = auto()    # يلتصق بالقاعدة — diacritic on base letter
-    CLUSTER_INTERNAL = auto()    # داخل المجموعة — inside grapheme cluster
-    CONTEXT_DEPENDENT = auto()   # حسب السياق — position-sensitive
-    SEQUENCE_LEVEL = auto()      # على مستوى التسلسل — multi-codepoint sequence
-
-
-class UnicodeProfileType(Enum):
-    """Unicode encoding profile of the element (نوع التمثيل الرقمي).
-
-    Axis 6 of the Alphabetic Periodic Table.
-    """
-    SINGLE_CODE_POINT = auto()    # نقطة رمز واحدة — one base code-point
-    COMBINING_MARK = auto()       # علامة ضم — combining / diacritic mark
-    SEQUENCE = auto()             # تسلسل — multi-codepoint sequence
-    CONTEXTUAL_RENDERING = auto() # عرض سياقي — context-sensitive rendering
-
-
-class ProofStatus(Enum):
-    """Proof-theoretic status of the element's inclusion (حالة البرهان).
-
-    Axis 7 of the Alphabetic Periodic Table.
-    """
-    PROVEN = auto()    # مبرهن — fully proven and stable
-    PENDING = auto()   # معلق  — proof incomplete / in progress
-    COMPOSITE = auto() # مركب  — composed of multiple proof units
-    DERIVED = auto()   # مشتق  — derived from another proven element
+    # Glide / vowel structure
+    GLIDE_LOSES_CONSONANTAL_LOAD = auto()
+    SEGMENT_BECOMES_VOCALIC_NUCLEUS = auto()
+    SYLLABLE_STRUCTURE_ALLOWS_LENGTHENING = auto()
+    SEGMENT_REQUIRED_AS_EXPLICIT_ONSET = auto()
+    SEGMENT_ENTERS_CONSONANTAL_POSITION = auto()
+    SURFACE_REQUIRES_GLIDE_LINKING = auto()
+    # Weak / implicit structure
+    WEAK_SEGMENT_DELETED_ON_SURFACE = auto()
+    DEEP_STRUCTURE_PRESERVED = auto()
+    PATTERN_RECOVERS_MISSING_SLOT = auto()
+    DELETION_CAUSES_ROOT_AMBIGUITY = auto()
+    # Vowel extension
+    FATHA_EXTENDED = auto()
+    DAMMA_EXTENDED = auto()
+    KASRA_EXTENDED = auto()
+    SEGMENT_FORMS_INDEPENDENT_LONG_NUCLEUS = auto()
+    # Gemination / compression
+    TWO_IDENTICAL_CONSONANTS_IN_SEQUENCE = auto()
+    COMPRESSION_ALLOWED = auto()
+    IDENTITY_NOT_PROVEN = auto()
+    AUGMENTATIVE_CONSONANT_CONTACTS_SIMILAR_OR_IDENTICAL_SEGMENT = auto()
+    MORPH_PATTERN_ALLOWS_ASSIMILATION = auto()
+    STRONG_SIMILARITY_OR_IDENTITY = auto()
+    SURFACE_COMPRESSION_PERMITTED = auto()
+    # Vowel drop / resyllabification
+    MORPHOLOGICAL_CHANGE_DROPS_SHORT_VOWEL = auto()
+    DROPPING_VOWEL_BREAKS_ALLOWED_SYLLABLE_PATTERN = auto()
+    SEGMENT_REQUIRES_OPENING = auto()
+    PATTERN_OR_LINKING_REQUIRES_MOVEMENT = auto()
+    SEGMENT_REQUIRES_BACK_ROUNDING = auto()
+    SEGMENT_REQUIRES_FRONTING = auto()
+    # Root / augment classification
+    SEGMENT_FUNCTIONS_AS_AUGMENTATIVE_MARKER = auto()
+    ROOT_SLOTS_IDENTIFIED_INDEPENDENTLY = auto()
+    LEXICON_CONFIRMS_SEGMENT_IS_ROOT_MEMBER = auto()
+    CONTEXT_FAVORS_AUGMENTATIVE_READING = auto()
+    PATTERN_REQUIRES_NON_ROOT_FUNCTION = auto()
+    LEXICON_CONFIRMS_ROOT_STATUS = auto()
+    SEGMENT_REQUIRED_FOR_ROOT_IDENTITY = auto()
+    # Glide-as-augment
+    WAAW_FUNCTIONS_AS_NON_ROOT_INCREMENT = auto()
+    PATTERN_SUPPORTS_INCREMENTAL_ROLE = auto()
+    ROOT_MEMBERSHIP_OF_WAAW_PROVEN = auto()
+    YAA_FUNCTIONS_AS_NON_ROOT_INCREMENT = auto()
+    ROOT_MEMBERSHIP_OF_YAA_PROVEN = auto()
+    # Pause / waqf
+    WORD_FINAL_POSITION = auto()
+    PAUSE_MODE_ENABLED = auto()
+    WEAK_FINAL_STRUCTURE_COMPRESSIBLE = auto()
+    # Surface deletion
+    SURFACE_DELETION_ALLOWED = auto()
+    DEEP_RECOVERABILITY_PRESERVED = auto()
+    ROOT_IDENTITY_COLLAPSES = auto()
+    # Causal
+    EXTERNAL_TRANSFORMER_APPEARS = auto()
+    EFFECT_MOVES_BEYOND_ACTOR = auto()
+    EXTERNAL_TRANSFORMER_REMOVED = auto()
+    EFFECT_COLLAPSES_BACK_TO_SUBJECT = auto()
+    # Temporal / existential
+    ABSTRACT_EVENT_LINKED_TO_TIME_REFERENCE = auto()
+    TIME_REFERENCE_REMOVED = auto()
+    TEMPORAL_OPERATOR_APPLIED = auto()
+    EXISTENTIAL_STATE_BOUND_TO_TIME = auto()
+    TEMPORAL_OPERATOR_REMOVED = auto()
