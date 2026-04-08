@@ -46,6 +46,9 @@ from .enums import (
     MafhumType as MafhumType,
 )
 from .enums import (
+    OntologicalLayer as OntologicalLayer,
+)
+from .enums import (
     PhonCategory as PhonCategory,
 )
 from .enums import (
@@ -62,6 +65,9 @@ from .enums import (
 )
 from .enums import (
     SemanticType as SemanticType,
+)
+from .enums import (
+    SlotState as SlotState,
 )
 from .enums import (
     SpaceRef as SpaceRef,
@@ -97,6 +103,9 @@ from .types import (
     InferenceResult as InferenceResult,
 )
 from .types import (
+    LayerPromotionRule as LayerPromotionRule,
+)
+from .types import (
     LexicalClosure as LexicalClosure,
 )
 from .types import (
@@ -115,5 +124,11 @@ from .types import (
     TimeSpaceTag as TimeSpaceTag,
 )
 from .types import (
+    TriadicBlockRecord as TriadicBlockRecord,
+)
+from .types import (
     WorldFact as WorldFact,
+)
+from .types import (
+    ZeroSlotRecord as ZeroSlotRecord,
 )
