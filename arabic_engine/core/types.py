@@ -36,6 +36,7 @@ from .enums import (
     TransitionLaw,
     TransitionType,
     TruthState,
+    UnicodeProfileType,
 )
 
 # ── Signifier layer ─────────────────────────────────────────────────
