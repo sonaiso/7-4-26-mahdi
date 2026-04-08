@@ -28,11 +28,13 @@ from .enums import (
     IrabRole,
     MafhumType,
     OntologicalLayer,
+    OntologicalMode,
     PhonCategory,
     PhonFeature,
     PhonGroup,
     PhonTransform,
     ProofStatus,
+    RankType,
     ReversibleValue,
     SemanticType,
     SlotState,
@@ -42,6 +44,7 @@ from .enums import (
     TransitionCondition,
     TransitionLaw,
     TransitionType,
+    TriadType,
     TruthState,
     UnicodeProfileType,
 )
@@ -681,3 +684,219 @@ class LayerPromotionRule:
     def is_valid(self) -> bool:
         """A4 — target layer must be strictly higher than source."""
         return self.target_layer.value > self.source_layer.value
+
+
+# ── Structural Slot — الموضع البنيوي الحقيقي ────────────────────────
+
+@dataclass(frozen=True)
+class StructuralSlot:
+    """الموضع البنيوي الحقيقي — the true structural zero.
+
+    This is **not** a letter, a vowel mark, or a written sukun.  It is a
+    position-that-can-be-filled — the ontological precondition for any
+    linguistic value to exist.
+
+    Clarifies the distinction::
+
+        ZeroStruct = EmptySlot       (structural possibility)
+        Sukun      = ZeroVocalicMark (a specific realisation)
+
+    Implements::
+
+        A1′. StructuralSlot ≠ letter ∧ StructuralSlot ≠ vowel
+        Law 1. Slot ≺ Value   (position precedes content)
+
+    Fields
+    ------
+    slot_id         unique identifier (e.g. ``"SS_001"``)
+    label           human-readable name
+    layer           ontological layer the slot belongs to
+    mode            always ``OntologicalMode.SLOT``
+    fillable        whether the slot can currently accept a value
+    occupant_id     id of the element occupying the slot (``None`` if empty)
+    constraint      optional :class:`ConditionToken` gating occupancy
+    notes           free-text annotation
+    """
+
+    slot_id: str
+    label: str
+    layer: OntologicalLayer
+    mode: OntologicalMode = OntologicalMode.SLOT
+    fillable: bool = True
+    occupant_id: Optional[str] = None
+    constraint: Optional[ConditionToken] = None
+    notes: str = ""
+
+    @property
+    def is_empty(self) -> bool:
+        """True when the slot has no occupant."""
+        return self.occupant_id is None
+
+    @property
+    def is_occupied(self) -> bool:
+        """True when the slot holds a value."""
+        return self.occupant_id is not None
+
+
+# ── Vocalic Zero — الصفر الحركي المخصوص ─────────────────────────────
+
+@dataclass(frozen=True)
+class VocalicZero:
+    """الصفر الحركي المخصوص — sukun as a specific vocalic-zero mark.
+
+    The vocalic zero is a *manifestation* (تمظهر) inside the vowel
+    layer, **not** the absolute structural zero.  It records the
+    absence-of-vowel on a specific consonant slot.
+
+    Clarifies::
+
+        Sukun ≠ ZeroStruct
+        Sukun  = 0_V   (a zero *within* the vocalic domain)
+
+    Fields
+    ------
+    zero_id         unique identifier (e.g. ``"VZ_001"``)
+    host_slot_id    the :class:`StructuralSlot` or consonant this zero
+                    is attached to
+    layer           always CELL (it lives at the phonological cell level)
+    mode            always ``OntologicalMode.MODIFIER``
+    explicit        whether the sukun is written on the surface
+    notes           free-text annotation
+    """
+
+    zero_id: str
+    host_slot_id: str
+    layer: OntologicalLayer = OntologicalLayer.CELL
+    mode: OntologicalMode = OntologicalMode.MODIFIER
+    explicit: bool = True
+    notes: str = ""
+
+    @property
+    def is_structural_zero(self) -> bool:
+        """Always False — this is a vocalic zero, not a structural one."""
+        return False
+
+    @property
+    def is_vocalic_zero(self) -> bool:
+        """Always True — this is a zero within the vocalic domain."""
+        return True
+
+
+# ── Triad Record — سجل الثلاثية ──────────────────────────────────────
+
+@dataclass(frozen=True)
+class TriadRecord:
+    """سجل ثلاثي منضبط — a formally typed triadic record.
+
+    Every triad must declare its :class:`TriadType` before entering
+    any computation (Law of Triad Type / قانون نوع المثلث).
+
+    Implements::
+
+        Triad = (Members, Type)
+        Type ∈ {Distinctive, Hierarchical, Generative}
+
+    And the Minimum Triad Law::
+
+        MinArabicStructure = (Slot, Value, Constraint)
+
+    Fields
+    ------
+    triad_id        unique identifier (e.g. ``"TD_001"``)
+    triad_type      the formal type of this triad
+    node_a          first member (slot / apex / base)
+    node_b          second member (value / left-branch / motion)
+    node_c          third member (constraint / right-branch / constraint)
+    layer           ontological layer
+    decision_rule   optional decision function identifier
+    notes           free-text annotation
+    """
+
+    triad_id: str
+    triad_type: TriadType
+    node_a: str
+    node_b: str
+    node_c: str
+    layer: OntologicalLayer = OntologicalLayer.CELL
+    decision_rule: Optional[str] = None
+    notes: str = ""
+
+    @property
+    def members(self) -> Tuple[str, str, str]:
+        """Return the ordered triple ``(node_a, node_b, node_c)``."""
+        return (self.node_a, self.node_b, self.node_c)
+
+    @property
+    def is_degenerate(self) -> bool:
+        """True if any two members coincide — violating the triad law."""
+        a, b, c = self.members
+        return a == b or a == c or b == c
+
+    @property
+    def has_decision_rule(self) -> bool:
+        """True when a decision function is attached (Law 2)."""
+        return self.decision_rule is not None
+
+
+# ── Rank Decision — قرار الرتبة ──────────────────────────────────────
+
+@dataclass(frozen=True)
+class RankDecision:
+    """قرار الرتبة — the limit/capacity rank decision for an element.
+
+    Implements Law 3 (قانون الحد والسعة)::
+
+        L(x) = LimitScore,  C(x) = CapacityScore
+        L ≫ C → LIMITAL
+        C ≫ L → CAPACITIVE
+        L ≈ C → TRANSITIONAL
+
+    And Law 4 (قانون القيد السابق على التفسير)::
+
+        Ω(x) = 0 → NoInterpretation(x)
+
+    Fields
+    ------
+    decision_id         unique identifier (e.g. ``"RD_001"``)
+    element_id          the element this decision is about
+    limit_score         حدّية — how much the element acts as a boundary
+    capacity_score      سعة — how much the element acts as a container
+    rank_type           derived :class:`RankType`
+    omega               constraint weight (Ω) — 0 means no interpretation
+    promotion_target    optional next-layer target for promotion (Law 5)
+    notes               free-text annotation
+    """
+
+    decision_id: str
+    element_id: str
+    limit_score: float
+    capacity_score: float
+    rank_type: RankType
+    omega: float = 1.0
+    promotion_target: Optional[OntologicalLayer] = None
+    notes: str = ""
+
+    @property
+    def is_limital(self) -> bool:
+        """True when limit dominates capacity."""
+        return self.rank_type is RankType.LIMITAL
+
+    @property
+    def is_capacitive(self) -> bool:
+        """True when capacity dominates limit."""
+        return self.rank_type is RankType.CAPACITIVE
+
+    @property
+    def is_transitional(self) -> bool:
+        """True when limit and capacity are balanced."""
+        return self.rank_type is RankType.TRANSITIONAL
+
+    @property
+    def has_interpretation(self) -> bool:
+        """Law 4 — Ω(x) = 0 → no interpretation possible."""
+        return self.omega != 0.0
+
+    @property
+    def requires_promotion(self) -> bool:
+        """Law 5 — whether a promotion target is specified."""
+        return self.promotion_target is not None

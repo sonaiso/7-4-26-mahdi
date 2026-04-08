@@ -590,3 +590,60 @@ class OntologicalLayer(Enum):
     SYLLABLE = auto()    # مقطع — syllable-level grouping
     ROOT = auto()        # جذر — root-level abstraction
     PATTERN = auto()     # وزن — morphological pattern
+
+
+class OntologicalMode(Enum):
+    """النمط الوجودي — the mode of existence of a linguistic element.
+
+    Separates ontological kinds so that elements from different modes
+    cannot be compared directly (Rank Law / قانون الرتبة).
+
+    =========  ==========================================
+    Mode        Description (Arabic / English)
+    =========  ==========================================
+    SLOT        موضع قابل للامتلاء — fillable structural position
+    UNIT        وحدة قاعدية — atomic base unit (letter)
+    MODIFIER    محمول تشغيلي — operational modifier (vowel mark)
+    COMPOSITE   تركيب — composite construct (syllable, word)
+    STRUCTURE   بنية — structural template (root, pattern)
+    CONSTRAINT  قيد — constraint or condition
+    =========  ==========================================
+    """
+    SLOT = auto()        # موضع — structural position (Structural Zero)
+    UNIT = auto()        # وحدة — base unit (consonant / letter)
+    MODIFIER = auto()    # محمول — modifier (short vowel, sukun, shadda)
+    COMPOSITE = auto()   # تركيب — composite (syllable, morpheme)
+    STRUCTURE = auto()   # بنية — structural template (root, pattern)
+    CONSTRAINT = auto()  # قيد — condition / constraint
+
+
+class TriadType(Enum):
+    """نوع الثلاثية — the formal type of a triadic block.
+
+    Every triad must declare its type before entering computation
+    (قانون نوع المثلث).
+
+    ==============  ==============================================
+    Type             Description
+    ==============  ==============================================
+    DISTINCTIVE      مثلث تمييزي — previous / centre / next
+    HIERARCHICAL     مثلث رتبي — apex / left-branch / right-branch
+    GENERATIVE       مثلث توليدي — base / motion / constraint
+    ==============  ==============================================
+    """
+    DISTINCTIVE = auto()    # تمييزي — سابق / مركز / لاحق
+    HIERARCHICAL = auto()   # رتبي — قمة / ضلع / ضلع
+    GENERATIVE = auto()     # توليدي — قاعدة / حركة / قيد
+
+
+class RankType(Enum):
+    """نوع الرتبة — the rank classification derived from limit/capacity balance.
+
+    Implements Law 3 (قانون الحد والسعة):
+      * L ≫ C → LIMITAL   (حدّي)
+      * C ≫ L → CAPACITIVE (سعوي)
+      * L ≈ C → TRANSITIONAL (انتقالي)
+    """
+    LIMITAL = auto()        # حدّي — limit-dominant
+    CAPACITIVE = auto()     # سعوي — capacity-dominant
+    TRANSITIONAL = auto()   # انتقالي — balanced / transitional
