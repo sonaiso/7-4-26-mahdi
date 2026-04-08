@@ -12,9 +12,13 @@ from typing import FrozenSet, List, Optional, Tuple
 
 from .enums import (
     POS,
+    CellType,
+    ConditionToken,
     ConstraintType,
     DalalaType,
+    EvidenceType,
     FunctionRole,
+    FuncTransitionClass,
     GuidanceState,
     IrabCase,
     IrabRole,
@@ -23,6 +27,7 @@ from .enums import (
     PhonFeature,
     PhonGroup,
     PhonTransform,
+    ReversibleValue,
     SemanticType,
     SpaceRef,
     SyllablePosition,
@@ -380,3 +385,47 @@ class TransitionResult:
     total_cost: float                 # = loss_root + loss_pattern + phonetic_burden
     conditions_met: FrozenSet[TransitionCondition]
     notes: str = ""                   # optional diagnostic string
+
+
+# ── Functional Transition Schema types ──────────────────────────────
+
+@dataclass(frozen=True)
+class FunctionalTransitionRecord:
+    """سجل الانتقال الوظيفي — a single record in the functional transition dataset.
+
+    This type mirrors the JSON Schema defined in
+    ``arabic_engine/data/transition_record.schema.json`` and the seed data
+    in ``arabic_engine/data/transitions_seed_v1.json``.
+
+    The ``preconditions`` and ``blocking_conditions`` fields use
+    :class:`~arabic_engine.core.enums.ConditionToken` values, giving a
+    typed, computable DSL instead of free-form strings.
+
+    Fields
+    ------
+    transition_id       ``TR_NNN`` identifier (e.g. ``"TR_001"``)
+    source_cell         source :class:`~arabic_engine.core.enums.CellType`
+    target_cell         target :class:`~arabic_engine.core.enums.CellType`
+    transition_class    broad class of the transition
+    preconditions       frozenset of activating :class:`ConditionToken` values
+    blocking_conditions frozenset of blocking :class:`ConditionToken` values
+    priority            1 (critical) … 5 (fallback)
+    reversible          reversibility status
+    surface_form        human-readable surface description
+    deep_form           human-readable deep-structure description
+    evidence_type       kind of evidence supporting this record (optional)
+    notes               free-text annotation (optional)
+    """
+
+    transition_id: str
+    source_cell: CellType
+    target_cell: CellType
+    transition_class: FuncTransitionClass
+    preconditions: FrozenSet[ConditionToken]
+    blocking_conditions: FrozenSet[ConditionToken]
+    priority: int                        # 1 = critical … 5 = fallback
+    reversible: ReversibleValue
+    surface_form: str
+    deep_form: str
+    evidence_type: Optional[EvidenceType] = None
+    notes: str = ""

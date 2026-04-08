@@ -339,3 +339,180 @@ class FunctionRole(Enum):
     DEFINITENESS = auto()   # أداة تعريف  — definiteness particle
     PRONOUN = auto()        # ضمير       — pronominal clitic
     UNKNOWN = auto()        # غير محدد   — undetermined
+
+
+# ── Functional Transition Schema — الانتقال الوظيفي المنضبط ──────────
+# The following enums mirror the JSON Schema defined in
+# arabic_engine/data/transition_record.schema.json and form the
+# Python side of the formal functional-transition layer.
+
+class CellType(Enum):
+    """خانة الانتقال — cell identifier in the functional transition schema.
+
+    Consonants (صوامت):
+        C_ROOT_PLAIN       — plain root consonant (صامت جذري سهل)
+        C_MULTI_FUNCTION   — multi-function / ambiguous consonant (صامت متعدد الوظائف)
+        C_AUGMENTATIVE     — augmentative consonant (صامت زيادة)
+        C_GLIDE_BACK       — back glide و (حرف لين خلفي)
+        C_GLIDE_FRONT      — front glide ي (حرف لين أمامي)
+
+    Long vowels (صوائت طويلة):
+        V_LONG_A           — long /aː/ — ا
+        V_LONG_W           — long /uː/ — و
+        V_LONG_Y           — long /iː/ — ي
+
+    Diacritics / short vowels (حركات):
+        D_FATHA            — فتحة
+        D_DAMMA            — ضمة
+        D_KASRA            — كسرة
+        D_SUKUN            — سكون
+        D_SHADDA           — شدة
+        D_TANWEEN_FATH     — تنوين فتح
+        D_TANWEEN_DAMM     — تنوين ضم
+        D_TANWEEN_KASR     — تنوين كسر
+
+    Meta-cells (خانات بنيوية):
+        CELL_ILLA                  — weak/defective letter structure (علّة)
+        CELL_IMPLICIT              — deleted-but-recoverable element (ضمني)
+        CELL_WAQF_COMPRESSED       — pause-compressed ending (وقف مضغوط)
+        CELL_EXISTENTIAL           — pure existential state (وجود مطلق)
+        CELL_EXISTENTIAL_TEMPORAL  — time-bound existential state (وجود زمني)
+        CELL_EVENT_SOURCE          — abstract event / maṣdar source (حدث مصدري)
+        CELL_EVENT_TEMPORAL        — temporalised event / verb form (حدث زمني)
+        CELL_CAUSAL_INTERNAL       — self-contained causation (تسبب داخلي)
+        CELL_CAUSAL_EXTERNAL       — external causation (تسبب خارجي)
+    """
+    # Consonants
+    C_ROOT_PLAIN = auto()
+    C_MULTI_FUNCTION = auto()
+    C_AUGMENTATIVE = auto()
+    C_GLIDE_BACK = auto()
+    C_GLIDE_FRONT = auto()
+    # Long vowels
+    V_LONG_A = auto()
+    V_LONG_W = auto()
+    V_LONG_Y = auto()
+    # Diacritics
+    D_FATHA = auto()
+    D_DAMMA = auto()
+    D_KASRA = auto()
+    D_SUKUN = auto()
+    D_SHADDA = auto()
+    D_TANWEEN_FATH = auto()
+    D_TANWEEN_DAMM = auto()
+    D_TANWEEN_KASR = auto()
+    # Meta-cells
+    CELL_ILLA = auto()
+    CELL_IMPLICIT = auto()
+    CELL_WAQF_COMPRESSED = auto()
+    CELL_EXISTENTIAL = auto()
+    CELL_EXISTENTIAL_TEMPORAL = auto()
+    CELL_EVENT_SOURCE = auto()
+    CELL_EVENT_TEMPORAL = auto()
+    CELL_CAUSAL_INTERNAL = auto()
+    CELL_CAUSAL_EXTERNAL = auto()
+
+
+class FuncTransitionClass(Enum):
+    """صنف الانتقال الوظيفي — broad classification of a functional transition."""
+    PHONOLOGICAL = auto()    # صوتي
+    MORPHOLOGICAL = auto()   # صرفي
+    ORTHOGRAPHIC = auto()    # إملائي / وقفي
+    CAUSAL = auto()          # سببي
+    TEMPORAL = auto()        # زمني
+    EXISTENTIAL = auto()     # وجودي
+    ABSTRACTIVE = auto()     # تجريدي
+
+
+class EvidenceType(Enum):
+    """نوع الدليل — the kind of evidence supporting a transition record."""
+    LEXICAL = auto()              # معجمي
+    PATTERN = auto()              # نمطي / وزني
+    PHONOLOGICAL_CONTEXT = auto() # سياق صوتي
+    MORPH_CONTEXT = auto()        # سياق صرفي
+    SURFACE_ONLY = auto()         # سطحي فقط
+    DEEP_ANALYSIS = auto()        # تحليل عميق
+
+
+class ReversibleValue(Enum):
+    """قابلية الانتقال للعكس — whether a transition can be reversed."""
+    YES = auto()         # قابل للعكس دائمًا
+    NO = auto()          # غير قابل للعكس
+    CONDITIONAL = auto() # قابل للعكس بشرط
+
+
+class ConditionToken(Enum):
+    """رمز الشرط — atomic DSL token for preconditions and blocking conditions.
+
+    Each value is a computable, snake_case label that can be evaluated
+    against a context object.  The tokens cover:
+      * phonological structure conditions (بنية صوتية)
+      * morphological and lexical conditions (صرف ومعجم)
+      * syllabic / positional conditions (مقطع وموضع)
+      * causal / temporal / existential conditions (سبب / زمن / وجود)
+    """
+    # Glide / vowel structure
+    GLIDE_LOSES_CONSONANTAL_LOAD = auto()
+    SEGMENT_BECOMES_VOCALIC_NUCLEUS = auto()
+    SYLLABLE_STRUCTURE_ALLOWS_LENGTHENING = auto()
+    SEGMENT_REQUIRED_AS_EXPLICIT_ONSET = auto()
+    SEGMENT_ENTERS_CONSONANTAL_POSITION = auto()
+    SURFACE_REQUIRES_GLIDE_LINKING = auto()
+    # Weak / implicit structure
+    WEAK_SEGMENT_DELETED_ON_SURFACE = auto()
+    DEEP_STRUCTURE_PRESERVED = auto()
+    PATTERN_RECOVERS_MISSING_SLOT = auto()
+    DELETION_CAUSES_ROOT_AMBIGUITY = auto()
+    # Vowel extension
+    FATHA_EXTENDED = auto()
+    DAMMA_EXTENDED = auto()
+    KASRA_EXTENDED = auto()
+    SEGMENT_FORMS_INDEPENDENT_LONG_NUCLEUS = auto()
+    # Gemination / compression
+    TWO_IDENTICAL_CONSONANTS_IN_SEQUENCE = auto()
+    COMPRESSION_ALLOWED = auto()
+    IDENTITY_NOT_PROVEN = auto()
+    AUGMENTATIVE_CONSONANT_CONTACTS_SIMILAR_OR_IDENTICAL_SEGMENT = auto()
+    MORPH_PATTERN_ALLOWS_ASSIMILATION = auto()
+    STRONG_SIMILARITY_OR_IDENTITY = auto()
+    SURFACE_COMPRESSION_PERMITTED = auto()
+    # Vowel drop / resyllabification
+    MORPHOLOGICAL_CHANGE_DROPS_SHORT_VOWEL = auto()
+    DROPPING_VOWEL_BREAKS_ALLOWED_SYLLABLE_PATTERN = auto()
+    SEGMENT_REQUIRES_OPENING = auto()
+    PATTERN_OR_LINKING_REQUIRES_MOVEMENT = auto()
+    SEGMENT_REQUIRES_BACK_ROUNDING = auto()
+    SEGMENT_REQUIRES_FRONTING = auto()
+    # Root / augment classification
+    SEGMENT_FUNCTIONS_AS_AUGMENTATIVE_MARKER = auto()
+    ROOT_SLOTS_IDENTIFIED_INDEPENDENTLY = auto()
+    LEXICON_CONFIRMS_SEGMENT_IS_ROOT_MEMBER = auto()
+    CONTEXT_FAVORS_AUGMENTATIVE_READING = auto()
+    PATTERN_REQUIRES_NON_ROOT_FUNCTION = auto()
+    LEXICON_CONFIRMS_ROOT_STATUS = auto()
+    SEGMENT_REQUIRED_FOR_ROOT_IDENTITY = auto()
+    # Glide-as-augment
+    WAAW_FUNCTIONS_AS_NON_ROOT_INCREMENT = auto()
+    PATTERN_SUPPORTS_INCREMENTAL_ROLE = auto()
+    ROOT_MEMBERSHIP_OF_WAAW_PROVEN = auto()
+    YAA_FUNCTIONS_AS_NON_ROOT_INCREMENT = auto()
+    ROOT_MEMBERSHIP_OF_YAA_PROVEN = auto()
+    # Pause / waqf
+    WORD_FINAL_POSITION = auto()
+    PAUSE_MODE_ENABLED = auto()
+    WEAK_FINAL_STRUCTURE_COMPRESSIBLE = auto()
+    # Surface deletion
+    SURFACE_DELETION_ALLOWED = auto()
+    DEEP_RECOVERABILITY_PRESERVED = auto()
+    ROOT_IDENTITY_COLLAPSES = auto()
+    # Causal
+    EXTERNAL_TRANSFORMER_APPEARS = auto()
+    EFFECT_MOVES_BEYOND_ACTOR = auto()
+    EXTERNAL_TRANSFORMER_REMOVED = auto()
+    EFFECT_COLLAPSES_BACK_TO_SUBJECT = auto()
+    # Temporal / existential
+    ABSTRACT_EVENT_LINKED_TO_TIME_REFERENCE = auto()
+    TIME_REFERENCE_REMOVED = auto()
+    TEMPORAL_OPERATOR_APPLIED = auto()
+    EXISTENTIAL_STATE_BOUND_TO_TIME = auto()
+    TEMPORAL_OPERATOR_REMOVED = auto()
