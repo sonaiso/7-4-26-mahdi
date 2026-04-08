@@ -12,8 +12,12 @@ from typing import FrozenSet, List, Optional, Tuple
 
 from .enums import (
     POS,
+    CombinationType,
     ConstraintType,
     DalalaType,
+    ElementClass,
+    ElementFunction,
+    ElementLayer,
     FunctionRole,
     GuidanceState,
     IrabCase,
@@ -23,6 +27,7 @@ from .enums import (
     PhonFeature,
     PhonGroup,
     PhonTransform,
+    ProofStatus,
     SemanticType,
     SpaceRef,
     SyllablePosition,
@@ -31,6 +36,7 @@ from .enums import (
     TransitionLaw,
     TransitionType,
     TruthState,
+    UnicodeProfileType,
 )
 
 # ── Signifier layer ─────────────────────────────────────────────────
@@ -380,3 +386,116 @@ class TransitionResult:
     total_cost: float                 # = loss_root + loss_pattern + phonetic_burden
     conditions_met: FrozenSet[TransitionCondition]
     notes: str = ""                   # optional diagnostic string
+
+
+# ── AEU — Alphabetic Encoding Unit (وحدة الترميز الأبجدي) ────────────
+
+@dataclass(frozen=True)
+class AEU:
+    """Alphabetic Encoding Unit — وحدة الترميز الأبجدي.
+
+    Implements the Minimal Complete form::
+
+        AMU = (R, B, N, G, E)
+
+    where:
+
+    ===  ====================  ======================================
+    R    referent              الدلالة الوظيفية — functional referent
+    B    boundary              الحد الفاصل — distinguishing boundary
+    N    necessity             الضرورة — necessity in the system
+    G    governing_role        الدور الحاكم — governing role
+    E    unicode_codepoint     هوية الترميز — encoding identity
+    ===  ====================  ======================================
+
+    Extended to the full 16-field periodic-table form::
+
+        AEU = {ID, Name, Class, Function, Referent, Boundary,
+               Necessity, Governing_Role, Layer, Combination_Type,
+               Math_Form, Unicode_Codepoint, Unicode_Profile,
+               Depends_On, Unlocks, Proof_Status}
+
+    The ``math_form`` is an 8-position binary vector in ``{0,1}⁸``::
+
+        (base_letter, vowel_marker, short, long,
+         closure, gemination, indefiniteness, special_mark)
+
+    making every element a computable point in ``{0,1}⁸ ⊆ ℕ⁸``.
+    """
+
+    element_id: str                       # e.g. "AE_001"
+    element_name: str                     # e.g. "Hamza"
+    element_class: ElementClass           # صنف العنصر
+    element_function: ElementFunction     # الوظيفة الحاكمة
+    referent: str                         # الدلالة الوظيفية
+    boundary: str                         # الحد الفاصل
+    necessity: str                        # الضرورة
+    governing_role: str                   # governing role (English label)
+    layer: ElementLayer                   # الطبقة
+    combination_type: CombinationType     # نمط الاتحاد
+    math_form: Tuple[int, ...]            # 8-bit binary vector
+    unicode_codepoint: int                # Unicode code-point
+    unicode_profile: UnicodeProfileType   # نوع التمثيل الرقمي
+    depends_on: Tuple[str, ...]           # proof dependency IDs
+    unlocks: Tuple[str, ...]              # capabilities this element unlocks
+    proof_status: ProofStatus             # حالة البرهان
+
+    @property
+    def char(self) -> str:
+        """Unicode character for this alphabetic unit."""
+        return chr(self.unicode_codepoint)
+
+    @property
+    def math_vector(self) -> Tuple[int, int, int, int, int, int, int, int]:
+        """The 8-bit math_form as a fixed-length tuple.
+
+        Position mapping::
+
+            0: base_letter     — element is a base consonant / long vowel
+            1: vowel_marker    — element is a short vowel diacritic
+            2: short           — element has a short-vowel feature
+            3: long            — element has a long-vowel / length feature
+            4: closure         — element marks syllable closure
+            5: gemination      — element marks gemination / doubling
+            6: indefiniteness  — element marks indefiniteness (nunation)
+            7: special_mark    — element is a special / composite mark
+        """
+        return (
+            self.math_form[0],
+            self.math_form[1],
+            self.math_form[2],
+            self.math_form[3],
+            self.math_form[4],
+            self.math_form[5],
+            self.math_form[6],
+            self.math_form[7],
+        )
+
+    def is_proven(self) -> bool:
+        """Return ``True`` when ``proof_status`` is :attr:`ProofStatus.PROVEN`."""
+        return self.proof_status is ProofStatus.PROVEN
+
+    def to_row(self) -> dict:
+        """Return a periodic-table row as a plain :class:`dict`.
+
+        The returned dictionary has the 16 canonical columns of the
+        Alphabetic Periodic Table as defined in the architecture spec.
+        """
+        return {
+            "Element_ID": self.element_id,
+            "Name": self.element_name,
+            "Class": self.element_class.name,
+            "Function": self.element_function.name,
+            "Referent": self.referent,
+            "Boundary": self.boundary,
+            "Necessity": self.necessity,
+            "Governing_Role": self.governing_role,
+            "Layer": self.layer.name,
+            "Combination_Type": self.combination_type.name,
+            "Math_Form": self.math_form,
+            "Unicode_Codepoint": f"U+{self.unicode_codepoint:04X}",
+            "Unicode_Profile": self.unicode_profile.name,
+            "Depends_On": self.depends_on,
+            "Unlocks": self.unlocks,
+            "Proof_Status": self.proof_status.name,
+        }

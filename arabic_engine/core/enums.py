@@ -339,3 +339,81 @@ class FunctionRole(Enum):
     DEFINITENESS = auto()   # أداة تعريف  — definiteness particle
     PRONOUN = auto()        # ضمير       — pronominal clitic
     UNKNOWN = auto()        # غير محدد   — undetermined
+
+
+# ── AEU — Alphabetic Encoding Unit (وحدة الترميز الأبجدي) ────────────
+# Implements the Master Minimal Alphabetic Encoding Architecture:
+#   AMU = (R, B, N, G, E)
+# extended to the full periodic-table 7-axis form.
+
+class ElementClass(Enum):
+    """Structural class of an alphabetic encoding element (صنف العنصر).
+
+    Axis 1 of the Alphabetic Periodic Table.
+    """
+    BASE_LETTER = auto()              # حرف أساسي — consonant / semi-vowel
+    VOWEL_MARKER = auto()             # علامة صائتة — short vowel diacritic
+    STRUCTURAL_MARKER = auto()        # علامة بنيوية — sukun / shadda / tanwin
+    COMPOSITE_DECISION_UNIT = auto()  # وحدة قرار مركبة — hamza
+    CARRIER_RELATED_UNIT = auto()     # وحدة حامل — superscript alef etc.
+
+
+class ElementLayer(Enum):
+    """Layer in the orthographic-phonological architecture (الطبقة).
+
+    Axis 2 of the Alphabetic Periodic Table.
+    """
+    PHONOLOGICAL = auto()   # صوتي  — phonological layer
+    ORTHOGRAPHIC = auto()   # كتابي — orthographic layer
+    STRUCTURAL = auto()     # بنيوي — structural / diacritic layer
+    ENCODING = auto()       # ترميزي — pure encoding layer
+    MIXED = auto()          # مختلط — multi-layer element
+
+
+class ElementFunction(Enum):
+    """Governing function of the element in the encoding system (الوظيفة الحاكمة).
+
+    Axis 3 of the Alphabetic Periodic Table.
+    """
+    IDENTITY_BEARING = auto()       # حامل هوية — carries consonant identity
+    MOTION_BEARING = auto()         # حامل حركة — marks vocalic motion
+    CLOSURE_BEARING = auto()        # حامل إغلاق — marks syllable closure
+    LENGTH_BEARING = auto()         # حامل إطالة — marks vowel length
+    DUPLICATION_BEARING = auto()    # حامل تضعيف — marks gemination
+    INDEFINITENESS_BEARING = auto() # حامل تنكير — marks indefiniteness
+    SEAT_BEARING = auto()           # حامل كرسي — hamza seat function
+    ENCODING_BEARING = auto()       # حامل ترميز — orthographic encoding unit
+
+
+class CombinationType(Enum):
+    """How the element combines with others in the structure (نمط الاتحاد).
+
+    Axis 4 of the Alphabetic Periodic Table.
+    """
+    STANDALONE = auto()          # مستقل — free-standing letter
+    ATTACHES_TO_BASE = auto()    # يلتصق بالقاعدة — diacritic on base letter
+    CLUSTER_INTERNAL = auto()    # داخل المجموعة — inside grapheme cluster
+    CONTEXT_DEPENDENT = auto()   # حسب السياق — position-sensitive
+    SEQUENCE_LEVEL = auto()      # على مستوى التسلسل — multi-codepoint sequence
+
+
+class UnicodeProfileType(Enum):
+    """Unicode encoding profile of the element (نوع التمثيل الرقمي).
+
+    Axis 6 of the Alphabetic Periodic Table.
+    """
+    SINGLE_CODE_POINT = auto()    # نقطة رمز واحدة — one base code-point
+    COMBINING_MARK = auto()       # علامة ضم — combining / diacritic mark
+    SEQUENCE = auto()             # تسلسل — multi-codepoint sequence
+    CONTEXTUAL_RENDERING = auto() # عرض سياقي — context-sensitive rendering
+
+
+class ProofStatus(Enum):
+    """Proof-theoretic status of the element's inclusion (حالة البرهان).
+
+    Axis 7 of the Alphabetic Periodic Table.
+    """
+    PROVEN = auto()    # مبرهن — fully proven and stable
+    PENDING = auto()   # معلق  — proof incomplete / in progress
+    COMPOSITE = auto() # مركب  — composed of multiple proof units
+    DERIVED = auto()   # مشتق  — derived from another proven element

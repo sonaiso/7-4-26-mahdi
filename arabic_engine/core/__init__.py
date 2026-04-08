@@ -16,10 +16,22 @@ from .enums import (
     POS as POS,
 )
 from .enums import (
+    CombinationType as CombinationType,
+)
+from .enums import (
     ConstraintType as ConstraintType,
 )
 from .enums import (
     DalalaType as DalalaType,
+)
+from .enums import (
+    ElementClass as ElementClass,
+)
+from .enums import (
+    ElementFunction as ElementFunction,
+)
+from .enums import (
+    ElementLayer as ElementLayer,
 )
 from .enums import (
     GuidanceState as GuidanceState,
@@ -46,6 +58,9 @@ from .enums import (
     PhonTransform as PhonTransform,
 )
 from .enums import (
+    ProofStatus as ProofStatus,
+)
+from .enums import (
     SemanticType as SemanticType,
 )
 from .enums import (
@@ -56,6 +71,12 @@ from .enums import (
 )
 from .enums import (
     TruthState as TruthState,
+)
+from .enums import (
+    UnicodeProfileType as UnicodeProfileType,
+)
+from .types import (
+    AEU as AEU,
 )
 from .types import (
     Concept as Concept,

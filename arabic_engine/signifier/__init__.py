@@ -13,6 +13,9 @@ Public sub-modules
 * :mod:`arabic_engine.signifier.transition` — قانون الانتقال بين الخانات:
   formal cell-transition engine with matrix, stability check, and
   optimality-driven transition solver.
+* :mod:`arabic_engine.signifier.aeu` — Master Minimal Alphabetic Encoding
+  Architecture: AEU periodic table of all Arabic orthographic elements
+  (جدول دوري لنظام الترميز الأبجدي).
 """
 
 __all__ = [
@@ -21,4 +24,5 @@ __all__ = [
     "root_pattern",
     "dmin",
     "transition",
+    "aeu",
 ]
