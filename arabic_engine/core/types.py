@@ -14,6 +14,7 @@ from .enums import (
     POS,
     ConstraintType,
     DalalaType,
+    FunctionRole,
     GuidanceState,
     IrabCase,
     IrabRole,
@@ -24,7 +25,11 @@ from .enums import (
     PhonTransform,
     SemanticType,
     SpaceRef,
+    SyllablePosition,
     TimeRef,
+    TransitionCondition,
+    TransitionLaw,
+    TransitionType,
     TruthState,
 )
 
@@ -293,3 +298,85 @@ class DMin:
             self.feature_mask,
             self.transform_mask,
         )
+
+
+# ── Transition Engine — قانون الانتقال بين الخانات ──────────────────
+
+@dataclass(frozen=True)
+class TransitionContext:
+    """السياق الذي يحكم الانتقال — contextual inputs to the transition function.
+
+    Implements the parameters of::
+
+        T_r(E) = f(P, N, F, W, Ec, M)
+
+    ============  ========================  ===================================
+    Parameter      Field                    Description
+    ============  ========================  ===================================
+    P              position                 syllable position of the element
+    N              left_neighbor /          adjacent DMin units (or None)
+                   right_neighbor
+    F              function_role            morpho-syntactic role
+    W              pattern                  prosodic / morphological pattern
+    Ec             economy_pressure         phonetic economy demand (0–1)
+    M              architecture             macro-architecture type label
+    ============  ========================  ===================================
+    """
+
+    position: SyllablePosition
+    function_role: FunctionRole
+    left_neighbor: Optional["DMin"] = None   # type: ignore[name-defined]
+    right_neighbor: Optional["DMin"] = None  # type: ignore[name-defined]
+    pattern: str = ""                        # e.g. "فَعَلَ", "اسْتَفْعَلَ"
+    economy_pressure: float = 0.0            # 0 = none, 1 = maximum
+    architecture: str = ""                   # e.g. "مجرد", "مزيد", "مشتق"
+
+
+@dataclass(frozen=True)
+class TransitionRule:
+    """قاعدة انتقال واحدة — a single row in the formal transition matrix.
+
+    Represents a directed transition::
+
+        from_category [from_features] → to_category [to_features]
+        | law | transition_type | conditions | priority | example
+
+    A rule is *applicable* to an element E in context C when:
+      * E.category matches ``from_category`` (None = any)
+      * E.features ⊇ ``required_features``
+      * the transition law is compatible with C
+    """
+
+    law: TransitionLaw
+    transition_type: TransitionType
+    from_category: Optional[PhonCategory]                # None = any category
+    required_features: FrozenSet[PhonFeature]            # features element must have
+    to_category: PhonCategory                            # target cell category
+    resulting_transform: PhonTransform                   # transform that fires
+    conditions: FrozenSet[TransitionCondition]
+    priority: int                                        # lower = higher precedence
+    description_ar: str                                  # Arabic description
+    example: str                                         # canonical Arabic example
+
+
+@dataclass
+class TransitionResult:
+    """نتيجة تطبيق قانون الانتقال — result of the transition engine.
+
+    The optimality criterion applied is::
+
+        E_new = ArgMin(loss_root, loss_pattern, phonetic_burden)
+        subject to: E_new ∈ Nearest_Valid_Functional_Cell
+    """
+
+    source_unicode: int               # codepoint of the original element
+    applied_rule: Optional[TransitionRule]  # the winning rule (None = stable)
+    stable: bool                      # True if no transition occurred
+    target_category: Optional[PhonCategory]  # new cell category (None = deleted)
+    surface_form: str                 # resulting surface character(s)
+    loss_root: float                  # cost: root integrity loss ∈ [0, 1]
+    loss_pattern: float               # cost: pattern integrity loss ∈ [0, 1]
+    phonetic_burden: float            # cost: articulatory burden ∈ [0, 1]
+    total_cost: float                 # = loss_root + loss_pattern + phonetic_burden
+    conditions_met: FrozenSet[TransitionCondition]
+    notes: str = ""                   # optional diagnostic string
