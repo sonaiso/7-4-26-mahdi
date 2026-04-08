@@ -516,3 +516,77 @@ class ConditionToken(Enum):
     TEMPORAL_OPERATOR_APPLIED = auto()
     EXISTENTIAL_STATE_BOUND_TO_TIME = auto()
     TEMPORAL_OPERATOR_REMOVED = auto()
+
+
+# ── AEU Periodic-Table enums ────────────────────────────────────────
+
+class ElementClass(Enum):
+    """تصنيف العنصر — structural class of an alphabetic encoding unit."""
+    BASE_LETTER = auto()              # حرف أساسي
+    VOWEL_MARKER = auto()             # علامة حركة
+    STRUCTURAL_MARKER = auto()        # علامة بنيوية
+    CARRIER_RELATED_UNIT = auto()     # وحدة مرتبطة بحامل
+    COMPOSITE_DECISION_UNIT = auto()  # وحدة قرار مركبة
+
+
+class ElementLayer(Enum):
+    """طبقة العنصر — the architectural layer an AEU belongs to."""
+    PHONOLOGICAL = auto()   # صوتية
+    ORTHOGRAPHIC = auto()   # كتابية
+    STRUCTURAL = auto()     # بنيوية
+    MIXED = auto()          # مختلطة
+
+
+class ElementFunction(Enum):
+    """وظيفة العنصر — the functional role an AEU carries."""
+    IDENTITY_BEARING = auto()        # حامل هوية
+    MOTION_BEARING = auto()          # حامل حركة
+    LENGTH_BEARING = auto()          # حامل طول
+    CLOSURE_BEARING = auto()         # حامل إغلاق
+    DUPLICATION_BEARING = auto()     # حامل تضعيف
+    INDEFINITENESS_BEARING = auto()  # حامل تنكير
+    ENCODING_BEARING = auto()        # حامل ترميز
+
+
+class CombinationType(Enum):
+    """نوع الاندماج — how an AEU combines with neighbours."""
+    STANDALONE = auto()         # مستقل
+    ATTACHES_TO_BASE = auto()   # يلتصق بالأساس
+    CLUSTER_INTERNAL = auto()   # داخل عنقود
+    CONTEXT_DEPENDENT = auto()  # معتمد على السياق
+
+
+class UnicodeProfileType(Enum):
+    """نوع الملف الموحد — Unicode rendering profile of an AEU."""
+    SINGLE_CODE_POINT = auto()    # نقطة رمز واحدة
+    COMBINING_MARK = auto()       # علامة تجميعية
+    CONTEXTUAL_RENDERING = auto() # عرض سياقي
+
+
+class ProofStatus(Enum):
+    """حالة الإثبات — proof/verification status of an AEU."""
+    PROVEN = auto()     # مُثبَت
+    PENDING = auto()    # قيد الإثبات
+    COMPOSITE = auto()  # مُركَّب
+
+
+# ── Axiom-layer enums (الأصول الخمسة) ────────────────────────────────
+
+class SlotState(Enum):
+    """حالة الموضع — state of a structural slot (A1/A2)."""
+    EMPTY = auto()      # فارغ قابل للامتلاء
+    OCCUPIED = auto()   # مشغول بموجب أول
+    BLOCKED = auto()    # محجوب بنيويًا
+
+
+class OntologicalLayer(Enum):
+    """الطبقة الوجودية — ontological rank for layer promotion (A4).
+
+    Encodes the hierarchy: cell → transition → syllable → root → pattern.
+    Each level requires the previous to be complete before promotion.
+    """
+    CELL = auto()        # خانة — atomic phonological cell
+    TRANSITION = auto()  # انتقال — directed transition between cells
+    SYLLABLE = auto()    # مقطع — syllable-level grouping
+    ROOT = auto()        # جذر — root-level abstraction
+    PATTERN = auto()     # وزن — morphological pattern

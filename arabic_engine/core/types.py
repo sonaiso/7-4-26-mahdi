@@ -13,9 +13,13 @@ from typing import FrozenSet, List, Optional, Tuple
 from .enums import (
     POS,
     CellType,
+    CombinationType,
     ConditionToken,
     ConstraintType,
     DalalaType,
+    ElementClass,
+    ElementFunction,
+    ElementLayer,
     EvidenceType,
     FunctionRole,
     FuncTransitionClass,
@@ -23,12 +27,15 @@ from .enums import (
     IrabCase,
     IrabRole,
     MafhumType,
+    OntologicalLayer,
     PhonCategory,
     PhonFeature,
     PhonGroup,
     PhonTransform,
+    ProofStatus,
     ReversibleValue,
     SemanticType,
+    SlotState,
     SpaceRef,
     SyllablePosition,
     TimeRef,
@@ -430,3 +437,247 @@ class FunctionalTransitionRecord:
     deep_form: str
     evidence_type: Optional[EvidenceType] = None
     notes: str = ""
+
+
+# ── AEU — Alphabetic Encoding Unit ─────────────────────────────────
+
+@dataclass(frozen=True)
+class AEU:
+    """وحدة الترميز الأبجدي — a single entry in the AEU periodic table.
+
+    Implements the 16-field record::
+
+        AEU = {ID, Name, Class, Function, Referent, Boundary, Necessity,
+               Governing_Role, Layer, Combination_Type, Math_Form,
+               Unicode_Codepoint, Unicode_Profile, Depends_On, Unlocks,
+               Proof_Status}
+
+    The ``math_form`` is an 8-position binary vector ``{0,1}⁸``.
+    """
+
+    element_id: str                            # e.g. "AE_001"
+    element_name: str                          # e.g. "Hamza"
+    element_class: ElementClass
+    element_function: ElementFunction
+    referent: str                              # الدلالة الوظيفية
+    boundary: str                              # الحد الفاصل
+    necessity: str                             # الضرورة
+    governing_role: str                        # الدور الحاكم
+    layer: ElementLayer
+    combination_type: CombinationType
+    math_form: Tuple[int, ...]                 # 8-bit binary vector
+    unicode_codepoint: int
+    unicode_profile: UnicodeProfileType
+    depends_on: Tuple[str, ...] = ()
+    unlocks: Tuple[str, ...] = ()
+    proof_status: ProofStatus = ProofStatus.PENDING
+
+    @property
+    def char(self) -> str:
+        """Unicode character for this element."""
+        return chr(self.unicode_codepoint)
+
+    @property
+    def math_vector(self) -> Tuple[int, ...]:
+        """The 8-position binary math form vector."""
+        return self.math_form
+
+    def is_proven(self) -> bool:
+        """Return True if the element's proof status is PROVEN."""
+        return self.proof_status is ProofStatus.PROVEN
+
+    def to_row(self) -> dict:
+        """Serialise to a flat dictionary suitable for tabular display.
+
+        Returns the 16 canonical columns with Pascal_Case keys::
+
+            Element_ID, Name, Class, Function, Referent, Boundary,
+            Necessity, Governing_Role, Layer, Combination_Type,
+            Math_Form, Unicode_Codepoint, Unicode_Profile,
+            Depends_On, Unlocks, Proof_Status
+        """
+        return {
+            "Element_ID": self.element_id,
+            "Name": self.element_name,
+            "Class": self.element_class.name,
+            "Function": self.element_function.name,
+            "Referent": self.referent,
+            "Boundary": self.boundary,
+            "Necessity": self.necessity,
+            "Governing_Role": self.governing_role,
+            "Layer": self.layer.name,
+            "Combination_Type": self.combination_type.name,
+            "Math_Form": self.math_form,
+            "Unicode_Codepoint": f"U+{self.unicode_codepoint:04X}",
+            "Unicode_Profile": self.unicode_profile.name,
+            "Depends_On": self.depends_on,
+            "Unlocks": self.unlocks,
+            "Proof_Status": self.proof_status.name,
+        }
+
+
+# ── Axiom Types — الأصول الخمسة ─────────────────────────────────────
+
+# A1/A2 — أصل الموضع الصفري والتحقق الموجب الأول
+
+@dataclass(frozen=True)
+class ZeroSlotRecord:
+    """الموضع الصفري البنيوي — a structural zero-slot (A1) that can admit
+    a first positive occupancy (A2).
+
+    Implements the axioms::
+
+        A1. ∃z (ZeroSlot(z) ∧ Fillable(z))
+        A2. ∀z (ZeroSlot(z) ∧ Fillable(z) → ∃x Occupies(x,z))
+
+    And the consequence::
+
+        C1. ZeroSlot ≠ ∅   (the zero-slot is not absolute nothingness)
+        C2. OneBase = FirstPositiveOccupancy(ZeroSlot)
+
+    Fields
+    ------
+    slot_id             unique identifier (e.g. ``"ZS_001"``)
+    label               human-readable name (Arabic or English)
+    state               current state — EMPTY, OCCUPIED, or BLOCKED
+    layer               ontological layer this slot belongs to
+    occupant_id         identifier of the first positive occupancy
+                        (``None`` while the slot is empty)
+    parent_cell         optional :class:`CellType` this slot is attached to
+    constraint_token    the :class:`ConditionToken` that gates filling
+                        (``None`` if unconstrained)
+    notes               free-text annotation
+    """
+
+    slot_id: str
+    label: str
+    state: SlotState
+    layer: OntologicalLayer
+    occupant_id: Optional[str] = None
+    parent_cell: Optional[CellType] = None
+    constraint_token: Optional[ConditionToken] = None
+    notes: str = ""
+
+    # ── Derived properties ──────────────────────────────────────────
+
+    @property
+    def is_fillable(self) -> bool:
+        """A1 — the slot is structurally fillable (not blocked)."""
+        return self.state is not SlotState.BLOCKED
+
+    @property
+    def is_occupied(self) -> bool:
+        """A2 — a first positive occupancy has been realised."""
+        return self.state is SlotState.OCCUPIED and self.occupant_id is not None
+
+    @property
+    def is_zero(self) -> bool:
+        """C1 — the slot is empty-but-fillable (≠ ∅)."""
+        return self.state is SlotState.EMPTY
+
+
+# A3 — أصل التمييز الثلاثي
+
+@dataclass(frozen=True)
+class TriadicBlockRecord:
+    """كتلة ثلاثية — a triadic distinction block (A3).
+
+    Implements the axiom::
+
+        A3. CompleteDistinction(x, y) → ∃t ≠ x, y
+            MinimalCompleteDistinction = 3
+
+    And the consequence::
+
+        C3. PairOnly(x, y) → IncompleteRankJudgment
+
+    A ``TriadicBlockRecord`` sits *above* a binary transition (which has
+    only ``source`` and ``target``) and adds a third ``apex`` element
+    that completes the minimal distinction.
+
+    Fields
+    ------
+    block_id            unique identifier (e.g. ``"TB_001"``)
+    apex                the third, completing element identifier
+    left                first element of the base pair
+    right               second element of the base pair
+    layer               ontological layer of the block
+    complete            whether the triadic distinction is satisfied
+    governing_transition
+                        optional ``Transition_ID`` that this block extends
+    notes               free-text annotation
+    """
+
+    block_id: str
+    apex: str
+    left: str
+    right: str
+    layer: OntologicalLayer
+    complete: bool = True
+    governing_transition: Optional[str] = None
+    notes: str = ""
+
+    # ── Derived properties ──────────────────────────────────────────
+
+    @property
+    def members(self) -> Tuple[str, str, str]:
+        """Return the ordered triple ``(apex, left, right)``."""
+        return (self.apex, self.left, self.right)
+
+    @property
+    def is_degenerate(self) -> bool:
+        """True if any two members coincide — violating A3."""
+        apex, left, right = self.members
+        return apex == left or apex == right or left == right
+
+
+# A4 — أصل الترقية الطبقية
+
+@dataclass(frozen=True)
+class LayerPromotionRule:
+    """قاعدة الترقية الطبقية — a layer-promotion rule (A4).
+
+    Implements the axiom::
+
+        A4. L_n ≢ L_{n+1}
+            Complete(x ∈ L_n) → RequiresHigherContext(x)
+
+    And the consequence::
+
+        C4. Letter → Requires(SyllabicOrHigherContext)
+
+    A ``LayerPromotionRule`` encodes an explicit promotion path from one
+    :class:`OntologicalLayer` to the next, together with a
+    :class:`ConditionToken` guard and an optional completeness check.
+
+    Fields
+    ------
+    rule_id             unique identifier (e.g. ``"LP_001"``)
+    source_layer        the starting layer
+    target_layer        the promoted layer (must be higher)
+    condition           :class:`ConditionToken` that gates promotion
+    description         human-readable description (Arabic or English)
+    requires_completeness
+                        whether the source must be complete before promotion
+    notes               free-text annotation
+    """
+
+    rule_id: str
+    source_layer: OntologicalLayer
+    target_layer: OntologicalLayer
+    condition: ConditionToken
+    description: str
+    requires_completeness: bool = True
+    notes: str = ""
+
+    # ── Derived properties ──────────────────────────────────────────
+
+    @property
+    def layer_gap(self) -> int:
+        """Number of ontological layers spanned by this promotion."""
+        return self.target_layer.value - self.source_layer.value
+
+    @property
+    def is_valid(self) -> bool:
+        """A4 — target layer must be strictly higher than source."""
+        return self.target_layer.value > self.source_layer.value
