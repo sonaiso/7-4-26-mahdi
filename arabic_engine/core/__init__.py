@@ -43,6 +43,9 @@ from .enums import (
     IrabRole as IrabRole,
 )
 from .enums import (
+    LinguisticZeroType as LinguisticZeroType,
+)
+from .enums import (
     MafhumType as MafhumType,
 )
 from .enums import (
@@ -80,6 +83,12 @@ from .enums import (
 )
 from .enums import (
     UnicodeProfileType as UnicodeProfileType,
+)
+from .enums import (
+    WordClass as WordClass,
+)
+from .enums import (
+    ZeroCoverage as ZeroCoverage,
 )
 from .types import (
     AEU as AEU,
@@ -139,7 +148,13 @@ from .types import (
     TriadicBlockRecord as TriadicBlockRecord,
 )
 from .types import (
+    WordZeroCoverageReport as WordZeroCoverageReport,
+)
+from .types import (
     WorldFact as WorldFact,
+)
+from .types import (
+    ZeroCoverageDetail as ZeroCoverageDetail,
 )
 from .types import (
     ZeroSlotRecord as ZeroSlotRecord,

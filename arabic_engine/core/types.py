@@ -26,6 +26,7 @@ from .enums import (
     GuidanceState,
     IrabCase,
     IrabRole,
+    LinguisticZeroType,
     MafhumType,
     OntologicalLayer,
     OntologicalMode,
@@ -47,6 +48,8 @@ from .enums import (
     TriadType,
     TruthState,
     UnicodeProfileType,
+    WordClass,
+    ZeroCoverage,
 )
 
 # ── Signifier layer ─────────────────────────────────────────────────
@@ -1155,3 +1158,58 @@ class EssenceConditionPair:
     def has_constraint(self) -> bool:
         """True when a realisation condition is attached."""
         return self.constraint is not None
+
+
+# ── Linguistic-Zero Coverage types ──────────────────────────────────
+
+
+@dataclass(frozen=True)
+class ZeroCoverageDetail:
+    """تفصيل تغطية الصفر — coverage status for a single zero-type axis.
+
+    Fields
+    ------
+    zero_type   the linguistic-zero axis (Z1–Z20)
+    coverage    whether the word covers, partially covers, or misses this axis
+    """
+
+    zero_type: LinguisticZeroType
+    coverage: ZeroCoverage
+
+    @property
+    def zero_code(self) -> str:
+        """Return the Z-code string, e.g. ``'Z1'``."""
+        return self.zero_type.name
+
+    @property
+    def zero_name(self) -> str:
+        """Return the Arabic name of this zero axis."""
+        return self.zero_type.arabic_name
+
+
+@dataclass(frozen=True)
+class WordZeroCoverageReport:
+    """تقرير تغطية الصفر اللغوي — full zero-coverage analysis for one word.
+
+    Fields
+    ------
+    word        surface form of the word (may be empty string for pure analysis)
+    word_class  morpho-semantic class (:class:`WordClass`)
+    pattern     morphological pattern string, e.g. ``'فاعل'`` (or ``''``)
+    root        tuple of root letters, e.g. ``('ك', 'ت', 'ب')`` (or empty)
+    covers      tuple of Z-codes fully covered by this word
+    partial     tuple of Z-codes partially covered
+    uncovered   tuple of Z-codes not covered at all
+    details     one :class:`ZeroCoverageDetail` per axis (Z1–Z20, in order)
+    notes       explanatory notes produced during analysis
+    """
+
+    word: str
+    word_class: WordClass
+    pattern: str
+    root: Tuple[str, ...]
+    covers: Tuple[str, ...]
+    partial: Tuple[str, ...]
+    uncovered: Tuple[str, ...]
+    details: Tuple[ZeroCoverageDetail, ...]
+    notes: Tuple[str, ...]

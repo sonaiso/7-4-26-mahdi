@@ -28,9 +28,11 @@ from arabic_engine.core.types import (
     Proposition,
     SyntaxNode,
     TimeSpaceTag,
+    WordZeroCoverageReport,
 )
 from arabic_engine.linkage.dalala import full_validation
 from arabic_engine.signified.ontology import batch_map
+from arabic_engine.signified.zero_coverage import analyze_word_zero_coverage
 from arabic_engine.signifier.root_pattern import batch_closure
 from arabic_engine.signifier.unicode_norm import normalize, tokenize
 from arabic_engine.syntax.syntax import analyse as syntax_analyse
@@ -59,6 +61,8 @@ class PipelineResult:
             Empty list when no inference engine was provided.
         world_adjustment: Confidence multiplier from the world model (L10).
             Defaults to ``0.5`` when no world model was provided.
+        word_zero_coverage: Per-token linguistic-zero coverage reports (L11).
+            Empty list when ``analyze_zeros=False`` (the default).
     """
 
     raw: str
@@ -73,6 +77,7 @@ class PipelineResult:
     eval_result: EvalResult
     inferences: List[InferenceResult] = field(default_factory=list)
     world_adjustment: float = 0.5
+    word_zero_coverage: List[WordZeroCoverageReport] = field(default_factory=list)
 
 
 # ── Pipeline ────────────────────────────────────────────────────────
@@ -82,10 +87,11 @@ def run(
     *,
     world: Optional[WorldModel] = None,
     inference_engine: Optional[InferenceEngine] = None,
+    analyze_zeros: bool = False,
 ) -> PipelineResult:
     """Execute the full v2 pipeline on *text*.
 
-    The pipeline runs eleven sequential layers (L0–L10):
+    The pipeline runs up to twelve sequential layers (L0–L11):
 
     * L0  — Unicode normalisation
     * L1  — Tokenisation
@@ -98,6 +104,7 @@ def run(
     * L8  — Truth and guidance evaluation
     * L9  — Inference rule application (optional)
     * L10 — World-model confidence adjustment (optional)
+    * L11 — Linguistic-zero coverage analysis (optional)
 
     Args:
         text: Raw Arabic input (may include tashkīl).
@@ -105,6 +112,9 @@ def run(
             When ``None``, the world-adjustment factor defaults to 0.5.
         inference_engine: A rule engine for deriving new propositions.
             When ``None``, the ``inferences`` list in the result is empty.
+        analyze_zeros: When ``True``, run L11 and populate
+            ``word_zero_coverage`` with one report per token.
+            Defaults to ``False``.
 
     Returns:
         A :class:`PipelineResult` containing the outputs of all pipeline
@@ -151,6 +161,11 @@ def run(
             eval_result.confidence * adjustment, 4
         )
 
+    # L11 — Linguistic-zero coverage (optional)
+    zero_coverage: List[WordZeroCoverageReport] = []
+    if analyze_zeros:
+        zero_coverage = [analyze_word_zero_coverage(tok) for tok in tokens]
+
     return PipelineResult(
         raw=text,
         normalised=normalised,
@@ -164,4 +179,5 @@ def run(
         eval_result=eval_result,
         inferences=inferences,
         world_adjustment=adjustment,
+        word_zero_coverage=zero_coverage,
     )

@@ -648,3 +648,87 @@ class RankType(Enum):
     LIMITAL = auto()        # حدّي — limit-dominant
     CAPACITIVE = auto()     # سعوي — capacity-dominant
     TRANSITIONAL = auto()   # انتقالي — balanced / transitional
+
+
+# ── Linguistic-Zero Coverage enums ──────────────────────────────────
+
+
+class WordClass(Enum):
+    """صنف الكلمة — morpho-semantic word class for zero-coverage analysis.
+
+    Used by the linguistic-zero decision matrix to select the base
+    coverage profile for a word before pattern hints are applied.
+    """
+    JAMID = auto()                 # جامد — frozen nominal
+    MASDAR = auto()                # مصدر — verbal noun / gerund
+    DERIVED = auto()               # مشتق — derived form (اسم فاعل، مفعول …)
+    REFERENTIAL_BUILTINS = auto()  # مبنيات إحالية — pronouns / demonstratives
+    RELATIONAL_TOOLS = auto()      # أدوات ربط — particles / prepositions
+    NOMINAL_COMPETENT = auto()     # متمكن اسمي — fully declined noun
+    VERBAL_COMPETENT = auto()      # متمكن فعلي — finite verb
+    VERBAL_COPULAR = auto()        # ناسخ فعلي — verbal copula (كان وأخواتها)
+    NOMINAL_COPULAR = auto()       # ناسخ اسمي — nominal copula (إن وأخواتها)
+
+
+class LinguisticZeroType(Enum):
+    """نوع الصفر اللغوي — the twenty axes of linguistic zero coverage.
+
+    Each member encodes one semantic/syntactic dimension that a word
+    may *cover*, *partially cover*, or *leave uncovered*.
+
+    Integer values are stable identifiers matching the Z-codes Z1–Z20.
+    """
+    Z1  = 1   # هوية اسمية
+    Z2  = 2   # كلي/جزئي
+    Z3  = 3   # معرفة/نكرة
+    Z4  = 4   # إحالة
+    Z5  = 5   # ربط
+    Z6  = 6   # حدث
+    Z7  = 7   # زمن
+    Z8  = 8   # مكان
+    Z9  = 9   # فاعلية
+    Z10 = 10  # مفعولية
+    Z11 = 11  # سببية
+    Z12 = 12  # مسببية
+    Z13 = 13  # تحول اشتقاقي
+    Z14 = 14  # وحدة/كثرة
+    Z15 = 15  # عد/معدود
+    Z16 = 16  # تذكير/تأنيث
+    Z17 = 17  # تمكن اسمي
+    Z18 = 18  # تمكن فعلي
+    Z19 = 19  # تحويل إسنادي
+    Z20 = 20  # توكيد/استدراك/ترجٍّ/تمنٍّ
+
+    @property
+    def arabic_name(self) -> str:
+        """Return the Arabic label for this zero type."""
+        _names = {
+            1: "هوية اسمية",
+            2: "كلي/جزئي",
+            3: "معرفة/نكرة",
+            4: "إحالة",
+            5: "ربط",
+            6: "حدث",
+            7: "زمن",
+            8: "مكان",
+            9: "فاعلية",
+            10: "مفعولية",
+            11: "سببية",
+            12: "مسببية",
+            13: "تحول اشتقاقي",
+            14: "وحدة/كثرة",
+            15: "عد/معدود",
+            16: "تذكير/تأنيث",
+            17: "تمكن اسمي",
+            18: "تمكن فعلي",
+            19: "تحويل إسنادي",
+            20: "توكيد/استدراك/ترجٍّ/تمنٍّ",
+        }
+        return _names[self.value]
+
+
+class ZeroCoverage(Enum):
+    """درجة التغطية — how well a word covers a linguistic-zero axis."""
+    COVERS = auto()     # يغطي — full coverage
+    PARTIAL = auto()    # جزئي — partial coverage
+    UNCOVERED = auto()  # لا يغطي — not covered
