@@ -647,3 +647,60 @@ class RankType(Enum):
     LIMITAL = auto()        # حدّي — limit-dominant
     CAPACITIVE = auto()     # سعوي — capacity-dominant
     TRANSITIONAL = auto()   # انتقالي — balanced / transitional
+
+
+# ── Symbolic Encoding — ترميز الحرف والحركة ─────────────────────────
+
+class UnitType(Enum):
+    """نوع الوحدة الرمزية — the type of a symbolic encoding unit.
+
+    Distinguishes letters (consonants/base units) from vowels
+    (operational/diacritical units).
+    """
+    LETTER = auto()     # حرف — consonant / base letter
+    VOWEL = auto()      # حركة — short vowel / diacritical modifier
+
+
+class SymbolicStatus(Enum):
+    """حالة الوحدة الرمزية — the structural status of a symbolic unit.
+
+    Implements the three-stage status model::
+
+        Representable   — Core(X) is well-formed (Slot ∧ Value)
+        Valid           — Core(X) ∧ Ω_X  (constraint satisfied)
+        Promotable      — Valid(X) ∧ P(X)  (ready for layer promotion)
+
+    =============  ===============================================
+    Status          Definition
+    =============  ===============================================
+    REPRESENTABLE   الماهية ثابتة — essence (slot + value) is defined
+    VALID           مُفعَّل — essence + constraint satisfied
+    PROMOTABLE      قابل للترقية — valid + promotion condition met
+    =============  ===============================================
+    """
+    REPRESENTABLE = auto()  # قابل للترميز — essence is well-formed
+    VALID = auto()          # صالح — essence + constraint satisfied
+    PROMOTABLE = auto()     # قابل للترقية — valid + promotion possible
+
+
+class ConstraintKind(Enum):
+    """نوع القيد — the kind of constraint gating a symbolic unit.
+
+    Constraints are *not* part of the unit's essence; they are
+    activation / acceptance / insertion / promotion conditions.
+
+    ===========  ==============================================
+    Kind          Description
+    ===========  ==============================================
+    POSITIONAL   قيد موضعي — position within the chain
+    ADJACENCY    قيد تجاوري — neighbour compatibility
+    CARRIER      قيد الحامل — requires a host consonant
+    SYLLABIC     قيد مقطعي — syllable-structure compatibility
+    LAYER        قيد طبقي — layer-promotion guard
+    ===========  ==============================================
+    """
+    POSITIONAL = auto()   # قيد موضعي — position-dependent
+    ADJACENCY = auto()    # قيد تجاوري — neighbour-dependent
+    CARRIER = auto()      # قيد الحامل — requires a carrier/host
+    SYLLABIC = auto()     # قيد مقطعي — syllable-structure guard
+    LAYER = auto()        # قيد طبقي — layer-promotion guard

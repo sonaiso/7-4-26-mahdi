@@ -15,6 +15,7 @@ from .enums import (
     CellType,
     CombinationType,
     ConditionToken,
+    ConstraintKind,
     ConstraintType,
     DalalaType,
     ElementClass,
@@ -40,6 +41,7 @@ from .enums import (
     SlotState,
     SpaceRef,
     SyllablePosition,
+    SymbolicStatus,
     TimeRef,
     TransitionCondition,
     TransitionLaw,
@@ -47,6 +49,7 @@ from .enums import (
     TriadType,
     TruthState,
     UnicodeProfileType,
+    UnitType,
 )
 
 # ── Signifier layer ─────────────────────────────────────────────────
@@ -900,3 +903,223 @@ class RankDecision:
     def requires_promotion(self) -> bool:
         """Law 5 — whether a promotion target is specified."""
         return self.promotion_target is not None
+
+
+# ── Symbolic Encoding — ترميز الحرف والحركة ─────────────────────────
+#
+# Implements the refined axiom:
+#
+#     Ess(x) = ⟨Slot(x), Value(x)⟩          — essence = position + value
+#     Cond(x) = Ω_x                          — constraint (external to essence)
+#     Valid(x) ⟺ Ess(x) ∧ Ω_x              — acceptance / activation
+#
+# The constraint is NOT an intrinsic part of the unit's essence.
+# It is an activation / acceptance / insertion / promotion condition.
+
+
+@dataclass(frozen=True)
+class SymbolicRecord:
+    """السجل الرمزي العام — Generic Symbolic Record.
+
+    The universal record for any linguistic encoding unit (letter or vowel).
+    Separates *essence* (Core) from *constraint* (Condition)::
+
+        X := (ID, Type, Slot, Value, Condition, Layer, Status)
+
+        Core(X)      = (Slot, Value)           — الجوهر
+        Condition(X)  = Ω_X                    — الشرط
+        Status(X)    = Representable | Valid | Promotable
+
+    Implements::
+
+        Ess(x)  = ⟨Slot, Value⟩
+        Valid(x) ⟺ Ess(x) ∧ Constraint
+
+    Fields
+    ------
+    record_id           unique identifier (e.g. ``"SR_001"``)
+    unit_type           LETTER or VOWEL
+    slot_position       positional encoding (scriptural / phonetic / chain)
+    slot_label          human-readable slot description
+    value_vector        numeric value tuple (identity, features, effects)
+    value_label         human-readable value description
+    constraints         frozenset of active constraint kinds
+    constraint_omega    constraint weight Ω ∈ [0, 1]; 0 = blocked, 1 = open
+    layer               ontological layer
+    status              current symbolic status
+    notes               free-text annotation
+    """
+
+    record_id: str
+    unit_type: UnitType
+    slot_position: int
+    slot_label: str
+    value_vector: Tuple[int, ...]
+    value_label: str
+    constraints: FrozenSet[ConstraintKind] = field(default_factory=frozenset)
+    constraint_omega: float = 1.0
+    layer: OntologicalLayer = OntologicalLayer.CELL
+    status: SymbolicStatus = SymbolicStatus.REPRESENTABLE
+    notes: str = ""
+
+    # ── Core (الجوهر) ──────────────────────────────────────────────
+
+    @property
+    def core(self) -> Tuple[int, Tuple[int, ...]]:
+        """Core(X) = (Slot, Value) — the essence of this unit.
+
+        Returns ``(slot_position, value_vector)`` — everything that
+        defines **what** the unit is, independent of contextual
+        constraints.
+        """
+        return (self.slot_position, self.value_vector)
+
+    # ── Essence predicates ─────────────────────────────────────────
+
+    @property
+    def is_representable(self) -> bool:
+        """Representable ⟺ Core(X) is well-formed.
+
+        A unit is representable when it has a valid slot position
+        (≥ 0) and a non-empty value vector.
+        """
+        return self.slot_position >= 0 and len(self.value_vector) > 0
+
+    # ── Constraint predicate ───────────────────────────────────────
+
+    @property
+    def constraint_satisfied(self) -> bool:
+        """Ω_X — the constraint is satisfied (non-zero weight)."""
+        return self.constraint_omega > 0.0
+
+    # ── Validation ─────────────────────────────────────────────────
+
+    @property
+    def is_valid(self) -> bool:
+        """Valid(X) ⟺ Core(X) ∧ Ω_X.
+
+        The unit is structurally valid when its essence is well-formed
+        **and** the external constraint is satisfied.
+        """
+        return self.is_representable and self.constraint_satisfied
+
+    # ── Match / Containment / Usability ────────────────────────────
+
+    @property
+    def match(self) -> bool:
+        """M(x) = Match(S_x) — the unit occupies its proper slot."""
+        return self.is_representable
+
+    @property
+    def containment(self) -> bool:
+        """T(x) = Containment(V_x) — the value is embeddable in a
+        higher structure."""
+        return self.is_representable
+
+    @property
+    def is_usable(self) -> bool:
+        """Usable(x) ⟺ M(x) ∧ T(x) ∧ Q(x).
+
+        The unit can be *used* in a structural context only when match,
+        containment, **and** the constraint condition are all true.
+        """
+        return self.match and self.containment and self.constraint_satisfied
+
+    def to_row(self) -> dict:
+        """Serialise to a flat dictionary suitable for tabular display."""
+        return {
+            "Record_ID": self.record_id,
+            "Unit_Type": self.unit_type.name,
+            "Slot_Position": self.slot_position,
+            "Slot_Label": self.slot_label,
+            "Value_Vector": self.value_vector,
+            "Value_Label": self.value_label,
+            "Constraints": tuple(sorted(c.name for c in self.constraints)),
+            "Constraint_Omega": self.constraint_omega,
+            "Layer": self.layer.name,
+            "Status": self.status.name,
+            "Core": self.core,
+            "Is_Valid": self.is_valid,
+            "Is_Usable": self.is_usable,
+        }
+
+
+@dataclass(frozen=True)
+class LetterRecord(SymbolicRecord):
+    """سجل ترميز الحرف — Letter Encoding Record.
+
+    Specialisation of :class:`SymbolicRecord` for consonants / base letters.
+
+    The essence of a letter::
+
+        Ess(L) = ⟨S_L, V_L⟩
+
+    where:
+        S_L — scriptural position, phonetic place, chain index
+        V_L — consonantal identity, feature vector, syllabic potential,
+              prosodic weight
+
+    The constraint::
+
+        C_L = Ω_L  (positional + adjacency + layer constraints)
+
+    Validation::
+
+        Valid(L) ⟺ ⟨S_L, V_L⟩ ∧ Ω_L = 1
+
+    Additional fields
+    -----------------
+    phonetic_group      phonetic articulation group (e.g. ``PhonGroup``)
+    syllabic_weight     maqta'i weight contribution (1–3)
+    """
+
+    phonetic_group: Optional[PhonGroup] = None
+    syllabic_weight: int = 1
+
+    def __post_init__(self) -> None:
+        """Ensure unit_type is LETTER."""
+        if self.unit_type is not UnitType.LETTER:
+            raise ValueError(
+                f"LetterRecord requires UnitType.LETTER, got {self.unit_type}"
+            )
+
+
+@dataclass(frozen=True)
+class VowelRecord(SymbolicRecord):
+    """سجل ترميز الحركة — Vowel Encoding Record.
+
+    Specialisation of :class:`SymbolicRecord` for short vowels / diacritics.
+
+    The essence of a vowel::
+
+        Ess(H) = ⟨S_H, V_H⟩
+
+    where:
+        S_H — dependent position (attached to a carrier / nucleus)
+        V_H — vocalic quality (fatha/damma/kasra), temporal effect,
+              syllabic effect, prosodic weight
+
+    The constraint::
+
+        C_H = Ω_H  (carrier + syllabic + layer constraints)
+
+    Validation::
+
+        Valid(H) ⟺ ⟨S_H, V_H⟩ ∧ Ω_H = 1
+
+    Additional fields
+    -----------------
+    carrier_id          identifier of the host consonant
+    is_long             whether the vowel is a long (madd) variant
+    """
+
+    carrier_id: Optional[str] = None
+    is_long: bool = False
+
+    def __post_init__(self) -> None:
+        """Ensure unit_type is VOWEL."""
+        if self.unit_type is not UnitType.VOWEL:
+            raise ValueError(
+                f"VowelRecord requires UnitType.VOWEL, got {self.unit_type}"
+            )
+
