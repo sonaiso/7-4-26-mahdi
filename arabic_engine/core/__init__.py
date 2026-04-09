@@ -12,7 +12,7 @@ re-exported here because it is a utility/verification module, not a data
 type.
 """
 
-from .enums import (  # noqa: F401 — intentional re-exports
+from .enums import (  # noqa: F401 -- intentional re-exports
     POS as POS,
 )
 from .enums import (
@@ -81,7 +81,7 @@ from .enums import (
 from .enums import (
     UnicodeProfileType as UnicodeProfileType,
 )
-from .types import (  # noqa: F401 — intentional re-exports
+from .types import (  # noqa: F401 -- intentional re-exports
     AEU as AEU,
 )
 from .types import (
