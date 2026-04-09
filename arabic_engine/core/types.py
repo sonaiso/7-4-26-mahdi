@@ -1055,7 +1055,7 @@ class ProofDependencyGraph:
 
     # ── Structural validation ──────────────────────────────────────
 
-    def _all_ids(self) -> frozenset:
+    def _all_ids(self) -> "frozenset[str]":
         """Return all axiom and theorem IDs."""
         ax_ids = frozenset(ax.axiom_id for ax in self.axioms)
         th_ids = frozenset(th.theorem_id for th in self.theorems)
@@ -1064,7 +1064,7 @@ class ProofDependencyGraph:
     def dangling_dependencies(self) -> Tuple[str, ...]:
         """Return dependency IDs that don't match any axiom or theorem."""
         known = self._all_ids()
-        dangling: list = []
+        dangling: "list[str]" = []
         for th in self.theorems:
             for dep in th.all_dependencies:
                 if dep not in known:
@@ -1078,8 +1078,8 @@ class ProofDependencyGraph:
         to theorem-to-theorem edges.
         """
         th_ids = [th.theorem_id for th in self.theorems]
-        adj: dict = {tid: [] for tid in th_ids}
-        in_deg: dict = {tid: 0 for tid in th_ids}
+        adj: "dict[str, list[str]]" = {tid: [] for tid in th_ids}
+        in_deg: "dict[str, int]" = {tid: 0 for tid in th_ids}
         for th in self.theorems:
             for dep in th.theorem_dependencies:
                 if dep in adj:

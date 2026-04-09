@@ -66,13 +66,13 @@ class TestOccupyZeroSlot:
         assert slot.state is SlotState.EMPTY
         assert slot.occupant_id is None
 
-    def test_filled_is_fillable_false(self) -> None:
-        """After occupation, is_fillable is still True (not BLOCKED),
-        but is_occupied is True."""
+    def test_filled_is_fillable_true(self) -> None:
+        """After occupation, is_fillable is still True because
+        is_fillable means 'not BLOCKED', not 'can accept new occupant'."""
         slot = self._empty_slot()
         filled = occupy_zero_slot(slot, "ELEM_001")
         assert filled.is_occupied is True
-        assert filled.is_fillable is True  # OCCUPIED ≠ BLOCKED
+        assert filled.is_fillable is True  # is_fillable means not BLOCKED
 
     def test_blocked_slot_raises(self) -> None:
         slot = ZeroSlotRecord(
