@@ -12,7 +12,7 @@ re-exported here because it is a utility/verification module, not a data
 type.
 """
 
-from .enums import (
+from .enums import (  # noqa: F401 — intentional re-exports
     POS as POS,
 )
 from .enums import (
@@ -81,7 +81,7 @@ from .enums import (
 from .enums import (
     UnicodeProfileType as UnicodeProfileType,
 )
-from .types import (
+from .types import (  # noqa: F401 — intentional re-exports
     AEU as AEU,
 )
 from .types import (
@@ -132,3 +132,48 @@ from .types import (
 from .types import (
     ZeroSlotRecord as ZeroSlotRecord,
 )
+
+__all__ = [
+    # enums
+    "POS",
+    "CombinationType",
+    "ConstraintType",
+    "DalalaType",
+    "ElementClass",
+    "ElementFunction",
+    "ElementLayer",
+    "GuidanceState",
+    "IrabCase",
+    "IrabRole",
+    "MafhumType",
+    "OntologicalLayer",
+    "PhonCategory",
+    "PhonFeature",
+    "PhonGroup",
+    "PhonTransform",
+    "ProofStatus",
+    "SemanticType",
+    "SlotState",
+    "SpaceRef",
+    "TimeRef",
+    "TruthState",
+    "UnicodeProfileType",
+    # types
+    "AEU",
+    "Concept",
+    "DalalaLink",
+    "DMin",
+    "EvalResult",
+    "Grapheme",
+    "InferenceResult",
+    "LayerPromotionRule",
+    "LexicalClosure",
+    "Proposition",
+    "RootPattern",
+    "Syllable",
+    "SyntaxNode",
+    "TimeSpaceTag",
+    "TriadicBlockRecord",
+    "WorldFact",
+    "ZeroSlotRecord",
+]
