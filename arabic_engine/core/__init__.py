@@ -12,7 +12,7 @@ re-exported here because it is a utility/verification module, not a data
 type.
 """
 
-from .enums import (
+from .enums import (  # noqa: F401 -- intentional re-exports
     POS as POS,
 )
 from .enums import (
