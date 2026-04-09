@@ -18,9 +18,23 @@ _next_fact_id = 0
 
 
 class WorldModel:
-    """An in-memory fact store representing the current world state."""
+    """An in-memory fact store representing the current world state.
+
+    The world model stores ground-truth :class:`~arabic_engine.core.types.WorldFact`
+    objects and exposes query methods used by the evaluation layer to raise
+    or lower confidence based on known reality.
+
+    Facts are indexed by *subject* string for O(1) subject-based lookups.
+
+    Example::
+
+        wm = WorldModel()
+        wm.add_fact("زَيْد", "كَتَبَ", "رِسَالَة", TruthState.CERTAIN)
+        fact = wm.matches(proposition)
+    """
 
     def __init__(self) -> None:
+        """Initialise an empty world model."""
         self._facts: Dict[int, WorldFact] = {}
         self._index: Dict[str, List[int]] = {}  # subject → fact_ids
 
@@ -34,7 +48,19 @@ class WorldModel:
         truth_state: TruthState = TruthState.CERTAIN,
         source: str = "axiom",
     ) -> WorldFact:
-        """Insert a new fact and return it."""
+        """Insert a new fact and return it.
+
+        Args:
+            subject: The subject of the fact (e.g. ``"زَيْد"``).
+            predicate: The predicate (e.g. ``"كَتَبَ"``).
+            obj: The object of the fact (e.g. ``"رِسَالَة"``).
+            truth_state: Epistemic status of the fact.  Defaults to
+                ``TruthState.CERTAIN``.
+            source: Provenance label (e.g. ``"axiom"``, ``"witness"``).
+
+        Returns:
+            The newly created :class:`~arabic_engine.core.types.WorldFact`.
+        """
         global _next_fact_id
         _next_fact_id += 1
         fact = WorldFact(
@@ -56,7 +82,17 @@ class WorldModel:
         subject: str,
         predicate: Optional[str] = None,
     ) -> List[WorldFact]:
-        """Return facts matching *subject* (and optionally *predicate*)."""
+        """Return facts matching *subject* (and optionally *predicate*).
+
+        Args:
+            subject: Subject string to look up in the index.
+            predicate: Optional predicate filter.  When provided, only
+                facts whose predicate equals this value are returned.
+
+        Returns:
+            A (possibly empty) list of matching
+            :class:`~arabic_engine.core.types.WorldFact` objects.
+        """
         ids = self._index.get(subject, [])
         results = [self._facts[fid] for fid in ids]
         if predicate is not None:
@@ -64,7 +100,15 @@ class WorldModel:
         return results
 
     def matches(self, proposition: Proposition) -> Optional[WorldFact]:
-        """Check if a proposition is supported by a known fact."""
+        """Check if a proposition is supported by a known fact.
+
+        Args:
+            proposition: The proposition to look up.
+
+        Returns:
+            The first matching :class:`~arabic_engine.core.types.WorldFact`
+            if found, or ``None`` when no matching fact exists.
+        """
         candidates = self.lookup(proposition.subject, proposition.predicate)
         for fact in candidates:
             if fact.obj == proposition.obj:
@@ -74,10 +118,21 @@ class WorldModel:
     def confidence_adjustment(self, proposition: Proposition) -> float:
         """Return a confidence multiplier based on world-model support.
 
-        • 1.0  if a matching fact is found and CERTAIN
-        • 0.8  if PROBABLE
-        • 0.5  if no evidence found
-        • 0.1  if contradicted
+        The multiplier is applied to the dalāla confidence score produced
+        by the evaluation layer.
+
+        Returns:
+            A float in ``[0.0, 1.0]`` according to the following table:
+
+            ============  ========  =================================
+            Match found?  State     Multiplier
+            ============  ========  =================================
+            Yes           CERTAIN   1.0
+            Yes           PROBABLE  0.8
+            Yes           FALSE     0.1 (contradicted)
+            Yes           Other     0.5
+            No            —         0.5 (no evidence)
+            ============  ========  =================================
         """
         fact = self.matches(proposition)
         if fact is None:
@@ -92,4 +147,10 @@ class WorldModel:
 
     @property
     def all_facts(self) -> List[WorldFact]:
+        """All facts currently held in the world model.
+
+        Returns:
+            A list of every :class:`~arabic_engine.core.types.WorldFact`
+            in insertion order.
+        """
         return list(self._facts.values())
