@@ -336,7 +336,7 @@ class TestSelectCoupling:
 
     def test_explicit_coupling_id(self):
         sig, sfd = self._pair()
-        rec = select_coupling(sig, sfd, DalalaType.DIRECT if False else DalalaType.MUTABAQA,
+        rec = select_coupling(sig, sfd, DalalaType.MUTABAQA,
                               coupling_id="CRP_CUSTOM")
         assert rec.coupling_id == "CRP_CUSTOM"
 

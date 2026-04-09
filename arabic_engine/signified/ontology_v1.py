@@ -53,17 +53,14 @@ _con_counter = 0
 _ont_counter = 0
 
 
-def _next_id(prefix: str, counter_name: str) -> str:
-    """Return the next sequential ID for *prefix*."""
+def _next_id(prefix: str, counter_name: str) -> str:  # noqa: ARG001
+    """Return the next sequential ID for *prefix*.
+
+    Supported prefixes and the global counter each one increments:
+      SIG → _sig_counter, SFD → _sfd_counter, CRP → _crp_counter,
+      CON → _con_counter, ONT → _ont_counter.
+    """
     global _sig_counter, _sfd_counter, _crp_counter, _con_counter, _ont_counter
-    mapping = {
-        "SIG": "_sig_counter",
-        "SFD": "_sfd_counter",
-        "CRP": "_crp_counter",
-        "CON": "_con_counter",
-        "ONT": "_ont_counter",
-    }
-    _ = mapping  # kept for documentation
     if prefix == "SIG":
         _sig_counter += 1
         return f"SIG_{_sig_counter:03d}"
@@ -126,8 +123,8 @@ _STYPE_TO_CONCEPTUAL: Dict[SemanticType, Optional[ConceptualSignifiedClass]] = {
     SemanticType.ENTITY: ConceptualSignifiedClass.ENTITY_CONCEPT,
     SemanticType.EVENT: ConceptualSignifiedClass.EVENT_CONCEPT,
     SemanticType.ATTRIBUTE: ConceptualSignifiedClass.PROPERTY_CONCEPT,
-    SemanticType.RELATION: None,   # relational signifieds are not CONCEPTUAL
-    SemanticType.NORM: None,       # normative signifieds are not CONCEPTUAL
+    SemanticType.RELATION: None,  # relational signifieds are not CONCEPTUAL
+    SemanticType.NORM: None,      # normative signifieds are not CONCEPTUAL
 }
 
 # ── DalalaType → CouplingRelationType mapping ────────────────────────
