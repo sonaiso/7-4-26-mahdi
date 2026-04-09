@@ -85,6 +85,9 @@ from .types import (
     AEU as AEU,
 )
 from .types import (
+    AxiomRecord as AxiomRecord,
+)
+from .types import (
     Concept as Concept,
 )
 from .types import (
@@ -92,6 +95,9 @@ from .types import (
 )
 from .types import (
     DMin as DMin,
+)
+from .types import (
+    EssenceConditionPair as EssenceConditionPair,
 )
 from .types import (
     EvalResult as EvalResult,
@@ -109,6 +115,9 @@ from .types import (
     LexicalClosure as LexicalClosure,
 )
 from .types import (
+    ProofDependencyGraph as ProofDependencyGraph,
+)
+from .types import (
     Proposition as Proposition,
 )
 from .types import (
@@ -119,6 +128,9 @@ from .types import (
 )
 from .types import (
     SyntaxNode as SyntaxNode,
+)
+from .types import (
+    TheoremRecord as TheoremRecord,
 )
 from .types import (
     TimeSpaceTag as TimeSpaceTag,

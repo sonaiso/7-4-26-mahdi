@@ -567,6 +567,7 @@ class ProofStatus(Enum):
     """حالة الإثبات — proof/verification status of an AEU."""
     PROVEN = auto()     # مُثبَت
     PENDING = auto()    # قيد الإثبات
+    ASSUMED = auto()    # مفترض — accepted without formal proof
     COMPOSITE = auto()  # مُركَّب
 
 
