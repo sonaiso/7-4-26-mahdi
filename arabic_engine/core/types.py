@@ -900,3 +900,258 @@ class RankDecision:
     def requires_promotion(self) -> bool:
         """Law 5 — whether a promotion target is specified."""
         return self.promotion_target is not None
+
+
+# ── Axiom & Theorem Records — السجلات البرهانية ──────────────────────
+
+@dataclass(frozen=True)
+class AxiomRecord:
+    """سجل بديهية — a formally registered axiom of the system.
+
+    Each axiom is a foundational statement that is *assumed* true and
+    upon which theorems depend.  Recording axioms as typed objects
+    allows:
+
+    * lookup by identifier
+    * dependency tracking
+    * proof-coverage analysis
+
+    Implements the requirement::
+
+        ∀ axiom ∈ Foundation:
+            axiom.id ∈ Registry
+            axiom.formal_statement is well-formed
+            axiom.implemented_by ⊆ Codebase
+
+    Fields
+    ------
+    axiom_id            unique identifier (e.g. ``"AX_001"``)
+    name                human-readable name (Arabic or English)
+    formal_statement    the symbolic / logical statement
+    natural_language    plain-language description
+    layer               the :class:`OntologicalLayer` this axiom governs
+    dependencies        IDs of prior axioms this one depends on
+    implemented_by      names of types/functions that embody this axiom
+    status              current :class:`ProofStatus`
+    notes               free-text annotation
+    """
+
+    axiom_id: str
+    name: str
+    formal_statement: str
+    natural_language: str
+    layer: OntologicalLayer
+    dependencies: Tuple[str, ...] = ()
+    implemented_by: Tuple[str, ...] = ()
+    status: ProofStatus = ProofStatus.ASSUMED
+    notes: str = ""
+
+
+@dataclass(frozen=True)
+class TheoremRecord:
+    """سجل مبرهنة — a formally registered theorem derived from axioms.
+
+    A theorem is a statement *derived* from one or more axioms (and
+    possibly other theorems).  Recording them as typed objects enables
+    traceability from any claim back to its foundational assumptions.
+
+    Implements the requirement::
+
+        ∀ thm ∈ Theorems:
+            thm.axiom_deps ⊆ Axioms
+            thm.theorem_deps ⊆ Theorems
+            thm.proof_sketch ≠ ""
+
+    Fields
+    ------
+    theorem_id          unique identifier (e.g. ``"TH_001"``)
+    name                human-readable name
+    formal_statement    the symbolic / logical statement
+    natural_language    plain-language description
+    axiom_dependencies  IDs of axioms this theorem depends on
+    theorem_dependencies IDs of prior theorems this theorem depends on
+    proof_sketch        concise proof outline
+    status              current :class:`ProofStatus`
+    test_reference      name of the test that verifies this theorem
+    notes               free-text annotation
+    """
+
+    theorem_id: str
+    name: str
+    formal_statement: str
+    natural_language: str
+    axiom_dependencies: Tuple[str, ...] = ()
+    theorem_dependencies: Tuple[str, ...] = ()
+    proof_sketch: str = ""
+    status: ProofStatus = ProofStatus.PENDING
+    test_reference: str = ""
+    notes: str = ""
+
+    @property
+    def all_dependencies(self) -> Tuple[str, ...]:
+        """Return all dependency IDs (axiom + theorem)."""
+        return self.axiom_dependencies + self.theorem_dependencies
+
+    @property
+    def is_proven(self) -> bool:
+        """True when the theorem has been formally proven."""
+        return self.status is ProofStatus.PROVEN
+
+
+@dataclass(frozen=True)
+class ProofDependencyGraph:
+    """رسم بياني للاعتماد البرهاني — the proof-dependency DAG.
+
+    Collects all :class:`AxiomRecord` and :class:`TheoremRecord` instances
+    and provides navigation / validation helpers.
+
+    Key invariants::
+
+        1. The graph must be acyclic (is_acyclic)
+        2. Every theorem dependency must reference existing axioms/theorems
+        3. proof_coverage ∈ [0, 1]
+
+    Fields
+    ------
+    axioms      all registered axioms
+    theorems    all registered theorems
+    """
+
+    axioms: Tuple[AxiomRecord, ...]
+    theorems: Tuple[TheoremRecord, ...]
+
+    # ── Lookup ─────────────────────────────────────────────────────
+
+    def get_axiom(self, axiom_id: str) -> Optional[AxiomRecord]:
+        """Return the axiom with the given ID, or ``None``."""
+        for ax in self.axioms:
+            if ax.axiom_id == axiom_id:
+                return ax
+        return None
+
+    def get_theorem(self, theorem_id: str) -> Optional[TheoremRecord]:
+        """Return the theorem with the given ID, or ``None``."""
+        for th in self.theorems:
+            if th.theorem_id == theorem_id:
+                return th
+        return None
+
+    # ── Dependency queries ─────────────────────────────────────────
+
+    def dependencies_of(self, theorem_id: str) -> Tuple[str, ...]:
+        """Return all dependency IDs for a theorem (axiom + theorem)."""
+        th = self.get_theorem(theorem_id)
+        if th is None:
+            return ()
+        return th.all_dependencies
+
+    def dependents_of(self, axiom_id: str) -> Tuple[str, ...]:
+        """Return IDs of all theorems that depend on the given axiom."""
+        return tuple(
+            th.theorem_id
+            for th in self.theorems
+            if axiom_id in th.axiom_dependencies
+        )
+
+    # ── Structural validation ──────────────────────────────────────
+
+    def _all_ids(self) -> "frozenset[str]":
+        """Return all axiom and theorem IDs."""
+        ax_ids = frozenset(ax.axiom_id for ax in self.axioms)
+        th_ids = frozenset(th.theorem_id for th in self.theorems)
+        return ax_ids | th_ids
+
+    def dangling_dependencies(self) -> Tuple[str, ...]:
+        """Return dependency IDs that don't match any axiom or theorem."""
+        known = self._all_ids()
+        dangling: "list[str]" = []
+        for th in self.theorems:
+            for dep in th.all_dependencies:
+                if dep not in known:
+                    dangling.append(dep)
+        return tuple(sorted(set(dangling)))
+
+    def is_acyclic(self) -> bool:
+        """Return ``True`` if the theorem dependency graph is a DAG.
+
+        Uses iterative topological-sort (Kahn's algorithm) restricted
+        to theorem-to-theorem edges.
+        """
+        th_ids = [th.theorem_id for th in self.theorems]
+        adj: "dict[str, list[str]]" = {tid: [] for tid in th_ids}
+        in_deg: "dict[str, int]" = {tid: 0 for tid in th_ids}
+        for th in self.theorems:
+            for dep in th.theorem_dependencies:
+                if dep in adj:
+                    adj[dep].append(th.theorem_id)
+                    in_deg[th.theorem_id] += 1
+
+        queue = [tid for tid, d in in_deg.items() if d == 0]
+        visited = 0
+        while queue:
+            node = queue.pop(0)
+            visited += 1
+            for child in adj[node]:
+                in_deg[child] -= 1
+                if in_deg[child] == 0:
+                    queue.append(child)
+        return visited == len(th_ids)
+
+    def proof_coverage(self) -> float:
+        """Fraction of theorems whose status is PROVEN.
+
+        Returns 0.0 when there are no theorems.
+        """
+        if not self.theorems:
+            return 0.0
+        proven = sum(1 for th in self.theorems if th.is_proven)
+        return proven / len(self.theorems)
+
+    def all_proven(self) -> bool:
+        """True when every theorem has been proven."""
+        return bool(self.theorems) and all(
+            th.is_proven for th in self.theorems
+        )
+
+
+# ── Essence / Condition — الجوهر والشرط ──────────────────────────────
+
+@dataclass(frozen=True)
+class EssenceConditionPair:
+    """ثنائية الجوهر والشرط — separates *what* an element is from the
+    constraint that gates its realisation.
+
+    Implements the principle::
+
+        Core(x) = (Slot, Value)
+        Cond(x) = Constraint      (شرط تحقق ≠ جزء من الماهية)
+
+    This allows treating the constraint as an *external guard* rather
+    than an intrinsic part of the element's essence.
+
+    Fields
+    ------
+    element_id      identifier of the linguistic element
+    slot            the structural position (موضع)
+    value           the content occupying the slot (قيمة)
+    constraint      optional :class:`ConditionToken` gating realisation
+    layer           ontological layer
+    notes           free-text annotation
+    """
+
+    element_id: str
+    slot: str
+    value: str
+    constraint: Optional[ConditionToken] = None
+    layer: OntologicalLayer = OntologicalLayer.CELL
+    notes: str = ""
+
+    @property
+    def core(self) -> Tuple[str, str]:
+        """Return ``(slot, value)`` — the essence, without constraint."""
+        return (self.slot, self.value)
+
+    @property
+    def has_constraint(self) -> bool:
+        """True when a realisation condition is attached."""
+        return self.constraint is not None
