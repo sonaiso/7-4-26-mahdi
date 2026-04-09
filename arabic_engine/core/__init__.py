@@ -19,7 +19,13 @@ from .enums import (
     CombinationType as CombinationType,
 )
 from .enums import (
+    ConceptualSignifiedClass as ConceptualSignifiedClass,
+)
+from .enums import (
     ConstraintType as ConstraintType,
+)
+from .enums import (
+    CouplingRelationType as CouplingRelationType,
 )
 from .enums import (
     DalalaType as DalalaType,
@@ -46,6 +52,9 @@ from .enums import (
     MafhumType as MafhumType,
 )
 from .enums import (
+    OntologicalConstraintType as OntologicalConstraintType,
+)
+from .enums import (
     OntologicalLayer as OntologicalLayer,
 )
 from .enums import (
@@ -67,6 +76,12 @@ from .enums import (
     SemanticType as SemanticType,
 )
 from .enums import (
+    SignifiedClass as SignifiedClass,
+)
+from .enums import (
+    SignifierClass as SignifierClass,
+)
+from .enums import (
     SlotState as SlotState,
 )
 from .enums import (
@@ -81,6 +96,12 @@ from .enums import (
 from .enums import (
     UnicodeProfileType as UnicodeProfileType,
 )
+from .enums import (
+    UtteranceToConceptConstraint as UtteranceToConceptConstraint,
+)
+from .enums import (
+    UtteredFormClass as UtteredFormClass,
+)
 from .types import (  # noqa: F401 -- intentional re-exports
     AEU as AEU,
 )
@@ -89,6 +110,9 @@ from .types import (
 )
 from .types import (
     Concept as Concept,
+)
+from .types import (
+    CouplingRecord as CouplingRecord,
 )
 from .types import (
     DalalaLink as DalalaLink,
@@ -115,6 +139,12 @@ from .types import (
     LexicalClosure as LexicalClosure,
 )
 from .types import (
+    OntologicalConstraintRecord as OntologicalConstraintRecord,
+)
+from .types import (
+    OntologyV1Record as OntologyV1Record,
+)
+from .types import (
     ProofDependencyGraph as ProofDependencyGraph,
 )
 from .types import (
@@ -122,6 +152,12 @@ from .types import (
 )
 from .types import (
     RootPattern as RootPattern,
+)
+from .types import (
+    SignifiedNode as SignifiedNode,
+)
+from .types import (
+    SignifierNode as SignifierNode,
 )
 from .types import (
     Syllable as Syllable,
@@ -149,7 +185,9 @@ __all__ = [
     # enums
     "POS",
     "CombinationType",
+    "ConceptualSignifiedClass",
     "ConstraintType",
+    "CouplingRelationType",
     "DalalaType",
     "ElementClass",
     "ElementFunction",
@@ -158,6 +196,7 @@ __all__ = [
     "IrabCase",
     "IrabRole",
     "MafhumType",
+    "OntologicalConstraintType",
     "OntologicalLayer",
     "PhonCategory",
     "PhonFeature",
@@ -165,14 +204,19 @@ __all__ = [
     "PhonTransform",
     "ProofStatus",
     "SemanticType",
+    "SignifiedClass",
+    "SignifierClass",
     "SlotState",
     "SpaceRef",
     "TimeRef",
     "TruthState",
     "UnicodeProfileType",
+    "UtteredFormClass",
+    "UtteranceToConceptConstraint",
     # types
     "AEU",
     "Concept",
+    "CouplingRecord",
     "DalalaLink",
     "DMin",
     "EvalResult",
@@ -180,8 +224,12 @@ __all__ = [
     "InferenceResult",
     "LayerPromotionRule",
     "LexicalClosure",
+    "OntologicalConstraintRecord",
+    "OntologyV1Record",
     "Proposition",
     "RootPattern",
+    "SignifiedNode",
+    "SignifierNode",
     "Syllable",
     "SyntaxNode",
     "TimeSpaceTag",

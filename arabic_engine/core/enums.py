@@ -648,3 +648,244 @@ class RankType(Enum):
     LIMITAL = auto()        # حدّي — limit-dominant
     CAPACITIVE = auto()     # سعوي — capacity-dominant
     TRANSITIONAL = auto()   # انتقالي — balanced / transitional
+
+
+# ── Ontology v1 — الجدول الأنطولوجي v1.0 ────────────────────────────
+
+
+class SignifierClass(Enum):
+    """صنف الدال — the major class of a signifier node (الدال).
+
+    The hierarchy: every utterance (منطوق) is a signifier, but not every
+    signifier is an utterance.  ``UTTERED_FORM`` marks the subtype whose
+    surface has been actually realised in speech or writing.
+
+    ==================  =====================================================
+    Member               Description
+    ==================  =====================================================
+    PHONOLOGICAL         دال صوتي — phoneme, stress, intonation
+    MORPHOLOGICAL        دال صرفي — root, pattern, augment
+    LEXICAL              دال معجمي — word, lexical compound
+    SYNTACTIC            دال نحوي — position, case-marker, governor
+    TEXTUAL              دال نصي — textual reference, discourse connector
+    PRAGMATIC            دال تداولي — intent, speech-situation, register
+    RHETORICAL           دال بلاغي — metaphor, ellipsis, foregrounding
+    UTTERED_FORM         منطوق — the realised surface form (فرع من الدال)
+    ==================  =====================================================
+    """
+    PHONOLOGICAL = auto()   # دال صوتي
+    MORPHOLOGICAL = auto()  # دال صرفي
+    LEXICAL = auto()        # دال معجمي
+    SYNTACTIC = auto()      # دال نحوي
+    TEXTUAL = auto()        # دال نصي
+    PRAGMATIC = auto()      # دال تداولي
+    RHETORICAL = auto()     # دال بلاغي
+    UTTERED_FORM = auto()   # منطوق — sub-class of signifier
+
+
+class UtteredFormClass(Enum):
+    """صنف المنطوق — sub-classification of an uttered / surface form.
+
+    These are the five realisable shapes of the منطوق (uttered signifier).
+    Only applicable when ``SignifierClass`` is ``UTTERED_FORM``.
+
+    ===================  ====================================================
+    Member                Description
+    ===================  ====================================================
+    PHONETIC_UTTERANCE    المنطوق من جهة الأداء الصوتي (stress, length, pause)
+    WORD_UTTERANCE        المنطوق في صورة كلمة مفردة
+    EXPRESSION_UTTERANCE  المنطوق في صورة تركيب / عبارة
+    SENTENCE_UTTERANCE    المنطوق القضوي — full sentential unit
+    MARKED_UTTERANCE      منطوق مقيّد بأداة بنيوية (إنّ، ما…إلا، etc.)
+    ===================  ====================================================
+    """
+    PHONETIC_UTTERANCE = auto()    # أداء صوتي
+    WORD_UTTERANCE = auto()        # كلمة منطوقة
+    EXPRESSION_UTTERANCE = auto()  # تركيب منطوق
+    SENTENCE_UTTERANCE = auto()    # جملة قضوية
+    MARKED_UTTERANCE = auto()      # منطوق مقيد بأداة
+
+
+class SignifiedClass(Enum):
+    """صنف المدلول — the major class of a signified node (المدلول).
+
+    The مفهوم (ConceptualSignified) is a sub-class of المدلول, so
+    ``CONCEPTUAL`` marks the root under which all eight concept types fall.
+
+    ======================  ================================================
+    Member                   Description
+    ======================  ================================================
+    ONTOLOGICAL              مدلول وجودي — entity / substance
+    PROPERTY                 مدلول وصفي — attribute / quality
+    EVENT                    مدلول حدثي — action / occurrence
+    RELATIONAL               مدلول علائقي — relation (above, with, because)
+    PROPOSITIONAL            مدلول حكمي — assertion / negation / restriction
+    REFERENTIAL              مدلول إحالي — deictic / anaphoric reference
+    FUNCTIONAL               مدلول وظيفي — connector / structural function
+    PRAGMATIC_SIGNIFIED      مدلول تداولي — illocutionary force
+    LOGICAL                  مدلول منطقي — entailment / implication / inference
+    RHETORICAL_SIGNIFIED     مدلول بلاغي — figurative / connotative meaning
+    EPISTEMIC                مدلول معرفي — certainty / doubt / opinion
+    NORMATIVE                مدلول معياري — obligation / permission / prohibition
+    AFFECTIVE                مدلول وجداني — emotion / sentiment
+    MODAL                    مدلول إمكاني/ضروري — possibility / necessity
+    INSTITUTIONAL            مدلول مؤسسي — social / legal construct
+    EMBODIED                 مدلول إدراكي متجسّد — sensorimotor grounding
+    SELF_MODEL               مدلول ذاتي هوياتي — self / identity perspective
+    FRAME                    مدلول إطاري — frame / scenario roles
+    SCRIPT                   مدلول سيناريوي — procedural script / sequence
+    CAUSAL_EXPLANATORY       مدلول سببي تفسيري — cause / condition / goal
+    META_CONCEPTUAL          مدلول فوق-مفهومي — concept of concepts
+    CONCEPTUAL               مفهوم — conceptual sub-class root
+    ======================  ================================================
+    """
+    ONTOLOGICAL = auto()            # مدلول وجودي
+    PROPERTY = auto()               # مدلول وصفي
+    EVENT = auto()                  # مدلول حدثي
+    RELATIONAL = auto()             # مدلول علائقي
+    PROPOSITIONAL = auto()          # مدلول حكمي
+    REFERENTIAL = auto()            # مدلول إحالي
+    FUNCTIONAL = auto()             # مدلول وظيفي
+    PRAGMATIC_SIGNIFIED = auto()    # مدلول تداولي
+    LOGICAL = auto()                # مدلول منطقي
+    RHETORICAL_SIGNIFIED = auto()   # مدلول بلاغي
+    EPISTEMIC = auto()              # مدلول معرفي
+    NORMATIVE = auto()              # مدلول معياري
+    AFFECTIVE = auto()              # مدلول وجداني
+    MODAL = auto()                  # مدلول إمكاني/ضروري
+    INSTITUTIONAL = auto()          # مدلول مؤسسي
+    EMBODIED = auto()               # مدلول إدراكي متجسّد
+    SELF_MODEL = auto()             # مدلول ذاتي هوياتي
+    FRAME = auto()                  # مدلول إطاري
+    SCRIPT = auto()                 # مدلول سيناريوي
+    CAUSAL_EXPLANATORY = auto()     # مدلول سببي تفسيري
+    META_CONCEPTUAL = auto()        # مدلول فوق-مفهومي
+    CONCEPTUAL = auto()             # مفهوم — root for conceptual sub-class
+
+
+class ConceptualSignifiedClass(Enum):
+    """صنف المفهوم — sub-classification of the conceptual signified (المفهوم).
+
+    Applicable only when ``SignifiedClass`` is ``CONCEPTUAL``.
+
+    ================  =========================================================
+    Member             Description
+    ================  =========================================================
+    ENTITY_CONCEPT     مفهوم ذات — substance / individual
+    PROPERTY_CONCEPT   مفهوم صفة — quality / attribute concept
+    EVENT_CONCEPT      مفهوم حدث — action / occurrence concept
+    RELATION_CONCEPT   مفهوم علاقة — relation / dependency concept
+    NORM_CONCEPT       مفهوم معياري — obligation / value concept
+    MENTAL_CONCEPT     مفهوم ذهني داخلي — intention / memory / imagination
+    ABSTRACT_CONCEPT   مفهوم تجريدي — freedom / existence / possibility
+    META_CONCEPT       مفهوم عن مفهوم — definition / genus / classification
+    ================  =========================================================
+    """
+    ENTITY_CONCEPT = auto()    # مفهوم ذات
+    PROPERTY_CONCEPT = auto()  # مفهوم صفة
+    EVENT_CONCEPT = auto()     # مفهوم حدث
+    RELATION_CONCEPT = auto()  # مفهوم علاقة
+    NORM_CONCEPT = auto()      # مفهوم معياري
+    MENTAL_CONCEPT = auto()    # مفهوم ذهني
+    ABSTRACT_CONCEPT = auto()  # مفهوم تجريدي
+    META_CONCEPT = auto()      # مفهوم عن مفهوم
+
+
+class CouplingRelationType(Enum):
+    """نوع علاقة الاقتران — how a signifier is bound to its signified.
+
+    Sits one level above the classical ``DalalaType`` (which covers the
+    intra-linguistic signification modes: مطابقة / تضمن / التزام / …).
+
+    ====================  ====================================================
+    Member                 Description
+    ====================  ====================================================
+    DIRECT                 اقتران مباشر — conventional / dictionary coupling
+    POLYSEMOUS             اقتران متعدد — one form, multiple possible signifieds
+    COMPOSITIONAL          اقتران تركيبي — meaning built from parts
+    HIERARCHICAL           اقتران طبقي — multi-level (morpho-syntactic)
+    CONTEXTUAL             اقتران سياقي — referent fixed by discourse context
+    INFERENTIAL            اقتران استلزامي — signified implied, not stated
+    FIGURATIVE             اقتران مجازي — metaphor / metonymy / synecdoche
+    PERFORMATIVE           اقتران إنجازي — speech act with institutional force
+    FUNCTIONAL_COUPLING    اقتران وظيفي — grammatical function word
+    REFERENTIAL_COUPLING   اقتران إحالي — anaphoric / deictic resolution
+    ====================  ====================================================
+    """
+    DIRECT = auto()               # مباشر
+    POLYSEMOUS = auto()           # متعدد الاحتمال
+    COMPOSITIONAL = auto()        # تركيبي
+    HIERARCHICAL = auto()         # طبقي
+    CONTEXTUAL = auto()           # سياقي
+    INFERENTIAL = auto()          # استلزامي
+    FIGURATIVE = auto()           # مجازي
+    PERFORMATIVE = auto()         # إنجازي
+    FUNCTIONAL_COUPLING = auto()  # وظيفي بنائي
+    REFERENTIAL_COUPLING = auto() # إحالي
+
+
+class OntologicalConstraintType(Enum):
+    """نوع القيد الأنطولوجي — constraint kind in the Ontology v1 model.
+
+    Each constraint guards a different layer of the signifier→signified
+    transition.  More specific than the classical ``ConstraintType`` (which
+    covers only the five Mafhūm constraint kinds).
+
+    ==========================  ================================================
+    Member                       Description
+    ==========================  ================================================
+    STRUCTURAL                   قيد بنيوي — syntactic well-formedness
+    PHONOLOGICAL_CONSTRAINT      قيد صوتي — phonological legality
+    MORPHOLOGICAL_CONSTRAINT     قيد صرفي — morphological pattern compatibility
+    LEXICAL_CONSTRAINT           قيد معجمي — lexical convention
+    SYNTACTIC_CONSTRAINT         قيد نحوي — syntactic position / case
+    REFERENTIAL_CONSTRAINT       قيد إحالي — pronoun/deictic needs an antecedent
+    CONTEXTUAL_CONSTRAINT        قيد سياقي — context required to fix reference
+    PRAGMATIC_CONSTRAINT         قيد تداولي — speech-act conditions
+    LOGICAL_CONSTRAINT           قيد منطقي — non-contradiction / coherence
+    RHETORICAL_CONSTRAINT        قيد بلاغي — figurative reading needs a qarīna
+    EPISTEMIC_CONSTRAINT         قيد معرفي — probabilistic/certainty tier
+    INSTITUTIONAL_CONSTRAINT     قيد مؤسسي — performative requires authority
+    INTERPRETIVE_CONSTRAINT      قيد تفسيري — disambiguation requires a tarjīḥ
+    ==========================  ================================================
+    """
+    STRUCTURAL = auto()                  # قيد بنيوي
+    PHONOLOGICAL_CONSTRAINT = auto()     # قيد صوتي
+    MORPHOLOGICAL_CONSTRAINT = auto()    # قيد صرفي
+    LEXICAL_CONSTRAINT = auto()          # قيد معجمي
+    SYNTACTIC_CONSTRAINT = auto()        # قيد نحوي
+    REFERENTIAL_CONSTRAINT = auto()      # قيد إحالي
+    CONTEXTUAL_CONSTRAINT = auto()       # قيد سياقي
+    PRAGMATIC_CONSTRAINT = auto()        # قيد تداولي
+    LOGICAL_CONSTRAINT = auto()          # قيد منطقي
+    RHETORICAL_CONSTRAINT = auto()       # قيد بلاغي
+    EPISTEMIC_CONSTRAINT = auto()        # قيد معرفي
+    INSTITUTIONAL_CONSTRAINT = auto()    # قيد مؤسسي
+    INTERPRETIVE_CONSTRAINT = auto()     # قيد تفسيري
+
+
+class UtteranceToConceptConstraint(Enum):
+    """قيود سلسلة المنطوق → المفهوم — the seven guards on the utterance-to-concept chain.
+
+    These constraints are evaluated in order; any failure sets
+    ``OntologicalConstraintRecord.passes = False``.
+
+    ===========================  ==============================================
+    Member                        Meaning
+    ===========================  ==============================================
+    SURFACE_VALIDITY              هل المنطوق سليم بنيويًا؟
+    LEXICAL_ACCESS                هل يملك المنطوق مدخلًا معجميًا معتبرًا؟
+    CONTEXT_RESOLUTION            هل السياق كافٍ لتعيين المقصود؟
+    CONCEPT_SELECTION             هل اختير المفهوم الصحيح من بين الاحتمالات؟
+    FIGURATIVE_DISAMBIGUATION     هل توجد قرينة تصرف عن الحقيقة إلى المجاز؟
+    REFERENTIAL_RESOLUTION        هل المرجع متاح إذا كان المنطوق إحاليًا؟
+    LOGICAL_COHERENCE             هل التفسير متسق مع بقية البنية؟
+    ===========================  ==============================================
+    """
+    SURFACE_VALIDITY = auto()           # صحة البنية السطحية
+    LEXICAL_ACCESS = auto()             # وجود مدخل معجمي
+    CONTEXT_RESOLUTION = auto()         # كفاية السياق
+    CONCEPT_SELECTION = auto()          # اختيار المفهوم الصحيح
+    FIGURATIVE_DISAMBIGUATION = auto()  # وجود قرينة مجازية
+    REFERENTIAL_RESOLUTION = auto()     # توفر المرجع الإحالي
+    LOGICAL_COHERENCE = auto()          # تسق التفسير مع البنية
