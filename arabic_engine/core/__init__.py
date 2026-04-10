@@ -18,6 +18,11 @@ from .enums import (  # noqa: F401 -- intentional re-exports
 from .enums import (
     CarrierClass as CarrierClass,
 )
+
+# ── Epistemic v1 enums ───────────────────────────────────────────────
+from .enums import (
+    CarrierType as CarrierType,
+)
 from .enums import (
     CombinationType as CombinationType,
 )
@@ -35,6 +40,9 @@ from .enums import (
 )
 from .enums import (
     DalalaType as DalalaType,
+)
+from .enums import (
+    DecisionCode as DecisionCode,
 )
 from .enums import (
     ElementClass as ElementClass,
@@ -56,6 +64,9 @@ from .enums import (
 )
 from .enums import (
     InfoKind as InfoKind,
+)
+from .enums import (
+    InsertionPolicy as InsertionPolicy,
 )
 from .enums import (
     IrabCase as IrabCase,
@@ -95,6 +106,9 @@ from .enums import (
 )
 from .enums import (
     PhonTransform as PhonTransform,
+)
+from .enums import (
+    ProofPathKind as ProofPathKind,
 )
 from .enums import (
     ProofStatus as ProofStatus,
@@ -142,6 +156,9 @@ from .enums import (
     UtteredFormClass as UtteredFormClass,
 )
 from .enums import (
+    ValidationOutcome as ValidationOutcome,
+)
+from .enums import (
     ValidationState as ValidationState,
 )
 from .types import (  # noqa: F401 -- intentional re-exports
@@ -154,7 +171,18 @@ from .types import (
     Concept as Concept,
 )
 from .types import (
+    ConceptRecord as ConceptRecord,
+)
+
+# ── Epistemic v1 types ───────────────────────────────────────────────
+from .types import (
+    ConflictResolutionResult as ConflictResolutionResult,
+)
+from .types import (
     ConflictRuleNode as ConflictRuleNode,
+)
+from .types import (
+    ConflictRuleRecord as ConflictRuleRecord,
 )
 from .types import (
     CouplingRecord as CouplingRecord,
@@ -184,6 +212,9 @@ from .types import (
     GapNode as GapNode,
 )
 from .types import (
+    GapRecord as GapRecord,
+)
+from .types import (
     Grapheme as Grapheme,
 )
 from .types import (
@@ -191,6 +222,15 @@ from .types import (
 )
 from .types import (
     JudgementNode as JudgementNode,
+)
+from .types import (
+    JudgementRecord as JudgementRecord,
+)
+from .types import (
+    KnowledgeEpisode as KnowledgeEpisode,
+)
+from .types import (
+    KnowledgeEpisodeInput as KnowledgeEpisodeInput,
 )
 from .types import (
     KnowledgeEpisodeNode as KnowledgeEpisodeNode,
@@ -205,10 +245,19 @@ from .types import (
     LinguisticCarrierNode as LinguisticCarrierNode,
 )
 from .types import (
+    LinguisticCarrierRecord as LinguisticCarrierRecord,
+)
+from .types import (
     LinkingTraceNode as LinkingTraceNode,
 )
 from .types import (
+    LinkingTraceRecord as LinkingTraceRecord,
+)
+from .types import (
     MethodNode as MethodNode,
+)
+from .types import (
+    MethodRecord as MethodRecord,
 )
 from .types import (
     OntologicalConstraintRecord as OntologicalConstraintRecord,
@@ -220,7 +269,13 @@ from .types import (
     OpinionTraceNode as OpinionTraceNode,
 )
 from .types import (
+    OpinionTraceRecord as OpinionTraceRecord,
+)
+from .types import (
     PriorInfoNode as PriorInfoNode,
+)
+from .types import (
+    PriorInfoRecord as PriorInfoRecord,
 )
 from .types import (
     ProofDependencyGraph as ProofDependencyGraph,
@@ -229,10 +284,16 @@ from .types import (
     ProofPathNode as ProofPathNode,
 )
 from .types import (
+    ProofPathRecord as ProofPathRecord,
+)
+from .types import (
     Proposition as Proposition,
 )
 from .types import (
     RealityAnchorNode as RealityAnchorNode,
+)
+from .types import (
+    RealityAnchorRecord as RealityAnchorRecord,
 )
 from .types import (
     RootPattern as RootPattern,
@@ -242,6 +303,9 @@ from .types import (
 )
 from .types import (
     SenseTraceNode as SenseTraceNode,
+)
+from .types import (
+    SenseTraceRecord as SenseTraceRecord,
 )
 from .types import (
     SignifiedNode as SignifiedNode,
@@ -266,6 +330,12 @@ from .types import (
 )
 from .types import (
     UtteranceNode as UtteranceNode,
+)
+from .types import (
+    UtteranceRecord as UtteranceRecord,
+)
+from .types import (
+    ValidationResult as ValidationResult,
 )
 from .types import (
     WorldFact as WorldFact,
@@ -320,6 +390,21 @@ __all__ = [
     "UtteredFormClass",
     "UtteranceToConceptConstraint",
     "ValidationState",
+    # epistemic v1 enums
+    "CarrierType",
+    "ContaminationLevel",
+    "DecisionCode",
+    "EpistemicRank",
+    "GapSeverity",
+    "InsertionPolicy",
+    "JudgementType",
+    "LinkKind",
+    "MethodFamily",
+    "ProofPathKind",
+    "RealityKind",
+    "SenseModality",
+    "TraceMode",
+    "ValidationOutcome",
     # types
     "AEU",
     "Concept",
@@ -362,4 +447,22 @@ __all__ = [
     "UtteranceNode",
     "WorldFact",
     "ZeroSlotRecord",
+    # epistemic v1 types
+    "ConflictResolutionResult",
+    "ConflictRuleRecord",
+    "ConceptRecord",
+    "GapRecord",
+    "JudgementRecord",
+    "KnowledgeEpisode",
+    "KnowledgeEpisodeInput",
+    "LinkingTraceRecord",
+    "LinguisticCarrierRecord",
+    "MethodRecord",
+    "OpinionTraceRecord",
+    "PriorInfoRecord",
+    "ProofPathRecord",
+    "RealityAnchorRecord",
+    "SenseTraceRecord",
+    "UtteranceRecord",
+    "ValidationResult",
 ]

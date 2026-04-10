@@ -385,7 +385,11 @@ class EpisodeValidator:
         ]
         return sorted(
             results,
-            key=lambda r: (r.validation_state.name, r.epistemic_rank.name, r.episode_id),
+            key=lambda r: (
+                r.validation_state.name,
+                r.epistemic_rank.name if r.epistemic_rank else "",
+                r.episode_id,
+            ),
         )
 
     # ── Private helpers ───────────────────────────────────────────────
@@ -395,11 +399,11 @@ class EpisodeValidator:
         ep: KnowledgeEpisodeNode,
         errors: List[str],
         proof: Optional[ProofPathNode],
-    ) -> EpistemicRank:
+    ) -> Optional[EpistemicRank]:
         """Derive the EpistemicRank from the error list and episode metadata."""
-        # Fatal structural errors → rejected
+        # Fatal structural errors → rejected (None signals methodological rejection)
         if any(e in _FATAL_ERRORS for e in errors):
-            return EpistemicRank.REJECTED_METHODOLOGICALLY
+            return None
 
         # Method/conflict mismatch → impossible
         if any(

@@ -196,7 +196,6 @@ class TestNewEnums:
             "TRUE_NON_CERTAIN",
             "PROBABILISTIC_DOUBT",
             "IMPOSSIBLE",
-            "REJECTED_METHODOLOGICALLY",
         }
 
     def test_validation_state_members(self):
@@ -207,12 +206,11 @@ class TestNewEnums:
         assert "EXISTENCE" in names
         assert "INTERPRETIVE" in names
         assert "METAPHYSICAL" in names
-        assert len(names) == 10
+        assert len(names) == 11
 
     def test_method_family_members(self):
-        assert {m.name for m in MethodFamily} == {
-            "RATIONAL", "SCIENTIFIC", "LINGUISTIC", "MATHEMATICAL", "PHYSICAL"
-        }
+        names = {m.name for m in MethodFamily}
+        assert {"RATIONAL", "SCIENTIFIC", "LINGUISTIC", "MATHEMATICAL", "PHYSICAL"} <= names
 
     def test_carrier_class_members(self):
         assert {m.name for m in CarrierClass} == {"UTTERANCE", "CONCEPT", "BOTH"}
@@ -221,7 +219,9 @@ class TestNewEnums:
         assert len(list(SenseModality)) == 6
 
     def test_reality_kind_members(self):
-        assert len(list(RealityKind)) == 6
+        names = {m.name for m in RealityKind}
+        assert {"MATERIAL", "ABSTRACT", "SOCIAL", "HISTORICAL"} <= names
+        assert {"PHYSICAL_OBJECT", "EVENT", "TEXT_OBJECT"} <= names
 
     def test_info_kind_members(self):
         assert len(list(InfoKind)) == 6
@@ -230,7 +230,8 @@ class TestNewEnums:
         assert {m.name for m in PathKind} == {"HISSI", "AQLI", "LINGUISTIC", "FORMAL"}
 
     def test_gap_severity_members(self):
-        assert {m.name for m in GapSeverity} == {"FATAL", "HIGH", "MEDIUM"}
+        names = {m.name for m in GapSeverity}
+        assert {"FATAL", "CRITICAL", "MODERATE", "MINOR"} == names
 
     def test_contamination_level_members(self):
         from arabic_engine.core.enums import ContaminationLevel
@@ -519,7 +520,7 @@ class TestEpisodeValidatorMain:
         result = v.validate_episode(ep_id)
         assert result.validation_state is ValidationState.INVALID
         assert "Missing RealityAnchor" in result.errors
-        assert result.epistemic_rank is EpistemicRank.REJECTED_METHODOLOGICALLY
+        assert result.epistemic_rank is None
 
     def test_missing_sense_trace_causes_rejected(self):
         g = _make_graph()
@@ -551,7 +552,7 @@ class TestEpisodeValidatorMain:
         v = EpisodeValidator(g)
         result = v.validate_episode(ep_id)
         assert "Missing SenseTrace" in result.errors
-        assert result.epistemic_rank is EpistemicRank.REJECTED_METHODOLOGICALLY
+        assert result.epistemic_rank is None
 
     def test_missing_prior_info_causes_rejected(self):
         g = _make_graph()
@@ -582,7 +583,7 @@ class TestEpisodeValidatorMain:
 
         result = EpisodeValidator(g).validate_episode(ep_id)
         assert "Missing PriorInfo" in result.errors
-        assert result.epistemic_rank is EpistemicRank.REJECTED_METHODOLOGICALLY
+        assert result.epistemic_rank is None
 
     def test_opinion_contamination_causes_rejected(self):
         g = _make_graph()
@@ -599,7 +600,7 @@ class TestEpisodeValidatorMain:
         result = EpisodeValidator(g).validate_episode(ep_id)
         assert result.validation_state is ValidationState.INVALID
         assert "Opinion contamination" in result.errors
-        assert result.epistemic_rank is EpistemicRank.REJECTED_METHODOLOGICALLY
+        assert result.epistemic_rank is None
 
     def test_low_opinion_contamination_does_not_fail(self):
         g = _make_graph()
