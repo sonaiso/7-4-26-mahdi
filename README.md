@@ -274,6 +274,61 @@ pytest -v
 ruff check .
 ```
 
+## Repository Maintenance: Branch PR Merge Automation
+
+The script `scripts/branch_pr_merge.sh` automates:
+
+- syncing feature branches from `origin`
+- creating/opening PRs to a base branch
+- merging PRs with a selected strategy
+
+This is a repository-maintenance utility and is not part of the `arabic_engine` runtime package.
+
+### Requirements
+
+- `git` installed
+- `gh` (GitHub CLI) installed and authenticated (`gh auth login`)
+- repository write permissions for PR creation/merge
+- clean working tree before execution
+
+### Recommended safe workflow
+
+Always run a dry run first:
+
+```bash
+./scripts/branch_pr_merge.sh \
+  --base-branch main \
+  --branches feature/branch-1,feature/branch-2 \
+  --merge-method rebase \
+  --auto-merge false \
+  --delete-branch false \
+  --dry-run
+```
+
+Then execute for real:
+
+```bash
+./scripts/branch_pr_merge.sh \
+  --base-branch main \
+  --branch feature/branch-1 \
+  --branch feature/branch-2 \
+  --merge-method rebase \
+  --auto-merge false \
+  --delete-branch false
+```
+
+### Key safety controls
+
+- `--merge-method` only allows `merge|rebase|squash`
+- branch list is required (`--branch`/`--branches` or `BRANCHES` env)
+- boolean flags are validated case-insensitively (`true/false/yes/no/1/0/on/off`)
+- script continues branch-by-branch on failures and exits non-zero if any branch fails
+- prints a machine-readable JSON summary at the end
+
+### Warning
+
+`--delete-branch true` deletes merged branches on remote. Keep it `false` unless deletion is explicitly intended.
+
 ## System Integrity Verification
 
 To keep the engine integrated and prevent duplicated repository content:
