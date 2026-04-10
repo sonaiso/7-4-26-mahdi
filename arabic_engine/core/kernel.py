@@ -69,23 +69,26 @@ KERNEL_REQUIRED_FIELDS: Dict[KernelLabel, FrozenSet[str]] = {
 }
 
 
-KERNEL_RELATION_PAIRS: Dict[KernelRelation, Tuple[KernelLabel, KernelLabel]] = {
-    KernelRelation.KNOWS: (KernelLabel.SELF, KernelLabel.CONCEPT),
-    KernelRelation.EMITS: (KernelLabel.SELF, KernelLabel.CARRIER),
-    KernelRelation.RECEIVES: (KernelLabel.SELF, KernelLabel.CARRIER),
-    KernelRelation.IS_SENSED_AS: (KernelLabel.REALITY, KernelLabel.SENSE),
-    KernelRelation.IS_INTERPRETED_WITH: (KernelLabel.SENSE, KernelLabel.PRIOR_INFO),
-    KernelRelation.ARE_BOUND_BY: (KernelLabel.PRIOR_INFO, KernelLabel.LINK),
-    KernelRelation.YIELDS: (KernelLabel.LINK, KernelLabel.CONCEPT),
-    KernelRelation.IS_JUDGED_AS: (KernelLabel.CONCEPT, KernelLabel.JUDGEMENT),
-    KernelRelation.IS_EVALUATED_BY: (KernelLabel.JUDGEMENT, KernelLabel.METHOD),
-    KernelRelation.IS_JUSTIFIED_BY: (KernelLabel.JUDGEMENT, KernelLabel.PROOF),
-    KernelRelation.IS_LIMITED_BY: (KernelLabel.JUDGEMENT, KernelLabel.CONSTRAINT),
-    KernelRelation.HAS_STATE: (KernelLabel.JUDGEMENT, KernelLabel.STATE),
-    KernelRelation.ARE_CARRIED_BY: (KernelLabel.CONCEPT, KernelLabel.CARRIER),
-    KernelRelation.PARTICIPATES_IN: (KernelLabel.CARRIER, KernelLabel.EXCHANGE),
-    KernelRelation.INVOLVES: (KernelLabel.EXCHANGE, KernelLabel.SELF),
-    KernelRelation.FORMS: (KernelLabel.EXCHANGE, KernelLabel.MODEL),
+KERNEL_RELATION_PAIRS: Dict[KernelRelation, Tuple[Tuple[KernelLabel, KernelLabel], ...]] = {
+    KernelRelation.KNOWS: ((KernelLabel.SELF, KernelLabel.CONCEPT),),
+    KernelRelation.EMITS: ((KernelLabel.SELF, KernelLabel.CARRIER),),
+    KernelRelation.RECEIVES: ((KernelLabel.SELF, KernelLabel.CARRIER),),
+    KernelRelation.IS_SENSED_AS: ((KernelLabel.REALITY, KernelLabel.SENSE),),
+    KernelRelation.IS_INTERPRETED_WITH: ((KernelLabel.SENSE, KernelLabel.PRIOR_INFO),),
+    KernelRelation.ARE_BOUND_BY: ((KernelLabel.PRIOR_INFO, KernelLabel.LINK),),
+    KernelRelation.YIELDS: ((KernelLabel.LINK, KernelLabel.CONCEPT),),
+    KernelRelation.IS_JUDGED_AS: ((KernelLabel.CONCEPT, KernelLabel.JUDGEMENT),),
+    KernelRelation.IS_EVALUATED_BY: ((KernelLabel.JUDGEMENT, KernelLabel.METHOD),),
+    KernelRelation.IS_JUSTIFIED_BY: ((KernelLabel.JUDGEMENT, KernelLabel.PROOF),),
+    KernelRelation.IS_LIMITED_BY: ((KernelLabel.JUDGEMENT, KernelLabel.CONSTRAINT),),
+    KernelRelation.HAS_STATE: (
+        (KernelLabel.JUDGEMENT, KernelLabel.STATE),
+        (KernelLabel.MODEL, KernelLabel.STATE),
+    ),
+    KernelRelation.ARE_CARRIED_BY: ((KernelLabel.CONCEPT, KernelLabel.CARRIER),),
+    KernelRelation.PARTICIPATES_IN: ((KernelLabel.CARRIER, KernelLabel.EXCHANGE),),
+    KernelRelation.INVOLVES: ((KernelLabel.EXCHANGE, KernelLabel.SELF),),
+    KernelRelation.FORMS: ((KernelLabel.EXCHANGE, KernelLabel.MODEL),),
 }
 
 
@@ -201,11 +204,11 @@ def validate_kernel_graph(graph: KernelGraph) -> KernelValidationResult:
                 f"{edge.source_id} -> {edge.target_id}"
             )
             continue
-        expected_source, expected_target = KERNEL_RELATION_PAIRS[edge.relation]
-        if source.label is not expected_source or target.label is not expected_target:
+        expected_pairs = KERNEL_RELATION_PAIRS[edge.relation]
+        if (source.label, target.label) not in expected_pairs:
+            expected = ", ".join(f"{s.value}->{t.value}" for s, t in expected_pairs)
             errors.append(
-                f"Edge {edge.relation.value} expects "
-                f"{expected_source.value}->{expected_target.value}, got "
+                f"Edge {edge.relation.value} expects one of [{expected}], got "
                 f"{source.label.value}->{target.label.value}"
             )
 
