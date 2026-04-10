@@ -1310,3 +1310,236 @@ class InfoKind(Enum):
     LOGICAL = auto()          # منطقي
     FORMAL = auto()           # صوري
     ANALOGICAL = auto()       # قياسي
+
+
+# ── Discourse Exchange enums (Schema التداول المعرفي) ───────────────────────────
+
+
+class ExchangeType(Enum):
+    """نوع التداول المعرفي — high-level discourse exchange category."""
+    REPORT = auto()
+    TEACHING = auto()
+    QUESTION = auto()
+    ANSWER = auto()
+    COMMAND = auto()
+    WARNING = auto()
+    PERSUASION = auto()
+    NEGOTIATION = auto()
+    TESTIMONY = auto()
+    EXPLANATION = auto()
+
+
+class ExchangePurposeType(Enum):
+    """صنف غرض التبادل — coarse-grained purpose class."""
+    INFORM = auto()
+    TEACH = auto()
+    VERIFY = auto()
+    GUIDE = auto()
+    BIND = auto()
+    PERSUADE = auto()
+    WARN = auto()
+    REQUEST = auto()
+    TEST = auto()
+    PRESERVE_KNOWLEDGE = auto()
+
+
+class ExchangeStyleType(Enum):
+    """صنف أسلوب التبادل — coarse-grained discourse style class."""
+    KHABARI = auto()
+    INSHAI = auto()
+    EXPLANATORY = auto()
+    ARGUMENTATIVE = auto()
+    DIRECTIVE = auto()
+    INTERROGATIVE = auto()
+    PEDAGOGICAL = auto()
+    TESTIMONIAL = auto()
+
+
+class ExchangeStatus(Enum):
+    """حالة التبادل — lifecycle state of discourse exchange."""
+    DRAFTED = auto()
+    TRANSMITTED = auto()
+    RECEIVED = auto()
+    INTERPRETED = auto()
+    ACCEPTED = auto()
+    REJECTED = auto()
+    SUSPENDED = auto()
+
+
+class RationalSelfKind(Enum):
+    """نوع الذات العاقلة الداخلة في التداول."""
+    INDIVIDUAL = auto()
+    COLLECTIVE = auto()
+    INSTITUTIONAL = auto()
+    MODELED_AGENT = auto()
+
+
+class SenderRoleType(Enum):
+    """نوع دور المرسل."""
+    SOURCE = auto()
+    EXPLAINER = auto()
+    WITNESS = auto()
+    TEACHER = auto()
+    COMMANDER = auto()
+    QUESTIONER = auto()
+    INTERPRETER = auto()
+
+
+class AuthorityLevel(Enum):
+    """درجة سلطة المرسل ضمن سياق التداول."""
+    LOW = auto()
+    MEDIUM = auto()
+    HIGH = auto()
+
+
+class ReceiverRoleType(Enum):
+    """نوع دور المستقبل."""
+    LISTENER = auto()
+    LEARNER = auto()
+    EXAMINER = auto()
+    ADDRESSEE = auto()
+    RESPONDENT = auto()
+    EVALUATOR = auto()
+
+
+class ReceiverExpectedAction(Enum):
+    """الفعل المتوقع من المستقبل بعد التداول."""
+    UNDERSTAND = auto()
+    VERIFY = auto()
+    ACT = auto()
+    ANSWER = auto()
+    PRESERVE = auto()
+    RELAY = auto()
+
+
+class PurposeType(Enum):
+    """الغرض التفصيلي للتداول."""
+    INFORM = auto()
+    INSTRUCT = auto()
+    PERSUADE = auto()
+    TEST = auto()
+    QUERY = auto()
+    PRESERVE = auto()
+    REFUTE = auto()
+    WARN = auto()
+    REQUEST_ACTION = auto()
+    CLARIFY = auto()
+
+
+class ExplicitnessLevel(Enum):
+    """درجة تصريح الأسلوب."""
+    DIRECT = auto()
+    SEMI_DIRECT = auto()
+    IMPLICIT = auto()
+
+
+class StyleKind(Enum):
+    """النمط التفصيلي لأسلوب الخطاب."""
+    KHABAR = auto()
+    INSHA = auto()
+    QUESTION = auto()
+    ANSWER = auto()
+    COMMAND = auto()
+    PROHIBITION = auto()
+    EXPLANATION = auto()
+    ARGUMENT = auto()
+    TESTIMONY = auto()
+    SYMBOLIC = auto()
+
+
+class UtteranceMode(Enum):
+    """نمط المنطوق المتداول."""
+    STATEMENT = auto()
+    QUESTION = auto()
+    COMMAND = auto()
+    REPORT = auto()
+    EXPLANATION = auto()
+    DIALOGUE_TURN = auto()
+
+
+class DalaalaKind(Enum):
+    """نوع الدلالة في طبقة التداول (distinct alias from DalalaType)."""
+    MUTABAQA = auto()
+    TADHAMMUN = auto()
+    ILTIZAM = auto()
+    ISHARA = auto()
+
+
+class ReceptionMode(Enum):
+    """نمط استقبال الرسالة."""
+    HEARD = auto()
+    READ = auto()
+    OBSERVED = auto()
+    INFERRED = auto()
+    RECALLED = auto()
+
+
+class ReceiverState(Enum):
+    """حالة المستقبل الذهنية عند الاستقبال."""
+    OPEN = auto()
+    RESISTANT = auto()
+    BIASED = auto()
+    UNCERTAIN = auto()
+    ATTENTIVE = auto()
+
+
+class ReceptionStateType(Enum):
+    """مآل الاستقبال بعد الفهم/الحكم."""
+    RECEIVED = auto()
+    UNDERSTOOD = auto()
+    MISUNDERSTOOD = auto()
+    ACCEPTED = auto()
+    REJECTED = auto()
+    SUSPENDED = auto()
+    PARTIALLY_UNDERSTOOD = auto()
+
+
+class TrustLevel(Enum):
+    """مستوى الثقة بالمصدر."""
+    LOW = auto()
+    MEDIUM = auto()
+    HIGH = auto()
+
+
+class TrustBasis(Enum):
+    """أساس الثقة بالمصدر."""
+    EXPERTISE = auto()
+    AUTHORITY = auto()
+    FAMILIARITY = auto()
+    TESTIMONY_CHAIN = auto()
+    NONE = auto()
+
+
+class InterpretiveOutcomeType(Enum):
+    """نتيجة التأويل عند المستقبل."""
+    ALIGNED = auto()
+    NARROWED = auto()
+    EXPANDED = auto()
+    DISTORTED = auto()
+    CONFLICTING = auto()
+    UNRESOLVED = auto()
+
+
+class DiscourseGapType(Enum):
+    """أنواع فجوات التداول المعرفي."""
+    MISSING_SENDER = auto()
+    MISSING_RECEIVER = auto()
+    MISSING_PURPOSE = auto()
+    MISSING_STYLE = auto()
+    INVALID_STYLE_PURPOSE_FIT = auto()
+    MISSING_CARRIER = auto()
+    INVALID_CARRIER = auto()
+    MISSING_RECEPTION = auto()
+    MISSING_RECEPTION_STATE = auto()
+    MISSING_TRANSFERRED_KNOWLEDGE = auto()
+    INVALID_TRANSFERRED_KNOWLEDGE = auto()
+    MISSING_TRUST_PROFILE = auto()
+    RECEPTION_INCONSISTENCY = auto()
+    SENDER_PURPOSE_MISMATCH = auto()
+
+
+class DiscourseValidationOutcome(Enum):
+    """نتيجة صلاحية التداول المعرفي."""
+    VALID = auto()
+    INVALID = auto()
+    INCOMPLETE = auto()

@@ -12,27 +12,35 @@ from typing import FrozenSet, List, Optional, Tuple
 
 from .enums import (
     POS,
+    AuthorityLevel,
     CarrierClass,
     CarrierType,
     CellType,
     CombinationType,
+    DalaalaKind,
     ConceptualSignifiedClass,
     ConditionToken,
     ConstraintType,
     ContaminationLevel,
     CouplingRelationType,
     DalalaType,
+    DiscourseGapType,
+    DiscourseValidationOutcome,
     DecisionCode,
     ElementClass,
     ElementFunction,
     ElementLayer,
     EpistemicRank,
+    ExchangeStatus,
+    ExchangeType,
+    ExplicitnessLevel,
     EvidenceType,
     FunctionRole,
     FuncTransitionClass,
     GapSeverity,
     GuidanceState,
     InfoKind,
+    InterpretiveOutcomeType,
     InsertionPolicy,
     IrabCase,
     IrabRole,
@@ -50,25 +58,37 @@ from .enums import (
     PhonTransform,
     ProofPathKind,
     ProofStatus,
+    PurposeType,
     RankType,
     RealityKind,
+    RationalSelfKind,
+    ReceiverExpectedAction,
+    ReceiverRoleType,
+    ReceiverState,
+    ReceptionMode,
+    ReceptionStateType,
     ReversibleValue,
     SemanticType,
     SenseModality,
+    SenderRoleType,
     SignifiedClass,
     SignifierClass,
     SlotState,
     SpaceRef,
+    StyleKind,
     SyllablePosition,
     TimeRef,
     TraceMode,
     TraceQuality,
+    TrustBasis,
+    TrustLevel,
     TransitionCondition,
     TransitionLaw,
     TransitionType,
     TriadType,
     TruthState,
     UnicodeProfileType,
+    UtteranceMode,
     UtteranceToConceptConstraint,
     UtteredFormClass,
     ValidationOutcome,
@@ -1849,3 +1869,148 @@ class EpisodeValidationResult:
     epistemic_rank: Optional[EpistemicRank]
     errors: Tuple[str, ...]
     gaps: Tuple[GapNode, ...]
+
+
+# ── Discourse Exchange types (Schema التداول المعرفي) ──────────────────────────
+
+
+@dataclass(frozen=True)
+class RationalSelfRecord:
+    """الذات العاقلة الداخلة في التداول."""
+    node_id: str
+    self_kind: RationalSelfKind
+    epistemic_capacity: str
+    language_profile: str
+
+
+@dataclass(frozen=True)
+class SenderRoleRecord:
+    """دور المرسل ضمن تبادل معرفي محدد."""
+    node_id: str
+    role_type: SenderRoleType
+    authority_level: AuthorityLevel
+
+
+@dataclass(frozen=True)
+class ReceiverRoleRecord:
+    """دور المستقبل ضمن تبادل معرفي محدد."""
+    node_id: str
+    role_type: ReceiverRoleType
+    expected_action: ReceiverExpectedAction
+
+
+@dataclass(frozen=True)
+class ExchangePurposeRecord:
+    """الغرض المقصود من التبادل المعرفي."""
+    node_id: str
+    purpose_type: PurposeType
+    goal_statement: str
+
+
+@dataclass(frozen=True)
+class ExchangeStyleRecord:
+    """أسلوب إخراج التبادل المعرفي."""
+    node_id: str
+    style_kind: StyleKind
+    explicitness: ExplicitnessLevel
+
+
+@dataclass(frozen=True)
+class DiscourseCarrierRecord:
+    """الحامل اللغوي للتداول (منطوق/مفهوم/كلاهما)."""
+    node_id: str
+    carrier_class: CarrierClass
+
+
+@dataclass(frozen=True)
+class DiscourseUtteranceRecord:
+    """المنطوق المحمول في التبادل."""
+    node_id: str
+    text_shakled: str
+    utterance_mode: UtteranceMode
+    literal_scope: str
+
+
+@dataclass(frozen=True)
+class DiscourseConceptRecord:
+    """المفهوم المحمول في التبادل."""
+    node_id: str
+    concept_name: str
+    dalaala_kind: DalaalaKind
+    concept_scope: str
+
+
+@dataclass(frozen=True)
+class ReceptionRecord:
+    """واقعة استقبال الرسالة."""
+    node_id: str
+    reception_mode: ReceptionMode
+    receiver_state: ReceiverState
+
+
+@dataclass(frozen=True)
+class ReceptionStateRecord:
+    """حكم ما بعد الاستقبال."""
+    node_id: str
+    state_type: ReceptionStateType
+    justification: str
+
+
+@dataclass(frozen=True)
+class TrustProfileRecord:
+    """وزن ثقة المستقبل بالمصدر."""
+    node_id: str
+    trust_level: TrustLevel
+    trust_basis: TrustBasis
+
+
+@dataclass(frozen=True)
+class InterpretiveOutcomeRecord:
+    """المحصلة التأويلية للاستقبال."""
+    node_id: str
+    outcome_type: InterpretiveOutcomeType
+
+
+@dataclass(frozen=True)
+class DiscourseGapRecord:
+    """فجوة مكتشفة في سلامة التداول المعرفي."""
+    node_id: str
+    gap_type: DiscourseGapType
+    severity: GapSeverity
+    detail: str
+
+
+@dataclass(frozen=True)
+class DiscourseExchangeResult:
+    """نتيجة التحقق من تداول معرفي واحد."""
+    exchange_id: str
+    outcome: DiscourseValidationOutcome
+    gaps: List[DiscourseGapRecord]
+    status: ExchangeStatus
+
+
+@dataclass
+class DiscourseExchangeNode:
+    """حادثة تداول معرفي مركزية (mutable for validator-written fields)."""
+    node_id: str
+    exchange_type: ExchangeType
+    purpose_class: str
+    style_class: str
+    carrier_type: str
+    status: ExchangeStatus
+    sender: Optional[RationalSelfRecord] = None
+    sender_role: Optional[SenderRoleRecord] = None
+    receiver: Optional[RationalSelfRecord] = None
+    receiver_role: Optional[ReceiverRoleRecord] = None
+    purpose: Optional[ExchangePurposeRecord] = None
+    style: Optional[ExchangeStyleRecord] = None
+    carrier: Optional[DiscourseCarrierRecord] = None
+    utterance: Optional[DiscourseUtteranceRecord] = None
+    concept: Optional[DiscourseConceptRecord] = None
+    transferred_knowledge: Optional[KnowledgeEpisodeNode] = None
+    reception: Optional[ReceptionRecord] = None
+    reception_state: Optional[ReceptionStateRecord] = None
+    trust_profile: Optional[TrustProfileRecord] = None
+    interpretive_outcome: Optional[InterpretiveOutcomeRecord] = None
+    validation_outcome: DiscourseValidationOutcome = DiscourseValidationOutcome.INCOMPLETE
+    gaps: List[DiscourseGapRecord] = field(default_factory=list)

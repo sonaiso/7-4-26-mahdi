@@ -20,6 +20,8 @@ Public sub-modules
 * :mod:`arabic_engine.cognition.episode_validator` —
   :class:`~arabic_engine.cognition.episode_validator.EpisodeValidator`
   that validates a knowledge episode against the ten epistemic conditions.
+* :mod:`arabic_engine.cognition.discourse_exchange` —
+  validator functions for inter-agent deliberative discourse exchange.
 """
 
 __all__ = [
@@ -31,4 +33,5 @@ __all__ = [
     "knowledge_graph",
     "seed_data",
     "episode_validator",
+    "discourse_exchange",
 ]
