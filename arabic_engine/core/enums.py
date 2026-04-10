@@ -889,3 +889,207 @@ class UtteranceToConceptConstraint(Enum):
     FIGURATIVE_DISAMBIGUATION = auto()  # وجود قرينة مجازية
     REFERENTIAL_RESOLUTION = auto()     # توفر المرجع الإحالي
     LOGICAL_COHERENCE = auto()          # تسق التفسير مع البنية
+
+
+# ══════════════════════════════════════════════════════════════════════
+# Knowledge Episode — طبقة الخبرة المعرفية
+# ══════════════════════════════════════════════════════════════════════
+
+class EpistemicRank(Enum):
+    """الرتبة الإبستيمية — the epistemic status of a validated knowledge episode.
+
+    ============================  ==============================================
+    Member                         Arabic meaning
+    ============================  ==============================================
+    CERTAIN                        قطعي — all conditions met, existence judgement
+    TRUE_NON_CERTAIN               صحيح غير قطعي — valid but revisable
+    PROBABILISTIC_DOUBT            ظني — probable but not certain
+    IMPOSSIBLE                     ممتنع — internally contradictory or method mismatch
+    REJECTED_METHODOLOGICALLY      ساقط من أصل المنهج — fatal anchor/sense/prior missing
+    ============================  ==============================================
+    """
+    CERTAIN = auto()                    # قطعي
+    TRUE_NON_CERTAIN = auto()           # صحيح غير قطعي
+    PROBABILISTIC_DOUBT = auto()        # ظني
+    IMPOSSIBLE = auto()                 # ممتنع
+    REJECTED_METHODOLOGICALLY = auto()  # ساقط من أصل المنهج
+
+
+class ValidationState(Enum):
+    """حالة صحة الخبرة المعرفية — lifecycle state of a KnowledgeEpisode."""
+    PENDING = auto()   # pending — not yet validated
+    VALID = auto()     # valid — all checks passed
+    INVALID = auto()   # invalid — one or more checks failed
+
+
+class JudgementType(Enum):
+    """نوع الحكم — the category of judgement issued by a KnowledgeEpisode.
+
+    ====================  ================================================
+    Member                 Arabic meaning
+    ====================  ================================================
+    EXISTENCE              وجود — the episode asserts that something exists
+    ESSENCE                حقيقة — the episode describes the nature of a thing
+    ATTRIBUTE              صفة — the episode attributes a property
+    RELATION               علاقة — the episode relates two things
+    CAUSAL                 سببي — the episode asserts a causal link
+    INTERPRETIVE           تفسيري — the episode interprets a text / utterance
+    FORMAL                 صوري — the episode proves a formal/logical claim
+    NORMATIVE              معياري — the episode makes a normative claim
+    PURE_LINGUISTIC        لغوي بحت — purely linguistic / grammatical claim
+    METAPHYSICAL           ميتافيزيقي — beyond empirical verification
+    ====================  ================================================
+    """
+    EXISTENCE = auto()       # وجود
+    ESSENCE = auto()         # حقيقة
+    ATTRIBUTE = auto()       # صفة
+    RELATION = auto()        # علاقة
+    CAUSAL = auto()          # سببي
+    INTERPRETIVE = auto()    # تفسيري
+    FORMAL = auto()          # صوري
+    NORMATIVE = auto()       # معياري
+    PURE_LINGUISTIC = auto() # لغوي بحت
+    METAPHYSICAL = auto()    # ميتافيزيقي
+
+
+class MethodFamily(Enum):
+    """عائلة المنهج — the broad family of epistemological method.
+
+    ===========  ======================================================
+    Member        Arabic meaning
+    ===========  ======================================================
+    RATIONAL      عقلي — general rational / logical reasoning
+    SCIENTIFIC    علمي — empirical scientific method
+    LINGUISTIC    لغوي — utterance / concept linguistic analysis
+    MATHEMATICAL  رياضي — formal symbolic proof
+    PHYSICAL      فيزيائي — physical law and measurement
+    ===========  ======================================================
+    """
+    RATIONAL = auto()      # عقلي
+    SCIENTIFIC = auto()    # علمي
+    LINGUISTIC = auto()    # لغوي
+    MATHEMATICAL = auto()  # رياضي
+    PHYSICAL = auto()      # فيزيائي
+
+
+class CarrierClass(Enum):
+    """صنف الحامل اللغوي — whether the linguistic carrier is an utterance, concept, or both.
+
+    The طبقة النقل اللغوي admits only two primitive carriers:
+    UTTERANCE (المنطوق) and CONCEPT (المفهوم).  BOTH signals that the
+    episode carries both at once (the common case for interpreted texts).
+    """
+    UTTERANCE = auto()  # منطوق فقط
+    CONCEPT = auto()    # مفهوم فقط
+    BOTH = auto()       # كلاهما
+
+
+class SenseModality(Enum):
+    """حاسة الأثر الحسي — the sensory channel through which reality is perceived."""
+    VISION = auto()    # بصر
+    HEARING = auto()   # سمع
+    TOUCH = auto()     # لمس
+    TASTE = auto()     # ذوق
+    SMELL = auto()     # شم
+    INTERNAL = auto()  # حس داخلي (وجداني / عقلي)
+
+
+class RealityKind(Enum):
+    """نوع الواقع — the ontological category of the reality anchor.
+
+    ====================  ===================================
+    Member                 Arabic meaning
+    ====================  ===================================
+    PHYSICAL_OBJECT        جسم مادي
+    EVENT                  حدث
+    RELATION               علاقة قائمة
+    TEXT_OBJECT            نص / خطاب
+    MENTAL_STATE           حالة ذهنية
+    FORMAL_STRUCTURE       بنية صورية (رياضية أو منطقية)
+    ====================  ===================================
+    """
+    PHYSICAL_OBJECT = auto()   # جسم مادي
+    EVENT = auto()             # حدث
+    RELATION = auto()          # علاقة
+    TEXT_OBJECT = auto()       # نص / خطاب
+    MENTAL_STATE = auto()      # حالة ذهنية
+    FORMAL_STRUCTURE = auto()  # بنية صورية
+
+
+class TraceMode(Enum):
+    """طريقة أخذ الأثر الحسي — how the sense trace was obtained."""
+    DIRECT_PERCEPTION = auto()  # مشاهدة مباشرة
+    MEDIATED = auto()           # بواسطة
+    REPORTED = auto()           # منقول
+    INFERRED = auto()           # مستنبط
+
+
+class TraceQuality(Enum):
+    """جودة الأثر الحسي — reliability of the sense trace."""
+    STRONG = auto()    # قوي
+    MODERATE = auto()  # متوسط
+    WEAK = auto()      # ضعيف
+
+
+class InfoKind(Enum):
+    """نوع المعلومة السابقة — the category of prior information.
+
+    ====================  ===================================
+    Member                 Arabic meaning
+    ====================  ===================================
+    LEXICAL                معجمي
+    LINGUISTIC_RULE        قاعدة لغوية / دلالية
+    EMPIRICAL              تجريبي / مُختبَر
+    LOGICAL                منطقي / عقلي
+    FORMAL                 صوري / رياضي
+    ANALOGICAL             قياسي / تمثيلي
+    ====================  ===================================
+    """
+    LEXICAL = auto()          # معجمي
+    LINGUISTIC_RULE = auto()  # قاعدة لغوية
+    EMPIRICAL = auto()        # تجريبي
+    LOGICAL = auto()          # منطقي
+    FORMAL = auto()           # صوري
+    ANALOGICAL = auto()       # قياسي
+
+
+class LinkKind(Enum):
+    """نوع الربط — the kind of inferential link used in a LinkingTrace."""
+    TEXTUAL_INFERENCE = auto()   # استنباط نصي
+    LOGICAL_DEDUCTION = auto()   # استنتاج منطقي
+    ANALOGICAL = auto()          # قياس
+    CAUSAL = auto()              # ربط سببي
+    EMPIRICAL = auto()           # استقراء تجريبي
+
+
+class ContaminationLevel(Enum):
+    """مستوى التلوث بالرأي السابق — degree to which prior opinion contaminates the episode."""
+    NONE = auto()    # لا تلوث
+    LOW = auto()     # تلوث خفيف
+    MEDIUM = auto()  # تلوث متوسط
+    HIGH = auto()    # تلوث عالٍ
+
+
+class GapSeverity(Enum):
+    """حدة الفجوة المعرفية — severity level of a detected knowledge gap."""
+    FATAL = auto()   # قاتل — causes REJECTED_METHODOLOGICALLY
+    HIGH = auto()    # عالٍ
+    MEDIUM = auto()  # متوسط
+
+
+class PathKind(Enum):
+    """نوع مسار الإثبات — the nature of the proof path.
+
+    =========  ===============================================
+    Member      Arabic meaning
+    =========  ===============================================
+    HISSI       حسي — direct sensory evidence
+    AQLI        عقلي — rational / logical proof
+    LINGUISTIC  لغوي — linguistic / textual evidence
+    FORMAL      صوري — formal mathematical / logical proof
+    =========  ===============================================
+    """
+    HISSI = auto()      # حسي
+    AQLI = auto()       # عقلي
+    LINGUISTIC = auto() # لغوي
+    FORMAL = auto()     # صوري
