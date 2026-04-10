@@ -12,6 +12,8 @@ Public sub-modules
   rule engine for deriving new propositions.
 * :mod:`arabic_engine.cognition.mafhum` — Mafhūm (implied meaning)
   analysis — minimal types (Ch. 21).
+* :mod:`arabic_engine.cognition.epistemic_v1` — Epistemic validation
+  based on the rational method (واقع + حس + معلومات سابقة + ربط).
 """
 
 __all__ = [
@@ -20,4 +22,5 @@ __all__ = [
     "world_model",
     "inference_rules",
     "mafhum",
+    "epistemic_v1",
 ]

@@ -889,3 +889,311 @@ class UtteranceToConceptConstraint(Enum):
     FIGURATIVE_DISAMBIGUATION = auto()  # وجود قرينة مجازية
     REFERENTIAL_RESOLUTION = auto()     # توفر المرجع الإحالي
     LOGICAL_COHERENCE = auto()          # تسق التفسير مع البنية
+
+
+# ── Epistemic v1 — المنهج العقلي: الرتب والتحقق ──────────────────────
+
+
+class EpistemicRank(Enum):
+    """الرتبة الإبستيمية — the four-level ladder of rational judgement.
+
+    Based on al-Nabhani's rational method: a valid cognitive episode grounds
+    reality + sensed trace + prior information + linking, then produces one
+    of exactly four ranks.  Methodological rejection is modelled separately
+    in :class:`ValidationOutcome`.
+
+    ==================  =======================================================
+    Member               Meaning
+    ==================  =======================================================
+    CERTAIN              قطعي — grounded existence judgement with valid proof
+    TRUE_NON_CERTAIN     حقيقي غير قطعي — valid essence / attribute / relation
+    PROBABILISTIC_DOUBT  ظني — partially grounded, unresolved or incomplete
+    IMPOSSIBLE           ممتنع — formal contradiction or invalid method-object
+    ==================  =======================================================
+    """
+    CERTAIN = auto()             # قطعي
+    TRUE_NON_CERTAIN = auto()    # حقيقي غير قطعي
+    PROBABILISTIC_DOUBT = auto() # ظني
+    IMPOSSIBLE = auto()          # ممتنع
+
+
+class ValidationOutcome(Enum):
+    """نتيجة التحقق — outcome of the methodological validity check.
+
+    Distinct from :class:`EpistemicRank`: a ``REJECTED_METHODOLOGICALLY``
+    episode never reaches the rank ladder at all.
+
+    ========================  ================================================
+    Member                     Meaning
+    ========================  ================================================
+    VALID                      صالح — all conditions met
+    INVALID                    غير صالح — conditions identified but not met
+    PENDING                    معلّق — waiting for missing inputs
+    REJECTED_METHODOLOGICALLY  مرفوض منهجيًا — foundational conditions absent
+    ========================  ================================================
+    """
+    VALID = auto()                      # صالح
+    INVALID = auto()                    # غير صالح
+    PENDING = auto()                    # معلّق
+    REJECTED_METHODOLOGICALLY = auto()  # مرفوض منهجيًا
+
+
+class DecisionCode(Enum):
+    """رموز القرار — stable codes for every validator failure.
+
+    Codes are stable across versions so that API consumers and tests can
+    check ``result.codes`` without relying on human-readable messages.
+
+    ========================  ================================================
+    Code                       Meaning
+    ========================  ================================================
+    EPI001_MISSING_REALITY     لا مرساة واقع
+    EPI002_MISSING_SENSE       لا أثر حسّي
+    EPI003_MISSING_PRIOR_INFO  لا معلومة سابقة
+    EPI004_OPINION_CONTAMINATION  تلوث الرأي المسبق فوق العتبة
+    EPI005_MISSING_LINKING     لا أثر ربط
+    EPI006_MISSING_JUDGEMENT   لا حكم
+    EPI007_MISSING_METHOD      لا طريقة
+    EPI008_METHOD_FIT_FAILURE  الطريقة لا تناسب المجال
+    EPI009_CARRIER_INVALID     حامل لغوي غير صالح
+    EPI010_MISSING_PROOF_PATH  لا مسار إثبات
+    EPI011_MISSING_CONFLICT_RULE  لا قاعدة تعارض
+    EPI012_CARRIER_BOTH_MISSING   النوع BOTH لكن أحد الطرفين غائب
+    EPI013_PROOF_METHOD_MISMATCH  مسار الإثبات لا يتوافق مع الطريقة
+    EPI014_UTTERANCE_CONCEPT_CONFLICT  تعارض المنطوق والمفهوم بلا قاعدة فصل
+    ========================  ================================================
+    """
+    EPI001_MISSING_REALITY = auto()
+    EPI002_MISSING_SENSE = auto()
+    EPI003_MISSING_PRIOR_INFO = auto()
+    EPI004_OPINION_CONTAMINATION = auto()
+    EPI005_MISSING_LINKING = auto()
+    EPI006_MISSING_JUDGEMENT = auto()
+    EPI007_MISSING_METHOD = auto()
+    EPI008_METHOD_FIT_FAILURE = auto()
+    EPI009_CARRIER_INVALID = auto()
+    EPI010_MISSING_PROOF_PATH = auto()
+    EPI011_MISSING_CONFLICT_RULE = auto()
+    EPI012_CARRIER_BOTH_MISSING = auto()
+    EPI013_PROOF_METHOD_MISMATCH = auto()
+    EPI014_UTTERANCE_CONCEPT_CONFLICT = auto()
+
+
+class JudgementType(Enum):
+    """نوع الحكم — the scope of a rational judgement.
+
+    Determines which epistemic rank is reachable:
+    * ``EXISTENCE`` with grounded proof → :attr:`EpistemicRank.CERTAIN`
+    * ``ESSENCE``, ``ATTRIBUTE``, ``RELATION``, ``INTERPRETIVE`` →
+      :attr:`EpistemicRank.TRUE_NON_CERTAIN` at best
+    * ``FORMAL_CONTRADICTION`` → :attr:`EpistemicRank.IMPOSSIBLE`
+
+    =====================  =================================================
+    Member                  Meaning
+    =====================  =================================================
+    EXISTENCE               حكم على الوجود
+    ESSENCE                 حكم على الحقيقة
+    ATTRIBUTE               حكم على الصفة
+    RELATION                حكم على العلاقة
+    INTERPRETIVE            حكم على التفسير
+    FORMAL_CONTRADICTION    حكم بتناقض صوري
+    =====================  =================================================
+    """
+    EXISTENCE = auto()              # حكم على الوجود
+    ESSENCE = auto()                # حكم على الحقيقة
+    ATTRIBUTE = auto()              # حكم على الصفة
+    RELATION = auto()               # حكم على العلاقة
+    INTERPRETIVE = auto()           # حكم على التفسير
+    FORMAL_CONTRADICTION = auto()   # حكم بتناقض صوري
+
+
+class MethodFamily(Enum):
+    """عائلة الطريقة — the epistemological family a method belongs to.
+
+    Scientific method is a *branch* specialised for empirical material
+    inquiry; it must not be treated as the universal basis of knowledge.
+
+    ==========  ============================================================
+    Member       Meaning
+    ==========  ============================================================
+    RATIONAL     عقلية — the universal basis: واقع + حس + معلومات سابقة + ربط
+    SCIENTIFIC   علمية — empirical/material inquiry (branch of rational)
+    TEXTUAL      نقلية — transmission-based (revelation, narration)
+    DEDUCTIVE    استنباطية — formal deduction from axioms
+    INDUCTIVE    استقرائية — induction from instances
+    ==========  ============================================================
+    """
+    RATIONAL = auto()    # عقلية
+    SCIENTIFIC = auto()  # علمية
+    TEXTUAL = auto()     # نقلية
+    DEDUCTIVE = auto()   # استنباطية
+    INDUCTIVE = auto()   # استقرائية
+
+
+class CarrierType(Enum):
+    """نوع الحامل اللغوي — the linguistic transport type.
+
+    Only two carriers exist: Utterance (منطوق) and Concept (مفهوم).
+    ``BOTH`` requires *both* carriers to be present.
+
+    =========  ============================================================
+    Member      Meaning
+    =========  ============================================================
+    UTTERANCE   منطوق فقط
+    CONCEPT     مفهوم فقط
+    BOTH        منطوق + مفهوم معًا
+    =========  ============================================================
+    """
+    UTTERANCE = auto()  # منطوق
+    CONCEPT = auto()    # مفهوم
+    BOTH = auto()       # كلاهما
+
+
+class RealityKind(Enum):
+    """نوع الواقع — the ontological character of the reality anchor.
+
+    ==========  ==============================================================
+    Member       Meaning
+    ==========  ==============================================================
+    MATERIAL     مادي — physically perceptible object or event
+    ABSTRACT     مجرد — logical / mathematical entity
+    SOCIAL       اجتماعي — convention, norm, institution
+    HISTORICAL   تاريخي — past event attested by transmission
+    ==========  ==============================================================
+    """
+    MATERIAL = auto()    # مادي
+    ABSTRACT = auto()    # مجرد
+    SOCIAL = auto()      # اجتماعي
+    HISTORICAL = auto()  # تاريخي
+
+
+class SenseModality(Enum):
+    """حاسة الأثر الحسي — the sensory channel of a sense trace.
+
+    =======  ================================================================
+    Member    Meaning
+    =======  ================================================================
+    VISUAL    بصري
+    AUDITORY  سمعي
+    TACTILE   لمسي
+    OLFACTORY شمّي
+    GUSTATORY ذوقي
+    INTERNAL  داخلي (proprioception / interoception)
+    =======  ================================================================
+    """
+    VISUAL = auto()     # بصري
+    AUDITORY = auto()   # سمعي
+    TACTILE = auto()    # لمسي
+    OLFACTORY = auto()  # شمّي
+    GUSTATORY = auto()  # ذوقي
+    INTERNAL = auto()   # داخلي
+
+
+class TraceMode(Enum):
+    """وضع الأثر — whether the trace is direct or indirect.
+
+    ==========  ==============================================================
+    Member       Meaning
+    ==========  ==============================================================
+    DIRECT       مباشر — first-hand sensory access
+    REPORTED     منقول — attested by reliable report
+    INFERRED     مستنتج — deduced from physical evidence
+    ==========  ==============================================================
+    """
+    DIRECT = auto()    # مباشر
+    REPORTED = auto()  # منقول
+    INFERRED = auto()  # مستنتج
+
+
+class LinkKind(Enum):
+    """نوع رابط الربط — the kind of linking used in the cognitive episode.
+
+    =============  ===========================================================
+    Member          Meaning
+    =============  ===========================================================
+    CAUSAL          سببي — cause-effect
+    ANALOGICAL      قياسي — analogy
+    DEFINITIONAL    تعريفي — by definition
+    CONTEXTUAL      سياقي — contextual inference
+    AUTHORITATIVE   نقلي — from authoritative text
+    =============  ===========================================================
+    """
+    CAUSAL = auto()         # سببي
+    ANALOGICAL = auto()     # قياسي
+    DEFINITIONAL = auto()   # تعريفي
+    CONTEXTUAL = auto()     # سياقي
+    AUTHORITATIVE = auto()  # نقلي
+
+
+class ProofPathKind(Enum):
+    """نوع مسار الإثبات — how the proof path is constructed.
+
+    ===========  ===============================================================
+    Member        Meaning
+    ===========  ===============================================================
+    DIRECT_PROOF  برهان مباشر
+    BY_NEGATION   برهان بالنفي (reductio ad absurdum)
+    BY_EXCLUSION  برهان بالحصر (elimination of alternatives)
+    COMPOSITE     مركّب — combination of the above
+    ===========  ===============================================================
+    """
+    DIRECT_PROOF = auto()  # برهان مباشر
+    BY_NEGATION = auto()   # برهان بالنفي
+    BY_EXCLUSION = auto()  # برهان بالحصر
+    COMPOSITE = auto()     # مركّب
+
+
+class GapSeverity(Enum):
+    """درجة الفجوة — how serious a detected gap is.
+
+    ========  =================================================================
+    Member     Meaning
+    ========  =================================================================
+    MINOR      طفيف — does not change rank
+    MODERATE   معتدل — may lower rank one step
+    CRITICAL   حرج — forces PROBABILISTIC_DOUBT or worse
+    FATAL      قاتل — forces REJECTED_METHODOLOGICALLY
+    ========  =================================================================
+    """
+    MINOR = auto()     # طفيف
+    MODERATE = auto()  # معتدل
+    CRITICAL = auto()  # حرج
+    FATAL = auto()     # قاتل
+
+
+class ContaminationLevel(Enum):
+    """مستوى تلوث الرأي المسبق — how much prior opinion contaminates the episode.
+
+    LOW is acceptable; MEDIUM triggers a warning; HIGH causes rejection.
+
+    ======  ===================================================================
+    Member   Meaning
+    ======  ===================================================================
+    NONE     لا تلوث
+    LOW      تلوث منخفض — acceptable
+    MEDIUM   تلوث متوسط — flagged, rank may be lowered
+    HIGH     تلوث مرتفع — causes EPI004 rejection
+    ======  ===================================================================
+    """
+    NONE = auto()    # لا تلوث
+    LOW = auto()     # منخفض
+    MEDIUM = auto()  # متوسط
+    HIGH = auto()    # مرتفع
+
+
+class InsertionPolicy(Enum):
+    """سياسة الإدخال المعرفي — whether and how a validated episode may be stored.
+
+    ===========  ===============================================================
+    Member        Meaning
+    ===========  ===============================================================
+    FOUNDATIONAL  أساسي — unconditionally storable (CERTAIN rank)
+    ADMISSIBLE    مقبول — storable with normal confidence (TRUE_NON_CERTAIN)
+    GUARDED       محاط بحذر — storable with explicit uncertainty flag
+    BLOCKED       محجوب — must not be stored (invalid or rejected)
+    ===========  ===============================================================
+    """
+    FOUNDATIONAL = auto()  # أساسي
+    ADMISSIBLE = auto()    # مقبول
+    GUARDED = auto()       # محاط بحذر
+    BLOCKED = auto()       # محجوب

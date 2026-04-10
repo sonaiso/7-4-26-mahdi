@@ -12,23 +12,32 @@ from typing import FrozenSet, List, Optional, Tuple
 
 from .enums import (
     POS,
+    CarrierType,
     CellType,
     CombinationType,
     ConceptualSignifiedClass,
     ConditionToken,
     ConstraintType,
+    ContaminationLevel,
     CouplingRelationType,
     DalalaType,
+    DecisionCode,
     ElementClass,
     ElementFunction,
     ElementLayer,
+    EpistemicRank,
     EvidenceType,
     FunctionRole,
     FuncTransitionClass,
+    GapSeverity,
     GuidanceState,
+    InsertionPolicy,
     IrabCase,
     IrabRole,
+    JudgementType,
+    LinkKind,
     MafhumType,
+    MethodFamily,
     OntologicalConstraintType,
     OntologicalLayer,
     OntologicalMode,
@@ -36,16 +45,20 @@ from .enums import (
     PhonFeature,
     PhonGroup,
     PhonTransform,
+    ProofPathKind,
     ProofStatus,
     RankType,
+    RealityKind,
     ReversibleValue,
     SemanticType,
+    SenseModality,
     SignifiedClass,
     SignifierClass,
     SlotState,
     SpaceRef,
     SyllablePosition,
     TimeRef,
+    TraceMode,
     TransitionCondition,
     TransitionLaw,
     TransitionType,
@@ -54,6 +67,7 @@ from .enums import (
     UnicodeProfileType,
     UtteranceToConceptConstraint,
     UtteredFormClass,
+    ValidationOutcome,
 )
 
 # ── Signifier layer ─────────────────────────────────────────────────
@@ -1359,3 +1373,306 @@ class OntologyV1Record:
     def failed_constraints(self) -> Tuple["OntologicalConstraintRecord", ...]:
         """Return all constraint records that did not pass."""
         return tuple(c for c in self.constraints if c.is_violated)
+
+
+# ── Epistemic v1 — طبقة المعرفة العقلانية ──────────────────────────────
+
+
+@dataclass(frozen=True)
+class RealityAnchorRecord:
+    """مرساة الواقع — the grounding of a cognitive episode in reality.
+
+    Fields
+    ------
+    anchor_id    unique identifier
+    kind         ontological character of the reality (:class:`RealityKind`)
+    description  free-text description of the reality anchor
+    """
+    anchor_id: str
+    kind: RealityKind
+    description: str
+
+
+@dataclass(frozen=True)
+class SenseTraceRecord:
+    """الأثر الحسي — the sensory imprint that connects reality to cognition.
+
+    Fields
+    ------
+    trace_id    unique identifier
+    modality    sensory channel (:class:`SenseModality`)
+    mode        direct / reported / inferred (:class:`TraceMode`)
+    description description of the sense trace
+    """
+    trace_id: str
+    modality: SenseModality
+    mode: TraceMode
+    description: str
+
+
+@dataclass(frozen=True)
+class PriorInfoRecord:
+    """المعلومة السابقة — pre-existing knowledge used in the episode.
+
+    Fields
+    ------
+    info_id      unique identifier
+    content      the prior knowledge content
+    source       origin of the prior info (e.g. axiom id, theorem id)
+    """
+    info_id: str
+    content: str
+    source: str = ""
+
+
+@dataclass(frozen=True)
+class OpinionTraceRecord:
+    """أثر الرأي المسبق — trace of prior opinion (must be excluded from the method).
+
+    Fields
+    ------
+    opinion_id          unique identifier
+    description         description of the opinion
+    contamination_level degree of contamination (:class:`ContaminationLevel`)
+    """
+    opinion_id: str
+    description: str
+    contamination_level: ContaminationLevel
+
+
+@dataclass(frozen=True)
+class LinkingTraceRecord:
+    """أثر الربط — the linking step connecting reality, sense, and prior info.
+
+    Fields
+    ------
+    link_id      unique identifier
+    kind         type of link (:class:`LinkKind`)
+    description  description of the linking operation
+    """
+    link_id: str
+    kind: LinkKind
+    description: str
+
+
+@dataclass(frozen=True)
+class JudgementRecord:
+    """سجل الحكم — the output judgement of a cognitive episode.
+
+    Fields
+    ------
+    judgement_id  unique identifier
+    judgement_type  scope of the judgement (:class:`JudgementType`)
+    content         the content of the judgement
+    """
+    judgement_id: str
+    judgement_type: JudgementType
+    content: str
+
+
+@dataclass(frozen=True)
+class MethodRecord:
+    """سجل الطريقة — the epistemological method applied in the episode.
+
+    Fields
+    ------
+    method_id     unique identifier
+    family        method family (:class:`MethodFamily`)
+    name          human-readable name
+    domain_fit    tuple of :class:`JudgementType` values the method can handle
+    """
+    method_id: str
+    family: MethodFamily
+    name: str
+    domain_fit: Tuple[JudgementType, ...]
+
+
+@dataclass(frozen=True)
+class UtteranceRecord:
+    """سجل المنطوق — the utterance (linguistic surface form) carrier.
+
+    Fields
+    ------
+    utterance_id  unique identifier
+    text          the surface text
+    """
+    utterance_id: str
+    text: str
+
+
+@dataclass(frozen=True)
+class ConceptRecord:
+    """سجل المفهوم — the concept (mental/semantic) carrier.
+
+    Fields
+    ------
+    concept_record_id  unique identifier
+    label              the concept label
+    """
+    concept_record_id: str
+    label: str
+
+
+@dataclass(frozen=True)
+class LinguisticCarrierRecord:
+    """سجل الحامل اللغوي — the linguistic transport for a cognitive episode.
+
+    The linguistic transport has exactly two carriers: Utterance and Concept.
+    ``carrier_type`` specifies which is present; when ``BOTH``, both
+    ``utterance`` and ``concept`` must be non-None.
+
+    Fields
+    ------
+    carrier_id    unique identifier
+    carrier_type  which carriers are present (:class:`CarrierType`)
+    utterance     the utterance carrier (required if type is UTTERANCE or BOTH)
+    concept       the concept carrier (required if type is CONCEPT or BOTH)
+    """
+    carrier_id: str
+    carrier_type: CarrierType
+    utterance: Optional[UtteranceRecord]
+    concept: Optional[ConceptRecord]
+
+
+@dataclass(frozen=True)
+class ProofPathRecord:
+    """مسار الإثبات — the path of proof supporting a judgement.
+
+    Fields
+    ------
+    path_id     unique identifier
+    kind        proof path kind (:class:`ProofPathKind`)
+    steps       ordered proof steps (as text)
+    method_fit  the method family this path is compatible with
+    """
+    path_id: str
+    kind: ProofPathKind
+    steps: Tuple[str, ...]
+    method_fit: MethodFamily
+
+
+@dataclass(frozen=True)
+class ConflictRuleRecord:
+    """قاعدة التعارض — rule for resolving utterance/concept conflicts.
+
+    Fields
+    ------
+    rule_id           unique identifier
+    prefer_concept    True → concept wins on conflict; False → utterance wins
+    rationale         explanation of the rule
+    """
+    rule_id: str
+    prefer_concept: bool
+    rationale: str
+
+
+@dataclass(frozen=True)
+class GapRecord:
+    """سجل الفجوة — a detected gap in the cognitive episode.
+
+    Fields
+    ------
+    gap_id      unique identifier
+    code        the :class:`DecisionCode` that triggered this gap
+    severity    how serious the gap is (:class:`GapSeverity`)
+    description human-readable description
+    """
+    gap_id: str
+    code: DecisionCode
+    severity: GapSeverity
+    description: str
+
+
+@dataclass(frozen=True)
+class KnowledgeEpisode:
+    """خبرة معرفية — a complete cognitive episode for validation.
+
+    This is the *internal* fully-typed representation.  Client code usually
+    builds a :class:`KnowledgeEpisodeInput` first, then passes it to
+    :func:`~arabic_engine.cognition.epistemic_v1.validate_episode`.
+
+    Fields
+    ------
+    episode_id       unique identifier
+    reality_anchor   the grounding in reality (required)
+    sense_trace      the sensory imprint (required)
+    prior_infos      at least one prior information record (required)
+    opinion_traces   any detected prior-opinion traces (may be empty)
+    linking_trace    the linking step (required)
+    judgement        the output judgement (required)
+    method           the epistemological method (required)
+    carrier          the linguistic carrier (required)
+    proof_path       the proof path (required)
+    conflict_rule    the conflict resolution rule (required)
+    """
+    episode_id: str
+    reality_anchor: RealityAnchorRecord
+    sense_trace: SenseTraceRecord
+    prior_infos: Tuple[PriorInfoRecord, ...]
+    opinion_traces: Tuple[OpinionTraceRecord, ...]
+    linking_trace: LinkingTraceRecord
+    judgement: JudgementRecord
+    method: MethodRecord
+    carrier: LinguisticCarrierRecord
+    proof_path: ProofPathRecord
+    conflict_rule: ConflictRuleRecord
+
+
+@dataclass(frozen=True)
+class KnowledgeEpisodeInput:
+    """مدخل الخبرة المعرفية — the input to the validator (all fields optional).
+
+    Use this type to build up an episode incrementally.  Fields left as
+    ``None`` will trigger the appropriate :class:`DecisionCode` failures.
+
+    Fields mirror :class:`KnowledgeEpisode` but every field is ``Optional``.
+    """
+    episode_id: str
+    reality_anchor: Optional[RealityAnchorRecord] = None
+    sense_trace: Optional[SenseTraceRecord] = None
+    prior_infos: Tuple[PriorInfoRecord, ...] = ()
+    opinion_traces: Tuple[OpinionTraceRecord, ...] = ()
+    linking_trace: Optional[LinkingTraceRecord] = None
+    judgement: Optional[JudgementRecord] = None
+    method: Optional[MethodRecord] = None
+    carrier: Optional[LinguisticCarrierRecord] = None
+    proof_path: Optional[ProofPathRecord] = None
+    conflict_rule: Optional[ConflictRuleRecord] = None
+
+
+@dataclass(frozen=True)
+class ConflictResolutionResult:
+    """نتيجة حل التعارض — result of resolving an utterance/concept conflict.
+
+    Fields
+    ------
+    winner        ``"utterance"`` or ``"concept"``
+    rule_applied  the :class:`ConflictRuleRecord` applied
+    rationale     explanation of the resolution
+    """
+    winner: str
+    rule_applied: ConflictRuleRecord
+    rationale: str
+
+
+@dataclass(frozen=True)
+class ValidationResult:
+    """نتيجة التحقق — the complete output of :func:`validate_episode`.
+
+    Fields
+    ------
+    episode_id        mirrors the input episode id
+    outcome           overall validity (:class:`ValidationOutcome`)
+    codes             tuple of :class:`DecisionCode` failures (empty if valid)
+    rank              assigned epistemic rank, or ``None`` if rejected/invalid
+    insertion_policy  storage policy (:class:`InsertionPolicy`)
+    gaps              detected gaps as :class:`GapRecord` tuples
+    messages          human-readable messages (one per code)
+    """
+    episode_id: str
+    outcome: ValidationOutcome
+    codes: Tuple[DecisionCode, ...]
+    rank: Optional[EpistemicRank]
+    insertion_policy: InsertionPolicy
+    gaps: Tuple[GapRecord, ...]
+    messages: Tuple[str, ...]
