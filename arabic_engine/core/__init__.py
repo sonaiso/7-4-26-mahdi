@@ -12,7 +12,7 @@ re-exported here because it is a utility/verification module, not a data
 type.
 """
 
-from .enums import (  # noqa: F401 -- intentional re-exports
+from .enums import (
     POS as POS,
 )
 from .enums import (
@@ -78,41 +78,69 @@ from .enums import (
 from .enums import (
     TruthState as TruthState,
 )
-from .types import (
-    Concept,
-    DalalaLink,
-    EvalResult,
-    Grapheme,
-    InferenceResult,
-    LexicalClosure,
-    Proposition,
-    RootPattern,
-    Syllable,
-    SyntaxNode,
-    TimeSpaceTag,
-    WorldFact,
+from .enums import (
+    UnicodeProfileType as UnicodeProfileType,
 )
-
-__all__ = [
-    "POS",
-    "DalalaType",
-    "GuidanceState",
-    "IrabCase",
-    "IrabRole",
-    "SemanticType",
-    "SpaceRef",
-    "TimeRef",
-    "TruthState",
-    "Concept",
-    "DalalaLink",
-    "EvalResult",
-    "Grapheme",
-    "InferenceResult",
-    "LexicalClosure",
-    "Proposition",
-    "RootPattern",
-    "Syllable",
-    "SyntaxNode",
-    "TimeSpaceTag",
-    "WorldFact",
-]
+from .types import (
+    AEU as AEU,
+)
+from .types import (
+    AxiomRecord as AxiomRecord,
+)
+from .types import (
+    Concept as Concept,
+)
+from .types import (
+    DalalaLink as DalalaLink,
+)
+from .types import (
+    DMin as DMin,
+)
+from .types import (
+    EssenceConditionPair as EssenceConditionPair,
+)
+from .types import (
+    EvalResult as EvalResult,
+)
+from .types import (
+    Grapheme as Grapheme,
+)
+from .types import (
+    InferenceResult as InferenceResult,
+)
+from .types import (
+    LayerPromotionRule as LayerPromotionRule,
+)
+from .types import (
+    LexicalClosure as LexicalClosure,
+)
+from .types import (
+    ProofDependencyGraph as ProofDependencyGraph,
+)
+from .types import (
+    Proposition as Proposition,
+)
+from .types import (
+    RootPattern as RootPattern,
+)
+from .types import (
+    Syllable as Syllable,
+)
+from .types import (
+    SyntaxNode as SyntaxNode,
+)
+from .types import (
+    TheoremRecord as TheoremRecord,
+)
+from .types import (
+    TimeSpaceTag as TimeSpaceTag,
+)
+from .types import (
+    TriadicBlockRecord as TriadicBlockRecord,
+)
+from .types import (
+    WorldFact as WorldFact,
+)
+from .types import (
+    ZeroSlotRecord as ZeroSlotRecord,
+)
