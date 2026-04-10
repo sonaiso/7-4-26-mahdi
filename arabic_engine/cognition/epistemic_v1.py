@@ -97,10 +97,19 @@ def validate_linguistic_carrier(
     * CONCEPT type → ``concept`` must not be None.
     * BOTH type → both ``utterance`` and ``concept`` must not be None.
 
+    Parameters
+    ----------
+    carrier:
+        The :class:`~arabic_engine.core.types.LinguisticCarrierRecord` to
+        validate.
+
     Returns
     -------
-    (valid, codes, gaps)
-        ``valid`` is True only when all rules pass.
+    tuple[bool, list[DecisionCode], list[GapRecord]]
+        A 3-tuple ``(valid, codes, gaps)`` where ``valid`` is ``True`` only
+        when all rules pass, ``codes`` is the list of triggered
+        :class:`DecisionCode` values, and ``gaps`` is the corresponding list
+        of :class:`GapRecord` instances.
     """
     codes: List[DecisionCode] = []
     gaps: List[GapRecord] = []
