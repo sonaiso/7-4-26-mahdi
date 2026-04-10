@@ -12,7 +12,7 @@ re-exported here because it is a utility/verification module, not a data
 type.
 """
 
-from .enums import (  # noqa: F401 -- intentional re-exports
+from .enums import (
     POS as POS,
 )
 from .enums import (
@@ -38,6 +38,9 @@ from .enums import (
 )
 from .enums import (
     CulturalScope as CulturalScope,
+)
+from .enums import (
+    DalaalaKind as DalaalaKind,
 )
 from .enums import (
     DalalaType as DalalaType,
@@ -79,6 +82,12 @@ from .enums import (
     IrabRole as IrabRole,
 )
 from .enums import (
+    JudgementType as JudgementType,
+)
+from .enums import (
+    LinkKind as LinkKind,
+)
+from .enums import (
     MafhumType as MafhumType,
 )
 from .enums import (
@@ -92,6 +101,10 @@ from .enums import (
 )
 from .enums import (
     NormativeCategory as NormativeCategory,
+    MethodFamily as MethodFamily,
+)
+from .enums import (
+    OntologicalConstraintType as OntologicalConstraintType,
 )
 from .enums import (
     OntologicalLayer as OntologicalLayer,
@@ -112,6 +125,9 @@ from .enums import (
     PhonTransform as PhonTransform,
 )
 from .enums import (
+    ProofPathKind as ProofPathKind,
+)
+from .enums import (
     ProofStatus as ProofStatus,
 )
 from .enums import (
@@ -127,6 +143,12 @@ from .enums import (
     SemanticType as SemanticType,
 )
 from .enums import (
+    SenderRoleType as SenderRoleType,
+)
+from .enums import (
+    SenseModality as SenseModality,
+)
+from .enums import (
     SignifiedClass as SignifiedClass,
 )
 from .enums import (
@@ -139,7 +161,22 @@ from .enums import (
     SpaceRef as SpaceRef,
 )
 from .enums import (
+    StyleKind as StyleKind,
+)
+from .enums import (
     TimeRef as TimeRef,
+)
+from .enums import (
+    TraceMode as TraceMode,
+)
+from .enums import (
+    TraceQuality as TraceQuality,
+)
+from .enums import (
+    TrustBasis as TrustBasis,
+)
+from .enums import (
+    TrustLevel as TrustLevel,
 )
 from .enums import (
     TruthState as TruthState,
@@ -148,10 +185,19 @@ from .enums import (
     UnicodeProfileType as UnicodeProfileType,
 )
 from .enums import (
+    UtteranceMode as UtteranceMode,
+)
+from .enums import (
     UtteranceToConceptConstraint as UtteranceToConceptConstraint,
 )
 from .enums import (
     UtteredFormClass as UtteredFormClass,
+)
+from .enums import (
+    ValidationOutcome as ValidationOutcome,
+)
+from .enums import (
+    ValidationState as ValidationState,
 )
 from .types import (  # noqa: F401 -- intentional re-exports
     AEU as AEU,
@@ -169,7 +215,31 @@ from .types import (
     DalalaLink as DalalaLink,
 )
 from .types import (
+    DiscourseCarrierRecord as DiscourseCarrierRecord,
+)
+from .types import (
+    DiscourseConceptRecord as DiscourseConceptRecord,
+)
+from .types import (
+    DiscourseExchangeNode as DiscourseExchangeNode,
+)
+from .types import (
+    DiscourseExchangeResult as DiscourseExchangeResult,
+)
+from .types import (
+    DiscourseGapRecord as DiscourseGapRecord,
+)
+from .types import (
+    DiscourseUtteranceRecord as DiscourseUtteranceRecord,
+)
+from .types import (
     DMin as DMin,
+)
+from .types import (
+    EpisodeValidationResult as EpisodeValidationResult,
+)
+from .types import (
+    EpistemicConceptNode as EpistemicConceptNode,
 )
 from .types import (
     EssenceConditionPair as EssenceConditionPair,
@@ -178,10 +248,43 @@ from .types import (
     EvalResult as EvalResult,
 )
 from .types import (
+    EvidenceNode as EvidenceNode,
+)
+from .types import (
+    ExchangePurposeRecord as ExchangePurposeRecord,
+)
+from .types import (
+    ExchangeStyleRecord as ExchangeStyleRecord,
+)
+from .types import (
+    GapNode as GapNode,
+)
+from .types import (
+    GapRecord as GapRecord,
+)
+from .types import (
     Grapheme as Grapheme,
 )
 from .types import (
     InferenceResult as InferenceResult,
+)
+from .types import (
+    InterpretiveOutcomeRecord as InterpretiveOutcomeRecord,
+)
+from .types import (
+    JudgementNode as JudgementNode,
+)
+from .types import (
+    JudgementRecord as JudgementRecord,
+)
+from .types import (
+    KnowledgeEpisode as KnowledgeEpisode,
+)
+from .types import (
+    KnowledgeEpisodeInput as KnowledgeEpisodeInput,
+)
+from .types import (
+    KnowledgeEpisodeNode as KnowledgeEpisodeNode,
 )
 from .types import (
     LayerPromotionRule as LayerPromotionRule,
@@ -190,19 +293,85 @@ from .types import (
     LexicalClosure as LexicalClosure,
 )
 from .types import (
+    LinguisticCarrierNode as LinguisticCarrierNode,
+)
+from .types import (
+    LinguisticCarrierRecord as LinguisticCarrierRecord,
+)
+from .types import (
+    LinkingTraceNode as LinkingTraceNode,
+)
+from .types import (
+    LinkingTraceRecord as LinkingTraceRecord,
+)
+from .types import (
+    MethodNode as MethodNode,
+)
+from .types import (
+    MethodRecord as MethodRecord,
+)
+from .types import (
     OntologicalConstraintRecord as OntologicalConstraintRecord,
 )
 from .types import (
     OntologyV1Record as OntologyV1Record,
 )
 from .types import (
+    OpinionTraceNode as OpinionTraceNode,
+)
+from .types import (
+    OpinionTraceRecord as OpinionTraceRecord,
+)
+from .types import (
+    PriorInfoNode as PriorInfoNode,
+)
+from .types import (
+    PriorInfoRecord as PriorInfoRecord,
+)
+from .types import (
     ProofDependencyGraph as ProofDependencyGraph,
+)
+from .types import (
+    ProofPathNode as ProofPathNode,
+)
+from .types import (
+    ProofPathRecord as ProofPathRecord,
 )
 from .types import (
     Proposition as Proposition,
 )
 from .types import (
+    RationalSelfRecord as RationalSelfRecord,
+)
+from .types import (
+    RealityAnchorNode as RealityAnchorNode,
+)
+from .types import (
+    RealityAnchorRecord as RealityAnchorRecord,
+)
+from .types import (
+    ReceiverRoleRecord as ReceiverRoleRecord,
+)
+from .types import (
+    ReceptionRecord as ReceptionRecord,
+)
+from .types import (
+    ReceptionStateRecord as ReceptionStateRecord,
+)
+from .types import (
     RootPattern as RootPattern,
+)
+from .types import (
+    SelfNode as SelfNode,
+)
+from .types import (
+    SenderRoleRecord as SenderRoleRecord,
+)
+from .types import (
+    SenseTraceNode as SenseTraceNode,
+)
+from .types import (
+    SenseTraceRecord as SenseTraceRecord,
 )
 from .types import (
     SignifiedNode as SignifiedNode,
@@ -224,6 +393,18 @@ from .types import (
 )
 from .types import (
     TriadicBlockRecord as TriadicBlockRecord,
+)
+from .types import (
+    TrustProfileRecord as TrustProfileRecord,
+)
+from .types import (
+    UtteranceNode as UtteranceNode,
+)
+from .types import (
+    UtteranceRecord as UtteranceRecord,
+)
+from .types import (
+    ValidationResult as ValidationResult,
 )
 from .types import (
     WorldFact as WorldFact,
