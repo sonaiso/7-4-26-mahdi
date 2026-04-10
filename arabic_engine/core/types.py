@@ -41,6 +41,7 @@ from .enums import (
     OntologicalConstraintType,
     OntologicalLayer,
     OntologicalMode,
+    PathKind,
     PhonCategory,
     PhonFeature,
     PhonGroup,

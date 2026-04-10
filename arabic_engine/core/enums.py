@@ -833,7 +833,7 @@ class OntologicalConstraintType(Enum):
 
     ==========================  ================================================
     Member                       Description
-    ==========================  ================================================
+    ==========================  ====٨============================================
     STRUCTURAL                   قيد بنيوي — syntactic well-formedness
     PHONOLOGICAL_CONSTRAINT      قيد صوتي — phonological legality
     MORPHOLOGICAL_CONSTRAINT     قيد صرفي — morphological pattern compatibility

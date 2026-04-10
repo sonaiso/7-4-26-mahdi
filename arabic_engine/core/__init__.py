@@ -21,6 +21,9 @@ from .enums import (
     CarrierType as CarrierType,
 )
 from .enums import (
+    CarrierClass as CarrierClass,
+)
+from .enums import (
     CombinationType as CombinationType,
 )
 from .enums import (
@@ -85,6 +88,9 @@ from .enums import (
 )
 from .enums import (
     OntologicalLayer as OntologicalLayer,
+)
+from .enums import (
+    PathKind as PathKind,
 )
 from .enums import (
     PhonCategory as PhonCategory,
@@ -174,6 +180,12 @@ from .types import (
 )
 from .types import (
     DMin as DMin,
+)
+from .types import (
+    EpisodeValidationResult as EpisodeValidationResult,
+)
+from .types import (
+    EpistemicConceptNode as EpistemicConceptNode,
 )
 from .types import (
     EssenceConditionPair as EssenceConditionPair,
@@ -281,31 +293,44 @@ from .types import (
 __all__ = [
     # enums
     "POS",
+    "CarrierClass",
     "CombinationType",
     "ConceptualSignifiedClass",
     "ConstraintType",
+    "ContaminationLevel",
     "CouplingRelationType",
     "DalalaType",
     "ElementClass",
     "ElementFunction",
     "ElementLayer",
+    "EpistemicRank",
+    "GapSeverity",
     "GuidanceState",
+    "InfoKind",
     "IrabCase",
     "IrabRole",
+    "JudgementType",
+    "LinkKind",
     "MafhumType",
+    "MethodFamily",
     "OntologicalConstraintType",
     "OntologicalLayer",
+    "PathKind",
     "PhonCategory",
     "PhonFeature",
     "PhonGroup",
     "PhonTransform",
     "ProofStatus",
+    "RealityKind",
     "SemanticType",
+    "SenseModality",
     "SignifiedClass",
     "SignifierClass",
     "SlotState",
     "SpaceRef",
     "TimeRef",
+    "TraceMode",
+    "TraceQuality",
     "TruthState",
     "UnicodeProfileType",
     "UtteredFormClass",
@@ -328,24 +353,43 @@ __all__ = [
     # types
     "AEU",
     "Concept",
+    "ConflictRuleNode",
     "CouplingRecord",
     "DalalaLink",
     "DMin",
+    "EpistemicConceptNode",
+    "EpisodeValidationResult",
     "EvalResult",
+    "EvidenceNode",
+    "GapNode",
     "Grapheme",
     "InferenceResult",
+    "JudgementNode",
+    "KnowledgeEpisodeNode",
     "LayerPromotionRule",
     "LexicalClosure",
+    "LinguisticCarrierNode",
+    "LinkingTraceNode",
+    "MethodNode",
     "OntologicalConstraintRecord",
     "OntologyV1Record",
+    "OpinionTraceNode",
+    "PriorInfoNode",
+    "ProofDependencyGraph",
+    "ProofPathNode",
     "Proposition",
+    "RealityAnchorNode",
     "RootPattern",
+    "SelfNode",
+    "SenseTraceNode",
     "SignifiedNode",
     "SignifierNode",
     "Syllable",
     "SyntaxNode",
+    "TheoremRecord",
     "TimeSpaceTag",
     "TriadicBlockRecord",
+    "UtteranceNode",
     "WorldFact",
     "ZeroSlotRecord",
     # epistemic v1 types
