@@ -227,6 +227,63 @@ from .enums import (
 from .enums import (
     ValidationState as ValidationState,
 )
+from .kernel import (
+    KERNEL_RELATION_PAIRS as KERNEL_RELATION_PAIRS,
+)
+from .kernel import (
+    KERNEL_REQUIRED_FIELDS as KERNEL_REQUIRED_FIELDS,
+)
+from .kernel import (
+    KernelDiscourseExchange as KernelDiscourseExchange,
+)
+from .kernel import (
+    KernelEdge as KernelEdge,
+)
+from .kernel import (
+    KernelGraph as KernelGraph,
+)
+from .kernel import (
+    KernelKnowledgeEpisode as KernelKnowledgeEpisode,
+)
+from .kernel import (
+    KernelLabel as KernelLabel,
+)
+from .kernel import (
+    KernelLinguisticProfile as KernelLinguisticProfile,
+)
+from .kernel import (
+    KernelNode as KernelNode,
+)
+from .kernel import (
+    KernelRelation as KernelRelation,
+)
+from .kernel import (
+    KernelReusableModel as KernelReusableModel,
+)
+from .kernel import (
+    KernelUtterance as KernelUtterance,
+)
+from .kernel import (
+    KernelValidationResult as KernelValidationResult,
+)
+from .kernel import (
+    derive_discourse_exchange as derive_discourse_exchange,
+)
+from .kernel import (
+    derive_knowledge_episode as derive_knowledge_episode,
+)
+from .kernel import (
+    derive_linguistic_profile as derive_linguistic_profile,
+)
+from .kernel import (
+    derive_reusable_model as derive_reusable_model,
+)
+from .kernel import (
+    derive_utterance_from_carrier as derive_utterance_from_carrier,
+)
+from .kernel import (
+    validate_kernel_graph as validate_kernel_graph,
+)
 from .types import (  # noqa: F401 -- intentional re-exports
     AEU as AEU,
 )
