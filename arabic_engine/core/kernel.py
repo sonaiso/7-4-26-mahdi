@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from enum import Enum
-from typing import Any, Dict, FrozenSet, Mapping, Tuple
+from typing import Any
 
 
 class KernelLabel(Enum):
@@ -51,7 +51,7 @@ class KernelRelation(Enum):
     FORMS = "FORMS"
 
 
-KERNEL_REQUIRED_FIELDS: Dict[KernelLabel, FrozenSet[str]] = {
+KERNEL_REQUIRED_FIELDS: dict[KernelLabel, frozenset[str]] = {
     KernelLabel.SELF: frozenset({"self_id", "name"}),
     KernelLabel.REALITY: frozenset({"reality_id", "kind"}),
     KernelLabel.SENSE: frozenset({"sense_id", "modality"}),
@@ -69,7 +69,7 @@ KERNEL_REQUIRED_FIELDS: Dict[KernelLabel, FrozenSet[str]] = {
 }
 
 
-KERNEL_RELATION_PAIRS: Dict[KernelRelation, Tuple[Tuple[KernelLabel, KernelLabel], ...]] = {
+KERNEL_RELATION_PAIRS: dict[KernelRelation, tuple[tuple[KernelLabel, KernelLabel], ...]] = {
     KernelRelation.KNOWS: ((KernelLabel.SELF, KernelLabel.CONCEPT),),
     KernelRelation.EMITS: ((KernelLabel.SELF, KernelLabel.CARRIER),),
     KernelRelation.RECEIVES: ((KernelLabel.SELF, KernelLabel.CARRIER),),
@@ -98,7 +98,7 @@ class KernelNode:
 
     node_id: str
     label: KernelLabel
-    fields: Mapping[str, Any]
+    fields: dict[str, Any]
 
 
 @dataclass(frozen=True)
@@ -114,8 +114,8 @@ class KernelEdge:
 class KernelGraph:
     """A minimal kernel graph payload."""
 
-    nodes: Tuple[KernelNode, ...]
-    edges: Tuple[KernelEdge, ...]
+    nodes: tuple[KernelNode, ...]
+    edges: tuple[KernelEdge, ...]
 
 
 @dataclass(frozen=True)
@@ -123,7 +123,7 @@ class KernelValidationResult:
     """Validation result for a kernel graph."""
 
     valid: bool
-    errors: Tuple[str, ...]
+    errors: tuple[str, ...]
 
 
 @dataclass(frozen=True)

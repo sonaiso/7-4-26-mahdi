@@ -45,7 +45,7 @@ def test_validate_kernel_graph_rejects_relation_label_mismatch() -> None:
     edge = KernelEdge(source_id="n1", relation=KernelRelation.KNOWS, target_id="n2")
     result = validate_kernel_graph(KernelGraph(nodes=(reality, sense), edges=(edge,)))
     assert result.valid is False
-    assert any("Self->Concept" in err for err in result.errors)
+    assert any("Self->Concept" in err and "Reality->Sense" in err for err in result.errors)
 
 
 def test_validate_kernel_graph_accepts_model_has_state() -> None:
