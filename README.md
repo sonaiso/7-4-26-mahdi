@@ -274,6 +274,22 @@ pytest -v
 ruff check .
 ```
 
+## System Integrity Verification
+
+To keep the engine integrated and prevent duplicated repository content:
+
+```bash
+# Full validation suite (includes architecture + integrity tests)
+pytest -v
+
+# Focused repository integrity checks
+pytest -v tests/test_repository_integrity.py
+```
+
+The integrity checks validate that critical engine modules are importable and
+that there are no duplicated file contents inside `arabic_engine/`, `tests/`,
+`docs/`, and `db/`.
+
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.

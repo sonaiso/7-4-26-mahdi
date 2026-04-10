@@ -284,3 +284,19 @@ from arabic_engine.closure import verify_general_closure, format_closure_report
 | `InferenceResult` | — | `rule_name`, `premises`, `conclusion`, `confidence`, `valid` |
 | `MafhumPillar` | — | `closed_mantuq`, `constraint_type`, `mental_counterpart`, `transition_rule` |
 | `MafhumResult` | — | `mafhum_type`, `constraint_type`, `pillars`, `source_text`, `valid`, `confidence` |
+
+---
+
+## Repository Integrity — `arabic_engine.core.integrity`
+
+```python
+from arabic_engine.core.integrity import (
+    scan_repository_integrity,
+    format_integrity_report,
+)
+```
+
+| Function | Signature | Description |
+|----------|-----------|-------------|
+| `scan_repository_integrity` | `(project_root, *, required_modules=..., scan_dirs=...) → IntegrityReport` | Validates critical architecture imports and duplicate-content policy |
+| `format_integrity_report` | `(report) → str` | Formats a human-readable integrity summary |
