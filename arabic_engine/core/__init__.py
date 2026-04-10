@@ -70,15 +70,13 @@ from .enums import (
     SlotState as SlotState,
 )
 from .enums import (
-    POS,
-    DalalaType,
-    GuidanceState,
-    IrabCase,
-    IrabRole,
-    SemanticType,
-    SpaceRef,
-    TimeRef,
-    TruthState,
+    SpaceRef as SpaceRef,
+)
+from .enums import (
+    TimeRef as TimeRef,
+)
+from .enums import (
+    TruthState as TruthState,
 )
 from .types import (
     Concept,
