@@ -276,7 +276,7 @@ ruff check .
 
 ## Repository Maintenance: Branch PR Merge Automation
 
-The script `/home/runner/work/7-4-26-mahdi/7-4-26-mahdi/scripts/branch_pr_merge.sh` automates:
+The script `scripts/branch_pr_merge.sh` automates:
 
 - syncing feature branches from `origin`
 - creating/opening PRs to a base branch
@@ -296,7 +296,7 @@ This is a repository-maintenance utility and is not part of the `arabic_engine` 
 Always run a dry run first:
 
 ```bash
-/home/runner/work/7-4-26-mahdi/7-4-26-mahdi/scripts/branch_pr_merge.sh \
+./scripts/branch_pr_merge.sh \
   --base-branch main \
   --branches feature/branch-1,feature/branch-2 \
   --merge-method rebase \
@@ -308,7 +308,7 @@ Always run a dry run first:
 Then execute for real:
 
 ```bash
-/home/runner/work/7-4-26-mahdi/7-4-26-mahdi/scripts/branch_pr_merge.sh \
+./scripts/branch_pr_merge.sh \
   --base-branch main \
   --branch feature/branch-1 \
   --branch feature/branch-2 \
@@ -321,7 +321,7 @@ Then execute for real:
 
 - `--merge-method` only allows `merge|rebase|squash`
 - branch list is required (`--branch`/`--branches` or `BRANCHES` env)
-- boolean flags are validated (`true/false/yes/no/1/0/on/off`)
+- boolean flags are validated case-insensitively (`true/false/yes/no/1/0/on/off`)
 - script continues branch-by-branch on failures and exits non-zero if any branch fails
 - prints a machine-readable JSON summary at the end
 

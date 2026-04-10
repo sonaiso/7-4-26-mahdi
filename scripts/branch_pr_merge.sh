@@ -84,17 +84,20 @@ BASE_BRANCH="${BASE_BRANCH:-main}"
 MERGE_METHOD="${MERGE_METHOD:-rebase}"
 AUTO_MERGE_RAW="${AUTO_MERGE:-false}"
 DELETE_BRANCH_RAW="${DELETE_BRANCH:-false}"
+BRANCHES_ENV="${BRANCHES:-}"
 DRY_RUN="false"
 VERBOSE="false"
 
-AUTO_MERGE="$(normalize_bool "$AUTO_MERGE_RAW" 2>/dev/null || true)"
-DELETE_BRANCH="$(normalize_bool "$DELETE_BRANCH_RAW" 2>/dev/null || true)"
-[[ -n "$AUTO_MERGE" ]] || die "Invalid AUTO_MERGE value: '$AUTO_MERGE_RAW'"
-[[ -n "$DELETE_BRANCH" ]] || die "Invalid DELETE_BRANCH value: '$DELETE_BRANCH_RAW'"
+if ! AUTO_MERGE="$(normalize_bool "$AUTO_MERGE_RAW" 2>/dev/null)"; then
+  die "Invalid AUTO_MERGE value: '$AUTO_MERGE_RAW'"
+fi
+if ! DELETE_BRANCH="$(normalize_bool "$DELETE_BRANCH_RAW" 2>/dev/null)"; then
+  die "Invalid DELETE_BRANCH value: '$DELETE_BRANCH_RAW'"
+fi
 
 BRANCHES=()
-if [[ -n "${BRANCHES:-}" ]]; then
-  IFS=',' read -r -a __env_branches <<<"$BRANCHES"
+if [[ -n "${BRANCHES_ENV:-}" ]]; then
+  IFS=',' read -r -a __env_branches <<<"$BRANCHES_ENV"
   for b in "${__env_branches[@]}"; do
     b="${b//[[:space:]]/}"
     [[ -n "$b" ]] && BRANCHES+=("$b")
@@ -186,7 +189,7 @@ if [[ -n "$(git status --porcelain)" ]]; then
 fi
 
 vlog "Checking GitHub authentication"
-gh auth status >/dev/null 2>&1 || die "gh authentication is not active; run 'gh auth login'"
+gh auth status >/dev/null 2>&1 || die "gh authentication is not active; run 'gh auth login' or configure GH_TOKEN"
 
 vlog "Checking repository access"
 REPO_FULL_NAME="$(gh repo view --json nameWithOwner -q '.nameWithOwner' 2>/dev/null)" || \
@@ -208,8 +211,8 @@ for br in "${BRANCHES[@]}"; do
   fi
 done
 
-SUMMARY_FILE="$(mktemp /tmp/branch-pr-merge-summary.XXXXXX.tsv)"
-trap 'rm -f "$SUMMARY_FILE"' EXIT
+SUMMARY_FILE="$(mktemp "${TMPDIR:-/tmp}/branch-pr-merge-summary.XXXXXX.tsv")"
+trap 'rm -f "$SUMMARY_FILE"' EXIT INT TERM
 
 TOTAL=${#BRANCHES[@]}
 SUCCESS=0
@@ -228,7 +231,7 @@ for BR in "${BRANCHES[@]}"; do
 
   PR_NUMBER=""
 
-  if ! run_cmd git checkout "$BR"; then
+  if ! run_cmd git switch "$BR"; then
     error "Failed checkout for branch: $BR"
     record_result "$BR" "failed" "" "checkout_failed"
     FAILED=$((FAILED + 1))
@@ -259,8 +262,10 @@ for BR in "${BRANCHES[@]}"; do
       log "Dry-run: would create PR for $BR -> $BASE_BRANCH"
       PR_NUMBER="dry-run"
     else
-      if ! gh pr create --base "$BASE_BRANCH" --head "$BR" --title "Merge $BR into $BASE_BRANCH" --body "Automated PR for $BR" >/dev/null; then
+      PR_CREATE_OUTPUT=""
+      if ! PR_CREATE_OUTPUT="$(gh pr create --base "$BASE_BRANCH" --head "$BR" --title "Merge $BR into $BASE_BRANCH" --body "Automated PR for $BR" 2>&1)"; then
         error "Failed creating PR for branch: $BR"
+        [[ -n "$PR_CREATE_OUTPUT" ]] && error "gh pr create output: $PR_CREATE_OUTPUT"
         record_result "$BR" "failed" "" "pr_create_failed"
         FAILED=$((FAILED + 1))
         log "=== END branch: $BR (failed) ==="
@@ -356,9 +361,15 @@ done
 
 log "Done processing branches"
 
-python - "$SUMMARY_FILE" "$TOTAL" "$SUCCESS" "$FAILED" <<'PY'
+python3 - "$SUMMARY_FILE" "$TOTAL" "$SUCCESS" "$FAILED" <<'PY'
 import json
 import sys
+
+if len(sys.argv) != 5:
+    raise SystemExit(
+        "Expected 4 arguments after script name (summary_file, total, success, failed), "
+        f"got {len(sys.argv) - 1}"
+    )
 
 summary_file, total, success, failed = sys.argv[1:5]
 results = []
