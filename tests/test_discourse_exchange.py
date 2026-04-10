@@ -69,27 +69,147 @@ from arabic_engine.core.types import (
 @pytest.mark.parametrize(
     ("enum_cls", "member_names"),
     [
-        (ExchangeType, {"REPORT", "TEACHING", "QUESTION", "ANSWER", "COMMAND", "WARNING", "PERSUASION", "NEGOTIATION", "TESTIMONY", "EXPLANATION"}),
-        (ExchangePurposeType, {"INFORM", "TEACH", "VERIFY", "GUIDE", "BIND", "PERSUADE", "WARN", "REQUEST", "TEST", "PRESERVE_KNOWLEDGE"}),
-        (ExchangeStyleType, {"KHABARI", "INSHAI", "EXPLANATORY", "ARGUMENTATIVE", "DIRECTIVE", "INTERROGATIVE", "PEDAGOGICAL", "TESTIMONIAL"}),
-        (ExchangeStatus, {"DRAFTED", "TRANSMITTED", "RECEIVED", "INTERPRETED", "ACCEPTED", "REJECTED", "SUSPENDED"}),
+        (
+            ExchangeType,
+            {
+                "REPORT",
+                "TEACHING",
+                "QUESTION",
+                "ANSWER",
+                "COMMAND",
+                "WARNING",
+                "PERSUASION",
+                "NEGOTIATION",
+                "TESTIMONY",
+                "EXPLANATION",
+            },
+        ),
+        (
+            ExchangePurposeType,
+            {
+                "INFORM",
+                "TEACH",
+                "VERIFY",
+                "GUIDE",
+                "BIND",
+                "PERSUADE",
+                "WARN",
+                "REQUEST",
+                "TEST",
+                "PRESERVE_KNOWLEDGE",
+            },
+        ),
+        (
+            ExchangeStyleType,
+            {
+                "KHABARI",
+                "INSHAI",
+                "EXPLANATORY",
+                "ARGUMENTATIVE",
+                "DIRECTIVE",
+                "INTERROGATIVE",
+                "PEDAGOGICAL",
+                "TESTIMONIAL",
+            },
+        ),
+        (
+            ExchangeStatus,
+            {
+                "DRAFTED",
+                "TRANSMITTED",
+                "RECEIVED",
+                "INTERPRETED",
+                "ACCEPTED",
+                "REJECTED",
+                "SUSPENDED",
+            },
+        ),
         (RationalSelfKind, {"INDIVIDUAL", "COLLECTIVE", "INSTITUTIONAL", "MODELED_AGENT"}),
-        (SenderRoleType, {"SOURCE", "EXPLAINER", "WITNESS", "TEACHER", "COMMANDER", "QUESTIONER", "INTERPRETER"}),
+        (
+            SenderRoleType,
+            {"SOURCE", "EXPLAINER", "WITNESS", "TEACHER", "COMMANDER", "QUESTIONER", "INTERPRETER"},
+        ),
         (AuthorityLevel, {"LOW", "MEDIUM", "HIGH"}),
-        (ReceiverRoleType, {"LISTENER", "LEARNER", "EXAMINER", "ADDRESSEE", "RESPONDENT", "EVALUATOR"}),
+        (
+            ReceiverRoleType,
+            {"LISTENER", "LEARNER", "EXAMINER", "ADDRESSEE", "RESPONDENT", "EVALUATOR"},
+        ),
         (ReceiverExpectedAction, {"UNDERSTAND", "VERIFY", "ACT", "ANSWER", "PRESERVE", "RELAY"}),
-        (PurposeType, {"INFORM", "INSTRUCT", "PERSUADE", "TEST", "QUERY", "PRESERVE", "REFUTE", "WARN", "REQUEST_ACTION", "CLARIFY"}),
+        (
+            PurposeType,
+            {
+                "INFORM",
+                "INSTRUCT",
+                "PERSUADE",
+                "TEST",
+                "QUERY",
+                "PRESERVE",
+                "REFUTE",
+                "WARN",
+                "REQUEST_ACTION",
+                "CLARIFY",
+            },
+        ),
         (ExplicitnessLevel, {"DIRECT", "SEMI_DIRECT", "IMPLICIT"}),
-        (StyleKind, {"KHABAR", "INSHA", "QUESTION", "ANSWER", "COMMAND", "PROHIBITION", "EXPLANATION", "ARGUMENT", "TESTIMONY", "SYMBOLIC"}),
-        (UtteranceMode, {"STATEMENT", "QUESTION", "COMMAND", "REPORT", "EXPLANATION", "DIALOGUE_TURN"}),
+        (
+            StyleKind,
+            {
+                "KHABAR",
+                "INSHA",
+                "QUESTION",
+                "ANSWER",
+                "COMMAND",
+                "PROHIBITION",
+                "EXPLANATION",
+                "ARGUMENT",
+                "TESTIMONY",
+                "SYMBOLIC",
+            },
+        ),
+        (
+            UtteranceMode,
+            {"STATEMENT", "QUESTION", "COMMAND", "REPORT", "EXPLANATION", "DIALOGUE_TURN"},
+        ),
         (DalaalaKind, {"MUTABAQA", "TADHAMMUN", "ILTIZAM", "ISHARA"}),
         (ReceptionMode, {"HEARD", "READ", "OBSERVED", "INFERRED", "RECALLED"}),
         (ReceiverState, {"OPEN", "RESISTANT", "BIASED", "UNCERTAIN", "ATTENTIVE"}),
-        (ReceptionStateType, {"RECEIVED", "UNDERSTOOD", "MISUNDERSTOOD", "ACCEPTED", "REJECTED", "SUSPENDED", "PARTIALLY_UNDERSTOOD"}),
+        (
+            ReceptionStateType,
+            {
+                "RECEIVED",
+                "UNDERSTOOD",
+                "MISUNDERSTOOD",
+                "ACCEPTED",
+                "REJECTED",
+                "SUSPENDED",
+                "PARTIALLY_UNDERSTOOD",
+            },
+        ),
         (TrustLevel, {"LOW", "MEDIUM", "HIGH"}),
         (TrustBasis, {"EXPERTISE", "AUTHORITY", "FAMILIARITY", "TESTIMONY_CHAIN", "NONE"}),
-        (InterpretiveOutcomeType, {"ALIGNED", "NARROWED", "EXPANDED", "DISTORTED", "CONFLICTING", "UNRESOLVED"}),
-        (DiscourseGapType, {"MISSING_SENDER", "MISSING_RECEIVER", "MISSING_PURPOSE", "MISSING_STYLE", "INVALID_STYLE_PURPOSE_FIT", "MISSING_CARRIER", "INVALID_CARRIER", "MISSING_RECEPTION", "MISSING_RECEPTION_STATE", "MISSING_TRANSFERRED_KNOWLEDGE", "INVALID_TRANSFERRED_KNOWLEDGE", "MISSING_TRUST_PROFILE", "RECEPTION_INCONSISTENCY", "SENDER_PURPOSE_MISMATCH"}),
+        (
+            InterpretiveOutcomeType,
+            {"ALIGNED", "NARROWED", "EXPANDED", "DISTORTED", "CONFLICTING", "UNRESOLVED"},
+        ),
+        (
+            DiscourseGapType,
+            {
+                "MISSING_SENDER",
+                "MISSING_RECEIVER",
+                "MISSING_PURPOSE",
+                "MISSING_STYLE",
+                "INVALID_STYLE_PURPOSE_FIT",
+                "MISSING_CARRIER",
+                "INVALID_CARRIER",
+                "MISSING_RECEPTION",
+                "MISSING_RECEPTION_STATE",
+                "MISSING_TRANSFERRED_KNOWLEDGE",
+                "INVALID_TRANSFERRED_KNOWLEDGE",
+                "MISSING_TRUST_PROFILE",
+                "RECEPTION_INCONSISTENCY",
+                "SENDER_PURPOSE_MISMATCH",
+            },
+        ),
         (DiscourseValidationOutcome, {"VALID", "INVALID", "INCOMPLETE"}),
     ],
 )
@@ -102,7 +222,9 @@ def test_discourse_enum_completeness(enum_cls, member_names):
     [
         lambda: RationalSelfRecord("S1", RationalSelfKind.INDIVIDUAL, "full", "ar"),
         lambda: SenderRoleRecord("SR1", SenderRoleType.SOURCE, AuthorityLevel.HIGH),
-        lambda: ReceiverRoleRecord("RR1", ReceiverRoleType.LISTENER, ReceiverExpectedAction.UNDERSTAND),
+        lambda: ReceiverRoleRecord(
+            "RR1", ReceiverRoleType.LISTENER, ReceiverExpectedAction.UNDERSTAND
+        ),
         lambda: ExchangePurposeRecord("P1", PurposeType.INFORM, "share fact"),
         lambda: ExchangeStyleRecord("ST1", StyleKind.EXPLANATION, ExplicitnessLevel.DIRECT),
         lambda: DiscourseCarrierRecord("C1", CarrierClass.UTTERANCE),
@@ -144,7 +266,9 @@ def _valid_exchange() -> DiscourseExchangeNode:
         sender=sender,
         sender_role=SenderRoleRecord("SR1", SenderRoleType.TEACHER, AuthorityLevel.HIGH),
         receiver=receiver,
-        receiver_role=ReceiverRoleRecord("RR1", ReceiverRoleType.LEARNER, ReceiverExpectedAction.UNDERSTAND),
+        receiver_role=ReceiverRoleRecord(
+            "RR1", ReceiverRoleType.LEARNER, ReceiverExpectedAction.UNDERSTAND
+        ),
         purpose=ExchangePurposeRecord("P1", PurposeType.INSTRUCT, "teach concept"),
         style=ExchangeStyleRecord("ST1", StyleKind.EXPLANATION, ExplicitnessLevel.DIRECT),
         carrier=DiscourseCarrierRecord("C1", CarrierClass.BOTH),
@@ -161,7 +285,9 @@ def _valid_exchange() -> DiscourseExchangeNode:
 def test_discourse_exchange_node_mutable_fields():
     node = _valid_exchange()
     node.validation_outcome = DiscourseValidationOutcome.INVALID
-    node.gaps.append(DiscourseGapRecord("G2", DiscourseGapType.MISSING_STYLE, GapSeverity.MODERATE, "x"))
+    node.gaps.append(
+        DiscourseGapRecord("G2", DiscourseGapType.MISSING_STYLE, GapSeverity.MODERATE, "x")
+    )
     assert node.validation_outcome == DiscourseValidationOutcome.INVALID
     assert len(node.gaps) == 1
 
@@ -230,12 +356,32 @@ def test_validate_style_question_invalid_for_non_question_exchange():
 @pytest.mark.parametrize(
     ("carrier_class", "utterance", "concept", "ok"),
     [
-        (CarrierClass.UTTERANCE, DiscourseUtteranceRecord("U", "نَصّ", UtteranceMode.STATEMENT, "direct"), None, True),
+        (
+            CarrierClass.UTTERANCE,
+            DiscourseUtteranceRecord("U", "نَصّ", UtteranceMode.STATEMENT, "direct"),
+            None,
+            True,
+        ),
         (CarrierClass.UTTERANCE, None, None, False),
-        (CarrierClass.CONCEPT, None, DiscourseConceptRecord("C", "x", DalaalaKind.MUTABAQA, "g"), True),
+        (
+            CarrierClass.CONCEPT,
+            None,
+            DiscourseConceptRecord("C", "x", DalaalaKind.MUTABAQA, "g"),
+            True,
+        ),
         (CarrierClass.CONCEPT, None, None, False),
-        (CarrierClass.BOTH, DiscourseUtteranceRecord("U", "نَصّ", UtteranceMode.STATEMENT, "direct"), DiscourseConceptRecord("C", "x", DalaalaKind.MUTABAQA, "g"), True),
-        (CarrierClass.BOTH, DiscourseUtteranceRecord("U", "نَصّ", UtteranceMode.STATEMENT, "direct"), None, False),
+        (
+            CarrierClass.BOTH,
+            DiscourseUtteranceRecord("U", "نَصّ", UtteranceMode.STATEMENT, "direct"),
+            DiscourseConceptRecord("C", "x", DalaalaKind.MUTABAQA, "g"),
+            True,
+        ),
+        (
+            CarrierClass.BOTH,
+            DiscourseUtteranceRecord("U", "نَصّ", UtteranceMode.STATEMENT, "direct"),
+            None,
+            False,
+        ),
     ],
 )
 def test_validate_carrier_cases(carrier_class, utterance, concept, ok):
@@ -307,7 +453,7 @@ def test_validate_knowledge_transfer_invalid_state():
     assert any(g.gap_type == DiscourseGapType.INVALID_TRANSFERRED_KNOWLEDGE for g in gaps)
 
 
-def test_validate_knowledge_transfer_rejected_methodologically_name():
+def test_validate_knowledge_transfer_with_rejected_rank():
     node = _valid_exchange()
 
     class _RejectedRank:
@@ -363,7 +509,10 @@ def test_validate_exchange_valid():
         (lambda n: setattr(n, "purpose", None), DiscourseGapType.MISSING_PURPOSE),
         (lambda n: setattr(n, "style", None), DiscourseGapType.MISSING_STYLE),
         (lambda n: setattr(n, "carrier", None), DiscourseGapType.MISSING_CARRIER),
-        (lambda n: setattr(n, "transferred_knowledge", None), DiscourseGapType.MISSING_TRANSFERRED_KNOWLEDGE),
+        (
+            lambda n: setattr(n, "transferred_knowledge", None),
+            DiscourseGapType.MISSING_TRANSFERRED_KNOWLEDGE,
+        ),
         (lambda n: setattr(n, "reception", None), DiscourseGapType.MISSING_RECEPTION),
         (lambda n: setattr(n, "reception_state", None), DiscourseGapType.MISSING_RECEPTION_STATE),
     ],

@@ -22,9 +22,13 @@ from arabic_engine.core.enums import (
     DiscourseValidationOutcome,
     ExchangeType,
     GapSeverity,
+    InterpretiveOutcomeType,
     PurposeType,
     ReceptionStateType,
     SenderRoleType,
+    StyleKind,
+    ValidationOutcome,
+    ValidationState,
 )
 from arabic_engine.core.types import (
     DiscourseCarrierRecord,
@@ -45,7 +49,9 @@ from arabic_engine.core.types import (
 )
 
 
-def _make_gap(exchange_id: str, gap_type: DiscourseGapType, detail: str, severity: GapSeverity) -> DiscourseGapRecord:
+def _make_gap(
+    exchange_id: str, gap_type: DiscourseGapType, detail: str, severity: GapSeverity
+) -> DiscourseGapRecord:
     """Build a discourse gap record."""
     return DiscourseGapRecord(
         node_id=f"GAP::{exchange_id}::{gap_type.name}",
@@ -63,7 +69,14 @@ def validate_sender(
     """Validate sender closure and sender role compatibility."""
     gaps: List[DiscourseGapRecord] = []
     if sender is None or role is None:
-        gaps.append(_make_gap(node.node_id, DiscourseGapType.MISSING_SENDER, "Missing sender or sender role", GapSeverity.CRITICAL))
+        gaps.append(
+            _make_gap(
+                node.node_id,
+                DiscourseGapType.MISSING_SENDER,
+                "Missing sender or sender role",
+                GapSeverity.CRITICAL,
+            )
+        )
         return gaps
 
     if node.exchange_type == ExchangeType.TEACHING and role.role_type not in {
@@ -91,18 +104,15 @@ def validate_receiver(
     """Validate receiver closure and expected action definition."""
     gaps: List[DiscourseGapRecord] = []
     if receiver is None or role is None:
-        gaps.append(_make_gap(node.node_id, DiscourseGapType.MISSING_RECEIVER, "Missing receiver or receiver role", GapSeverity.CRITICAL))
-        return gaps
-
-    if role.expected_action is None:
         gaps.append(
             _make_gap(
                 node.node_id,
                 DiscourseGapType.MISSING_RECEIVER,
-                "Receiver expectation undefined",
-                GapSeverity.MODERATE,
+                "Missing receiver or receiver role",
+                GapSeverity.CRITICAL,
             )
         )
+        return gaps
 
     return gaps
 
@@ -114,11 +124,22 @@ def validate_purpose(
     """Validate purpose presence and purpose-style compatibility."""
     gaps: List[DiscourseGapRecord] = []
     if purpose is None:
-        gaps.append(_make_gap(node.node_id, DiscourseGapType.MISSING_PURPOSE, "Missing exchange purpose", GapSeverity.CRITICAL))
+        gaps.append(
+            _make_gap(
+                node.node_id,
+                DiscourseGapType.MISSING_PURPOSE,
+                "Missing exchange purpose",
+                GapSeverity.CRITICAL,
+            )
+        )
         return gaps
 
     if purpose.purpose_type == PurposeType.PERSUADE and node.style is not None:
-        if node.style.style_kind.name.lower() not in {"argument", "explanation", "testimony"}:
+        if node.style.style_kind not in {
+            StyleKind.ARGUMENT,
+            StyleKind.EXPLANATION,
+            StyleKind.TESTIMONY,
+        }:
             gaps.append(
                 _make_gap(
                     node.node_id,
@@ -138,10 +159,17 @@ def validate_style(
     """Validate style presence and exchange-type fit."""
     gaps: List[DiscourseGapRecord] = []
     if style is None:
-        gaps.append(_make_gap(node.node_id, DiscourseGapType.MISSING_STYLE, "Missing exchange style", GapSeverity.CRITICAL))
+        gaps.append(
+            _make_gap(
+                node.node_id,
+                DiscourseGapType.MISSING_STYLE,
+                "Missing exchange style",
+                GapSeverity.CRITICAL,
+            )
+        )
         return gaps
 
-    if style.style_kind.name.lower() == "question" and node.exchange_type not in {
+    if style.style_kind == StyleKind.QUESTION and node.exchange_type not in {
         ExchangeType.QUESTION,
     }:
         gaps.append(
@@ -165,11 +193,29 @@ def validate_carrier(
     """Validate carrier class and attached sub-carrier records."""
     gaps: List[DiscourseGapRecord] = []
     if carrier is None:
-        gaps.append(_make_gap(node.node_id, DiscourseGapType.MISSING_CARRIER, "Missing carrier", GapSeverity.CRITICAL))
+        gaps.append(
+            _make_gap(
+                node.node_id,
+                DiscourseGapType.MISSING_CARRIER,
+                "Missing carrier",
+                GapSeverity.CRITICAL,
+            )
+        )
         return gaps
 
-    if carrier.carrier_class not in {CarrierClass.UTTERANCE, CarrierClass.CONCEPT, CarrierClass.BOTH}:
-        gaps.append(_make_gap(node.node_id, DiscourseGapType.INVALID_CARRIER, "Invalid carrier class", GapSeverity.CRITICAL))
+    if carrier.carrier_class not in {
+        CarrierClass.UTTERANCE,
+        CarrierClass.CONCEPT,
+        CarrierClass.BOTH,
+    }:
+        gaps.append(
+            _make_gap(
+                node.node_id,
+                DiscourseGapType.INVALID_CARRIER,
+                "Invalid carrier class",
+                GapSeverity.CRITICAL,
+            )
+        )
         return gaps
 
     if carrier.carrier_class == CarrierClass.UTTERANCE and utterance is None:
@@ -212,11 +258,25 @@ def validate_reception(
     """Validate reception closure and presence of state/outcome."""
     gaps: List[DiscourseGapRecord] = []
     if reception is None:
-        gaps.append(_make_gap(node.node_id, DiscourseGapType.MISSING_RECEPTION, "Missing reception", GapSeverity.CRITICAL))
+        gaps.append(
+            _make_gap(
+                node.node_id,
+                DiscourseGapType.MISSING_RECEPTION,
+                "Missing reception",
+                GapSeverity.CRITICAL,
+            )
+        )
         return gaps
 
     if state is None:
-        gaps.append(_make_gap(node.node_id, DiscourseGapType.MISSING_RECEPTION_STATE, "Missing reception state", GapSeverity.CRITICAL))
+        gaps.append(
+            _make_gap(
+                node.node_id,
+                DiscourseGapType.MISSING_RECEPTION_STATE,
+                "Missing reception state",
+                GapSeverity.CRITICAL,
+            )
+        )
 
     if outcome is None:
         gaps.append(
@@ -231,9 +291,15 @@ def validate_reception(
     return gaps
 
 
-def validate_trust(node: DiscourseExchangeNode, trust: Optional[TrustProfileRecord]) -> List[DiscourseGapRecord]:
+def validate_trust(
+    node: DiscourseExchangeNode, trust: Optional[TrustProfileRecord]
+) -> List[DiscourseGapRecord]:
     """Validate trust profile for credibility-sensitive exchange types."""
-    if node.exchange_type in {ExchangeType.TEACHING, ExchangeType.TESTIMONY, ExchangeType.EXPLANATION} and trust is None:
+    if (
+        node.exchange_type
+        in {ExchangeType.TEACHING, ExchangeType.TESTIMONY, ExchangeType.EXPLANATION}
+        and trust is None
+    ):
         return [
             _make_gap(
                 node.node_id,
@@ -245,7 +311,9 @@ def validate_trust(node: DiscourseExchangeNode, trust: Optional[TrustProfileReco
     return []
 
 
-def validate_knowledge_transfer(node: DiscourseExchangeNode, episode: object) -> List[DiscourseGapRecord]:
+def validate_knowledge_transfer(
+    node: DiscourseExchangeNode, episode: object
+) -> List[DiscourseGapRecord]:
     """Validate transferred knowledge is present and epistemically valid."""
     gaps: List[DiscourseGapRecord] = []
     if episode is None:
@@ -260,7 +328,9 @@ def validate_knowledge_transfer(node: DiscourseExchangeNode, episode: object) ->
         return gaps
 
     rank = getattr(episode, "epistemic_rank", None)
-    if rank is not None and getattr(rank, "name", "") == "REJECTED_METHODOLOGICALLY":
+    if rank is not None and (
+        getattr(rank, "name", "") == ValidationOutcome.REJECTED_METHODOLOGICALLY.name
+    ):
         gaps.append(
             _make_gap(
                 node.node_id,
@@ -271,7 +341,7 @@ def validate_knowledge_transfer(node: DiscourseExchangeNode, episode: object) ->
         )
 
     validation_state = getattr(episode, "validation_state", None)
-    if validation_state is not None and getattr(validation_state, "name", "").lower() == "invalid":
+    if validation_state is not None and validation_state == ValidationState.INVALID:
         gaps.append(
             _make_gap(
                 node.node_id,
@@ -292,7 +362,10 @@ def validate_sender_purpose_fit(
     if sender_role is None or purpose is None:
         return []
 
-    if purpose.purpose_type == PurposeType.REQUEST_ACTION and sender_role.authority_level == AuthorityLevel.LOW:
+    if (
+        purpose.purpose_type == PurposeType.REQUEST_ACTION
+        and sender_role.authority_level == AuthorityLevel.LOW
+    ):
         return [
             DiscourseGapRecord(
                 node_id=f"GAP::{sender_role.node_id}::SENDER_PURPOSE_MISMATCH",
@@ -313,7 +386,10 @@ def validate_reception_consistency(
     if state is None or outcome is None:
         return []
 
-    if state.state_type == ReceptionStateType.ACCEPTED and outcome.outcome_type.name.lower() == "distorted":
+    if (
+        state.state_type == ReceptionStateType.ACCEPTED
+        and outcome.outcome_type == InterpretiveOutcomeType.DISTORTED
+    ):
         return [
             DiscourseGapRecord(
                 node_id=f"GAP::{state.node_id}::RECEPTION_INCONSISTENCY",
@@ -335,7 +411,9 @@ def validate_exchange(node: DiscourseExchangeNode) -> DiscourseExchangeResult:
     gaps.extend(validate_purpose(node, node.purpose))
     gaps.extend(validate_style(node, node.style))
     gaps.extend(validate_carrier(node, node.carrier, node.utterance, node.concept))
-    gaps.extend(validate_reception(node, node.reception, node.reception_state, node.interpretive_outcome))
+    gaps.extend(
+        validate_reception(node, node.reception, node.reception_state, node.interpretive_outcome)
+    )
     gaps.extend(validate_trust(node, node.trust_profile))
     gaps.extend(validate_knowledge_transfer(node, node.transferred_knowledge))
     gaps.extend(validate_sender_purpose_fit(node.sender_role, node.purpose))
