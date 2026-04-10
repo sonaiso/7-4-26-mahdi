@@ -185,8 +185,11 @@ def validate_kernel_graph(graph: KernelGraph) -> KernelValidationResult:
         required = KERNEL_REQUIRED_FIELDS[node.label]
         missing = sorted(field for field in required if field not in node.fields)
         if missing:
+            missing_fields = ", ".join(missing)
             errors.append(
-                f"Node {node.node_id} ({node.label.value}) missing required fields: {', '.join(missing)}"
+                "Node "
+                f"{node.node_id} ({node.label.value}) "
+                f"missing required fields: {missing_fields}"
             )
 
     for edge in graph.edges:
@@ -214,7 +217,11 @@ def derive_utterance_from_carrier(carrier: KernelNode, text: str) -> KernelUtter
     if carrier.label is not KernelLabel.CARRIER:
         raise ValueError("Utterance can only be derived from a Carrier node.")
     carrier_id = str(carrier.fields["carrier_id"])
-    return KernelUtterance(utterance_id=f"utterance::{carrier_id}", carrier_id=carrier_id, text=text)
+    return KernelUtterance(
+        utterance_id=f"utterance::{carrier_id}",
+        carrier_id=carrier_id,
+        text=text,
+    )
 
 
 def derive_linguistic_profile(
@@ -316,7 +323,9 @@ def derive_reusable_model(
     if state.label is not KernelLabel.STATE:
         raise ValueError("Expected State node.")
     if pattern_count < 2:
-        raise ValueError("Reusable model requires repeated validated patterns (pattern_count >= 2).")
+        raise ValueError(
+            "Reusable model requires repeated validated patterns (pattern_count >= 2)."
+        )
 
     model_id = str(model.fields["model_id"])
     state_id = str(state.fields["state_id"])

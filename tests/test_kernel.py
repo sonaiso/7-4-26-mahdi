@@ -19,8 +19,8 @@ from arabic_engine.core.kernel import (
 )
 
 
-def _node(node_id: str, label: KernelLabel, **fields: object) -> KernelNode:
-    return KernelNode(node_id=node_id, label=label, fields=fields)
+def _node(node_id: str, node_label: KernelLabel, **fields: object) -> KernelNode:
+    return KernelNode(node_id=node_id, label=node_label, fields=fields)
 
 
 def test_validate_kernel_graph_accepts_minimal_valid_graph() -> None:
