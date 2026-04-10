@@ -522,6 +522,13 @@ class TestBuildSignifiedNode:
         # None kwarg is ignored, existing value preserved
         assert c.epistemic_status == EpistemicStatus.CERTAIN
 
+    def test_none_axes_unset_field_stays_none(self):
+        c = _concept()
+        # axis was None before; passing None for it should leave it None
+        assert c.modal_category is None
+        build_signified_node(c, modal_category=None)
+        assert c.modal_category is None
+
 
 # ═══════════════════════════════════════════════════════════════════════
 # 8. ConceptNetwork
