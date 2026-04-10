@@ -16,13 +16,34 @@ from .enums import (  # noqa: F401 -- intentional re-exports
     POS as POS,
 )
 from .enums import (
+    AffectiveDimension as AffectiveDimension,
+)
+from .enums import (
+    CategorizationMode as CategorizationMode,
+)
+from .enums import (
+    CausalRole as CausalRole,
+)
+from .enums import (
     CombinationType as CombinationType,
+)
+from .enums import (
+    ConceptFormationMode as ConceptFormationMode,
+)
+from .enums import (
+    ConceptRelationType as ConceptRelationType,
 )
 from .enums import (
     ConstraintType as ConstraintType,
 )
 from .enums import (
+    CulturalScope as CulturalScope,
+)
+from .enums import (
     DalalaType as DalalaType,
+)
+from .enums import (
+    DiachronicStatus as DiachronicStatus,
 )
 from .enums import (
     ElementClass as ElementClass,
@@ -34,7 +55,22 @@ from .enums import (
     ElementLayer as ElementLayer,
 )
 from .enums import (
+    EmbodiedDomain as EmbodiedDomain,
+)
+from .enums import (
+    EpistemicStatus as EpistemicStatus,
+)
+from .enums import (
+    FrameType as FrameType,
+)
+from .enums import (
     GuidanceState as GuidanceState,
+)
+from .enums import (
+    InstitutionalCategory as InstitutionalCategory,
+)
+from .enums import (
+    InterpretiveStability as InterpretiveStability,
 )
 from .enums import (
     IrabCase as IrabCase,
@@ -46,7 +82,22 @@ from .enums import (
     MafhumType as MafhumType,
 )
 from .enums import (
+    MentalIntentionalType as MentalIntentionalType,
+)
+from .enums import (
+    MetaConceptualLevel as MetaConceptualLevel,
+)
+from .enums import (
+    ModalCategory as ModalCategory,
+)
+from .enums import (
+    NormativeCategory as NormativeCategory,
+)
+from .enums import (
     OntologicalLayer as OntologicalLayer,
+)
+from .enums import (
+    OperationalCapacity as OperationalCapacity,
 )
 from .enums import (
     PhonCategory as PhonCategory,
@@ -62,6 +113,15 @@ from .enums import (
 )
 from .enums import (
     ProofStatus as ProofStatus,
+)
+from .enums import (
+    SalienceLevel as SalienceLevel,
+)
+from .enums import (
+    ScriptPhase as ScriptPhase,
+)
+from .enums import (
+    SelfModelAspect as SelfModelAspect,
 )
 from .enums import (
     SemanticType as SemanticType,
@@ -89,6 +149,9 @@ from .types import (
 )
 from .types import (
     Concept as Concept,
+)
+from .types import (
+    ConceptRelation as ConceptRelation,
 )
 from .types import (
     DalalaLink as DalalaLink,
@@ -148,23 +211,43 @@ from .types import (
 __all__ = [
     # enums
     "POS",
+    "AffectiveDimension",
+    "CausalRole",
+    "CategorizationMode",
     "CombinationType",
+    "ConceptFormationMode",
+    "ConceptRelationType",
     "ConstraintType",
+    "CulturalScope",
     "DalalaType",
+    "DiachronicStatus",
     "ElementClass",
     "ElementFunction",
     "ElementLayer",
+    "EmbodiedDomain",
+    "EpistemicStatus",
+    "FrameType",
     "GuidanceState",
+    "InstitutionalCategory",
+    "InterpretiveStability",
     "IrabCase",
     "IrabRole",
     "MafhumType",
+    "MentalIntentionalType",
+    "MetaConceptualLevel",
+    "ModalCategory",
+    "NormativeCategory",
     "OntologicalLayer",
+    "OperationalCapacity",
     "PhonCategory",
     "PhonFeature",
     "PhonGroup",
     "PhonTransform",
     "ProofStatus",
+    "SalienceLevel",
+    "ScriptPhase",
     "SemanticType",
+    "SelfModelAspect",
     "SlotState",
     "SpaceRef",
     "TimeRef",
@@ -173,6 +256,7 @@ __all__ = [
     # types
     "AEU",
     "Concept",
+    "ConceptRelation",
     "DalalaLink",
     "DMin",
     "EvalResult",
