@@ -16,6 +16,9 @@ from .enums import (  # noqa: F401 -- intentional re-exports
     POS as POS,
 )
 from .enums import (
+    AuthorityLevel as AuthorityLevel,
+)
+from .enums import (
     CarrierClass as CarrierClass,
 )
 
@@ -39,10 +42,19 @@ from .enums import (
     CouplingRelationType as CouplingRelationType,
 )
 from .enums import (
+    DalaalaKind as DalaalaKind,
+)
+from .enums import (
     DalalaType as DalalaType,
 )
 from .enums import (
     DecisionCode as DecisionCode,
+)
+from .enums import (
+    DiscourseGapType as DiscourseGapType,
+)
+from .enums import (
+    DiscourseValidationOutcome as DiscourseValidationOutcome,
 )
 from .enums import (
     ElementClass as ElementClass,
@@ -57,6 +69,21 @@ from .enums import (
     EpistemicRank as EpistemicRank,
 )
 from .enums import (
+    ExchangePurposeType as ExchangePurposeType,
+)
+from .enums import (
+    ExchangeStatus as ExchangeStatus,
+)
+from .enums import (
+    ExchangeStyleType as ExchangeStyleType,
+)
+from .enums import (
+    ExchangeType as ExchangeType,
+)
+from .enums import (
+    ExplicitnessLevel as ExplicitnessLevel,
+)
+from .enums import (
     GapSeverity as GapSeverity,
 )
 from .enums import (
@@ -67,6 +94,9 @@ from .enums import (
 )
 from .enums import (
     InsertionPolicy as InsertionPolicy,
+)
+from .enums import (
+    InterpretiveOutcomeType as InterpretiveOutcomeType,
 )
 from .enums import (
     IrabCase as IrabCase,
@@ -114,10 +144,34 @@ from .enums import (
     ProofStatus as ProofStatus,
 )
 from .enums import (
+    PurposeType as PurposeType,
+)
+from .enums import (
+    RationalSelfKind as RationalSelfKind,
+)
+from .enums import (
     RealityKind as RealityKind,
 )
 from .enums import (
+    ReceiverExpectedAction as ReceiverExpectedAction,
+)
+from .enums import (
+    ReceiverRoleType as ReceiverRoleType,
+)
+from .enums import (
+    ReceiverState as ReceiverState,
+)
+from .enums import (
+    ReceptionMode as ReceptionMode,
+)
+from .enums import (
+    ReceptionStateType as ReceptionStateType,
+)
+from .enums import (
     SemanticType as SemanticType,
+)
+from .enums import (
+    SenderRoleType as SenderRoleType,
 )
 from .enums import (
     SenseModality as SenseModality,
@@ -135,6 +189,9 @@ from .enums import (
     SpaceRef as SpaceRef,
 )
 from .enums import (
+    StyleKind as StyleKind,
+)
+from .enums import (
     TimeRef as TimeRef,
 )
 from .enums import (
@@ -144,10 +201,19 @@ from .enums import (
     TraceQuality as TraceQuality,
 )
 from .enums import (
+    TrustBasis as TrustBasis,
+)
+from .enums import (
+    TrustLevel as TrustLevel,
+)
+from .enums import (
     TruthState as TruthState,
 )
 from .enums import (
     UnicodeProfileType as UnicodeProfileType,
+)
+from .enums import (
+    UtteranceMode as UtteranceMode,
 )
 from .enums import (
     UtteranceToConceptConstraint as UtteranceToConceptConstraint,
@@ -191,6 +257,24 @@ from .types import (
     DalalaLink as DalalaLink,
 )
 from .types import (
+    DiscourseCarrierRecord as DiscourseCarrierRecord,
+)
+from .types import (
+    DiscourseConceptRecord as DiscourseConceptRecord,
+)
+from .types import (
+    DiscourseExchangeNode as DiscourseExchangeNode,
+)
+from .types import (
+    DiscourseExchangeResult as DiscourseExchangeResult,
+)
+from .types import (
+    DiscourseGapRecord as DiscourseGapRecord,
+)
+from .types import (
+    DiscourseUtteranceRecord as DiscourseUtteranceRecord,
+)
+from .types import (
     DMin as DMin,
 )
 from .types import (
@@ -209,6 +293,12 @@ from .types import (
     EvidenceNode as EvidenceNode,
 )
 from .types import (
+    ExchangePurposeRecord as ExchangePurposeRecord,
+)
+from .types import (
+    ExchangeStyleRecord as ExchangeStyleRecord,
+)
+from .types import (
     GapNode as GapNode,
 )
 from .types import (
@@ -219,6 +309,9 @@ from .types import (
 )
 from .types import (
     InferenceResult as InferenceResult,
+)
+from .types import (
+    InterpretiveOutcomeRecord as InterpretiveOutcomeRecord,
 )
 from .types import (
     JudgementNode as JudgementNode,
@@ -290,16 +383,31 @@ from .types import (
     Proposition as Proposition,
 )
 from .types import (
+    RationalSelfRecord as RationalSelfRecord,
+)
+from .types import (
     RealityAnchorNode as RealityAnchorNode,
 )
 from .types import (
     RealityAnchorRecord as RealityAnchorRecord,
 )
 from .types import (
+    ReceiverRoleRecord as ReceiverRoleRecord,
+)
+from .types import (
+    ReceptionRecord as ReceptionRecord,
+)
+from .types import (
+    ReceptionStateRecord as ReceptionStateRecord,
+)
+from .types import (
     RootPattern as RootPattern,
 )
 from .types import (
     SelfNode as SelfNode,
+)
+from .types import (
+    SenderRoleRecord as SenderRoleRecord,
 )
 from .types import (
     SenseTraceNode as SenseTraceNode,
@@ -329,6 +437,9 @@ from .types import (
     TriadicBlockRecord as TriadicBlockRecord,
 )
 from .types import (
+    TrustProfileRecord as TrustProfileRecord,
+)
+from .types import (
     UtteranceNode as UtteranceNode,
 )
 from .types import (
@@ -347,22 +458,32 @@ from .types import (
 __all__ = [
     # enums
     "POS",
+    "AuthorityLevel",
     "CarrierClass",
     "CombinationType",
     "ConceptualSignifiedClass",
     "ConstraintType",
     "ContaminationLevel",
     "CouplingRelationType",
+    "DalaalaKind",
     "DalalaType",
+    "DiscourseGapType",
+    "DiscourseValidationOutcome",
     "ElementClass",
     "ElementFunction",
     "ElementLayer",
     "EpistemicRank",
+    "ExchangePurposeType",
+    "ExchangeStatus",
+    "ExchangeStyleType",
+    "ExchangeType",
+    "ExplicitnessLevel",
     "GapSeverity",
     "GuidanceState",
     "InfoKind",
     "IrabCase",
     "IrabRole",
+    "InterpretiveOutcomeType",
     "JudgementType",
     "LinkKind",
     "MafhumType",
@@ -375,18 +496,30 @@ __all__ = [
     "PhonGroup",
     "PhonTransform",
     "ProofStatus",
+    "PurposeType",
     "RealityKind",
+    "RationalSelfKind",
+    "ReceiverExpectedAction",
+    "ReceiverRoleType",
+    "ReceiverState",
+    "ReceptionMode",
+    "ReceptionStateType",
     "SemanticType",
+    "SenderRoleType",
     "SenseModality",
     "SignifiedClass",
     "SignifierClass",
     "SlotState",
     "SpaceRef",
+    "StyleKind",
     "TimeRef",
     "TraceMode",
     "TraceQuality",
+    "TrustBasis",
+    "TrustLevel",
     "TruthState",
     "UnicodeProfileType",
+    "UtteranceMode",
     "UtteredFormClass",
     "UtteranceToConceptConstraint",
     "ValidationState",
@@ -412,13 +545,22 @@ __all__ = [
     "CouplingRecord",
     "DalalaLink",
     "DMin",
+    "DiscourseCarrierRecord",
+    "DiscourseConceptRecord",
+    "DiscourseExchangeNode",
+    "DiscourseExchangeResult",
+    "DiscourseGapRecord",
+    "DiscourseUtteranceRecord",
     "EpistemicConceptNode",
     "EpisodeValidationResult",
     "EvalResult",
+    "ExchangePurposeRecord",
+    "ExchangeStyleRecord",
     "EvidenceNode",
     "GapNode",
     "Grapheme",
     "InferenceResult",
+    "InterpretiveOutcomeRecord",
     "JudgementNode",
     "KnowledgeEpisodeNode",
     "LayerPromotionRule",
@@ -433,8 +575,13 @@ __all__ = [
     "ProofDependencyGraph",
     "ProofPathNode",
     "Proposition",
+    "RationalSelfRecord",
     "RealityAnchorNode",
+    "ReceiverRoleRecord",
+    "ReceptionRecord",
+    "ReceptionStateRecord",
     "RootPattern",
+    "SenderRoleRecord",
     "SelfNode",
     "SenseTraceNode",
     "SignifiedNode",
@@ -446,6 +593,7 @@ __all__ = [
     "TriadicBlockRecord",
     "UtteranceNode",
     "WorldFact",
+    "TrustProfileRecord",
     "ZeroSlotRecord",
     # epistemic v1 types
     "ConflictResolutionResult",
