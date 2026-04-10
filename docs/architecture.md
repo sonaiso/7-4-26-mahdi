@@ -203,3 +203,19 @@ A Mafhūm is valid only when all four pillars (أركان) hold:
 * [`docs/chapter_19_general_closure.md`](chapter_19_general_closure.md) — Ch. 19 proof
 * [`docs/chapter_21_mafhum_types.md`](chapter_21_mafhum_types.md) — Ch. 21 proof
 * [`docs/api_reference.md`](api_reference.md) — public API quick reference
+
+---
+
+## Operational Integrity Guard
+
+Repository-level integrity is enforced by tests in
+`tests/test_repository_integrity.py` using `arabic_engine.core.integrity`.
+
+It validates:
+
+1. Critical architecture modules remain importable.
+2. Duplicate file contents are not introduced across:
+   * `arabic_engine/`
+   * `tests/`
+   * `docs/`
+   * `db/`
