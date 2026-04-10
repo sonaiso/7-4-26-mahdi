@@ -127,6 +127,12 @@ from .enums import (
     SemanticType as SemanticType,
 )
 from .enums import (
+    SignifiedClass as SignifiedClass,
+)
+from .enums import (
+    SignifierClass as SignifierClass,
+)
+from .enums import (
     SlotState as SlotState,
 )
 from .enums import (
@@ -140,6 +146,12 @@ from .enums import (
 )
 from .enums import (
     UnicodeProfileType as UnicodeProfileType,
+)
+from .enums import (
+    UtteranceToConceptConstraint as UtteranceToConceptConstraint,
+)
+from .enums import (
+    UtteredFormClass as UtteredFormClass,
 )
 from .types import (  # noqa: F401 -- intentional re-exports
     AEU as AEU,
@@ -178,6 +190,12 @@ from .types import (
     LexicalClosure as LexicalClosure,
 )
 from .types import (
+    OntologicalConstraintRecord as OntologicalConstraintRecord,
+)
+from .types import (
+    OntologyV1Record as OntologyV1Record,
+)
+from .types import (
     ProofDependencyGraph as ProofDependencyGraph,
 )
 from .types import (
@@ -185,6 +203,12 @@ from .types import (
 )
 from .types import (
     RootPattern as RootPattern,
+)
+from .types import (
+    SignifiedNode as SignifiedNode,
+)
+from .types import (
+    SignifierNode as SignifierNode,
 )
 from .types import (
     Syllable as Syllable,
@@ -219,6 +243,9 @@ __all__ = [
     "ConceptRelationType",
     "ConstraintType",
     "CulturalScope",
+    "ConceptualSignifiedClass",
+    "ConstraintType",
+    "CouplingRelationType",
     "DalalaType",
     "DiachronicStatus",
     "ElementClass",
@@ -237,6 +264,7 @@ __all__ = [
     "MetaConceptualLevel",
     "ModalCategory",
     "NormativeCategory",
+    "OntologicalConstraintType",
     "OntologicalLayer",
     "OperationalCapacity",
     "PhonCategory",
@@ -248,15 +276,20 @@ __all__ = [
     "ScriptPhase",
     "SemanticType",
     "SelfModelAspect",
+    "SignifiedClass",
+    "SignifierClass",
     "SlotState",
     "SpaceRef",
     "TimeRef",
     "TruthState",
     "UnicodeProfileType",
+    "UtteredFormClass",
+    "UtteranceToConceptConstraint",
     # types
     "AEU",
     "Concept",
     "ConceptRelation",
+    "CouplingRecord",
     "DalalaLink",
     "DMin",
     "EvalResult",
@@ -264,8 +297,12 @@ __all__ = [
     "InferenceResult",
     "LayerPromotionRule",
     "LexicalClosure",
+    "OntologicalConstraintRecord",
+    "OntologyV1Record",
     "Proposition",
     "RootPattern",
+    "SignifiedNode",
+    "SignifierNode",
     "Syllable",
     "SyntaxNode",
     "TimeSpaceTag",

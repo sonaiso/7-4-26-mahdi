@@ -57,6 +57,8 @@ from .enums import (
     ScriptPhase,
     SelfModelAspect,
     SemanticType,
+    SignifiedClass,
+    SignifierClass,
     SlotState,
     SpaceRef,
     SyllablePosition,
@@ -67,6 +69,8 @@ from .enums import (
     TriadType,
     TruthState,
     UnicodeProfileType,
+    UtteranceToConceptConstraint,
+    UtteredFormClass,
 )
 
 # ── Signifier layer ─────────────────────────────────────────────────
@@ -1255,3 +1259,200 @@ class EssenceConditionPair:
     def has_constraint(self) -> bool:
         """True when a realisation condition is attached."""
         return self.constraint is not None
+
+
+# ── Ontology v1 — الجدول الأنطولوجي v1.0 ────────────────────────────
+
+@dataclass(frozen=True)
+class SignifierNode:
+    """عقدة الدال — a node representing a signifier in the Ontology v1 model.
+
+    Encodes the دال at any level (phonological, morphological, lexical,
+    syntactic, textual, pragmatic, rhetorical, or uttered).  When the node
+    represents a realised surface form (منطوق), ``signifier_class`` is
+    ``SignifierClass.UTTERED_FORM`` and ``uttered_form_class`` carries the
+    finer classification.
+
+    Axiom 1 (الدال أعمّ من المنطوق):
+        ``uttered_form_class`` is ``Optional`` — it is only set when
+        ``signifier_class is SignifierClass.UTTERED_FORM``.
+
+    Fields
+    ------
+    node_id             unique identifier (e.g. ``"SIG_001"``)
+    signifier_class     broad class of this signifier
+    uttered_form_class  finer classification when class is UTTERED_FORM
+    surface             the surface string (if available)
+    layer               ontological layer this signifier belongs to
+    notes               free-text annotation
+    """
+
+    node_id: str
+    signifier_class: SignifierClass
+    surface: str
+    layer: OntologicalLayer = OntologicalLayer.CELL
+    uttered_form_class: Optional[UtteredFormClass] = None
+    notes: str = ""
+
+    @property
+    def is_uttered(self) -> bool:
+        """True when this signifier is a realised surface form (منطوق)."""
+        return self.signifier_class is SignifierClass.UTTERED_FORM
+
+    @property
+    def uttered_form_is_set(self) -> bool:
+        """True when the finer uttered-form class has been assigned."""
+        return self.uttered_form_class is not None
+
+
+@dataclass(frozen=True)
+class SignifiedNode:
+    """عقدة المدلول — a node representing a signified in the Ontology v1 model.
+
+    Encodes the مدلول at any level.  When the node represents a conceptual
+    structure (مفهوم), ``signified_class`` is ``SignifiedClass.CONCEPTUAL``
+    and ``conceptual_class`` carries the finer classification.
+
+    Axiom 2 (المدلول أعمّ من المفهوم):
+        ``conceptual_class`` is ``Optional`` — it is only set when
+        ``signified_class is SignifiedClass.CONCEPTUAL``.
+
+    Fields
+    ------
+    node_id             unique identifier (e.g. ``"SFD_001"``)
+    signified_class     broad class of this signified
+    label               human-readable label for the signified
+    semantic_type       reuses the existing :class:`SemanticType` classification
+    conceptual_class    finer classification when class is CONCEPTUAL
+    properties          arbitrary key/value metadata
+    notes               free-text annotation
+    """
+
+    node_id: str
+    signified_class: SignifiedClass
+    label: str
+    semantic_type: SemanticType = SemanticType.ENTITY
+    conceptual_class: Optional[ConceptualSignifiedClass] = None
+    properties: dict = field(default_factory=dict)
+    notes: str = ""
+
+    @property
+    def is_conceptual(self) -> bool:
+        """True when this signified is a conceptual structure (مفهوم)."""
+        return self.signified_class is SignifiedClass.CONCEPTUAL
+
+    @property
+    def conceptual_class_is_set(self) -> bool:
+        """True when the finer conceptual class has been assigned."""
+        return self.conceptual_class is not None
+
+
+@dataclass(frozen=True)
+class CouplingRecord:
+    """سجل علاقة الاقتران — the directed link from a signifier to its signified.
+
+    Implements the coupling relation::
+
+        CouplingRelation: Signifier × Signified → Meaning
+
+    Axiom 3 (المنطوق لا ينتج المفهوم وحده بلا علاقة اقتران مفعّلة):
+        Every ``OntologyV1Record`` carries exactly one ``CouplingRecord``.
+
+    Fields
+    ------
+    coupling_id         unique identifier (e.g. ``"CRP_001"``)
+    coupling_type       the kind of coupling (direct, figurative, etc.)
+    signifier_id        ID of the source :class:`SignifierNode`
+    signified_id        ID of the target :class:`SignifiedNode`
+    confidence          coupling confidence ∈ [0, 1]
+    evidence            human-readable evidence description
+    active_constraints  IDs of constraints that govern this coupling
+    """
+
+    coupling_id: str
+    coupling_type: CouplingRelationType
+    signifier_id: str
+    signified_id: str
+    confidence: float = 1.0
+    evidence: str = ""
+    active_constraints: FrozenSet[str] = field(default_factory=frozenset)
+
+    @property
+    def is_direct(self) -> bool:
+        """True when the coupling is a direct / conventional link."""
+        return self.coupling_type is CouplingRelationType.DIRECT
+
+    @property
+    def is_figurative(self) -> bool:
+        """True when the coupling crosses a rhetorical / figurative boundary."""
+        return self.coupling_type is CouplingRelationType.FIGURATIVE
+
+
+@dataclass(frozen=True)
+class OntologicalConstraintRecord:
+    """سجل قيد أنطولوجي — a single constraint in the Ontology v1 model.
+
+    Axiom 5 (كل انتقال من منطوق إلى مفهوم يحتاج قيودًا تمنع الاحتمال الفاسد):
+        An ``OntologyV1Record`` is *valid* only when all its constraint
+        records have ``passes = True``.
+
+    Fields
+    ------
+    constraint_id           unique identifier (e.g. ``"CON_001"``)
+    constraint_type         the broad ontological constraint kind
+    utterance_constraint    the specific utterance→concept check (if any)
+    description_ar          Arabic description of this constraint
+    passes                  whether the constraint is satisfied
+    violated_by             description of the violation (empty when passing)
+    """
+
+    constraint_id: str
+    constraint_type: OntologicalConstraintType
+    description_ar: str
+    passes: bool = True
+    utterance_constraint: Optional[UtteranceToConceptConstraint] = None
+    violated_by: str = ""
+
+    @property
+    def is_violated(self) -> bool:
+        """True when the constraint is not satisfied."""
+        return not self.passes
+
+
+@dataclass(frozen=True)
+class OntologyV1Record:
+    """سجل الجدول الأنطولوجي v1.0 — the top-level unit of the ontology model.
+
+    Ties together the four chapters of the ontology:
+      1. الدال — :class:`SignifierNode`
+      2. المدلول — :class:`SignifiedNode`
+      3. علاقة الاقتران — :class:`CouplingRecord`
+      4. القيود — ``Tuple[OntologicalConstraintRecord, ...]``
+
+    Axiom 7 (التحليل الصحيح يبدأ بتعيين طبقة الدال…):
+        Build this record via :func:`~arabic_engine.signified.ontology_v1.build_ontology_record`
+        to guarantee the correct evaluation order.
+
+    Fields
+    ------
+    record_id       unique identifier (e.g. ``"ONT_001"``)
+    signifier       the دال node
+    signified       the مدلول node
+    coupling        the علاقة اقتران record
+    constraints     all قيود evaluated for this record
+    valid           True when all constraints pass
+    notes           free-text annotation
+    """
+
+    record_id: str
+    signifier: SignifierNode
+    signified: SignifiedNode
+    coupling: CouplingRecord
+    constraints: Tuple["OntologicalConstraintRecord", ...]
+    valid: bool
+    notes: str = ""
+
+    @property
+    def failed_constraints(self) -> Tuple["OntologicalConstraintRecord", ...]:
+        """Return all constraint records that did not pass."""
+        return tuple(c for c in self.constraints if c.is_violated)
