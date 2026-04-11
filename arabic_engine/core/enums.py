@@ -1147,7 +1147,7 @@ class DalaalaKind(Enum):
     """نوع الدلالة — fine-grained signification kind."""
     MUTABAQA = auto()    # مطابقة — exact denotation
     TADHAMMUN = auto()   # تضمن  — inclusion
-    TADAMMUN = TADHAMMUN  # backward-compat alias
+    TADAMMUN = TADHAMMUN  # backward-compat alias for legacy spelling
     ILTIZAM = auto()     # التزام — necessary concomitant
     ISHARA = auto()      # إشارة — allusion / indication
 
@@ -1523,12 +1523,17 @@ class CouplingRelationType(Enum):
 
 
 class GapSeverity(Enum):
-    """شدة الفجوة — how severe an epistemic gap is."""
+    """شدة الفجوة — how severe an epistemic gap is.
+
+    Canonical members: FATAL, CRITICAL, MODERATE, MINOR.
+    Legacy aliases HIGH/MEDIUM/LOW are kept for backward compatibility
+    and should be considered deprecated in new code.
+    """
     FATAL = auto()     # قاتلة
     CRITICAL = auto()  # حرجة
     MODERATE = auto()  # معتدلة
     MINOR = auto()     # طفيفة
-    # backward-compat aliases
+    # backward-compat aliases (deprecated — prefer canonical names)
     HIGH = CRITICAL
     MEDIUM = MODERATE
     LOW = MINOR

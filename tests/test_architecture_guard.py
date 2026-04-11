@@ -76,8 +76,12 @@ class TestExportSurface:
 
     def test_star_import_succeeds(self):
         """``from arabic_engine.core import *`` must not raise."""
-        # If this fails the import itself throws
-        exec("from arabic_engine.core import *", {})  # noqa: S102
+        import importlib
+
+        core = importlib.import_module("arabic_engine.core")
+        # Verify all names in __all__ are actually accessible
+        for name in core.__all__:
+            assert hasattr(core, name), f"__all__ name '{name}' not accessible"
 
     def test_no_duplicates_in_all(self):
         """__all__ must not contain duplicate entries."""
@@ -138,9 +142,9 @@ class TestRuntimePipeline:
         assert result.trace  # trace should exist even for empty input
 
     def test_pipeline_stage_count(self):
-        from arabic_engine.runtime_pipeline import _STAGES
+        from arabic_engine.runtime_pipeline import _STAGES, PipelineStage
 
-        assert len(_STAGES) == 8, "Pipeline must have exactly 8 stages"
+        assert len(_STAGES) == len(PipelineStage), "Pipeline must have one function per stage"
 
     def test_runtime_state_fields(self):
         from arabic_engine.runtime_pipeline import RuntimeState
