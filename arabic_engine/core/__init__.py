@@ -199,6 +199,66 @@ from .enums import (
 from .enums import (
     ValidationState as ValidationState,
 )
+from .enums import (
+    CarrierClass as CarrierClass,
+)
+from .enums import (
+    CarrierType as CarrierType,
+)
+from .enums import (
+    ConceptualSignifiedClass as ConceptualSignifiedClass,
+)
+from .enums import (
+    ContaminationLevel as ContaminationLevel,
+)
+from .enums import (
+    CouplingRelationType as CouplingRelationType,
+)
+from .enums import (
+    DecisionCode as DecisionCode,
+)
+from .enums import (
+    DiscourseGapType as DiscourseGapType,
+)
+from .enums import (
+    DiscourseValidationOutcome as DiscourseValidationOutcome,
+)
+from .enums import (
+    EpistemicRank as EpistemicRank,
+)
+from .enums import (
+    ExchangePurposeType as ExchangePurposeType,
+)
+from .enums import (
+    ExchangeStatus as ExchangeStatus,
+)
+from .enums import (
+    ExchangeStyleType as ExchangeStyleType,
+)
+from .enums import (
+    ExchangeType as ExchangeType,
+)
+from .enums import (
+    ExplicitnessLevel as ExplicitnessLevel,
+)
+from .enums import (
+    InfoKind as InfoKind,
+)
+from .enums import (
+    InsertionPolicy as InsertionPolicy,
+)
+from .enums import (
+    InterpretiveOutcomeType as InterpretiveOutcomeType,
+)
+from .enums import (
+    PathKind as PathKind,
+)
+from .enums import (
+    GapSeverity as GapSeverity,
+)
+from .enums import (
+    RealityKind as RealityKind,
+)
 from .kernel import (
     KERNEL_RELATION_PAIRS as KERNEL_RELATION_PAIRS,
 )
@@ -468,6 +528,15 @@ from .types import (
 )
 from .types import (
     ZeroSlotRecord as ZeroSlotRecord,
+)
+from .types import (
+    ConflictRuleNode as ConflictRuleNode,
+)
+from .types import (
+    ConflictRuleRecord as ConflictRuleRecord,
+)
+from .types import (
+    CouplingRecord as CouplingRecord,
 )
 
 __all__ = [
