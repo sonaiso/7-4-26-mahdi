@@ -710,32 +710,32 @@ class TestStubDetection_Judgements:
 
 
 class TestStubDetection_Axes:
-    """Prove that axes.py resolves only 1 of 6 axes.
+    """Verify that axes.py now resolves all 6 axes.
 
-    5 axes always return 'غير محدد' — this is a known stub.
+    The stub has been replaced — all axes return real values.
     """
 
-    def test_five_axes_return_undefined(self):
-        """5 out of 6 axes return 'غير محدد' regardless of input."""
-        concept = _make_concept("C1", "كتاب", "ENTITY", "definite")
+    def test_all_axes_resolved(self):
+        """All 6 axes should return non-'غير محدد' values for typical input."""
+        concept = _make_concept("C1", "كتب", "EVENT", "definite")
         axis_hyps = axes.generate([concept])
 
         undefined_count = sum(
             1 for h in axis_hyps if h.get("axis_value") == "غير محدد"
         )
-        assert undefined_count == 5, (
-            f"Expected 5 undefined axes, got {undefined_count}"
+        # At most 1 axis (زمني/مكاني for non-adverbs returns "غير زمني/مكاني")
+        assert undefined_count == 0, (
+            f"Expected 0 undefined axes, got {undefined_count}"
         )
 
-    def test_only_definiteness_is_resolved(self):
-        """Only معرفة/نكرة axis is actually resolved."""
+    def test_definiteness_still_works(self):
+        """معرفة/نكرة axis still resolves correctly."""
         definite = _make_concept("C1", "الكتاب", "ENTITY", "definite")
         indefinite = _make_concept("C2", "كتاب", "ENTITY", "indefinite")
 
         def_axes = axes.generate([definite])
         indef_axes = axes.generate([indefinite])
 
-        # Find the معرفة/نكرة axis
         def_value = next(
             h.get("axis_value") for h in def_axes
             if h.get("axis_name") == "معرفة/نكرة"
@@ -748,20 +748,64 @@ class TestStubDetection_Axes:
         assert def_value == "معرفة", "Definite must resolve to معرفة"
         assert indef_value == "نكرة", "Indefinite must resolve to نكرة"
 
-    def test_derived_frozen_axis_always_undefined(self):
-        """جامد/مشتق axis is always غير محدد even for obvious cases.
-
-        كاتب is clearly مشتق (derived), but the stub doesn't know.
-        """
-        concept = _make_concept("C1", "كاتب", "ENTITY", "indefinite")
+    def test_derived_axis_resolves_for_event(self):
+        """جامد/مشتق axis now resolves: EVENT → مشتق."""
+        concept = _make_concept("C1", "كتب", "EVENT", "indefinite")
         axis_hyps = axes.generate([concept])
 
         derived_axis = next(
             h for h in axis_hyps if h.get("axis_name") == "جامد/مشتق"
         )
-        # This PROVES the stub doesn't do real analysis
-        assert derived_axis.get("axis_value") == "غير محدد", (
-            "Stub must return غير محدد for جامد/مشتق"
+        assert derived_axis.get("axis_value") == "مشتق", (
+            "EVENT concepts should be مشتق (derived)"
+        )
+
+    def test_frozen_axis_for_entity(self):
+        """جامد/مشتق axis: non-derivative entity → جامد."""
+        concept = _make_concept("C1", "كتاب", "ENTITY", "indefinite")
+        axis_hyps = axes.generate([concept])
+
+        derived_axis = next(
+            h for h in axis_hyps if h.get("axis_name") == "جامد/مشتق"
+        )
+        assert derived_axis.get("axis_value") == "جامد", (
+            "Non-derivative entity should be جامد (frozen)"
+        )
+
+    def test_invariant_for_particle(self):
+        """مبني/معرب axis: particle → مبني."""
+        concept = _make_concept("C1", "في", "ENTITY", "indefinite")
+        axis_hyps = axes.generate([concept])
+
+        decl_axis = next(
+            h for h in axis_hyps if h.get("axis_name") == "مبني/معرب"
+        )
+        assert decl_axis.get("axis_value") == "مبني", (
+            "Particle should be مبني (invariant)"
+        )
+
+    def test_temporal_adverb(self):
+        """زمني/مكاني axis: اليوم → زمني."""
+        concept = _make_concept("C1", "اليوم", "ENTITY", "definite")
+        axis_hyps = axes.generate([concept])
+
+        ts_axis = next(
+            h for h in axis_hyps if h.get("axis_name") == "زمني/مكاني"
+        )
+        assert ts_axis.get("axis_value") == "زمني", (
+            "اليوم should be زمني (temporal)"
+        )
+
+    def test_spatial_adverb(self):
+        """زمني/مكاني axis: هنا → مكاني."""
+        concept = _make_concept("C1", "هنا", "ENTITY", "indefinite")
+        axis_hyps = axes.generate([concept])
+
+        ts_axis = next(
+            h for h in axis_hyps if h.get("axis_name") == "زمني/مكاني"
+        )
+        assert ts_axis.get("axis_value") == "مكاني", (
+            "هنا should be مكاني (spatial)"
         )
 
 

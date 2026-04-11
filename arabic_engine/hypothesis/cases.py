@@ -2,6 +2,15 @@
 
 Generates case (i'rāb) hypotheses from role + factor hypotheses.
 Case is treated as a *stabilisation decision* — not a direct lookup.
+
+Expanded role-case mapping covering:
+- Standard verbal sentence roles (فاعل, مفعول)
+- Nominal sentence roles (مبتدأ, خبر)
+- إنّ وأخواتها (اسم إنّ, خبر إنّ)
+- كان وأخواتها (اسم كان, خبر كان)
+- Preposition-governed (مجرور)
+- Vocative (منادى)
+- Particles and tools (أداة)
 """
 
 from __future__ import annotations
@@ -12,12 +21,34 @@ from arabic_engine.core.enums import ActivationStage, HypothesisStatus
 from arabic_engine.core.types import HypothesisNode
 
 _ROLE_CASE_MAP: dict[str, str] = {
+    # Standard verbal roles
     "فاعل": "رفع",
+    "مفعول": "نصب",
+    "فعل": "مبني",
+    # Nominal sentence
     "مبتدأ": "رفع",
     "خبر": "رفع",
-    "مفعول": "نصب",
+    # إنّ وأخواتها
+    "اسم_إن": "نصب",
+    "خبر_إن": "رفع",
+    # كان وأخواتها
+    "اسم_كان": "رفع",
+    "خبر_كان": "نصب",
+    # Preposition-governed
     "حرف_جر": "مبني",
-    "فعل": "مبني",
+    "مجرور": "جر",
+    "مضاف_إليه": "جر",
+    # Vocative
+    "منادى": "بناء",
+    # Adverbial
+    "حال": "نصب",
+    "تمييز": "نصب",
+    # Tools and particles
+    "أداة": "مبني",
+    "أداة_نداء": "مبني",
+    "أداة_استفهام": "مبني",
+    "أداة_نفي": "مبني",
+    "فعل_ناقص": "مبني",
 }
 
 

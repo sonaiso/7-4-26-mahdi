@@ -63,10 +63,24 @@ def _infer_factor(role: str, verb_label: Optional[str]) -> tuple[str, str]:
     """Determine factor and factor type from role (heuristic)."""
     if role == "فعل":
         return ("ذاتي", "فعل")
+    if role == "فعل_ناقص":
+        return ("ذاتي", "فعل_ناقص")
     if role == "فاعل":
         return (verb_label or "مقدر", "فعل")
     if role in ("مبتدأ", "خبر"):
         return ("ابتداء", "عامل_معنوي")
+    if role in ("اسم_إن", "خبر_إن"):
+        return ("إنّ", "حرف_مشبه_بالفعل")
+    if role in ("اسم_كان", "خبر_كان"):
+        return (verb_label or "كان", "فعل_ناقص")
     if role == "حرف_جر":
         return ("ذاتي", "حرف_جر")
+    if role == "مجرور":
+        return ("حرف_جر", "حرف_جر")
+    if role == "منادى":
+        return ("يا", "أداة_نداء")
+    if role == "مفعول":
+        return (verb_label or "مقدر", "فعل")
+    if role in ("أداة", "أداة_نداء", "أداة_استفهام", "أداة_نفي"):
+        return ("ذاتي", "أداة")
     return ("مقدر", "عامل_مقدر")

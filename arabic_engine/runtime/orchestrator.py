@@ -22,7 +22,7 @@ from __future__ import annotations
 
 from typing import List
 
-from arabic_engine.constraints.propagation import propagate
+from arabic_engine.constraints.propagation import get_constraint_edges, propagate
 from arabic_engine.constraints.pruning import prune
 from arabic_engine.constraints.revision import apply_revision, needs_revision
 from arabic_engine.core.enums import ActivationStage, HypothesisStatus
@@ -115,10 +115,12 @@ def run(text: str, *, max_iterations: int = 3) -> KernelRuntimeState:
     all_hyps, prune_traces = prune(all_hyps)
     state.decisions.trace.extend(prune_traces)
 
-    # 3b. Propagate constraints
+    # 3b. Propagate constraints (support + conflict edges)
     support_edges, conflict_edges = propagate(all_hyps)
     state.hypotheses.support_edges = support_edges
     state.hypotheses.conflict_edges = conflict_edges
+    # Store constraint edges
+    state.hypotheses.constraint_edges = get_constraint_edges(all_hyps)
 
     # 3c. Bounded revision loop
     for iteration in range(max_iterations):
