@@ -175,6 +175,9 @@ def resolve_utterance_concept_conflict(
     Returns
     -------
     :class:`ConflictResolutionResult`
+        A record with ``winner`` set to ``"concept"`` or ``"utterance"``,
+        ``rule_applied`` set to ``conflict_rule``, and a human-readable
+        ``rationale`` string.
     """
     winner = "concept" if conflict_rule.prefer_concept else "utterance"
     return ConflictResolutionResult(
@@ -215,6 +218,14 @@ def assign_epistemic_rank(
         The proof path for the judgement.
     has_hard_conflict:
         True if a hard (unresolved) conflict was detected.
+
+    Returns
+    -------
+    :class:`EpistemicRank`
+        The assigned rank — one of :attr:`EpistemicRank.CERTAIN`,
+        :attr:`EpistemicRank.TRUE_NON_CERTAIN`,
+        :attr:`EpistemicRank.PROBABILISTIC_DOUBT`, or
+        :attr:`EpistemicRank.IMPOSSIBLE`.
     """
     jtype = judgement.judgement_type
 
@@ -259,6 +270,14 @@ def derive_insertion_policy(
         The validation outcome.
     rank:
         The epistemic rank (may be None if episode was rejected).
+
+    Returns
+    -------
+    :class:`InsertionPolicy`
+        The policy — :attr:`InsertionPolicy.FOUNDATIONAL` for certain
+        knowledge, :attr:`InsertionPolicy.ADMISSIBLE` for non-certain,
+        :attr:`InsertionPolicy.GUARDED` for doubtful or pending, and
+        :attr:`InsertionPolicy.BLOCKED` for invalid or impossible.
     """
     if outcome in (ValidationOutcome.REJECTED_METHODOLOGICALLY, ValidationOutcome.INVALID):
         return InsertionPolicy.BLOCKED
@@ -340,6 +359,9 @@ def validate_episode(inp: KnowledgeEpisodeInput) -> ValidationResult:
     Returns
     -------
     :class:`ValidationResult`
+        A result record containing the ``outcome``, ``rank``,
+        ``insertion_policy``, ``gaps``, and ``messages`` collected
+        across all twelve validation checks.
     """
     codes: List[DecisionCode] = []
     gaps: List[GapRecord] = []
