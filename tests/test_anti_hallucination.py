@@ -45,6 +45,7 @@ from arabic_engine.hypothesis import (
     cases,
     factors,
     judgements,
+    relations,
     roles,
 )
 from arabic_engine.runtime.orchestrator import run
@@ -893,6 +894,145 @@ class TestStubDetection_Roles:
 
         # But it never produces BOTH possibilities — proof of limitation
         # A real engine would emit alternatives with different confidences
+
+
+class TestStubDetection_Relations:
+    """Verify that relations.py now handles 9+ relation types."""
+
+    def test_conjunction_detected(self):
+        """Conjunction particle 'و' → عطف."""
+        concepts = [
+            _make_concept("C0", "زيد", "ENTITY", "definite"),
+            _make_concept("C1", "و", "ENTITY", "indefinite"),
+            _make_concept("C2", "عمرو", "ENTITY", "definite"),
+        ]
+        rel_hyps = relations.generate(concepts)
+        rel_types = [str(h.get("relation_type", "")) for h in rel_hyps]
+        assert "عطف" in rel_types, f"Expected عطف, got {rel_types}"
+
+    def test_predication_detected(self):
+        """EVENT → ENTITY still produces إسناد."""
+        concepts = [
+            _make_concept("C0", "كتب", "EVENT", "indefinite"),
+            _make_concept("C1", "الطالب", "ENTITY", "definite"),
+        ]
+        rel_hyps = relations.generate(concepts)
+        assert rel_hyps[0].get("relation_type") == "إسناد"
+
+    def test_entity_entity_produces_alternatives(self):
+        """Two adjacent entities produce multiple relation hypotheses."""
+        concepts = [
+            _make_concept("C0", "كتاب", "ENTITY", "indefinite"),
+            _make_concept("C1", "الطالب", "ENTITY", "definite"),
+        ]
+        rel_hyps = relations.generate(concepts)
+        # Should produce إضافة as primary for indef+def pattern
+        rel_types = [str(h.get("relation_type", "")) for h in rel_hyps]
+        assert "إضافة" in rel_types, f"Expected إضافة, got {rel_types}"
+
+    def test_preposition_produces_zarfiyya(self):
+        """Preposition → ظرفية."""
+        concepts = [
+            _make_concept("C0", "في", "ENTITY", "indefinite"),
+            _make_concept("C1", "المدرسة", "ENTITY", "definite"),
+        ]
+        rel_hyps = relations.generate(concepts)
+        assert rel_hyps[0].get("relation_type") == "ظرفية"
+
+    def test_emphasis_detected(self):
+        """Emphasis token 'نفس' → توكيد."""
+        concepts = [
+            _make_concept("C0", "الطالب", "ENTITY", "definite"),
+            _make_concept("C1", "نفس", "ENTITY", "definite"),
+        ]
+        rel_hyps = relations.generate(concepts)
+        rel_types = [str(h.get("relation_type", "")) for h in rel_hyps]
+        has_emphasis = "توكيد" in rel_types
+        assert has_emphasis, f"Expected توكيد, got {rel_types}"
+
+
+class TestStubDetection_Factors:
+    """Verify that factors.py now handles implicit/elided factors."""
+
+    def test_vocative_has_elided_factor(self):
+        """Vocative role (منادى) should have elided factor."""
+        role_h = HypothesisNode(
+            node_id="ROLE_C0",
+            hypothesis_type="role",
+            stage=ActivationStage.ROLE,
+            source_refs=("C0",),
+            payload=(("role", "منادى"), ("token_label", "طالب")),
+            confidence=0.9,
+            status=HypothesisStatus.ACTIVE,
+        )
+        concepts = [
+            _make_concept("C0", "يا", "ENTITY", "indefinite"),
+            _make_concept("C1", "طالب", "ENTITY", "indefinite"),
+        ]
+        factor_hyps = factors.generate([role_h], concepts)
+        factor_type = str(factor_hyps[0].get("factor_type", ""))
+        assert factor_type == "عامل_محذوف", (
+            f"Expected عامل_محذوف, got {factor_type}"
+        )
+
+    def test_subject_without_verb_has_implicit_factor(self):
+        """Subject (فاعل) without a verb → implicit factor."""
+        role_h = HypothesisNode(
+            node_id="ROLE_C0",
+            hypothesis_type="role",
+            stage=ActivationStage.ROLE,
+            source_refs=("C0",),
+            payload=(("role", "فاعل"), ("token_label", "زيد")),
+            confidence=0.9,
+            status=HypothesisStatus.ACTIVE,
+        )
+        # No EVENT concept → no verb
+        concepts = [
+            _make_concept("C0", "زيد", "ENTITY", "indefinite"),
+        ]
+        factor_hyps = factors.generate([role_h], concepts)
+        factor = str(factor_hyps[0].get("factor", ""))
+        assert factor == "مقدّر", f"Expected مقدّر, got {factor}"
+
+    def test_subject_with_verb_has_explicit_factor(self):
+        """Subject (فاعل) with a verb → verb is the factor."""
+        role_h = HypothesisNode(
+            node_id="ROLE_C1",
+            hypothesis_type="role",
+            stage=ActivationStage.ROLE,
+            source_refs=("C1",),
+            payload=(("role", "فاعل"), ("token_label", "زيد")),
+            confidence=0.9,
+            status=HypothesisStatus.ACTIVE,
+        )
+        concepts = [
+            _make_concept("C0", "كتب", "EVENT", "indefinite"),
+            _make_concept("C1", "زيد", "ENTITY", "indefinite"),
+        ]
+        factor_hyps = factors.generate([role_h], concepts)
+        factor = str(factor_hyps[0].get("factor", ""))
+        assert factor == "كتب", f"Expected كتب, got {factor}"
+
+    def test_inna_governed_has_particle_factor(self):
+        """اسم إنّ → particle factor from إنّ."""
+        role_h = HypothesisNode(
+            node_id="ROLE_C1",
+            hypothesis_type="role",
+            stage=ActivationStage.ROLE,
+            source_refs=("C1",),
+            payload=(("role", "اسم_إن"), ("token_label", "الطالب")),
+            confidence=0.9,
+            status=HypothesisStatus.ACTIVE,
+        )
+        concepts = [
+            _make_concept("C0", "إنّ", "ENTITY", "indefinite"),
+            _make_concept("C1", "الطالب", "ENTITY", "definite"),
+        ]
+        factor_hyps = factors.generate([role_h], concepts)
+        factor = str(factor_hyps[0].get("factor", ""))
+        factor_type = str(factor_hyps[0].get("factor_type", ""))
+        assert factor == "إنّ", f"Expected إنّ, got {factor}"
+        assert factor_type == "حرف_مشبه_بالفعل"
 
 
 # ═══════════════════════════════════════════════════════════════════════

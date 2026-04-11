@@ -72,14 +72,14 @@ STUB_REGISTRY: List[StubRecord] = [
     StubRecord(
         module="hypothesis/relations.py",
         function="generate",
-        status=StubStatus.PARTIAL,
-        description="Relation hypotheses — 3 patterns, needs more",
+        status=StubStatus.COMPLETE,
+        description="Relation hypotheses — 9 patterns with disambiguation",
     ),
     StubRecord(
         module="hypothesis/factors.py",
         function="_infer_factor",
-        status=StubStatus.PARTIAL,
-        description="Factor inference — basic heuristic, needs expansion",
+        status=StubStatus.COMPLETE,
+        description="Factor inference — handles implicit/elided/particle factors",
     ),
 ]
 
