@@ -22,6 +22,8 @@ Public sub-modules
   that validates a knowledge episode against the ten epistemic conditions.
 * :mod:`arabic_engine.cognition.discourse_exchange` —
   validator functions for inter-agent deliberative discourse exchange.
+* :mod:`arabic_engine.cognition.explanation` — explicit why/evidence
+  explanation payload construction for v3 pipeline output.
 """
 
 __all__ = [
@@ -34,4 +36,5 @@ __all__ = [
     "seed_data",
     "episode_validator",
     "discourse_exchange",
+    "explanation",
 ]

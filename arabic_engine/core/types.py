@@ -207,6 +207,59 @@ class EvalResult:
     confidence: float
 
 
+@dataclass(frozen=True)
+class PerceptTrace:
+    """Perception trace for a sentence-level episode."""
+
+    raw_text: str
+    normalized_text: str
+    tokens: Tuple[str, ...]
+    trace_quality: float = 1.0
+
+
+@dataclass(frozen=True)
+class PriorKnowledgeUnit:
+    """Prior knowledge unit used during linking and judgement."""
+
+    unit_id: str
+    content: str
+    source: str = "pipeline"
+    weight: float = 0.5
+
+
+@dataclass(frozen=True)
+class LinkOperation:
+    """A single linking operation between signifier-side and concept-side data."""
+
+    operation_id: str
+    operation_type: DalalaType
+    source: str
+    target: str
+    accepted: bool
+    confidence: float
+
+
+@dataclass(frozen=True)
+class ConceptNode:
+    """Explicit concept node for v3 explainable episode payloads."""
+
+    concept_id: str
+    label: str
+    semantic_type: SemanticType
+    properties: dict = field(default_factory=dict)
+
+
+@dataclass(frozen=True)
+class EvaluationResult:
+    """v3 evaluation payload: truth, rank, confidence, and validity."""
+
+    truth_state: TruthState
+    epistemic_rank: Optional[EpistemicRank]
+    confidence: float
+    validation_state: ValidationState
+    consistency: str = ""
+
+
 # ── Syntax layer (v2) ───────────────────────────────────────────────
 
 
@@ -263,6 +316,11 @@ class InferenceResult:
     conclusion: Proposition
     confidence: float
     valid: bool
+    rule_category: str = ""
+    conditions: Tuple[str, ...] = ()
+    outcome: str = ""
+    strength: float = 0.0
+    explanation: str = ""
 
 
 # ── Mafhūm layer (Ch. 21) ──────────────────────────────────────────
