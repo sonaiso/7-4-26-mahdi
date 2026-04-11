@@ -93,7 +93,7 @@ def _constraints_to_conflicts(
     conflicts: List[ConflictEdge] = []
     for i, ce in enumerate(constraint_edges):
         if ce.strength in (ConstraintStrength.ABSOLUTE, ConstraintStrength.STRONG):
-            state = ConflictState.SOFT
+            state = ConflictState.HARD
         else:
             state = ConflictState.SOFT
         conflicts.append(

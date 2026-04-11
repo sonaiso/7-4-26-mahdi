@@ -43,6 +43,9 @@ _PROHIBITION_PARTICLES = frozenset({"لا"})
 # Exclamatory patterns: "ما أفعلَ" (ما + أفعل)
 _EXCLAMATORY_MA = "ما"
 
+# Minimum length for أفعلَ exclamatory pattern (hamza + root + vowel)
+_MIN_AFAL_LENGTH = 3
+
 # Common imperative patterns (verb-initial with no visible subject)
 _IMPERATIVE_ROLES = frozenset({"فعل_أمر", "أمر"})
 
@@ -180,8 +183,9 @@ def _is_exclamatory(labels: List[str]) -> bool:
     for i, label in enumerate(labels[:-1]):
         if label == _EXCLAMATORY_MA:
             next_label = labels[i + 1]
-            # أفعلَ pattern: starts with أ and has ≥ 3 chars
-            if next_label.startswith("أ") and len(next_label) >= 3:
+            # أفعلَ pattern: starts with أ and has ≥ _MIN_AFAL_LENGTH chars
+            # (minimum 3 = hamza + root consonant + vowel pattern)
+            if next_label.startswith("أ") and len(next_label) >= _MIN_AFAL_LENGTH:
                 return True
     return False
 
