@@ -97,11 +97,13 @@ from .enums import (
     MetaConceptualLevel as MetaConceptualLevel,
 )
 from .enums import (
+    MethodFamily as MethodFamily,
+)
+from .enums import (
     ModalCategory as ModalCategory,
 )
 from .enums import (
     NormativeCategory as NormativeCategory,
-    MethodFamily as MethodFamily,
 )
 from .enums import (
     OntologicalConstraintType as OntologicalConstraintType,
