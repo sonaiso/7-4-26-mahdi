@@ -108,12 +108,27 @@ def normalize_atoms(
                     decision_type="normalization",
                     input_refs=tuple(dropped),
                     output_refs=(f"SU_{tok_idx}",),
-                    applied_rules=("tatweel_removal",) if any(
-                        atoms[int(d.split("_")[1])].codepoint == _TATWEEL_CP
-                        for d in dropped if d.startswith("A_") and int(d.split("_")[1]) < len(atoms)
-                    ) else ("tashkil_strip",),
+                    applied_rules=_classify_dropped_rules(atoms, dropped),
                     justification="Removed tatweel or diacritics during normalization",
                 )
             )
 
     return units, traces
+
+
+def _classify_dropped_rules(
+    atoms: List[UnicodeAtom], dropped: List[str]
+) -> tuple[str, ...]:
+    """Determine which normalization rule was applied to dropped atoms."""
+    has_tatweel = False
+    for d in dropped:
+        parts = d.split("_", 1)
+        if len(parts) == 2 and parts[0] == "A":
+            try:
+                idx = int(parts[1])
+            except ValueError:
+                continue
+            if 0 <= idx < len(atoms) and atoms[idx].codepoint == _TATWEEL_CP:
+                has_tatweel = True
+                break
+    return ("tatweel_removal",) if has_tatweel else ("tashkil_strip",)

@@ -12,7 +12,7 @@ through each processing stage:
     → Signal Structuring  (atoms → normalize → segment)
     → Hypothesis Graph    (morph → concept → axis → relation → role → factor → case → judgement)
     → Constraint Engine   (score → prune → propagate → revise)
-    → Stabilisation
+    → Stabilization
 
 The revision loop is bounded by ``max_iterations`` to guarantee
 termination.
@@ -132,20 +132,20 @@ def run(text: str, *, max_iterations: int = 3) -> KernelRuntimeState:
         state.hypotheses.support_edges = support_edges
         state.hypotheses.conflict_edges = conflict_edges
 
-    # ── Stage 4: Stabilisation ──────────────────────────────────────
-    _stabilise(state, all_hyps)
+    # ── Stage 4: Stabilization ──────────────────────────────────────
+    _stabilize(state, all_hyps)
 
     return state
 
 
-def _stabilise(state: KernelRuntimeState, hypotheses: List[HypothesisNode]) -> None:
-    """Stabilise all ACTIVE hypotheses and record activated nodes."""
+def _stabilize(state: KernelRuntimeState, hypotheses: List[HypothesisNode]) -> None:
+    """Stabilize all ACTIVE hypotheses and record activated nodes."""
     activated: List[HypothesisNode] = []
     suspended: List[HypothesisNode] = []
 
     for h in hypotheses:
         if h.status == HypothesisStatus.ACTIVE:
-            stabilised = HypothesisNode(
+            stabilized = HypothesisNode(
                 node_id=h.node_id,
                 hypothesis_type=h.hypothesis_type,
                 stage=h.stage,
@@ -154,14 +154,14 @@ def _stabilise(state: KernelRuntimeState, hypotheses: List[HypothesisNode]) -> N
                 confidence=h.confidence,
                 status=HypothesisStatus.STABILIZED,
             )
-            activated.append(stabilised)
+            activated.append(stabilized)
         elif h.status == HypothesisStatus.SUSPENDED:
             suspended.append(h)
 
     state.decisions.activated = activated
     state.decisions.suspended = suspended
 
-    # Set the judgement if one was stabilised
+    # Set the judgement if one was stabilized
     for h in activated:
         if h.stage == ActivationStage.JUDGEMENT:
             state.decisions.judgement = h
@@ -172,7 +172,7 @@ def _stabilise(state: KernelRuntimeState, hypotheses: List[HypothesisNode]) -> N
         DecisionTrace(
             trace_id="STAB_FINAL",
             stage=ActivationStage.JUDGEMENT,
-            decision_type="stabilisation",
+            decision_type="stabilization",
             input_refs=tuple(h.node_id for h in hypotheses),
             output_refs=tuple(h.node_id for h in activated),
             justification=f"Stabilised {len(activated)} hypotheses, suspended {len(suspended)}",
@@ -183,7 +183,7 @@ def _stabilise(state: KernelRuntimeState, hypotheses: List[HypothesisNode]) -> N
     # Rebuild hypothesis dict with final statuses
     state.hypotheses.hypotheses.clear()
     for h in hypotheses:
-        # Use the stabilised version if available
+        # Use the stabilized version if available
         final = next((a for a in activated if a.node_id == h.node_id), None)
         if final is not None:
             state.hypotheses.add_hypothesis(final)
