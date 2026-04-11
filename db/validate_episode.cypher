@@ -27,6 +27,11 @@ OPTIONAL MATCH (e)-[:HAS_CONFLICT_RULE]->(cr:ConflictRule)
 WITH e, ra, st, lt, j, m, c, pp, cr,
      collect(DISTINCT pi)               AS prior_infos,
      collect(DISTINCT ot)               AS opinion_traces
+// ── Use pattern comprehensions for multi-value relationships ─────────────
+// (avoids cartesian product from multiple OPTIONAL MATCHes)
+WITH e, ra, st, lt, j, m, c, pp, cr,
+     [(e)-[:HAS_PRIOR_INFO]->(pi:PriorInfo) | pi]         AS prior_infos,
+     [(e)-[:HAS_OPINION_TRACE]->(ot:OpinionTrace) | ot]   AS opinion_traces
 
 // ── Gap accumulation (mirrors Python validate_episode checks) ────────────
 WITH e, ra, st, prior_infos, opinion_traces, lt, j, m, c, pp, cr,

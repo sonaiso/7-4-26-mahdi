@@ -21,6 +21,26 @@ where every intermediate type is a finite, numerically-encoded structure, making
 
 ---
 
+## Canonical Kernel-14 (Final)
+
+The project now defines a canonical epistemic kernel of exactly 14 primary
+labels:
+
+`Self, Reality, Sense, PriorInfo, Link, Concept, Judgement, Method, Proof, Carrier, Exchange, Model, Constraint, State`
+
+This kernel is the only ontological root. Higher structures are treated as
+derived/application structures:
+
+- `Utterance` ← derived from `Carrier`
+- `LinguisticProfile` ← derived from `Method + Carrier + Concept`
+- `KnowledgeEpisode` ← derived from `Reality + Sense + PriorInfo + Link + Judgement`
+- `DiscourseExchange` ← derived from `Exchange + Carrier + Self + State`
+- `ReusableModel` ← derived from `Model + State + repeated validated patterns`
+
+See [`docs/kernel_schema.md`](kernel_schema.md) for the formal schema.
+
+---
+
 ## Layer Stack
 
 ```
@@ -203,3 +223,19 @@ A Mafhūm is valid only when all four pillars (أركان) hold:
 * [`docs/chapter_19_general_closure.md`](chapter_19_general_closure.md) — Ch. 19 proof
 * [`docs/chapter_21_mafhum_types.md`](chapter_21_mafhum_types.md) — Ch. 21 proof
 * [`docs/api_reference.md`](api_reference.md) — public API quick reference
+
+---
+
+## Operational Integrity Guard
+
+Repository-level integrity is enforced by tests in
+`tests/test_repository_integrity.py` using `arabic_engine.core.integrity`.
+
+It validates:
+
+1. Critical architecture modules remain importable.
+2. Duplicate file contents are not introduced across:
+   * `arabic_engine/`
+   * `tests/`
+   * `docs/`
+   * `db/`

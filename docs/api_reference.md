@@ -245,6 +245,30 @@ from arabic_engine.closure import verify_general_closure, format_closure_report
 
 ## Core Types — `arabic_engine.core`
 
+### `arabic_engine.core.kernel` (Kernel-14)
+
+```python
+from arabic_engine.core.kernel import (
+    KernelLabel, KernelRelation,
+    KernelNode, KernelEdge, KernelGraph,
+    KernelValidationResult, validate_kernel_graph,
+    derive_utterance_from_carrier, derive_linguistic_profile,
+    derive_knowledge_episode, derive_discourse_exchange, derive_reusable_model,
+)
+```
+
+| Symbol | Description |
+|--------|-------------|
+| `KernelLabel` | Canonical 14 node labels only |
+| `KernelRelation` | Minimal core kernel relationships |
+| `KernelNode` / `KernelEdge` / `KernelGraph` | Minimal graph payload for kernel validation |
+| `validate_kernel_graph(graph)` | Checks required fields + relation label compatibility |
+| `derive_utterance_from_carrier` | Derives `Utterance` from `Carrier` |
+| `derive_linguistic_profile` | Derives profile from `Method + Carrier + Concept` |
+| `derive_knowledge_episode` | Derives episode from `Reality + Sense + PriorInfo + Link + Judgement` |
+| `derive_discourse_exchange` | Derives exchange artifact from `Exchange + Carrier + Self + State` |
+| `derive_reusable_model` | Derives reusable model from `Model + State + repeated validated patterns` |
+
 ### Enumerations (`arabic_engine.core.enums`)
 
 | Enum | Values |
@@ -284,3 +308,19 @@ from arabic_engine.closure import verify_general_closure, format_closure_report
 | `InferenceResult` | — | `rule_name`, `premises`, `conclusion`, `confidence`, `valid` |
 | `MafhumPillar` | — | `closed_mantuq`, `constraint_type`, `mental_counterpart`, `transition_rule` |
 | `MafhumResult` | — | `mafhum_type`, `constraint_type`, `pillars`, `source_text`, `valid`, `confidence` |
+
+---
+
+## Repository Integrity — `arabic_engine.core.integrity`
+
+```python
+from arabic_engine.core.integrity import (
+    scan_repository_integrity,
+    format_integrity_report,
+)
+```
+
+| Function | Signature | Description |
+|----------|-----------|-------------|
+| `scan_repository_integrity` | `(project_root, *, required_modules=..., scan_dirs=...) → IntegrityReport` | Validates critical architecture imports and duplicate-content policy |
+| `format_integrity_report` | `(report) → str` | Formats a human-readable integrity summary |

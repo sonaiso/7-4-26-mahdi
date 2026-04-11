@@ -10,114 +10,131 @@ from enum import Enum, auto
 
 # ── Part of Speech ──────────────────────────────────────────────────
 
+
 class POS(Enum):
     """Arabic part-of-speech tags (اسم / فعل / حرف + sub-types)."""
-    ISM = auto()        # اسم
-    FI3L = auto()       # فعل
-    HARF = auto()       # حرف
-    SIFA = auto()       # صفة
-    ZARF = auto()       # ظرف
-    DAMIR = auto()      # ضمير
+
+    ISM = auto()  # اسم
+    FI3L = auto()  # فعل
+    HARF = auto()  # حرف
+    SIFA = auto()  # صفة
+    ZARF = auto()  # ظرف
+    DAMIR = auto()  # ضمير
     UNKNOWN = auto()
 
 
 # ── Semantic (ontological) type ─────────────────────────────────────
 
+
 class SemanticType(Enum):
     """High-level concept categories (التعريف 5 — ontological mapping)."""
-    ENTITY = auto()     # ذات
-    EVENT = auto()      # حدث
+
+    ENTITY = auto()  # ذات
+    EVENT = auto()  # حدث
     ATTRIBUTE = auto()  # صفة
-    RELATION = auto()   # علاقة
-    NORM = auto()       # حكم شرعي / قاعدة
+    RELATION = auto()  # علاقة
+    NORM = auto()  # حكم شرعي / قاعدة
 
 
 # ── Dalāla (signification) type ─────────────────────────────────────
 
+
 class DalalaType(Enum):
     """Kinds of signification linking signifier → signified."""
-    MUTABAQA = auto()   # مطابقة – exact denotation
-    TADAMMUN = auto()   # تضمن  – inclusion (part of meaning)
-    ILTIZAM = auto()    # التزام – implication (necessary concomitant)
-    ISNAD = auto()      # إسناد – predication
-    TAQYID = auto()     # تقييد – restriction / qualification
-    IDAFA = auto()      # إضافة – genitive construction
-    IHALA = auto()      # إحالة – referential link
+
+    MUTABAQA = auto()  # مطابقة – exact denotation
+    TADAMMUN = auto()  # تضمن  – inclusion (part of meaning)
+    ILTIZAM = auto()  # التزام – implication (necessary concomitant)
+    ISNAD = auto()  # إسناد – predication
+    TAQYID = auto()  # تقييد – restriction / qualification
+    IDAFA = auto()  # إضافة – genitive construction
+    IHALA = auto()  # إحالة – referential link
 
 
 # ── Truth state ─────────────────────────────────────────────────────
 
+
 class TruthState(Enum):
     """Epistemic status of a proposition (التعريف 8)."""
-    CERTAIN = auto()    # قطعي
-    PROBABLE = auto()   # ظني راجح
-    POSSIBLE = auto()   # ممكن
-    DOUBTFUL = auto()   # مشكوك
-    FALSE = auto()      # باطل
+
+    CERTAIN = auto()  # قطعي
+    PROBABLE = auto()  # ظني راجح
+    POSSIBLE = auto()  # ممكن
+    DOUBTFUL = auto()  # مشكوك
+    FALSE = auto()  # باطل
     UNKNOWN = auto()
 
 
 # ── Guidance state ──────────────────────────────────────────────────
 
+
 class GuidanceState(Enum):
     """Normative/actionable status derived from evaluation."""
-    OBLIGATORY = auto()   # واجب
+
+    OBLIGATORY = auto()  # واجب
     RECOMMENDED = auto()  # مستحب
     PERMISSIBLE = auto()  # مباح
-    DISLIKED = auto()     # مكروه
-    FORBIDDEN = auto()    # حرام
+    DISLIKED = auto()  # مكروه
+    FORBIDDEN = auto()  # حرام
     NOT_APPLICABLE = auto()
 
 
 # ── I'rāb (syntactic inflection) ────────────────────────────────────
 
+
 class IrabCase(Enum):
     """Grammatical case markers."""
-    RAF3 = auto()       # رفع
-    NASB = auto()       # نصب
-    JARR = auto()       # جر
-    JAZM = auto()       # جزم
-    SUKUN = auto()      # سكون (مبني)
+
+    RAF3 = auto()  # رفع
+    NASB = auto()  # نصب
+    JARR = auto()  # جر
+    JAZM = auto()  # جزم
+    SUKUN = auto()  # سكون (مبني)
     UNKNOWN = auto()
 
 
 class IrabRole(Enum):
     """Syntactic role in the sentence."""
-    FA3IL = auto()      # فاعل
-    MAF3UL_BIH = auto() # مفعول به
-    MUBTADA = auto()    # مبتدأ
-    KHABAR = auto()     # خبر
-    FI3L = auto()       # فعل
-    MUDAF = auto()      # مضاف
-    MUDAF_ILAYH = auto()# مضاف إليه
-    SIFA = auto()       # صفة
-    HAL = auto()        # حال
-    TAMYIZ = auto()     # تمييز
-    ZARF = auto()       # ظرف
-    JARR_MAJRUR = auto()# جار ومجرور
+
+    FA3IL = auto()  # فاعل
+    MAF3UL_BIH = auto()  # مفعول به
+    MUBTADA = auto()  # مبتدأ
+    KHABAR = auto()  # خبر
+    FI3L = auto()  # فعل
+    MUDAF = auto()  # مضاف
+    MUDAF_ILAYH = auto()  # مضاف إليه
+    SIFA = auto()  # صفة
+    HAL = auto()  # حال
+    TAMYIZ = auto()  # تمييز
+    ZARF = auto()  # ظرف
+    JARR_MAJRUR = auto()  # جار ومجرور
     UNKNOWN = auto()
 
 
 # ── Time / Space references (v2) ────────────────────────────────────
 
+
 class TimeRef(Enum):
     """Temporal anchors for propositions."""
-    PAST = auto()       # ماض
-    PRESENT = auto()    # حاضر
-    FUTURE = auto()     # مستقبل
-    ETERNAL = auto()    # أزلي / دائم
+
+    PAST = auto()  # ماض
+    PRESENT = auto()  # حاضر
+    FUTURE = auto()  # مستقبل
+    ETERNAL = auto()  # أزلي / دائم
     UNSPECIFIED = auto()
 
 
 class SpaceRef(Enum):
     """Spatial anchors for propositions."""
-    HERE = auto()       # هنا
-    THERE = auto()      # هناك
-    NAMED = auto()      # مكان محدد بالاسم
+
+    HERE = auto()  # هنا
+    THERE = auto()  # هناك
+    NAMED = auto()  # مكان محدد بالاسم
     UNSPECIFIED = auto()
 
 
 # ── Mafhūm types (Ch. 21) ───────────────────────────────────────────
+
 
 class ConstraintType(Enum):
     """Structural constraint types in the Manṭūq (أنواع القيد البنيوي).
@@ -125,11 +142,12 @@ class ConstraintType(Enum):
     Each constraint type generates a corresponding Mafhūm type when
     combined with a mental counterpart and a transition rule.
     """
-    SHART = auto()      # شرط — condition (تعليق الحكم)
-    GHAYA = auto()      # غاية — goal / endpoint (تحديد المنتهى)
-    ADAD = auto()       # عدد — number (التحديد الكمي)
-    WASF = auto()       # وصف — description (التقييد الوصفي)
-    ISHARA = auto()     # إشارة — reference / deixis (التخصيص الإحالي)
+
+    SHART = auto()  # شرط — condition (تعليق الحكم)
+    GHAYA = auto()  # غاية — goal / endpoint (تحديد المنتهى)
+    ADAD = auto()  # عدد — number (التحديد الكمي)
+    WASF = auto()  # وصف — description (التقييد الوصفي)
+    ISHARA = auto()  # إشارة — reference / deixis (التخصيص الإحالي)
 
 
 class MafhumType(Enum):
@@ -143,11 +161,12 @@ class MafhumType(Enum):
       • WASF   — domain of qualitative restriction (تقييد نوعي)
       • ISHARA — domain of referential specification (تخصيص مرجعي)
     """
-    SHART = auto()      # مفهوم الشرط
-    GHAYA = auto()      # مفهوم الغاية
-    ADAD = auto()       # مفهوم العدد
-    WASF = auto()       # مفهوم الوصف
-    ISHARA = auto()     # مفهوم الإشارة
+
+    SHART = auto()  # مفهوم الشرط
+    GHAYA = auto()  # مفهوم الغاية
+    ADAD = auto()  # مفهوم العدد
+    WASF = auto()  # مفهوم الوصف
+    ISHARA = auto()  # مفهوم الإشارة
 
 
 # ── D_min Phonological layer ─────────────────────────────────────────
@@ -155,53 +174,56 @@ class MafhumType(Enum):
 # where every field maps to a computable integer, making the full
 # 5-tuple a numeric vector over ℕ⁵.
 
+
 class PhonCategory(Enum):
     """Major phonological category — الفئة الكبرى (c in D_min)."""
-    CONSONANT = auto()      # صامت
-    SEMI_VOWEL = auto()     # شبه صامت / صائت ذو تحولات (و ي)
-    LONG_VOWEL = auto()     # صائت طويل / حامل كتابي (ا)
-    SHORT_VOWEL = auto()    # صائت قصير (فتحة ضمة كسرة)
-    SUKUN = auto()          # علامة انعدام حركة (ْ)
-    SHADDA = auto()         # علامة بنيوية / تضعيف (ّ)
-    TANWIN = auto()         # حركة/علامة مركبة / تنوين (ً ٌ ٍ)
-    SPECIAL_MARK = auto()   # علامة مدّ/همز خاصة (ٰ ٓ)
+
+    CONSONANT = auto()  # صامت
+    SEMI_VOWEL = auto()  # شبه صامت / صائت ذو تحولات (و ي)
+    LONG_VOWEL = auto()  # صائت طويل / حامل كتابي (ا)
+    SHORT_VOWEL = auto()  # صائت قصير (فتحة ضمة كسرة)
+    SUKUN = auto()  # علامة انعدام حركة (ْ)
+    SHADDA = auto()  # علامة بنيوية / تضعيف (ّ)
+    TANWIN = auto()  # حركة/علامة مركبة / تنوين (ً ٌ ٍ)
+    SPECIAL_MARK = auto()  # علامة مدّ/همز خاصة (ٰ ٓ)
 
 
 class PhonGroup(Enum):
     """Phonological/articulatory group — المجموعة الكبرى (g in D_min)."""
+
     # ── Consonant articulation groups (مجموعات الصوامت) ────────────
-    HNJ_MZM = auto()        # حنجري/مزمَري — ء
-    HNJ_HLQ = auto()        # حنجري/حلقي   — ه
-    HLQ = auto()            # حلقي          — ح ع غ
-    HLQ_LHW = auto()        # حلقي/لهوي     — خ
-    LHW = auto()            # لهوي          — ق
-    TBQ_LHW = auto()        # طبقي/لهوي     — ك
-    SHJR = auto()           # شجري/حنكي     — ج ش
-    ASN_LTH = auto()        # أسناني-لثوي   — ت د
-    ASN_LTH_MTPQ = auto()   # أسناني-لثوي مطبق — ط
-    BAYNASN = auto()        # بين-أسناني    — ث ذ
-    BAYNASN_MTPQ = auto()   # بين-أسناني مطبق — ظ
-    LTH = auto()            # لثوي          — ر ل ن (with feature distinctions)
-    LTH_MTPQ = auto()       # لثوي مطبق     — ض
-    ASLI = auto()           # أسلي/صفيري    — ز س
-    ASLI_MTPQ = auto()      # أسلي مطبق     — ص
-    SHF = auto()            # شفوي          — ب م (with feature distinctions)
-    SHF_ASN = auto()        # شفوي-أسناني   — ف
-    SHF_LYN = auto()        # شفوي لين      — و (semi-vowel)
-    HNK_LYN = auto()        # حنكي لين      — ي (semi-vowel)
+    HNJ_MZM = auto()  # حنجري/مزمَري — ء
+    HNJ_HLQ = auto()  # حنجري/حلقي   — ه
+    HLQ = auto()  # حلقي          — ح ع غ
+    HLQ_LHW = auto()  # حلقي/لهوي     — خ
+    LHW = auto()  # لهوي          — ق
+    TBQ_LHW = auto()  # طبقي/لهوي     — ك
+    SHJR = auto()  # شجري/حنكي     — ج ش
+    ASN_LTH = auto()  # أسناني-لثوي   — ت د
+    ASN_LTH_MTPQ = auto()  # أسناني-لثوي مطبق — ط
+    BAYNASN = auto()  # بين-أسناني    — ث ذ
+    BAYNASN_MTPQ = auto()  # بين-أسناني مطبق — ظ
+    LTH = auto()  # لثوي          — ر ل ن (with feature distinctions)
+    LTH_MTPQ = auto()  # لثوي مطبق     — ض
+    ASLI = auto()  # أسلي/صفيري    — ز س
+    ASLI_MTPQ = auto()  # أسلي مطبق     — ص
+    SHF = auto()  # شفوي          — ب م (with feature distinctions)
+    SHF_ASN = auto()  # شفوي-أسناني   — ف
+    SHF_LYN = auto()  # شفوي لين      — و (semi-vowel)
+    HNK_LYN = auto()  # حنكي لين      — ي (semi-vowel)
     # ── Long vowel (الصوائت الطويلة) ──────────────────────────────
-    ALF_LV = auto()         # ألف           — ا
+    ALF_LV = auto()  # ألف           — ا
     # ── Short vowel / diacritic groups (الحركات والعلامات) ─────────
-    FTH = auto()            # فتح           — َ (U+064E)
-    DMM = auto()            # ضم            — ُ (U+064F)
-    KSR = auto()            # كسر           — ِ (U+0650)
-    SKN_GRP = auto()        # سكون          — ْ (U+0652)
-    SHD_GRP = auto()        # شدة           — ّ (U+0651)
-    TAN_FTH = auto()        # تنوين فتح     — ً (U+064B)
-    TAN_DMM = auto()        # تنوين ضم      — ٌ (U+064C)
-    TAN_KSR = auto()        # تنوين كسر     — ٍ (U+064D)
-    ALF_KHNJ = auto()       # ألف خنجرية    — ٰ (U+0670)
-    MDD_GRP = auto()        # مدة           — ٓ (U+0653)
+    FTH = auto()  # فتح           — َ (U+064E)
+    DMM = auto()  # ضم            — ُ (U+064F)
+    KSR = auto()  # كسر           — ِ (U+0650)
+    SKN_GRP = auto()  # سكون          — ْ (U+0652)
+    SHD_GRP = auto()  # شدة           — ّ (U+0651)
+    TAN_FTH = auto()  # تنوين فتح     — ً (U+064B)
+    TAN_DMM = auto()  # تنوين ضم      — ٌ (U+064C)
+    TAN_KSR = auto()  # تنوين كسر     — ٍ (U+064D)
+    ALF_KHNJ = auto()  # ألف خنجرية    — ٰ (U+0670)
+    MDD_GRP = auto()  # مدة           — ٓ (U+0653)
 
 
 class PhonFeature(Enum):
@@ -210,36 +232,37 @@ class PhonFeature(Enum):
     Each value is a unique power-of-two bit-position, enabling a compact
     integer bitmask: feature_mask = Σ 2^(f.value-1) for f in features.
     """
+
     # Manner of articulation (طريقة النطق)
-    SHADID = auto()         # شديد   — stop / plosive
-    RAKHW = auto()          # رخو    — fricative / continuant
-    MURAKKAB = auto()       # مركب   — affricate
-    MUTAWASSIT = auto()     # متوسط  — intermediate manner
-    TAKRIR = auto()         # مكرر   — trill / vibrant
-    MUNHARIF = auto()       # منحرف  — lateral
-    TAFSHI = auto()         # تفشٍّ  — diffuse / spread
+    SHADID = auto()  # شديد   — stop / plosive
+    RAKHW = auto()  # رخو    — fricative / continuant
+    MURAKKAB = auto()  # مركب   — affricate
+    MUTAWASSIT = auto()  # متوسط  — intermediate manner
+    TAKRIR = auto()  # مكرر   — trill / vibrant
+    MUNHARIF = auto()  # منحرف  — lateral
+    TAFSHI = auto()  # تفشٍّ  — diffuse / spread
     # Voicing (الجهر والهمس)
-    MAJHUR = auto()         # مجهور  — voiced
-    MAHMOUS = auto()        # مهموس  — voiceless
+    MAJHUR = auto()  # مجهور  — voiced
+    MAHMOUS = auto()  # مهموس  — voiceless
     # Secondary articulation (الصفات الثانوية)
-    ITBAQ = auto()          # مطبق   — pharyngealization / emphatic
-    MSTALI = auto()         # مستعلٍ — dorsal elevation
-    SAFIR = auto()          # صفيري  — sibilant / whistling
-    ANFI = auto()           # أنفي   — nasal
-    GHUNNA = auto()         # غنّي   — nasality / resonance
-    LAYIN = auto()          # لين    — sonorant
-    ASTTALA = auto()        # استطالة — prolongation (ض)
-    HMZ = auto()            # همزي   — hamza-bearing
+    ITBAQ = auto()  # مطبق   — pharyngealization / emphatic
+    MSTALI = auto()  # مستعلٍ — dorsal elevation
+    SAFIR = auto()  # صفيري  — sibilant / whistling
+    ANFI = auto()  # أنفي   — nasal
+    GHUNNA = auto()  # غنّي   — nasality / resonance
+    LAYIN = auto()  # لين    — sonorant
+    ASTTALA = auto()  # استطالة — prolongation (ض)
+    HMZ = auto()  # همزي   — hamza-bearing
     # Vowel / nucleus features (الصوائت)
-    NUWAWI = auto()         # نووي   — nuclear / syllabic
-    QASIR = auto()          # قصير   — short vowel
-    TAWIL = auto()          # طويل   — long vowel
-    ITLAL = auto()          # اعتلال — defective / weak
+    NUWAWI = auto()  # نووي   — nuclear / syllabic
+    QASIR = auto()  # قصير   — short vowel
+    TAWIL = auto()  # طويل   — long vowel
+    ITLAL = auto()  # اعتلال — defective / weak
     # Mark features (العلامات)
-    SIFR_HARAKA = auto()    # صفر حركة — zero-vowel
-    QAFIL = auto()          # قفل      — syllable closure
-    TADFIF = auto()         # تضعيف   — gemination mark
-    MD_KHAS = auto()        # مدّ خاص  — special extension mark
+    SIFR_HARAKA = auto()  # صفر حركة — zero-vowel
+    QAFIL = auto()  # قفل      — syllable closure
+    TADFIF = auto()  # تضعيف   — gemination mark
+    MD_KHAS = auto()  # مدّ خاص  — special extension mark
 
 
 class PhonTransform(Enum):
@@ -248,103 +271,111 @@ class PhonTransform(Enum):
     Each value is a unique power-of-two bit-position enabling a bitmask:
     transform_mask = Σ 2^(t.value-1) for t in transforms.
     """
+
     # Phonological processes (العمليات الصوتية)
-    TAHQIQ = auto()             # تحقيق       — full realization
-    TASHIL = auto()             # تسهيل       — facilitation / weakening
-    IBDAL = auto()              # إبدال       — phonemic substitution
-    HADHF = auto()              # حذف         — deletion / elision
-    HAMLI_HAMZI = auto()        # حمل همزي    — hamza hosting
-    IDGHAM = auto()             # إدغام       — assimilation / merging
-    IDGHAM_SHAMSI = auto()      # إدغام شمسي  — solar (regressive) assimilation
-    IZHAR_QAMARI = auto()       # إظهار قمري  — lunar clarity
-    IZHAR = auto()              # إظهار       — clear articulation
-    IKHFAA = auto()             # إخفاء       — nasalized concealment
-    IQLAB = auto()              # إقلاب       — metamorphosis (ن → م before ب)
-    TAFKHIM = auto()            # تفخيم       — velarization / emphasis
-    TARQIQ = auto()             # ترقيق       — thinning / palatalization
-    TAKRIR_TR = auto()          # تكرير       — trill articulation
-    TAFSHI_TR = auto()          # تفشٍّ صوتي  — acoustic diffusion
-    TAMATHUL = auto()           # تماثل       — progressive assimilation
-    MADD = auto()               # مدّ         — vowel lengthening
-    ITLAL_TR = auto()           # اعتلال      — weak-letter process
-    ASTTALA_TR = auto()         # استطالة     — prolongation process
+    TAHQIQ = auto()  # تحقيق       — full realization
+    TASHIL = auto()  # تسهيل       — facilitation / weakening
+    IBDAL = auto()  # إبدال       — phonemic substitution
+    HADHF = auto()  # حذف         — deletion / elision
+    HAMLI_HAMZI = auto()  # حمل همزي    — hamza hosting
+    IDGHAM = auto()  # إدغام       — assimilation / merging
+    IDGHAM_SHAMSI = auto()  # إدغام شمسي  — solar (regressive) assimilation
+    IZHAR_QAMARI = auto()  # إظهار قمري  — lunar clarity
+    IZHAR = auto()  # إظهار       — clear articulation
+    IKHFAA = auto()  # إخفاء       — nasalized concealment
+    IQLAB = auto()  # إقلاب       — metamorphosis (ن → م before ب)
+    TAFKHIM = auto()  # تفخيم       — velarization / emphasis
+    TARQIQ = auto()  # ترقيق       — thinning / palatalization
+    TAKRIR_TR = auto()  # تكرير       — trill articulation
+    TAFSHI_TR = auto()  # تفشٍّ صوتي  — acoustic diffusion
+    TAMATHUL = auto()  # تماثل       — progressive assimilation
+    MADD = auto()  # مدّ         — vowel lengthening
+    ITLAL_TR = auto()  # اعتلال      — weak-letter process
+    ASTTALA_TR = auto()  # استطالة     — prolongation process
     # Morphological functions (الوظائف الصرفية)
-    ASAL_JADHARI = auto()       # أصل جذري    — root-radical origin
-    ZIYADA = auto()             # زيادة       — morphological augmentation
-    BINA_SARFI = auto()         # بنية صرفية  — morphological structure
-    BINA_ISHTIQAQI = auto()     # بناء اشتقاقي — derivational structure
-    WAZIFA_SARFIYYA = auto()    # وظيفة صرفية — morphological function marker
-    WAZN = auto()               # بناء وزني   — prosodic-pattern building
+    ASAL_JADHARI = auto()  # أصل جذري    — root-radical origin
+    ZIYADA = auto()  # زيادة       — morphological augmentation
+    BINA_SARFI = auto()  # بنية صرفية  — morphological structure
+    BINA_ISHTIQAQI = auto()  # بناء اشتقاقي — derivational structure
+    WAZIFA_SARFIYYA = auto()  # وظيفة صرفية — morphological function marker
+    WAZN = auto()  # بناء وزني   — prosodic-pattern building
     # Syntactic / grammatical functions (الوظائف النحوية)
-    TAAREF = auto()             # تعريف       — definiteness (لام التعريف)
-    TAWKID = auto()             # توكيد       — emphasis marker
-    TANWIN_FUNC = auto()        # تنوين       — nunation function
-    JAZM = auto()               # جزم         — apocopation / jussive
-    IIRAB = auto()              # إعراب       — grammatical case marking
-    TANKIR = auto()             # تنكير       — indefiniteness
-    JAM = auto()                # جمع         — pluralization marker
-    ATAF = auto()               # عطف         — coordination marker
-    NISBAH = auto()             # نسبة        — relational adjective marker
-    MUTAKALLIM = auto()         # متكلم       — first-person marker
-    DAMIR_FUNC = auto()         # هاء ضمير    — pronoun function
-    TADFIF_TR = auto()          # تضعيف       — gemination function
-    MAQTAA = auto()             # بناء مقطع مغلق — closed-syllable building
-    HAMZA_CARRIER = auto()      # حامل كتابي  — orthographic hamza carrier
+    TAAREF = auto()  # تعريف       — definiteness (لام التعريف)
+    TAWKID = auto()  # توكيد       — emphasis marker
+    TANWIN_FUNC = auto()  # تنوين       — nunation function
+    JAZM = auto()  # جزم         — apocopation / jussive
+    IIRAB = auto()  # إعراب       — grammatical case marking
+    TANKIR = auto()  # تنكير       — indefiniteness
+    JAM = auto()  # جمع         — pluralization marker
+    ATAF = auto()  # عطف         — coordination marker
+    NISBAH = auto()  # نسبة        — relational adjective marker
+    MUTAKALLIM = auto()  # متكلم       — first-person marker
+    DAMIR_FUNC = auto()  # هاء ضمير    — pronoun function
+    TADFIF_TR = auto()  # تضعيف       — gemination function
+    MAQTAA = auto()  # بناء مقطع مغلق — closed-syllable building
+    HAMZA_CARRIER = auto()  # حامل كتابي  — orthographic hamza carrier
 
 
 # ── Transition Engine — قانون الانتقال بين الخانات ──────────────────
 
+
 class TransitionType(Enum):
     """الأنواع الكبرى للانتقال — the four major classes of cell transition."""
-    FUNCTIONAL = auto()         # انتقال وظيفي    — same element, changed function
-    RANK = auto()               # انتقال رتبي     — movement between phonetic tiers
-    CONTEXTUAL = auto()         # انتقال تجاوري   — neighbour-driven transition
+
+    FUNCTIONAL = auto()  # انتقال وظيفي    — same element, changed function
+    RANK = auto()  # انتقال رتبي     — movement between phonetic tiers
+    CONTEXTUAL = auto()  # انتقال تجاوري   — neighbour-driven transition
     MORPHO_STRUCTURAL = auto()  # انتقال بنيوي صرفي — pattern/template-driven
 
 
 class TransitionLaw(Enum):
     """القوانين الجزئية للانتقال — the seven partial transition laws."""
-    ITLAL = auto()      # اعتلال  — weak-letter transformation (ا و ي)
-    IDGHAM = auto()     # إدغام   — gemination: C+C → Shadda
-    IBDAL = auto()      # إبدال   — substitution within phonetic family
-    HADHF = auto()      # حذف     — deletion from surface to deep structure
-    WAQF = auto()       # وقف     — pause-final phonological reduction
-    ZIYADA = auto()     # زيادة   — root element re-slotted as augment
-    INZILAQ = auto()    # انزلاق  — glide ↔ long-vowel transition (و / ي)
+
+    ITLAL = auto()  # اعتلال  — weak-letter transformation (ا و ي)
+    IDGHAM = auto()  # إدغام   — gemination: C+C → Shadda
+    IBDAL = auto()  # إبدال   — substitution within phonetic family
+    HADHF = auto()  # حذف     — deletion from surface to deep structure
+    WAQF = auto()  # وقف     — pause-final phonological reduction
+    ZIYADA = auto()  # زيادة   — root element re-slotted as augment
+    INZILAQ = auto()  # انزلاق  — glide ↔ long-vowel transition (و / ي)
 
 
 class TransitionCondition(Enum):
     """شروط الانتقال — the five conditions required for a valid transition."""
-    STRUCTURAL_VALIDITY = auto()    # بقاء داخل الأنماط المسموحة
-    PHONETIC_BALANCE = auto()       # التخفيف دون الإفساد
-    ROOT_PRESERVATION = auto()      # إمكان استرجاع الجذر بعد الانتقال
+
+    STRUCTURAL_VALIDITY = auto()  # بقاء داخل الأنماط المسموحة
+    PHONETIC_BALANCE = auto()  # التخفيف دون الإفساد
+    ROOT_PRESERVATION = auto()  # إمكان استرجاع الجذر بعد الانتقال
     FUNCTION_PRESERVATION = auto()  # وضوح الوظيفة بعد الانتقال
-    NON_CONTRADICTION = auto()      # عدم الوقوع في صورة ممنوعة
+    NON_CONTRADICTION = auto()  # عدم الوقوع في صورة ممنوعة
 
 
 class SyllablePosition(Enum):
     """موضع العنصر في المقطع — element's position inside the syllable."""
-    ONSET = auto()      # بداية المقطع  — syllable onset (C)
-    NUCLEUS = auto()    # نواة المقطع   — syllable nucleus (V)
-    CODA = auto()       # نهاية المقطع  — syllable coda (C)
-    INTER_WORD = auto() # حدّ الكلمة    — word boundary
+
+    ONSET = auto()  # بداية المقطع  — syllable onset (C)
+    NUCLEUS = auto()  # نواة المقطع   — syllable nucleus (V)
+    CODA = auto()  # نهاية المقطع  — syllable coda (C)
+    INTER_WORD = auto()  # حدّ الكلمة    — word boundary
 
 
 class FunctionRole(Enum):
     """الدور الوظيفي للعنصر — element's morpho-syntactic role in the word."""
-    ROOT_RADICAL = auto()   # أصل جذري   — part of the tri-literal root
-    AUGMENT = auto()        # زيادة      — morphological augment
+
+    ROOT_RADICAL = auto()  # أصل جذري   — part of the tri-literal root
+    AUGMENT = auto()  # زيادة      — morphological augment
     VOWEL_CARRIER = auto()  # حامل صائتي — vowel / nucleus carrier
-    CASE_MARKER = auto()    # علامة إعراب — case / mood marker
-    DEFINITENESS = auto()   # أداة تعريف  — definiteness particle
-    PRONOUN = auto()        # ضمير       — pronominal clitic
-    UNKNOWN = auto()        # غير محدد   — undetermined
+    CASE_MARKER = auto()  # علامة إعراب — case / mood marker
+    DEFINITENESS = auto()  # أداة تعريف  — definiteness particle
+    PRONOUN = auto()  # ضمير       — pronominal clitic
+    UNKNOWN = auto()  # غير محدد   — undetermined
 
 
 # ── Functional Transition Schema — الانتقال الوظيفي المنضبط ──────────
 # The following enums mirror the JSON Schema defined in
 # arabic_engine/data/transition_record.schema.json and form the
 # Python side of the formal functional-transition layer.
+
 
 class CellType(Enum):
     """خانة الانتقال — cell identifier in the functional transition schema.
@@ -382,6 +413,7 @@ class CellType(Enum):
         CELL_CAUSAL_INTERNAL       — self-contained causation (تسبب داخلي)
         CELL_CAUSAL_EXTERNAL       — external causation (تسبب خارجي)
     """
+
     # Consonants
     C_ROOT_PLAIN = auto()
     C_MULTI_FUNCTION = auto()
@@ -415,30 +447,33 @@ class CellType(Enum):
 
 class FuncTransitionClass(Enum):
     """صنف الانتقال الوظيفي — broad classification of a functional transition."""
-    PHONOLOGICAL = auto()    # صوتي
-    MORPHOLOGICAL = auto()   # صرفي
-    ORTHOGRAPHIC = auto()    # إملائي / وقفي
-    CAUSAL = auto()          # سببي
-    TEMPORAL = auto()        # زمني
-    EXISTENTIAL = auto()     # وجودي
-    ABSTRACTIVE = auto()     # تجريدي
+
+    PHONOLOGICAL = auto()  # صوتي
+    MORPHOLOGICAL = auto()  # صرفي
+    ORTHOGRAPHIC = auto()  # إملائي / وقفي
+    CAUSAL = auto()  # سببي
+    TEMPORAL = auto()  # زمني
+    EXISTENTIAL = auto()  # وجودي
+    ABSTRACTIVE = auto()  # تجريدي
 
 
 class EvidenceType(Enum):
     """نوع الدليل — the kind of evidence supporting a transition record."""
-    LEXICAL = auto()              # معجمي
-    PATTERN = auto()              # نمطي / وزني
-    PHONOLOGICAL_CONTEXT = auto() # سياق صوتي
-    MORPH_CONTEXT = auto()        # سياق صرفي
-    SURFACE_ONLY = auto()         # سطحي فقط
-    DEEP_ANALYSIS = auto()        # تحليل عميق
+
+    LEXICAL = auto()  # معجمي
+    PATTERN = auto()  # نمطي / وزني
+    PHONOLOGICAL_CONTEXT = auto()  # سياق صوتي
+    MORPH_CONTEXT = auto()  # سياق صرفي
+    SURFACE_ONLY = auto()  # سطحي فقط
+    DEEP_ANALYSIS = auto()  # تحليل عميق
 
 
 class ReversibleValue(Enum):
     """قابلية الانتقال للعكس — whether a transition can be reversed."""
-    YES = auto()         # قابل للعكس دائمًا
-    NO = auto()          # غير قابل للعكس
-    CONDITIONAL = auto() # قابل للعكس بشرط
+
+    YES = auto()  # قابل للعكس دائمًا
+    NO = auto()  # غير قابل للعكس
+    CONDITIONAL = auto()  # قابل للعكس بشرط
 
 
 class ConditionToken(Enum):
@@ -451,6 +486,7 @@ class ConditionToken(Enum):
       * syllabic / positional conditions (مقطع وموضع)
       * causal / temporal / existential conditions (سبب / زمن / وجود)
     """
+
     # Glide / vowel structure
     GLIDE_LOSES_CONSONANTAL_LOAD = auto()
     SEGMENT_BECOMES_VOCALIC_NUCLEUS = auto()
@@ -520,64 +556,73 @@ class ConditionToken(Enum):
 
 # ── AEU Periodic-Table enums ────────────────────────────────────────
 
+
 class ElementClass(Enum):
     """تصنيف العنصر — structural class of an alphabetic encoding unit."""
-    BASE_LETTER = auto()              # حرف أساسي
-    VOWEL_MARKER = auto()             # علامة حركة
-    STRUCTURAL_MARKER = auto()        # علامة بنيوية
-    CARRIER_RELATED_UNIT = auto()     # وحدة مرتبطة بحامل
+
+    BASE_LETTER = auto()  # حرف أساسي
+    VOWEL_MARKER = auto()  # علامة حركة
+    STRUCTURAL_MARKER = auto()  # علامة بنيوية
+    CARRIER_RELATED_UNIT = auto()  # وحدة مرتبطة بحامل
     COMPOSITE_DECISION_UNIT = auto()  # وحدة قرار مركبة
 
 
 class ElementLayer(Enum):
     """طبقة العنصر — the architectural layer an AEU belongs to."""
-    PHONOLOGICAL = auto()   # صوتية
-    ORTHOGRAPHIC = auto()   # كتابية
-    STRUCTURAL = auto()     # بنيوية
-    MIXED = auto()          # مختلطة
+
+    PHONOLOGICAL = auto()  # صوتية
+    ORTHOGRAPHIC = auto()  # كتابية
+    STRUCTURAL = auto()  # بنيوية
+    MIXED = auto()  # مختلطة
 
 
 class ElementFunction(Enum):
     """وظيفة العنصر — the functional role an AEU carries."""
-    IDENTITY_BEARING = auto()        # حامل هوية
-    MOTION_BEARING = auto()          # حامل حركة
-    LENGTH_BEARING = auto()          # حامل طول
-    CLOSURE_BEARING = auto()         # حامل إغلاق
-    DUPLICATION_BEARING = auto()     # حامل تضعيف
+
+    IDENTITY_BEARING = auto()  # حامل هوية
+    MOTION_BEARING = auto()  # حامل حركة
+    LENGTH_BEARING = auto()  # حامل طول
+    CLOSURE_BEARING = auto()  # حامل إغلاق
+    DUPLICATION_BEARING = auto()  # حامل تضعيف
     INDEFINITENESS_BEARING = auto()  # حامل تنكير
-    ENCODING_BEARING = auto()        # حامل ترميز
+    ENCODING_BEARING = auto()  # حامل ترميز
 
 
 class CombinationType(Enum):
     """نوع الاندماج — how an AEU combines with neighbours."""
-    STANDALONE = auto()         # مستقل
-    ATTACHES_TO_BASE = auto()   # يلتصق بالأساس
-    CLUSTER_INTERNAL = auto()   # داخل عنقود
+
+    STANDALONE = auto()  # مستقل
+    ATTACHES_TO_BASE = auto()  # يلتصق بالأساس
+    CLUSTER_INTERNAL = auto()  # داخل عنقود
     CONTEXT_DEPENDENT = auto()  # معتمد على السياق
 
 
 class UnicodeProfileType(Enum):
     """نوع الملف الموحد — Unicode rendering profile of an AEU."""
-    SINGLE_CODE_POINT = auto()    # نقطة رمز واحدة
-    COMBINING_MARK = auto()       # علامة تجميعية
-    CONTEXTUAL_RENDERING = auto() # عرض سياقي
+
+    SINGLE_CODE_POINT = auto()  # نقطة رمز واحدة
+    COMBINING_MARK = auto()  # علامة تجميعية
+    CONTEXTUAL_RENDERING = auto()  # عرض سياقي
 
 
 class ProofStatus(Enum):
     """حالة الإثبات — proof/verification status of an AEU."""
-    PROVEN = auto()     # مُثبَت
-    PENDING = auto()    # قيد الإثبات
-    ASSUMED = auto()    # مفترض — accepted without formal proof
+
+    PROVEN = auto()  # مُثبَت
+    PENDING = auto()  # قيد الإثبات
+    ASSUMED = auto()  # مفترض — accepted without formal proof
     COMPOSITE = auto()  # مُركَّب
 
 
 # ── Axiom-layer enums (الأصول الخمسة) ────────────────────────────────
 
+
 class SlotState(Enum):
     """حالة الموضع — state of a structural slot (A1/A2)."""
-    EMPTY = auto()      # فارغ قابل للامتلاء
-    OCCUPIED = auto()   # مشغول بموجب أول
-    BLOCKED = auto()    # محجوب بنيويًا
+
+    EMPTY = auto()  # فارغ قابل للامتلاء
+    OCCUPIED = auto()  # مشغول بموجب أول
+    BLOCKED = auto()  # محجوب بنيويًا
 
 
 class OntologicalLayer(Enum):
@@ -586,11 +631,12 @@ class OntologicalLayer(Enum):
     Encodes the hierarchy: cell → transition → syllable → root → pattern.
     Each level requires the previous to be complete before promotion.
     """
-    CELL = auto()        # خانة — atomic phonological cell
+
+    CELL = auto()  # خانة — atomic phonological cell
     TRANSITION = auto()  # انتقال — directed transition between cells
-    SYLLABLE = auto()    # مقطع — syllable-level grouping
-    ROOT = auto()        # جذر — root-level abstraction
-    PATTERN = auto()     # وزن — morphological pattern
+    SYLLABLE = auto()  # مقطع — syllable-level grouping
+    ROOT = auto()  # جذر — root-level abstraction
+    PATTERN = auto()  # وزن — morphological pattern
 
 
 class OntologicalMode(Enum):
@@ -610,11 +656,12 @@ class OntologicalMode(Enum):
     CONSTRAINT  قيد — constraint or condition
     =========  ==========================================
     """
-    SLOT = auto()        # موضع — structural position (Structural Zero)
-    UNIT = auto()        # وحدة — base unit (consonant / letter)
-    MODIFIER = auto()    # محمول — modifier (short vowel, sukun, shadda)
-    COMPOSITE = auto()   # تركيب — composite (syllable, morpheme)
-    STRUCTURE = auto()   # بنية — structural template (root, pattern)
+
+    SLOT = auto()  # موضع — structural position (Structural Zero)
+    UNIT = auto()  # وحدة — base unit (consonant / letter)
+    MODIFIER = auto()  # محمول — modifier (short vowel, sukun, shadda)
+    COMPOSITE = auto()  # تركيب — composite (syllable, morpheme)
+    STRUCTURE = auto()  # بنية — structural template (root, pattern)
     CONSTRAINT = auto()  # قيد — condition / constraint
 
 
@@ -632,9 +679,10 @@ class TriadType(Enum):
     GENERATIVE       مثلث توليدي — base / motion / constraint
     ==============  ==============================================
     """
-    DISTINCTIVE = auto()    # تمييزي — سابق / مركز / لاحق
-    HIERARCHICAL = auto()   # رتبي — قمة / ضلع / ضلع
-    GENERATIVE = auto()     # توليدي — قاعدة / حركة / قيد
+
+    DISTINCTIVE = auto()  # تمييزي — سابق / مركز / لاحق
+    HIERARCHICAL = auto()  # رتبي — قمة / ضلع / ضلع
+    GENERATIVE = auto()  # توليدي — قاعدة / حركة / قيد
 
 
 class RankType(Enum):
@@ -645,172 +693,198 @@ class RankType(Enum):
       * C ≫ L → CAPACITIVE (سعوي)
       * L ≈ C → TRANSITIONAL (انتقالي)
     """
-    LIMITAL = auto()        # حدّي — limit-dominant
-    CAPACITIVE = auto()     # سعوي — capacity-dominant
-    TRANSITIONAL = auto()   # انتقالي — balanced / transitional
+
+    LIMITAL = auto()  # حدّي — limit-dominant
+    CAPACITIVE = auto()  # سعوي — capacity-dominant
+    TRANSITIONAL = auto()  # انتقالي — balanced / transitional
 
 
-# ── Ontology v1 — الجدول الأنطولوجي v1.0 ────────────────────────────
+# ── Signified v2.0 — طبقة المدلول الموسّعة ──────────────────────────
+# The twenty axes below extend the signified layer so that a Concept
+# can encode not just its ontological *type* but also its epistemic
+# standing, normative weight, affective charge, causal role, cultural
+# scope, and every other dimension required to represent the full range
+# of human conceptual knowledge.
 
 
-class SignifierClass(Enum):
-    """صنف الدال — the major class of a signifier node (الدال).
+class EpistemicStatus(Enum):
+    """الوضع الإبستيمي — how knowledge of the concept is held (1/20).
 
-    The hierarchy: every utterance (منطوق) is a signifier, but not every
-    signifier is an utterance.  ``UTTERED_FORM`` marks the subtype whose
-    surface has been actually realised in speech or writing.
-
-    ==================  =====================================================
-    Member               Description
-    ==================  =====================================================
-    PHONOLOGICAL         دال صوتي — phoneme, stress, intonation
-    MORPHOLOGICAL        دال صرفي — root, pattern, augment
-    LEXICAL              دال معجمي — word, lexical compound
-    SYNTACTIC            دال نحوي — position, case-marker, governor
-    TEXTUAL              دال نصي — textual reference, discourse connector
-    PRAGMATIC            دال تداولي — intent, speech-situation, register
-    RHETORICAL           دال بلاغي — metaphor, ellipsis, foregrounding
-    UTTERED_FORM         منطوق — the realised surface form (فرع من الدال)
-    ==================  =====================================================
+    Complements :class:`TruthState` (which applies to propositions).
+    ``EpistemicStatus`` applies to the *concept itself* and captures the
+    epistemic grade at which the concept is known or postulated.
     """
-    PHONOLOGICAL = auto()   # دال صوتي
-    MORPHOLOGICAL = auto()  # دال صرفي
-    LEXICAL = auto()        # دال معجمي
-    SYNTACTIC = auto()      # دال نحوي
-    TEXTUAL = auto()        # دال نصي
-    PRAGMATIC = auto()      # دال تداولي
-    RHETORICAL = auto()     # دال بلاغي
-    UTTERED_FORM = auto()   # منطوق — sub-class of signifier
+    CERTAIN = auto()        # يقيني — known with certainty
+    PROBABLE = auto()       # ظني    — probably true / held with high confidence
+    DOUBTFUL = auto()       # مشكوك  — genuinely doubtful
+    IMAGINED = auto()       # متخيَّل — constructed by imagination
+    PRESUMED = auto()       # مفترض  — assumed without full proof
+    NECESSARY = auto()      # ضروري  — necessarily true (cannot be otherwise)
+    POSSIBLE = auto()       # ممكن   — possible but not certain
+    IMPOSSIBLE = auto()     # ممتنع  — logically / ontologically impossible
+    AXIOMATIC = auto()      # بديهي  — self-evident / axiomatic
+    THEORETICAL = auto()    # نظري   — derived by theoretical reasoning
 
 
-class UtteredFormClass(Enum):
-    """صنف المنطوق — sub-classification of an uttered / surface form.
+class NormativeCategory(Enum):
+    """الجهة المعيارية المستقلة — normative / deontic category (2/20).
 
-    These are the five realisable shapes of the منطوق (uttered signifier).
-    Only applicable when ``SignifierClass`` is ``UTTERED_FORM``.
-
-    ===================  ====================================================
-    Member                Description
-    ===================  ====================================================
-    PHONETIC_UTTERANCE    المنطوق من جهة الأداء الصوتي (stress, length, pause)
-    WORD_UTTERANCE        المنطوق في صورة كلمة مفردة
-    EXPRESSION_UTTERANCE  المنطوق في صورة تركيب / عبارة
-    SENTENCE_UTTERANCE    المنطوق القضوي — full sentential unit
-    MARKED_UTTERANCE      منطوق مقيّد بأداة بنيوية (إنّ، ما…إلا، etc.)
-    ===================  ====================================================
+    Independent of :class:`GuidanceState` (which is a procedural
+    evaluation output).  ``NormativeCategory`` encodes the *intrinsic*
+    normative meaning carried by the concept.
     """
-    PHONETIC_UTTERANCE = auto()    # أداء صوتي
-    WORD_UTTERANCE = auto()        # كلمة منطوقة
-    EXPRESSION_UTTERANCE = auto()  # تركيب منطوق
-    SENTENCE_UTTERANCE = auto()    # جملة قضوية
-    MARKED_UTTERANCE = auto()      # منطوق مقيد بأداة
+    OBLIGATORY = auto()     # واجب   — morally / legally required
+    PERMISSIBLE = auto()    # مباح   — allowed without positive recommendation
+    FORBIDDEN = auto()      # محظور  — prohibited
+    RECOMMENDED = auto()    # مستحب  — recommended / praiseworthy
+    DISAPPROVED = auto()    # مكروه  — disapproved / discouraged
+    GOOD = auto()           # حسن    — ethically good
+    BAD = auto()            # قبيح   — ethically bad
+    JUST = auto()           # عادل   — just / fair
+    UNJUST = auto()         # ظالم   — unjust / unfair
+    NEUTRAL = auto()        # محايد  — normatively neutral
 
 
-class SignifiedClass(Enum):
-    """صنف المدلول — the major class of a signified node (المدلول).
+class AffectiveDimension(Enum):
+    """البُعد الوجداني — the affective / emotional dimension (3/20).
 
-    The مفهوم (ConceptualSignified) is a sub-class of المدلول, so
-    ``CONCEPTUAL`` marks the root under which all eight concept types fall.
-
-    ======================  ================================================
-    Member                   Description
-    ======================  ================================================
-    ONTOLOGICAL              مدلول وجودي — entity / substance
-    PROPERTY                 مدلول وصفي — attribute / quality
-    EVENT                    مدلول حدثي — action / occurrence
-    RELATIONAL               مدلول علائقي — relation (above, with, because)
-    PROPOSITIONAL            مدلول حكمي — assertion / negation / restriction
-    REFERENTIAL              مدلول إحالي — deictic / anaphoric reference
-    FUNCTIONAL               مدلول وظيفي — connector / structural function
-    PRAGMATIC_SIGNIFIED      مدلول تداولي — illocutionary force
-    LOGICAL                  مدلول منطقي — entailment / implication / inference
-    RHETORICAL_SIGNIFIED     مدلول بلاغي — figurative / connotative meaning
-    EPISTEMIC                مدلول معرفي — certainty / doubt / opinion
-    NORMATIVE                مدلول معياري — obligation / permission / prohibition
-    AFFECTIVE                مدلول وجداني — emotion / sentiment
-    MODAL                    مدلول إمكاني/ضروري — possibility / necessity
-    INSTITUTIONAL            مدلول مؤسسي — social / legal construct
-    EMBODIED                 مدلول إدراكي متجسّد — sensorimotor grounding
-    SELF_MODEL               مدلول ذاتي هوياتي — self / identity perspective
-    FRAME                    مدلول إطاري — frame / scenario roles
-    SCRIPT                   مدلول سيناريوي — procedural script / sequence
-    CAUSAL_EXPLANATORY       مدلول سببي تفسيري — cause / condition / goal
-    META_CONCEPTUAL          مدلول فوق-مفهومي — concept of concepts
-    CONCEPTUAL               مفهوم — conceptual sub-class root
-    ======================  ================================================
+    Concepts carry affective charge that shapes human understanding
+    beyond purely rational classification.
     """
-    ONTOLOGICAL = auto()            # مدلول وجودي
-    PROPERTY = auto()               # مدلول وصفي
-    EVENT = auto()                  # مدلول حدثي
-    RELATIONAL = auto()             # مدلول علائقي
-    PROPOSITIONAL = auto()          # مدلول حكمي
-    REFERENTIAL = auto()            # مدلول إحالي
-    FUNCTIONAL = auto()             # مدلول وظيفي
-    PRAGMATIC_SIGNIFIED = auto()    # مدلول تداولي
-    LOGICAL = auto()                # مدلول منطقي
-    RHETORICAL_SIGNIFIED = auto()   # مدلول بلاغي
-    EPISTEMIC = auto()              # مدلول معرفي
-    NORMATIVE = auto()              # مدلول معياري
-    AFFECTIVE = auto()              # مدلول وجداني
-    MODAL = auto()                  # مدلول إمكاني/ضروري
-    INSTITUTIONAL = auto()          # مدلول مؤسسي
-    EMBODIED = auto()               # مدلول إدراكي متجسّد
-    SELF_MODEL = auto()             # مدلول ذاتي هوياتي
-    FRAME = auto()                  # مدلول إطاري
-    SCRIPT = auto()                 # مدلول سيناريوي
-    CAUSAL_EXPLANATORY = auto()     # مدلول سببي تفسيري
-    META_CONCEPTUAL = auto()        # مدلول فوق-مفهومي
-    CONCEPTUAL = auto()             # مفهوم — root for conceptual sub-class
+    LOVE = auto()           # محبة       — love / affection
+    FEAR = auto()           # خوف        — fear / dread
+    TRANQUILITY = auto()    # طمأنينة    — inner peace / tranquility
+    ANXIETY = auto()        # قلق        — anxiety / worry
+    AWE = auto()            # هيبة       — awe / reverence
+    SHAME = auto()          # حياء/خجل   — shame / modesty
+    HATE = auto()           # كراهية     — hatred / aversion
+    INTIMACY = auto()       # أُنس       — intimacy / familiarity
+    ALIENATION = auto()     # اغتراب     — alienation / estrangement
+    JOY = auto()            # فرح        — joy / happiness
+    GRIEF = auto()          # حزن        — grief / sorrow
+    NEUTRAL = auto()        # محايد      — affectively neutral
 
 
-class ConceptualSignifiedClass(Enum):
-    """صنف المفهوم — sub-classification of the conceptual signified (المفهوم).
+class MentalIntentionalType(Enum):
+    """نوع العقل القصدي الداخلي — intentional mental state type (4/20).
 
-    Applicable only when ``SignifiedClass`` is ``CONCEPTUAL``.
-
-    ================  =========================================================
-    Member             Description
-    ================  =========================================================
-    ENTITY_CONCEPT     مفهوم ذات — substance / individual
-    PROPERTY_CONCEPT   مفهوم صفة — quality / attribute concept
-    EVENT_CONCEPT      مفهوم حدث — action / occurrence concept
-    RELATION_CONCEPT   مفهوم علاقة — relation / dependency concept
-    NORM_CONCEPT       مفهوم معياري — obligation / value concept
-    MENTAL_CONCEPT     مفهوم ذهني داخلي — intention / memory / imagination
-    ABSTRACT_CONCEPT   مفهوم تجريدي — freedom / existence / possibility
-    META_CONCEPT       مفهوم عن مفهوم — definition / genus / classification
-    ================  =========================================================
+    Covers the inner mental life: concepts that are *about* other
+    states (intentionality) rather than just representing external facts.
     """
-    ENTITY_CONCEPT = auto()    # مفهوم ذات
-    PROPERTY_CONCEPT = auto()  # مفهوم صفة
-    EVENT_CONCEPT = auto()     # مفهوم حدث
-    RELATION_CONCEPT = auto()  # مفهوم علاقة
-    NORM_CONCEPT = auto()      # مفهوم معياري
-    MENTAL_CONCEPT = auto()    # مفهوم ذهني
-    ABSTRACT_CONCEPT = auto()  # مفهوم تجريدي
-    META_CONCEPT = auto()      # مفهوم عن مفهوم
+    BELIEF = auto()         # اعتقاد   — propositional belief
+    DESIRE = auto()         # رغبة     — desire / want
+    INTENTION = auto()      # نية/قصد  — intention / purpose
+    ATTENTION = auto()      # انتباه   — focal attention
+    MEMORY = auto()         # تذكر     — memory / recollection
+    EXPECTATION = auto()    # توقع     — expectation / anticipation
+    DECISION = auto()       # قرار     — decision / resolution
+    IMAGINATION = auto()    # تخيّل    — imagination / mental imagery
+    PERCEPTION = auto()     # إدراك    — perceptual experience
+    AWARENESS = auto()      # وعي      — consciousness / awareness
 
 
-class CouplingRelationType(Enum):
-    """نوع علاقة الاقتران — how a signifier is bound to its signified.
+class ModalCategory(Enum):
+    """الجهة المنطقية — alethic modal category (5/20).
 
-    Sits one level above the classical ``DalalaType`` (which covers the
-    intra-linguistic signification modes: مطابقة / تضمن / التزام / …).
+    Encodes what is possible, necessary, impossible, or merely
+    hypothetical — including counterfactual reasoning.
+    """
+    POSSIBLE = auto()           # ممكن           — possibly the case
+    NECESSARY = auto()          # ضروري          — necessarily the case
+    IMPOSSIBLE = auto()         # ممتنع          — impossible
+    COUNTERFACTUAL = auto()     # مضاد للواقع    — contrary-to-fact
+    HYPOTHETICAL = auto()       # افتراضي        — supposed for argument's sake
+    ACTUAL = auto()             # واقعي          — actually obtaining
 
-    ====================  ====================================================
-    Member                 Description
-    ====================  ====================================================
-    DIRECT                 اقتران مباشر — conventional / dictionary coupling
-    POLYSEMOUS             اقتران متعدد — one form, multiple possible signifieds
-    COMPOSITIONAL          اقتران تركيبي — meaning built from parts
-    HIERARCHICAL           اقتران طبقي — multi-level (morpho-syntactic)
-    CONTEXTUAL             اقتران سياقي — referent fixed by discourse context
-    INFERENTIAL            اقتران استلزامي — signified implied, not stated
-    FIGURATIVE             اقتران مجازي — metaphor / metonymy / synecdoche
-    PERFORMATIVE           اقتران إنجازي — speech act with institutional force
-    FUNCTIONAL_COUPLING    اقتران وظيفي — grammatical function word
-    REFERENTIAL_COUPLING   اقتران إحالي — anaphoric / deictic resolution
-    ====================  ====================================================
+
+class FrameType(Enum):
+    """نوع الإطار المفاهيمي — conceptual frame / scene type (6/20).
+
+    Many concepts are only intelligible within a background frame
+    (Charles Fillmore's frame semantics).  This enum names the most
+    common encyclopaedic frames.
+    """
+    COMMERCIAL = auto()     # تجاري   — buying, selling, price, goods
+    JOURNEY = auto()        # سفر     — traveller, path, destination, vehicle
+    KINSHIP = auto()        # قرابة   — parent, child, sibling, lineage
+    CONFLICT = auto()       # صراع   — adversary, battle, victory, defeat
+    TEACHING = auto()       # تعليم   — teacher, student, lesson, assessment
+    GOVERNANCE = auto()     # حكم    — ruler, law, authority, subject
+    RELIGIOUS = auto()      # ديني   — worship, ritual, sacred, obligation
+    MEDICAL = auto()        # طبي    — patient, symptom, diagnosis, treatment
+    DOMESTIC = auto()       # منزلي  — household, family, dwelling, routine
+    NONE = auto()           # لا إطار — no particular frame
+
+
+class ScriptPhase(Enum):
+    """مرحلة السيناريو الإجرائي — phase within a cognitive script (7/20).
+
+    Schank & Abelson-style scripts: stereotyped event sequences.
+    A concept may be located at a particular phase in such a sequence.
+    """
+    PRECONDITION = auto()   # شرط سابق    — must hold before script begins
+    INITIATION = auto()     # بدء         — script-opening action
+    DEVELOPMENT = auto()    # تطور        — main body of the script
+    CLIMAX = auto()         # ذروة        — peak / pivotal moment
+    RESOLUTION = auto()     # حلّ         — outcome / resolution
+    POSTCONDITION = auto()  # نتيجة لاحقة — state that holds after script
+    NONE = auto()           # لا سيناريو  — not script-bound
+
+
+class CausalRole(Enum):
+    """الدور السببي-التفسيري — causal / explanatory role (8/20).
+
+    Human knowledge is built on causal models.  This enum labels
+    the role a concept plays inside a causal-explanatory chain.
+    """
+    CAUSE = auto()      # سبب       — direct cause
+    CONDITION = auto()  # شرط       — necessary / sufficient condition
+    ENABLER = auto()    # مُمكِّن   — enables without directly causing
+    BLOCKER = auto()    # مانع      — prevents / blocks an effect
+    MECHANISM = auto()  # آلية      — the *how* of causation
+    MEDIATOR = auto()   # وسيط      — intermediary in a causal chain
+    EFFECT = auto()     # أثر/نتيجة — downstream effect
+    GOAL = auto()       # غاية      — final cause / telos
+    LAW = auto()        # قانون     — governing regularity / nomic law
+    NONE = auto()       # لا دور    — no causal role assigned
+
+
+class InstitutionalCategory(Enum):
+    """التصنيف المؤسسي الاجتماعي — social / institutional category (9/20).
+
+    Searle-style institutional facts: realities that exist only through
+    collective acceptance (X counts as Y in context C).
+    """
+    STATE = auto()          # دولة     — state / sovereign entity
+    LAW = auto()            # قانون    — legal rule or statute
+    PROPERTY = auto()       # ملكية    — ownership right
+    CONTRACT = auto()       # عقد      — binding agreement
+    POSITION = auto()       # منصب     — social role / office
+    INSTITUTION = auto()    # مؤسسة   — established organisation
+    CURRENCY = auto()       # عملة     — medium of exchange
+    NORM = auto()           # معيار    — social / conventional norm
+    RITUAL = auto()         # طقس      — ceremonial practice
+    NONE = auto()           # لا تصنيف — not an institutional fact
+
+
+class CategorizationMode(Enum):
+    """نمط التصنيف المفاهيمي — how the concept belongs to its category (10/20).
+
+    Classical categories have crisp boundaries; prototype-based and
+    fuzzy categories admit degrees of membership (Rosch, Zadeh).
+    """
+    CLASSICAL = auto()              # كلاسيكي        — necessary & sufficient conditions
+    PROTOTYPE_BASED = auto()        # نموذجي         — graded membership around prototype
+    FUZZY_BOUNDED = auto()          # ضبابي الحدود   — membership by degree (fuzzy sets)
+    GRADIENT_MEMBERSHIP = auto()    # عضوية متدرجة   — continuous membership scale
+    RADIAL = auto()                 # شعاعي          — radial network of related senses
+
+
+class CulturalScope(Enum):
+    """النطاق الثقافي الحضاري — cultural / civilisational scope (11/20).
+
+    Marks whether a concept is universal or specific to a particular
+    cultural, religious, or domain tradition.
     """
     DIRECT = auto()               # مباشر
     POLYSEMOUS = auto()           # متعدد الاحتمال
@@ -849,38 +923,20 @@ class OntologicalConstraintType(Enum):
     INTERPRETIVE_CONSTRAINT      قيد تفسيري — disambiguation requires a tarjīḥ
     ==========================  ================================================
     """
-    STRUCTURAL = auto()                  # قيد بنيوي
-    PHONOLOGICAL_CONSTRAINT = auto()     # قيد صوتي
-    MORPHOLOGICAL_CONSTRAINT = auto()    # قيد صرفي
-    LEXICAL_CONSTRAINT = auto()          # قيد معجمي
-    SYNTACTIC_CONSTRAINT = auto()        # قيد نحوي
-    REFERENTIAL_CONSTRAINT = auto()      # قيد إحالي
-    CONTEXTUAL_CONSTRAINT = auto()       # قيد سياقي
-    PRAGMATIC_CONSTRAINT = auto()        # قيد تداولي
-    LOGICAL_CONSTRAINT = auto()          # قيد منطقي
-    RHETORICAL_CONSTRAINT = auto()       # قيد بلاغي
-    EPISTEMIC_CONSTRAINT = auto()        # قيد معرفي
-    INSTITUTIONAL_CONSTRAINT = auto()    # قيد مؤسسي
-    INTERPRETIVE_CONSTRAINT = auto()     # قيد تفسيري
+    ORIGINAL = auto()       # أصلي        — meaning as originally used
+    SHIFTED = auto()        # منتقل       — meaning has shifted
+    NARROWED = auto()       # ضيّق        — meaning has narrowed
+    BROADENED = auto()      # موسَّع      — meaning has broadened
+    SPECIALIZED = auto()    # تخصّص       — moved to technical domain
+    GENERALIZED = auto()    # عمّ         — moved from technical to general use
+    OBSOLETE = auto()       # متقادم      — no longer in active use
 
 
-class UtteranceToConceptConstraint(Enum):
-    """قيود سلسلة المنطوق → المفهوم — the seven guards on the utterance-to-concept chain.
+class ConceptFormationMode(Enum):
+    """طريقة تكوين المفهوم — how the concept was formed (13/20).
 
-    These constraints are evaluated in order; any failure sets
-    ``OntologicalConstraintRecord.passes = False``.
-
-    ===========================  ==============================================
-    Member                        Meaning
-    ===========================  ==============================================
-    SURFACE_VALIDITY              هل المنطوق سليم بنيويًا؟
-    LEXICAL_ACCESS                هل يملك المنطوق مدخلًا معجميًا معتبرًا؟
-    CONTEXT_RESOLUTION            هل السياق كافٍ لتعيين المقصود؟
-    CONCEPT_SELECTION             هل اختير المفهوم الصحيح من بين الاحتمالات؟
-    FIGURATIVE_DISAMBIGUATION     هل توجد قرينة تصرف عن الحقيقة إلى المجاز؟
-    REFERENTIAL_RESOLUTION        هل المرجع متاح إذا كان المنطوق إحاليًا؟
-    LOGICAL_COHERENCE             هل التفسير متسق مع بقية البنية؟
-    ===========================  ==============================================
+    Distinguishes primitive atomic concepts from derived, composed,
+    blended, or metaphorically extended ones.
     """
     SURFACE_VALIDITY = auto()           # صحة البنية السطحية
     LEXICAL_ACCESS = auto()             # وجود مدخل معجمي
@@ -1197,3 +1253,117 @@ class InsertionPolicy(Enum):
     ADMISSIBLE = auto()    # مقبول
     GUARDED = auto()       # محاط بحذر
     BLOCKED = auto()       # محجوب
+    PRIMITIVE = auto()              # أصلي بسيط       — irreducible primitive
+    DERIVED = auto()                # مشتق            — derived from another concept
+    COMPOSED = auto()               # مركّب           — composed from parts
+    BLENDED = auto()                # ممزوج           — conceptual blend (Fauconnier)
+    ANALOGICALLY_EXTENDED = auto()  # تمديد قياسي     — extended by analogy
+    METAPHORICAL = auto()           # مجازي           — grounded in metaphor
+
+
+class MetaConceptualLevel(Enum):
+    """المستوى فوق المفاهيمي — meta-conceptual order (14/20).
+
+    First-order concepts are *about* the world; second-order concepts
+    are about first-order concepts; third-order are about the system
+    of concepts itself.
+    """
+    FIRST_ORDER = auto()    # مستوى أول  — concepts about entities / events
+    SECOND_ORDER = auto()   # مستوى ثان  — concepts about first-order concepts
+    THIRD_ORDER = auto()    # مستوى ثالث — concepts about the conceptual system
+
+
+class InterpretiveStability(Enum):
+    """استقرار التفسير — interpretive stability / polysemy status (15/20).
+
+    Some concepts have a single stable reading; others are ambiguous,
+    polysemous, or actively contested.
+    """
+    STABLE = auto()             # ثابت           — single, stable interpretation
+    AMBIGUOUS = auto()          # ملتبس          — genuinely ambiguous
+    POLYSEMOUS = auto()         # متعدد المعاني  — multiple related senses
+    CONTEXT_RESOLVED = auto()   # محدَّد بالسياق — disambiguation requires context
+    CONTESTED = auto()          # متنازع عليه    — meaning is socially contested
+
+
+class SalienceLevel(Enum):
+    """مستوى البروز الإدراكي — cognitive salience / prominence level (16/20).
+
+    In human cognition not all features / concepts are equally salient.
+    This enum captures the prominence profile of a concept.
+    """
+    CENTRAL = auto()        # مركزي    — highly salient, prototype-like
+    PERIPHERAL = auto()     # هامشي    — low salience, atypical
+    FOREGROUNDED = auto()   # بارز     — brought to focal attention
+    BACKGROUNDED = auto()   # خلفي     — presupposed, not in focus
+    UNEXPECTED = auto()     # مفاجئ    — surprises the interpreter
+    EXPECTED = auto()       # متوقع    — predicted by context
+
+
+class EmbodiedDomain(Enum):
+    """المجال الإدراكي المتجسد — embodied / perceptual domain (17/20).
+
+    Lakoff & Johnson: many abstract concepts are grounded in
+    embodied sensorimotor experience.  This enum names the source
+    domain of that grounding.
+    """
+    VISUAL = auto()         # بصري       — sight / visual experience
+    AUDITORY = auto()       # سمعي       — hearing / sound
+    TACTILE = auto()        # لمسي       — touch / texture
+    BALANCE = auto()        # توازن      — bodily balance / equilibrium
+    MOTION = auto()         # حركة       — kinesthetic / movement
+    FORCE = auto()          # قوة/جهد    — force / effort / resistance
+    CONTAINMENT = auto()    # احتواء     — in/out container schema
+    PROXIMITY = auto()      # قرب/بُعد   — near/far spatial experience
+    VERTICAL_AXIS = auto()  # محور عمودي — up/down orientation
+    NONE = auto()           # لا تجسيد   — not grounded in embodied experience
+
+
+class SelfModelAspect(Enum):
+    """جانب النموذج الذاتي — aspect of the self-model (18/20).
+
+    Concepts involved in self-awareness, personal identity, and
+    first-person perspective.
+    """
+    EGO = auto()                    # الأنا              — the ego / subjective centre
+    SELF_IMAGE = auto()             # صورة الذات        — self-conception / self-image
+    SELF_AWARENESS = auto()         # وعي الذات         — reflective self-awareness
+    OTHER_DISTINCTION = auto()      # تمييز الذات من الغير — self vs. other
+    PERSONAL_CONTINUITY = auto()    # الاستمرار الشخصي  — identity over time
+    FIRST_PERSON = auto()           # منظور أول         — first-person perspective
+    NONE = auto()                   # لا جانب ذاتي      — not self-related
+
+
+class OperationalCapacity(Enum):
+    """القدرة الإجرائية — operational / performative capacity (19/20).
+
+    Some concepts not only *mean* something but also *do* something:
+    they enable actions, issue commands, create obligations, etc.
+    (Austin / Searle speech-act inspired).
+    """
+    ENABLES = auto()    # يُمكِّن   — grants ability or access
+    COMMANDS = auto()   # يأمر     — directive / command
+    PROMISES = auto()   # يَعِد    — commissive / promise
+    PERMITS = auto()    # يأذن     — declarative permission
+    RESTRICTS = auto()  # يُقيِّد  — restricts / prohibits
+    ACTIVATES = auto()  # يُنشِّط  — triggers a process or state
+    NONE = auto()       # لا قدرة  — no operational capacity
+
+
+class ConceptRelationType(Enum):
+    """نوع العلاقة بين المفاهيم — inter-concept relation type (20/20).
+
+    The top-level relation vocabulary for building a concept network.
+    These relations are used in :class:`~arabic_engine.core.types.ConceptRelation`
+    to wire concept nodes together into a full knowledge graph.
+    """
+    IS_A = auto()           # هو نوع من       — taxonomic (hyponymy)
+    PART_OF = auto()        # جزء من          — meronymy / part–whole
+    CAUSES = auto()         # يُسبِّب         — causal relation
+    ENABLES = auto()        # يُمكِّن         — enabling (weaker than causes)
+    OPPOSES = auto()        # يُعارض          — opposition / antonymy
+    PRESUPPOSES = auto()    # يفترض مسبقًا    — logical presupposition
+    SYMBOLIZES = auto()     # يرمز إلى        — symbolic / iconic link
+    INSTANTIATES = auto()   # يُمثِّل نموذجًا — instance-of
+    REALIZES = auto()       # يُجسِّد         — realisation / implementation
+    REGULATES = auto()      # يَضبط           — regulatory / governance link

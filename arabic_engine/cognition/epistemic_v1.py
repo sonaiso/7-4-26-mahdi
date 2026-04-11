@@ -405,6 +405,16 @@ def validate_episode(inp: KnowledgeEpisodeInput) -> ValidationResult:
     # 8. Method-fit and proof-path compatibility (only when both present)
     if inp.method is not None and inp.judgement is not None and inp.proof_path is not None:
         fit_codes, fit_gaps = _check_method_fit(inp.method, inp.judgement, inp.proof_path)
+        # Stamp fit gaps with episode_id
+        fit_gaps = [
+            GapRecord(
+                gap_id=f"{inp.episode_id}::{g.gap_id}",
+                code=g.code,
+                severity=g.severity,
+                description=g.description,
+            )
+            for g in fit_gaps
+        ]
         codes.extend(fit_codes)
         gaps.extend(fit_gaps)
         messages.extend(g.description for g in fit_gaps)
@@ -422,6 +432,16 @@ def validate_episode(inp: KnowledgeEpisodeInput) -> ValidationResult:
         cv, carrier_codes, carrier_gaps = validate_linguistic_carrier(inp.carrier)
         if not cv:
             carrier_valid = False
+            # Re-stamp carrier gaps with episode_id
+            carrier_gaps = [
+                GapRecord(
+                    gap_id=f"{inp.episode_id}::{g.gap_id}",
+                    code=g.code,
+                    severity=g.severity,
+                    description=g.description,
+                )
+                for g in carrier_gaps
+            ]
             codes.extend(carrier_codes)
             gaps.extend(carrier_gaps)
             messages.extend(g.description for g in carrier_gaps)
@@ -463,6 +483,23 @@ def validate_episode(inp: KnowledgeEpisodeInput) -> ValidationResult:
             )
             # Hard conflict = when no rule existed (already caught above); here it's soft
             has_hard_conflict = False
+            if inp.conflict_rule is not None:
+                # Soft conflict — apply rule
+                resolution = resolve_utterance_concept_conflict(inp.carrier, inp.conflict_rule)
+                messages.append(
+                    f"Utterance/concept conflict resolved: winner='{resolution.winner}' "
+                    f"via rule '{resolution.rule_applied.rule_id}'"
+                )
+                has_hard_conflict = False
+            else:
+                # Hard conflict — no rule to resolve (EPI011 fires above; EPI014 here)
+                _add(
+                    DecisionCode.EPI014_UTTERANCE_CONCEPT_CONFLICT,
+                    GapSeverity.FATAL,
+                    "CarrierType.BOTH has utterance/concept mismatch with no ConflictRule — "
+                    "لا توجد قاعدة لحل التعارض بين المنطوق والمفهوم",
+                )
+                has_hard_conflict = True
 
     # Determine outcome
     fatal_codes = {

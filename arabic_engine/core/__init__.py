@@ -12,7 +12,7 @@ re-exported here because it is a utility/verification module, not a data
 type.
 """
 
-from .enums import (  # noqa: F401 -- intentional re-exports
+from .enums import (
     POS as POS,
 )
 
@@ -21,22 +21,31 @@ from .enums import (
     CarrierType as CarrierType,
 )
 from .enums import (
-    CarrierClass as CarrierClass,
+    AffectiveDimension as AffectiveDimension,
+)
+from .enums import (
+    CategorizationMode as CategorizationMode,
+)
+from .enums import (
+    CausalRole as CausalRole,
 )
 from .enums import (
     CombinationType as CombinationType,
 )
 from .enums import (
-    ConceptualSignifiedClass as ConceptualSignifiedClass,
+    ConceptFormationMode as ConceptFormationMode,
+)
+from .enums import (
+    ConceptRelationType as ConceptRelationType,
 )
 from .enums import (
     ConstraintType as ConstraintType,
 )
 from .enums import (
-    ContaminationLevel as ContaminationLevel,
+    CulturalScope as CulturalScope,
 )
 from .enums import (
-    CouplingRelationType as CouplingRelationType,
+    DalaalaKind as DalaalaKind,
 )
 from .enums import (
     DalalaType as DalalaType,
@@ -54,10 +63,13 @@ from .enums import (
     ElementLayer as ElementLayer,
 )
 from .enums import (
-    EpistemicRank as EpistemicRank,
+    EmbodiedDomain as EmbodiedDomain,
 )
 from .enums import (
-    GapSeverity as GapSeverity,
+    EpistemicStatus as EpistemicStatus,
+)
+from .enums import (
+    FrameType as FrameType,
 )
 from .enums import (
     GuidanceState as GuidanceState,
@@ -81,6 +93,16 @@ from .enums import (
     MafhumType as MafhumType,
 )
 from .enums import (
+    MentalIntentionalType as MentalIntentionalType,
+)
+from .enums import (
+    MetaConceptualLevel as MetaConceptualLevel,
+)
+from .enums import (
+    ModalCategory as ModalCategory,
+)
+from .enums import (
+    NormativeCategory as NormativeCategory,
     MethodFamily as MethodFamily,
 )
 from .enums import (
@@ -90,7 +112,7 @@ from .enums import (
     OntologicalLayer as OntologicalLayer,
 )
 from .enums import (
-    PathKind as PathKind,
+    OperationalCapacity as OperationalCapacity,
 )
 from .enums import (
     PhonCategory as PhonCategory,
@@ -111,10 +133,19 @@ from .enums import (
     ProofStatus as ProofStatus,
 )
 from .enums import (
-    RealityKind as RealityKind,
+    SalienceLevel as SalienceLevel,
+)
+from .enums import (
+    ScriptPhase as ScriptPhase,
+)
+from .enums import (
+    SelfModelAspect as SelfModelAspect,
 )
 from .enums import (
     SemanticType as SemanticType,
+)
+from .enums import (
+    SenderRoleType as SenderRoleType,
 )
 from .enums import (
     SenseModality as SenseModality,
@@ -132,6 +163,9 @@ from .enums import (
     SpaceRef as SpaceRef,
 )
 from .enums import (
+    StyleKind as StyleKind,
+)
+from .enums import (
     TimeRef as TimeRef,
 )
 from .enums import (
@@ -144,6 +178,9 @@ from .enums import (
     UnicodeProfileType as UnicodeProfileType,
 )
 from .enums import (
+    UtteranceMode as UtteranceMode,
+)
+from .enums import (
     UtteranceToConceptConstraint as UtteranceToConceptConstraint,
 )
 from .enums import (
@@ -151,6 +188,63 @@ from .enums import (
 )
 from .enums import (
     ValidationOutcome as ValidationOutcome,
+)
+from .kernel import (
+    KERNEL_RELATION_PAIRS as KERNEL_RELATION_PAIRS,
+)
+from .kernel import (
+    KERNEL_REQUIRED_FIELDS as KERNEL_REQUIRED_FIELDS,
+)
+from .kernel import (
+    KernelDiscourseExchange as KernelDiscourseExchange,
+)
+from .kernel import (
+    KernelEdge as KernelEdge,
+)
+from .kernel import (
+    KernelGraph as KernelGraph,
+)
+from .kernel import (
+    KernelKnowledgeEpisode as KernelKnowledgeEpisode,
+)
+from .kernel import (
+    KernelLabel as KernelLabel,
+)
+from .kernel import (
+    KernelLinguisticProfile as KernelLinguisticProfile,
+)
+from .kernel import (
+    KernelNode as KernelNode,
+)
+from .kernel import (
+    KernelRelation as KernelRelation,
+)
+from .kernel import (
+    KernelReusableModel as KernelReusableModel,
+)
+from .kernel import (
+    KernelUtterance as KernelUtterance,
+)
+from .kernel import (
+    KernelValidationResult as KernelValidationResult,
+)
+from .kernel import (
+    derive_discourse_exchange as derive_discourse_exchange,
+)
+from .kernel import (
+    derive_knowledge_episode as derive_knowledge_episode,
+)
+from .kernel import (
+    derive_linguistic_profile as derive_linguistic_profile,
+)
+from .kernel import (
+    derive_reusable_model as derive_reusable_model,
+)
+from .kernel import (
+    derive_utterance_from_carrier as derive_utterance_from_carrier,
+)
+from .kernel import (
+    validate_kernel_graph as validate_kernel_graph,
 )
 from .types import (  # noqa: F401 -- intentional re-exports
     AEU as AEU,
@@ -173,10 +267,25 @@ from .types import (
     ConflictRuleRecord as ConflictRuleRecord,
 )
 from .types import (
-    CouplingRecord as CouplingRecord,
+    DalalaLink as DalalaLink,
 )
 from .types import (
-    DalalaLink as DalalaLink,
+    DiscourseCarrierRecord as DiscourseCarrierRecord,
+)
+from .types import (
+    DiscourseConceptRecord as DiscourseConceptRecord,
+)
+from .types import (
+    DiscourseExchangeNode as DiscourseExchangeNode,
+)
+from .types import (
+    DiscourseExchangeResult as DiscourseExchangeResult,
+)
+from .types import (
+    DiscourseGapRecord as DiscourseGapRecord,
+)
+from .types import (
+    DiscourseUtteranceRecord as DiscourseUtteranceRecord,
 )
 from .types import (
     DMin as DMin,
@@ -197,10 +306,22 @@ from .types import (
     GapRecord as GapRecord,
 )
 from .types import (
+    GapRecord as GapRecord,
+)
+from .types import (
     Grapheme as Grapheme,
 )
 from .types import (
     InferenceResult as InferenceResult,
+)
+from .types import (
+    JudgementRecord as JudgementRecord,
+)
+from .types import (
+    InterpretiveOutcomeRecord as InterpretiveOutcomeRecord,
+)
+from .types import (
+    JudgementNode as JudgementNode,
 )
 from .types import (
     JudgementRecord as JudgementRecord,
@@ -227,6 +348,9 @@ from .types import (
     MethodRecord as MethodRecord,
 )
 from .types import (
+    MethodRecord as MethodRecord,
+)
+from .types import (
     OntologicalConstraintRecord as OntologicalConstraintRecord,
 )
 from .types import (
@@ -234,6 +358,13 @@ from .types import (
 )
 from .types import (
     OpinionTraceRecord as OpinionTraceRecord,
+)
+from .types import (
+    PriorInfoRecord as PriorInfoRecord,
+    OpinionTraceRecord as OpinionTraceRecord,
+)
+from .types import (
+    PriorInfoNode as PriorInfoNode,
 )
 from .types import (
     PriorInfoRecord as PriorInfoRecord,
@@ -245,13 +376,42 @@ from .types import (
     ProofPathRecord as ProofPathRecord,
 )
 from .types import (
+    ProofPathRecord as ProofPathRecord,
+)
+from .types import (
     Proposition as Proposition,
+)
+from .types import (
+    RealityAnchorRecord as RealityAnchorRecord,
+    RationalSelfRecord as RationalSelfRecord,
+)
+from .types import (
+    RealityAnchorNode as RealityAnchorNode,
 )
 from .types import (
     RealityAnchorRecord as RealityAnchorRecord,
 )
 from .types import (
+    ReceiverRoleRecord as ReceiverRoleRecord,
+)
+from .types import (
+    ReceptionRecord as ReceptionRecord,
+)
+from .types import (
+    ReceptionStateRecord as ReceptionStateRecord,
+)
+from .types import (
     RootPattern as RootPattern,
+)
+from .types import (
+    SenseTraceRecord as SenseTraceRecord,
+    SelfNode as SelfNode,
+)
+from .types import (
+    SenderRoleRecord as SenderRoleRecord,
+)
+from .types import (
+    SenseTraceNode as SenseTraceNode,
 )
 from .types import (
     SenseTraceRecord as SenseTraceRecord,
@@ -284,6 +444,12 @@ from .types import (
     ValidationResult as ValidationResult,
 )
 from .types import (
+    UtteranceRecord as UtteranceRecord,
+)
+from .types import (
+    ValidationResult as ValidationResult,
+)
+from .types import (
     WorldFact as WorldFact,
 )
 from .types import (
@@ -293,44 +459,52 @@ from .types import (
 __all__ = [
     # enums
     "POS",
-    "CarrierClass",
+    "AffectiveDimension",
+    "CausalRole",
+    "CategorizationMode",
     "CombinationType",
+    "ConceptFormationMode",
+    "ConceptRelationType",
+    "ConstraintType",
+    "CulturalScope",
     "ConceptualSignifiedClass",
     "ConstraintType",
-    "ContaminationLevel",
     "CouplingRelationType",
     "DalalaType",
+    "DiachronicStatus",
     "ElementClass",
     "ElementFunction",
     "ElementLayer",
-    "EpistemicRank",
-    "GapSeverity",
+    "EmbodiedDomain",
+    "EpistemicStatus",
+    "FrameType",
     "GuidanceState",
-    "InfoKind",
+    "InstitutionalCategory",
+    "InterpretiveStability",
     "IrabCase",
     "IrabRole",
-    "JudgementType",
-    "LinkKind",
     "MafhumType",
-    "MethodFamily",
+    "MentalIntentionalType",
+    "MetaConceptualLevel",
+    "ModalCategory",
+    "NormativeCategory",
     "OntologicalConstraintType",
     "OntologicalLayer",
-    "PathKind",
+    "OperationalCapacity",
     "PhonCategory",
     "PhonFeature",
     "PhonGroup",
     "PhonTransform",
     "ProofStatus",
-    "RealityKind",
+    "SalienceLevel",
+    "ScriptPhase",
     "SemanticType",
-    "SenseModality",
+    "SelfModelAspect",
     "SignifiedClass",
     "SignifierClass",
     "SlotState",
     "SpaceRef",
     "TimeRef",
-    "TraceMode",
-    "TraceQuality",
     "TruthState",
     "UnicodeProfileType",
     "UtteredFormClass",
@@ -353,43 +527,25 @@ __all__ = [
     # types
     "AEU",
     "Concept",
-    "ConflictRuleNode",
+    "ConceptRelation",
     "CouplingRecord",
     "DalalaLink",
     "DMin",
-    "EpistemicConceptNode",
-    "EpisodeValidationResult",
     "EvalResult",
-    "EvidenceNode",
-    "GapNode",
     "Grapheme",
     "InferenceResult",
-    "JudgementNode",
-    "KnowledgeEpisodeNode",
     "LayerPromotionRule",
     "LexicalClosure",
-    "LinguisticCarrierNode",
-    "LinkingTraceNode",
-    "MethodNode",
     "OntologicalConstraintRecord",
     "OntologyV1Record",
-    "OpinionTraceNode",
-    "PriorInfoNode",
-    "ProofDependencyGraph",
-    "ProofPathNode",
     "Proposition",
-    "RealityAnchorNode",
     "RootPattern",
-    "SelfNode",
-    "SenseTraceNode",
     "SignifiedNode",
     "SignifierNode",
     "Syllable",
     "SyntaxNode",
-    "TheoremRecord",
     "TimeSpaceTag",
     "TriadicBlockRecord",
-    "UtteranceNode",
     "WorldFact",
     "ZeroSlotRecord",
     # epistemic v1 types
