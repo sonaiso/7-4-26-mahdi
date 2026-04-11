@@ -699,944 +699,332 @@ class RankType(Enum):
     TRANSITIONAL = auto()  # انتقالي — balanced / transitional
 
 
-# ── Ontology v1 — الجدول الأنطولوجي v1.0 ────────────────────────────
+# ── Signified v2.0 — طبقة المدلول الموسّعة ──────────────────────────
+# The twenty axes below extend the signified layer so that a Concept
+# can encode not just its ontological *type* but also its epistemic
+# standing, normative weight, affective charge, causal role, cultural
+# scope, and every other dimension required to represent the full range
+# of human conceptual knowledge.
 
 
-class SignifierClass(Enum):
-    """صنف الدال — the major class of a signifier node (الدال).
+class EpistemicStatus(Enum):
+    """الوضع الإبستيمي — how knowledge of the concept is held (1/20).
 
-    The hierarchy: every utterance (منطوق) is a signifier, but not every
-    signifier is an utterance.  ``UTTERED_FORM`` marks the subtype whose
-    surface has been actually realised in speech or writing.
-
-    ==================  =====================================================
-    Member               Description
-    ==================  =====================================================
-    PHONOLOGICAL         دال صوتي — phoneme, stress, intonation
-    MORPHOLOGICAL        دال صرفي — root, pattern, augment
-    LEXICAL              دال معجمي — word, lexical compound
-    SYNTACTIC            دال نحوي — position, case-marker, governor
-    TEXTUAL              دال نصي — textual reference, discourse connector
-    PRAGMATIC            دال تداولي — intent, speech-situation, register
-    RHETORICAL           دال بلاغي — metaphor, ellipsis, foregrounding
-    UTTERED_FORM         منطوق — the realised surface form (فرع من الدال)
-    ==================  =====================================================
+    Complements :class:`TruthState` (which applies to propositions).
+    ``EpistemicStatus`` applies to the *concept itself* and captures the
+    epistemic grade at which the concept is known or postulated.
     """
+    CERTAIN = auto()        # يقيني — known with certainty
+    PROBABLE = auto()       # ظني    — probably true / held with high confidence
+    DOUBTFUL = auto()       # مشكوك  — genuinely doubtful
+    IMAGINED = auto()       # متخيَّل — constructed by imagination
+    PRESUMED = auto()       # مفترض  — assumed without full proof
+    NECESSARY = auto()      # ضروري  — necessarily true (cannot be otherwise)
+    POSSIBLE = auto()       # ممكن   — possible but not certain
+    IMPOSSIBLE = auto()     # ممتنع  — logically / ontologically impossible
+    AXIOMATIC = auto()      # بديهي  — self-evident / axiomatic
+    THEORETICAL = auto()    # نظري   — derived by theoretical reasoning
 
-    PHONOLOGICAL = auto()  # دال صوتي
-    MORPHOLOGICAL = auto()  # دال صرفي
-    LEXICAL = auto()  # دال معجمي
-    SYNTACTIC = auto()  # دال نحوي
-    TEXTUAL = auto()  # دال نصي
-    PRAGMATIC = auto()  # دال تداولي
-    RHETORICAL = auto()  # دال بلاغي
-    UTTERED_FORM = auto()  # منطوق — sub-class of signifier
 
+class NormativeCategory(Enum):
+    """الجهة المعيارية المستقلة — normative / deontic category (2/20).
 
-class UtteredFormClass(Enum):
-    """صنف المنطوق — sub-classification of an uttered / surface form.
-
-    These are the five realisable shapes of the منطوق (uttered signifier).
-    Only applicable when ``SignifierClass`` is ``UTTERED_FORM``.
-
-    ===================  ====================================================
-    Member                Description
-    ===================  ====================================================
-    PHONETIC_UTTERANCE    المنطوق من جهة الأداء الصوتي (stress, length, pause)
-    WORD_UTTERANCE        المنطوق في صورة كلمة مفردة
-    EXPRESSION_UTTERANCE  المنطوق في صورة تركيب / عبارة
-    SENTENCE_UTTERANCE    المنطوق القضوي — full sentential unit
-    MARKED_UTTERANCE      منطوق مقيّد بأداة بنيوية (إنّ، ما…إلا، etc.)
-    ===================  ====================================================
+    Independent of :class:`GuidanceState` (which is a procedural
+    evaluation output).  ``NormativeCategory`` encodes the *intrinsic*
+    normative meaning carried by the concept.
     """
+    OBLIGATORY = auto()     # واجب   — morally / legally required
+    PERMISSIBLE = auto()    # مباح   — allowed without positive recommendation
+    FORBIDDEN = auto()      # محظور  — prohibited
+    RECOMMENDED = auto()    # مستحب  — recommended / praiseworthy
+    DISAPPROVED = auto()    # مكروه  — disapproved / discouraged
+    GOOD = auto()           # حسن    — ethically good
+    BAD = auto()            # قبيح   — ethically bad
+    JUST = auto()           # عادل   — just / fair
+    UNJUST = auto()         # ظالم   — unjust / unfair
+    NEUTRAL = auto()        # محايد  — normatively neutral
 
-    PHONETIC_UTTERANCE = auto()  # أداء صوتي
-    WORD_UTTERANCE = auto()  # كلمة منطوقة
-    EXPRESSION_UTTERANCE = auto()  # تركيب منطوق
-    SENTENCE_UTTERANCE = auto()  # جملة قضوية
-    MARKED_UTTERANCE = auto()  # منطوق مقيد بأداة
 
+class AffectiveDimension(Enum):
+    """البُعد الوجداني — the affective / emotional dimension (3/20).
 
-class SignifiedClass(Enum):
-    """صنف المدلول — the major class of a signified node (المدلول).
-
-    The مفهوم (ConceptualSignified) is a sub-class of المدلول, so
-    ``CONCEPTUAL`` marks the root under which all eight concept types fall.
-
-    ======================  ================================================
-    Member                   Description
-    ======================  ================================================
-    ONTOLOGICAL              مدلول وجودي — entity / substance
-    PROPERTY                 مدلول وصفي — attribute / quality
-    EVENT                    مدلول حدثي — action / occurrence
-    RELATIONAL               مدلول علائقي — relation (above, with, because)
-    PROPOSITIONAL            مدلول حكمي — assertion / negation / restriction
-    REFERENTIAL              مدلول إحالي — deictic / anaphoric reference
-    FUNCTIONAL               مدلول وظيفي — connector / structural function
-    PRAGMATIC_SIGNIFIED      مدلول تداولي — illocutionary force
-    LOGICAL                  مدلول منطقي — entailment / implication / inference
-    RHETORICAL_SIGNIFIED     مدلول بلاغي — figurative / connotative meaning
-    EPISTEMIC                مدلول معرفي — certainty / doubt / opinion
-    NORMATIVE                مدلول معياري — obligation / permission / prohibition
-    AFFECTIVE                مدلول وجداني — emotion / sentiment
-    MODAL                    مدلول إمكاني/ضروري — possibility / necessity
-    INSTITUTIONAL            مدلول مؤسسي — social / legal construct
-    EMBODIED                 مدلول إدراكي متجسّد — sensorimotor grounding
-    SELF_MODEL               مدلول ذاتي هوياتي — self / identity perspective
-    FRAME                    مدلول إطاري — frame / scenario roles
-    SCRIPT                   مدلول سيناريوي — procedural script / sequence
-    CAUSAL_EXPLANATORY       مدلول سببي تفسيري — cause / condition / goal
-    META_CONCEPTUAL          مدلول فوق-مفهومي — concept of concepts
-    CONCEPTUAL               مفهوم — conceptual sub-class root
-    ======================  ================================================
+    Concepts carry affective charge that shapes human understanding
+    beyond purely rational classification.
     """
-
-    ONTOLOGICAL = auto()  # مدلول وجودي
-    PROPERTY = auto()  # مدلول وصفي
-    EVENT = auto()  # مدلول حدثي
-    RELATIONAL = auto()  # مدلول علائقي
-    PROPOSITIONAL = auto()  # مدلول حكمي
-    REFERENTIAL = auto()  # مدلول إحالي
-    FUNCTIONAL = auto()  # مدلول وظيفي
-    PRAGMATIC_SIGNIFIED = auto()  # مدلول تداولي
-    LOGICAL = auto()  # مدلول منطقي
-    RHETORICAL_SIGNIFIED = auto()  # مدلول بلاغي
-    EPISTEMIC = auto()  # مدلول معرفي
-    NORMATIVE = auto()  # مدلول معياري
-    AFFECTIVE = auto()  # مدلول وجداني
-    MODAL = auto()  # مدلول إمكاني/ضروري
-    INSTITUTIONAL = auto()  # مدلول مؤسسي
-    EMBODIED = auto()  # مدلول إدراكي متجسّد
-    SELF_MODEL = auto()  # مدلول ذاتي هوياتي
-    FRAME = auto()  # مدلول إطاري
-    SCRIPT = auto()  # مدلول سيناريوي
-    CAUSAL_EXPLANATORY = auto()  # مدلول سببي تفسيري
-    META_CONCEPTUAL = auto()  # مدلول فوق-مفهومي
-    CONCEPTUAL = auto()  # مفهوم — root for conceptual sub-class
+    LOVE = auto()           # محبة       — love / affection
+    FEAR = auto()           # خوف        — fear / dread
+    TRANQUILITY = auto()    # طمأنينة    — inner peace / tranquility
+    ANXIETY = auto()        # قلق        — anxiety / worry
+    AWE = auto()            # هيبة       — awe / reverence
+    SHAME = auto()          # حياء/خجل   — shame / modesty
+    HATE = auto()           # كراهية     — hatred / aversion
+    INTIMACY = auto()       # أُنس       — intimacy / familiarity
+    ALIENATION = auto()     # اغتراب     — alienation / estrangement
+    JOY = auto()            # فرح        — joy / happiness
+    GRIEF = auto()          # حزن        — grief / sorrow
+    NEUTRAL = auto()        # محايد      — affectively neutral
 
 
-class ConceptualSignifiedClass(Enum):
-    """صنف المفهوم — sub-classification of the conceptual signified (المفهوم).
+class MentalIntentionalType(Enum):
+    """نوع العقل القصدي الداخلي — intentional mental state type (4/20).
 
-    Applicable only when ``SignifiedClass`` is ``CONCEPTUAL``.
-
-    ================  =========================================================
-    Member             Description
-    ================  =========================================================
-    ENTITY_CONCEPT     مفهوم ذات — substance / individual
-    PROPERTY_CONCEPT   مفهوم صفة — quality / attribute concept
-    EVENT_CONCEPT      مفهوم حدث — action / occurrence concept
-    RELATION_CONCEPT   مفهوم علاقة — relation / dependency concept
-    NORM_CONCEPT       مفهوم معياري — obligation / value concept
-    MENTAL_CONCEPT     مفهوم ذهني داخلي — intention / memory / imagination
-    ABSTRACT_CONCEPT   مفهوم تجريدي — freedom / existence / possibility
-    META_CONCEPT       مفهوم عن مفهوم — definition / genus / classification
-    ================  =========================================================
+    Covers the inner mental life: concepts that are *about* other
+    states (intentionality) rather than just representing external facts.
     """
+    BELIEF = auto()         # اعتقاد   — propositional belief
+    DESIRE = auto()         # رغبة     — desire / want
+    INTENTION = auto()      # نية/قصد  — intention / purpose
+    ATTENTION = auto()      # انتباه   — focal attention
+    MEMORY = auto()         # تذكر     — memory / recollection
+    EXPECTATION = auto()    # توقع     — expectation / anticipation
+    DECISION = auto()       # قرار     — decision / resolution
+    IMAGINATION = auto()    # تخيّل    — imagination / mental imagery
+    PERCEPTION = auto()     # إدراك    — perceptual experience
+    AWARENESS = auto()      # وعي      — consciousness / awareness
 
-    ENTITY_CONCEPT = auto()  # مفهوم ذات
-    PROPERTY_CONCEPT = auto()  # مفهوم صفة
-    EVENT_CONCEPT = auto()  # مفهوم حدث
-    RELATION_CONCEPT = auto()  # مفهوم علاقة
-    NORM_CONCEPT = auto()  # مفهوم معياري
-    MENTAL_CONCEPT = auto()  # مفهوم ذهني
-    ABSTRACT_CONCEPT = auto()  # مفهوم تجريدي
-    META_CONCEPT = auto()  # مفهوم عن مفهوم
 
+class ModalCategory(Enum):
+    """الجهة المنطقية — alethic modal category (5/20).
 
-class CouplingRelationType(Enum):
-    """نوع علاقة الاقتران — how a signifier is bound to its signified.
-
-    Sits one level above the classical ``DalalaType`` (which covers the
-    intra-linguistic signification modes: مطابقة / تضمن / التزام / …).
-
-    ====================  ====================================================
-    Member                 Description
-    ====================  ====================================================
-    DIRECT                 اقتران مباشر — conventional / dictionary coupling
-    POLYSEMOUS             اقتران متعدد — one form, multiple possible signifieds
-    COMPOSITIONAL          اقتران تركيبي — meaning built from parts
-    HIERARCHICAL           اقتران طبقي — multi-level (morpho-syntactic)
-    CONTEXTUAL             اقتران سياقي — referent fixed by discourse context
-    INFERENTIAL            اقتران استلزامي — signified implied, not stated
-    FIGURATIVE             اقتران مجازي — metaphor / metonymy / synecdoche
-    PERFORMATIVE           اقتران إنجازي — speech act with institutional force
-    FUNCTIONAL_COUPLING    اقتران وظيفي — grammatical function word
-    REFERENTIAL_COUPLING   اقتران إحالي — anaphoric / deictic resolution
-    ====================  ====================================================
+    Encodes what is possible, necessary, impossible, or merely
+    hypothetical — including counterfactual reasoning.
     """
-
-    DIRECT = auto()  # مباشر
-    POLYSEMOUS = auto()  # متعدد الاحتمال
-    COMPOSITIONAL = auto()  # تركيبي
-    HIERARCHICAL = auto()  # طبقي
-    CONTEXTUAL = auto()  # سياقي
-    INFERENTIAL = auto()  # استلزامي
-    FIGURATIVE = auto()  # مجازي
-    PERFORMATIVE = auto()  # إنجازي
-    FUNCTIONAL_COUPLING = auto()  # وظيفي بنائي
-    REFERENTIAL_COUPLING = auto()  # إحالي
+    POSSIBLE = auto()           # ممكن           — possibly the case
+    NECESSARY = auto()          # ضروري          — necessarily the case
+    IMPOSSIBLE = auto()         # ممتنع          — impossible
+    COUNTERFACTUAL = auto()     # مضاد للواقع    — contrary-to-fact
+    HYPOTHETICAL = auto()       # افتراضي        — supposed for argument's sake
+    ACTUAL = auto()             # واقعي          — actually obtaining
 
 
-class OntologicalConstraintType(Enum):
-    """نوع القيد الأنطولوجي — constraint kind in the Ontology v1 model.
+class FrameType(Enum):
+    """نوع الإطار المفاهيمي — conceptual frame / scene type (6/20).
 
-    Each constraint guards a different layer of the signifier→signified
-    transition.  More specific than the classical ``ConstraintType`` (which
-    covers only the five Mafhūm constraint kinds).
-
-    ==========================  ================================================
-    Member                       Description
-    ==========================  ====٨============================================
-    STRUCTURAL                   قيد بنيوي — syntactic well-formedness
-    PHONOLOGICAL_CONSTRAINT      قيد صوتي — phonological legality
-    MORPHOLOGICAL_CONSTRAINT     قيد صرفي — morphological pattern compatibility
-    LEXICAL_CONSTRAINT           قيد معجمي — lexical convention
-    SYNTACTIC_CONSTRAINT         قيد نحوي — syntactic position / case
-    REFERENTIAL_CONSTRAINT       قيد إحالي — pronoun/deictic needs an antecedent
-    CONTEXTUAL_CONSTRAINT        قيد سياقي — context required to fix reference
-    PRAGMATIC_CONSTRAINT         قيد تداولي — speech-act conditions
-    LOGICAL_CONSTRAINT           قيد منطقي — non-contradiction / coherence
-    RHETORICAL_CONSTRAINT        قيد بلاغي — figurative reading needs a qarīna
-    EPISTEMIC_CONSTRAINT         قيد معرفي — probabilistic/certainty tier
-    INSTITUTIONAL_CONSTRAINT     قيد مؤسسي — performative requires authority
-    INTERPRETIVE_CONSTRAINT      قيد تفسيري — disambiguation requires a tarjīḥ
-    ==========================  ================================================
+    Many concepts are only intelligible within a background frame
+    (Charles Fillmore's frame semantics).  This enum names the most
+    common encyclopaedic frames.
     """
-
-    STRUCTURAL = auto()  # قيد بنيوي
-    PHONOLOGICAL_CONSTRAINT = auto()  # قيد صوتي
-    MORPHOLOGICAL_CONSTRAINT = auto()  # قيد صرفي
-    LEXICAL_CONSTRAINT = auto()  # قيد معجمي
-    SYNTACTIC_CONSTRAINT = auto()  # قيد نحوي
-    REFERENTIAL_CONSTRAINT = auto()  # قيد إحالي
-    CONTEXTUAL_CONSTRAINT = auto()  # قيد سياقي
-    PRAGMATIC_CONSTRAINT = auto()  # قيد تداولي
-    LOGICAL_CONSTRAINT = auto()  # قيد منطقي
-    RHETORICAL_CONSTRAINT = auto()  # قيد بلاغي
-    EPISTEMIC_CONSTRAINT = auto()  # قيد معرفي
-    INSTITUTIONAL_CONSTRAINT = auto()  # قيد مؤسسي
-    INTERPRETIVE_CONSTRAINT = auto()  # قيد تفسيري
+    COMMERCIAL = auto()     # تجاري   — buying, selling, price, goods
+    JOURNEY = auto()        # سفر     — traveller, path, destination, vehicle
+    KINSHIP = auto()        # قرابة   — parent, child, sibling, lineage
+    CONFLICT = auto()       # صراع   — adversary, battle, victory, defeat
+    TEACHING = auto()       # تعليم   — teacher, student, lesson, assessment
+    GOVERNANCE = auto()     # حكم    — ruler, law, authority, subject
+    RELIGIOUS = auto()      # ديني   — worship, ritual, sacred, obligation
+    MEDICAL = auto()        # طبي    — patient, symptom, diagnosis, treatment
+    DOMESTIC = auto()       # منزلي  — household, family, dwelling, routine
+    NONE = auto()           # لا إطار — no particular frame
 
 
-class UtteranceToConceptConstraint(Enum):
-    """قيود سلسلة المنطوق → المفهوم — the seven guards on the utterance-to-concept chain.
+class ScriptPhase(Enum):
+    """مرحلة السيناريو الإجرائي — phase within a cognitive script (7/20).
 
-    These constraints are evaluated in order; any failure sets
-    ``OntologicalConstraintRecord.passes = False``.
-
-    ===========================  ==============================================
-    Member                        Meaning
-    ===========================  ==============================================
-    SURFACE_VALIDITY              هل المنطوق سليم بنيويًا؟
-    LEXICAL_ACCESS                هل يملك المنطوق مدخلًا معجميًا معتبرًا؟
-    CONTEXT_RESOLUTION            هل السياق كافٍ لتعيين المقصود؟
-    CONCEPT_SELECTION             هل اختير المفهوم الصحيح من بين الاحتمالات؟
-    FIGURATIVE_DISAMBIGUATION     هل توجد قرينة تصرف عن الحقيقة إلى المجاز؟
-    REFERENTIAL_RESOLUTION        هل المرجع متاح إذا كان المنطوق إحاليًا؟
-    LOGICAL_COHERENCE             هل التفسير متسق مع بقية البنية؟
-    ===========================  ==============================================
+    Schank & Abelson-style scripts: stereotyped event sequences.
+    A concept may be located at a particular phase in such a sequence.
     """
-
-    SURFACE_VALIDITY = auto()  # صحة البنية السطحية
-    LEXICAL_ACCESS = auto()  # وجود مدخل معجمي
-    CONTEXT_RESOLUTION = auto()  # كفاية السياق
-    CONCEPT_SELECTION = auto()  # اختيار المفهوم الصحيح
-    FIGURATIVE_DISAMBIGUATION = auto()  # وجود قرينة مجازية
-    REFERENTIAL_RESOLUTION = auto()  # توفر المرجع الإحالي
-    LOGICAL_COHERENCE = auto()  # تسق التفسير مع البنية
-
-
-# ── Epistemic v1 — المنهج العقلي: الرتب والتحقق ──────────────────────
+    PRECONDITION = auto()   # شرط سابق    — must hold before script begins
+    INITIATION = auto()     # بدء         — script-opening action
+    DEVELOPMENT = auto()    # تطور        — main body of the script
+    CLIMAX = auto()         # ذروة        — peak / pivotal moment
+    RESOLUTION = auto()     # حلّ         — outcome / resolution
+    POSTCONDITION = auto()  # نتيجة لاحقة — state that holds after script
+    NONE = auto()           # لا سيناريو  — not script-bound
 
 
-class EpistemicRank(Enum):
-    """الرتبة الإبستيمية — the four-level ladder of rational judgement.
+class CausalRole(Enum):
+    """الدور السببي-التفسيري — causal / explanatory role (8/20).
 
-    Based on al-Nabhani's rational method: a valid cognitive episode grounds
-    reality + sensed trace + prior information + linking, then produces one
-    of exactly four ranks.  Methodological rejection is modelled separately
-    in :class:`ValidationOutcome`.
-
-    ==================  =======================================================
-    Member               Meaning
-    ==================  =======================================================
-    CERTAIN              قطعي — grounded existence judgement with valid proof
-    TRUE_NON_CERTAIN     حقيقي غير قطعي — valid essence / attribute / relation
-    PROBABILISTIC_DOUBT  ظني — partially grounded, unresolved or incomplete
-    IMPOSSIBLE           ممتنع — only for FORMAL_CONTRADICTION judgements
-    ==================  =======================================================
+    Human knowledge is built on causal models.  This enum labels
+    the role a concept plays inside a causal-explanatory chain.
     """
+    CAUSE = auto()      # سبب       — direct cause
+    CONDITION = auto()  # شرط       — necessary / sufficient condition
+    ENABLER = auto()    # مُمكِّن   — enables without directly causing
+    BLOCKER = auto()    # مانع      — prevents / blocks an effect
+    MECHANISM = auto()  # آلية      — the *how* of causation
+    MEDIATOR = auto()   # وسيط      — intermediary in a causal chain
+    EFFECT = auto()     # أثر/نتيجة — downstream effect
+    GOAL = auto()       # غاية      — final cause / telos
+    LAW = auto()        # قانون     — governing regularity / nomic law
+    NONE = auto()       # لا دور    — no causal role assigned
 
-    CERTAIN = auto()  # قطعي
-    TRUE_NON_CERTAIN = auto()  # حقيقي غير قطعي
-    PROBABILISTIC_DOUBT = auto()  # ظني
-    IMPOSSIBLE = auto()  # ممتنع
 
+class InstitutionalCategory(Enum):
+    """التصنيف المؤسسي الاجتماعي — social / institutional category (9/20).
 
-class ValidationOutcome(Enum):
-    """نتيجة التحقق — outcome of the methodological validity check.
-
-    Distinct from :class:`EpistemicRank`: a ``REJECTED_METHODOLOGICALLY``
-    episode never reaches the rank ladder at all.
-
-    ========================  ================================================
-    Member                     Meaning
-    ========================  ================================================
-    VALID                      صالح — all conditions met
-    INVALID                    غير صالح — conditions identified but not met
-    PENDING                    معلّق — waiting for missing inputs
-    REJECTED_METHODOLOGICALLY  مرفوض منهجيًا — foundational conditions absent
-    ========================  ================================================
+    Searle-style institutional facts: realities that exist only through
+    collective acceptance (X counts as Y in context C).
     """
+    STATE = auto()          # دولة     — state / sovereign entity
+    LAW = auto()            # قانون    — legal rule or statute
+    PROPERTY = auto()       # ملكية    — ownership right
+    CONTRACT = auto()       # عقد      — binding agreement
+    POSITION = auto()       # منصب     — social role / office
+    INSTITUTION = auto()    # مؤسسة   — established organisation
+    CURRENCY = auto()       # عملة     — medium of exchange
+    NORM = auto()           # معيار    — social / conventional norm
+    RITUAL = auto()         # طقس      — ceremonial practice
+    NONE = auto()           # لا تصنيف — not an institutional fact
 
-    VALID = auto()  # صالح
-    INVALID = auto()  # غير صالح
-    PENDING = auto()  # معلّق
-    REJECTED_METHODOLOGICALLY = auto()  # مرفوض منهجيًا
 
+class CategorizationMode(Enum):
+    """نمط التصنيف المفاهيمي — how the concept belongs to its category (10/20).
 
-class DecisionCode(Enum):
-    """رموز القرار — stable codes for every validator failure.
-
-    Codes are stable across versions so that API consumers and tests can
-    check ``result.codes`` without relying on human-readable messages.
-
-    ========================  ================================================
-    Code                       Meaning
-    ========================  ================================================
-    EPI001_MISSING_REALITY     لا مرساة واقع
-    EPI002_MISSING_SENSE       لا أثر حسّي
-    EPI003_MISSING_PRIOR_INFO  لا معلومة سابقة
-    EPI004_OPINION_CONTAMINATION  تلوث الرأي المسبق فوق العتبة
-    EPI005_MISSING_LINKING     لا أثر ربط
-    EPI006_MISSING_JUDGEMENT   لا حكم
-    EPI007_MISSING_METHOD      لا طريقة
-    EPI008_METHOD_FIT_FAILURE  الطريقة لا تناسب المجال
-    EPI009_CARRIER_INVALID     حامل لغوي غير صالح
-    EPI010_MISSING_PROOF_PATH  لا مسار إثبات
-    EPI011_MISSING_CONFLICT_RULE  لا قاعدة تعارض
-    EPI012_CARRIER_BOTH_MISSING   النوع BOTH لكن أحد الطرفين غائب
-    EPI013_PROOF_METHOD_MISMATCH  مسار الإثبات لا يتوافق مع الطريقة
-    EPI014_UTTERANCE_CONCEPT_CONFLICT  تعارض المنطوق والمفهوم بلا قاعدة فصل
-    ========================  ================================================
+    Classical categories have crisp boundaries; prototype-based and
+    fuzzy categories admit degrees of membership (Rosch, Zadeh).
     """
-
-    EPI001_MISSING_REALITY = auto()
-    EPI002_MISSING_SENSE = auto()
-    EPI003_MISSING_PRIOR_INFO = auto()
-    EPI004_OPINION_CONTAMINATION = auto()
-    EPI005_MISSING_LINKING = auto()
-    EPI006_MISSING_JUDGEMENT = auto()
-    EPI007_MISSING_METHOD = auto()
-    EPI008_METHOD_FIT_FAILURE = auto()
-    EPI009_CARRIER_INVALID = auto()
-    EPI010_MISSING_PROOF_PATH = auto()
-    EPI011_MISSING_CONFLICT_RULE = auto()
-    EPI012_CARRIER_BOTH_MISSING = auto()
-    EPI013_PROOF_METHOD_MISMATCH = auto()
-    EPI014_UTTERANCE_CONCEPT_CONFLICT = auto()
+    CLASSICAL = auto()              # كلاسيكي        — necessary & sufficient conditions
+    PROTOTYPE_BASED = auto()        # نموذجي         — graded membership around prototype
+    FUZZY_BOUNDED = auto()          # ضبابي الحدود   — membership by degree (fuzzy sets)
+    GRADIENT_MEMBERSHIP = auto()    # عضوية متدرجة   — continuous membership scale
+    RADIAL = auto()                 # شعاعي          — radial network of related senses
 
 
-class JudgementType(Enum):
-    """نوع الحكم — the scope of a rational judgement.
+class CulturalScope(Enum):
+    """النطاق الثقافي الحضاري — cultural / civilisational scope (11/20).
 
-    Determines which epistemic rank is reachable:
-    * ``EXISTENCE`` with grounded proof → :attr:`EpistemicRank.CERTAIN`
-    * ``ESSENCE``, ``ATTRIBUTE``, ``RELATION``, ``INTERPRETIVE`` →
-      :attr:`EpistemicRank.TRUE_NON_CERTAIN` at best
-    * ``FORMAL_CONTRADICTION`` → :attr:`EpistemicRank.IMPOSSIBLE`
-
-    =====================  =================================================
-    Member                  Meaning
-    =====================  =================================================
-    EXISTENCE               حكم على الوجود
-    ESSENCE                 حكم على الحقيقة
-    ATTRIBUTE               حكم على الصفة
-    RELATION                حكم على العلاقة
-    INTERPRETIVE            حكم على التفسير
-    FORMAL_CONTRADICTION    حكم بتناقض صوري
-    =====================  =================================================
+    Marks whether a concept is universal or specific to a particular
+    cultural, religious, or domain tradition.
     """
-
-    EXISTENCE = auto()  # حكم على الوجود
-    ESSENCE = auto()  # حكم على الحقيقة
-    ATTRIBUTE = auto()  # حكم على الصفة
-    RELATION = auto()  # حكم على العلاقة
-    INTERPRETIVE = auto()  # حكم على التفسير
-    FORMAL_CONTRADICTION = auto()  # حكم بتناقض صوري
-    # restored for backward compatibility with episode_validator
-    CAUSAL = auto()  # سببي — cause-effect judgement
-    NORMATIVE = auto()  # معياري — obligation / permission / prohibition
-    PURE_LINGUISTIC = auto()  # لغوي بحت — purely grammatical / structural
-    METAPHYSICAL = auto()  # ميتافيزيقي — beyond empirical verification
-    FORMAL = auto()  # صوري — formal / mathematical (non-contradiction)
+    UNIVERSAL = auto()          # كوني         — applies across all cultures
+    CULTURE_SPECIFIC = auto()   # ثقافي خاص    — specific to one culture
+    CIVILIZATIONAL = auto()     # حضاري        — shared within a civilisation
+    DOMAIN_SPECIFIC = auto()    # تخصصي        — confined to a specialised domain
+    RELIGIOUS_SPECIFIC = auto() # ديني خاص     — specific to a religious tradition
 
 
-class MethodFamily(Enum):
-    """عائلة الطريقة — the epistemological family a method belongs to.
+class DiachronicStatus(Enum):
+    """الوضع التاريخي الدلالي — diachronic / historical semantic status (12/20).
 
-    Scientific method is a *branch* specialised for empirical material
-    inquiry; it must not be treated as the universal basis of knowledge.
-
-    ==========  ============================================================
-    Member       Meaning
-    ==========  ============================================================
-    RATIONAL     عقلية — the universal basis: واقع + حس + معلومات سابقة + ربط
-    SCIENTIFIC   علمية — empirical/material inquiry (branch of rational)
-    TEXTUAL      نقلية — transmission-based (revelation, narration)
-    DEDUCTIVE    استنباطية — formal deduction from axioms
-    INDUCTIVE    استقرائية — induction from instances
-    ==========  ============================================================
+    Tracks whether a concept has drifted, narrowed, broadened, or
+    specialised relative to its original meaning.
     """
-
-    RATIONAL = auto()  # عقلية
-    SCIENTIFIC = auto()  # علمية
-    TEXTUAL = auto()  # نقلية
-    DEDUCTIVE = auto()  # استنباطية
-    INDUCTIVE = auto()  # استقرائية
-    # restored for backward compatibility with episode_validator
-    LINGUISTIC = auto()  # لغوي — utterance / concept linguistic analysis
-    MATHEMATICAL = auto()  # رياضي — formal symbolic proof
-    PHYSICAL = auto()  # فيزيائي — physical law and measurement
+    ORIGINAL = auto()       # أصلي        — meaning as originally used
+    SHIFTED = auto()        # منتقل       — meaning has shifted
+    NARROWED = auto()       # ضيّق        — meaning has narrowed
+    BROADENED = auto()      # موسَّع      — meaning has broadened
+    SPECIALIZED = auto()    # تخصّص       — moved to technical domain
+    GENERALIZED = auto()    # عمّ         — moved from technical to general use
+    OBSOLETE = auto()       # متقادم      — no longer in active use
 
 
-class CarrierType(Enum):
-    """نوع الحامل اللغوي — the linguistic transport type.
+class ConceptFormationMode(Enum):
+    """طريقة تكوين المفهوم — how the concept was formed (13/20).
 
-    Only two carriers exist: Utterance (منطوق) and Concept (مفهوم).
-    ``BOTH`` requires *both* carriers to be present.
-
-    =========  ============================================================
-    Member      Meaning
-    =========  ============================================================
-    UTTERANCE   منطوق فقط
-    CONCEPT     مفهوم فقط
-    BOTH        منطوق + مفهوم معًا
-    =========  ============================================================
+    Distinguishes primitive atomic concepts from derived, composed,
+    blended, or metaphorically extended ones.
     """
+    PRIMITIVE = auto()              # أصلي بسيط       — irreducible primitive
+    DERIVED = auto()                # مشتق            — derived from another concept
+    COMPOSED = auto()               # مركّب           — composed from parts
+    BLENDED = auto()                # ممزوج           — conceptual blend (Fauconnier)
+    ANALOGICALLY_EXTENDED = auto()  # تمديد قياسي     — extended by analogy
+    METAPHORICAL = auto()           # مجازي           — grounded in metaphor
 
-    UTTERANCE = auto()  # منطوق
-    CONCEPT = auto()  # مفهوم
-    BOTH = auto()  # كلاهما
 
+class MetaConceptualLevel(Enum):
+    """المستوى فوق المفاهيمي — meta-conceptual order (14/20).
 
-class RealityKind(Enum):
-    """نوع الواقع — the ontological character of the reality anchor.
-
-    ==========  ==============================================================
-    Member       Meaning
-    ==========  ==============================================================
-    MATERIAL     مادي — physically perceptible object or event
-    ABSTRACT     مجرد — logical / mathematical entity
-    SOCIAL       اجتماعي — convention, norm, institution
-    HISTORICAL   تاريخي — past event attested by transmission
-    ==========  ==============================================================
+    First-order concepts are *about* the world; second-order concepts
+    are about first-order concepts; third-order are about the system
+    of concepts itself.
     """
-
-    MATERIAL = auto()  # مادي
-    ABSTRACT = auto()  # مجرد
-    SOCIAL = auto()  # اجتماعي
-    HISTORICAL = auto()  # تاريخي
-    # restored from episode_validator schema (backward compatibility)
-    PHYSICAL_OBJECT = auto()  # جسم مادي
-    EVENT = auto()  # حدث
-    RELATION = auto()  # علاقة
-    TEXT_OBJECT = auto()  # نص / خطاب
-    MENTAL_STATE = auto()  # حالة ذهنية
-    FORMAL_STRUCTURE = auto()  # بنية صورية
+    FIRST_ORDER = auto()    # مستوى أول  — concepts about entities / events
+    SECOND_ORDER = auto()   # مستوى ثان  — concepts about first-order concepts
+    THIRD_ORDER = auto()    # مستوى ثالث — concepts about the conceptual system
 
 
-class SenseModality(Enum):
-    """حاسة الأثر الحسي — the sensory channel of a sense trace.
+class InterpretiveStability(Enum):
+    """استقرار التفسير — interpretive stability / polysemy status (15/20).
 
-    =======  ================================================================
-    Member    Meaning
-    =======  ================================================================
-    VISUAL    بصري
-    AUDITORY  سمعي
-    TACTILE   لمسي
-    OLFACTORY شمّي
-    GUSTATORY ذوقي
-    INTERNAL  داخلي (proprioception / interoception)
-    =======  ================================================================
+    Some concepts have a single stable reading; others are ambiguous,
+    polysemous, or actively contested.
     """
-
-    VISUAL = auto()  # بصري
-    AUDITORY = auto()  # سمعي
-    TACTILE = auto()  # لمسي
-    OLFACTORY = auto()  # شمّي
-    GUSTATORY = auto()  # ذوقي
-    INTERNAL = auto()  # داخلي
-    # backward-compatible aliases for old names (episode_validator compat)
-    VISION = VISUAL  # alias → بصر
-    HEARING = AUDITORY  # alias → سمع
-    TOUCH = TACTILE  # alias → لمس
-    SMELL = OLFACTORY  # alias → شم
-    TASTE = GUSTATORY  # alias → ذوق
+    STABLE = auto()             # ثابت           — single, stable interpretation
+    AMBIGUOUS = auto()          # ملتبس          — genuinely ambiguous
+    POLYSEMOUS = auto()         # متعدد المعاني  — multiple related senses
+    CONTEXT_RESOLVED = auto()   # محدَّد بالسياق — disambiguation requires context
+    CONTESTED = auto()          # متنازع عليه    — meaning is socially contested
 
 
-class TraceMode(Enum):
-    """وضع الأثر — whether the trace is direct or indirect.
+class SalienceLevel(Enum):
+    """مستوى البروز الإدراكي — cognitive salience / prominence level (16/20).
 
-    ==========  ==============================================================
-    Member       Meaning
-    ==========  ==============================================================
-    DIRECT       مباشر — first-hand sensory access
-    REPORTED     منقول — attested by reliable report
-    INFERRED     مستنتج — deduced from physical evidence
-    ==========  ==============================================================
+    In human cognition not all features / concepts are equally salient.
+    This enum captures the prominence profile of a concept.
     """
+    CENTRAL = auto()        # مركزي    — highly salient, prototype-like
+    PERIPHERAL = auto()     # هامشي    — low salience, atypical
+    FOREGROUNDED = auto()   # بارز     — brought to focal attention
+    BACKGROUNDED = auto()   # خلفي     — presupposed, not in focus
+    UNEXPECTED = auto()     # مفاجئ    — surprises the interpreter
+    EXPECTED = auto()       # متوقع    — predicted by context
 
-    DIRECT = auto()  # مباشر
-    REPORTED = auto()  # منقول
-    INFERRED = auto()  # مستنتج
-    MEDIATED = auto()  # بواسطة — restored for backward compatibility
-    # backward-compatible alias
-    DIRECT_PERCEPTION = DIRECT  # alias
 
+class EmbodiedDomain(Enum):
+    """المجال الإدراكي المتجسد — embodied / perceptual domain (17/20).
 
-class LinkKind(Enum):
-    """نوع رابط الربط — the kind of linking used in the cognitive episode.
-
-    =============  ===========================================================
-    Member          Meaning
-    =============  ===========================================================
-    CAUSAL          سببي — cause-effect
-    ANALOGICAL      قياسي — analogy
-    DEFINITIONAL    تعريفي — by definition
-    CONTEXTUAL      سياقي — contextual inference
-    AUTHORITATIVE   نقلي — from authoritative text
-    =============  ===========================================================
+    Lakoff & Johnson: many abstract concepts are grounded in
+    embodied sensorimotor experience.  This enum names the source
+    domain of that grounding.
     """
+    VISUAL = auto()         # بصري       — sight / visual experience
+    AUDITORY = auto()       # سمعي       — hearing / sound
+    TACTILE = auto()        # لمسي       — touch / texture
+    BALANCE = auto()        # توازن      — bodily balance / equilibrium
+    MOTION = auto()         # حركة       — kinesthetic / movement
+    FORCE = auto()          # قوة/جهد    — force / effort / resistance
+    CONTAINMENT = auto()    # احتواء     — in/out container schema
+    PROXIMITY = auto()      # قرب/بُعد   — near/far spatial experience
+    VERTICAL_AXIS = auto()  # محور عمودي — up/down orientation
+    NONE = auto()           # لا تجسيد   — not grounded in embodied experience
 
-    CAUSAL = auto()  # سببي
-    ANALOGICAL = auto()  # قياسي
-    DEFINITIONAL = auto()  # تعريفي
-    CONTEXTUAL = auto()  # سياقي
-    AUTHORITATIVE = auto()  # نقلي
-    # restored for backward compatibility with episode_validator
-    TEXTUAL_INFERENCE = auto()  # استنباط نصي
-    LOGICAL_DEDUCTION = auto()  # استنتاج منطقي
-    EMPIRICAL = auto()  # استقراء تجريبي
 
+class SelfModelAspect(Enum):
+    """جانب النموذج الذاتي — aspect of the self-model (18/20).
 
-class ProofPathKind(Enum):
-    """نوع مسار الإثبات — how the proof path is constructed.
-
-    ===========  ===============================================================
-    Member        Meaning
-    ===========  ===============================================================
-    DIRECT_PROOF  برهان مباشر
-    BY_NEGATION   برهان بالنفي (reductio ad absurdum)
-    BY_EXCLUSION  برهان بالحصر (elimination of alternatives)
-    COMPOSITE     مركّب — combination of the above
-    ===========  ===============================================================
+    Concepts involved in self-awareness, personal identity, and
+    first-person perspective.
     """
+    EGO = auto()                    # الأنا              — the ego / subjective centre
+    SELF_IMAGE = auto()             # صورة الذات        — self-conception / self-image
+    SELF_AWARENESS = auto()         # وعي الذات         — reflective self-awareness
+    OTHER_DISTINCTION = auto()      # تمييز الذات من الغير — self vs. other
+    PERSONAL_CONTINUITY = auto()    # الاستمرار الشخصي  — identity over time
+    FIRST_PERSON = auto()           # منظور أول         — first-person perspective
+    NONE = auto()                   # لا جانب ذاتي      — not self-related
 
-    DIRECT_PROOF = auto()  # برهان مباشر
-    BY_NEGATION = auto()  # برهان بالنفي
-    BY_EXCLUSION = auto()  # برهان بالحصر
-    COMPOSITE = auto()  # مركّب
 
+class OperationalCapacity(Enum):
+    """القدرة الإجرائية — operational / performative capacity (19/20).
 
-class GapSeverity(Enum):
-    """درجة الفجوة — how serious a detected gap is.
-
-    ========  =================================================================
-    Member     Meaning
-    ========  =================================================================
-    MINOR      طفيف — does not change rank
-    MODERATE   معتدل — may lower rank one step
-    CRITICAL   حرج — forces PROBABILISTIC_DOUBT or worse
-    FATAL      قاتل — forces REJECTED_METHODOLOGICALLY
-    ========  =================================================================
+    Some concepts not only *mean* something but also *do* something:
+    they enable actions, issue commands, create obligations, etc.
+    (Austin / Searle speech-act inspired).
     """
+    ENABLES = auto()    # يُمكِّن   — grants ability or access
+    COMMANDS = auto()   # يأمر     — directive / command
+    PROMISES = auto()   # يَعِد    — commissive / promise
+    PERMITS = auto()    # يأذن     — declarative permission
+    RESTRICTS = auto()  # يُقيِّد  — restricts / prohibits
+    ACTIVATES = auto()  # يُنشِّط  — triggers a process or state
+    NONE = auto()       # لا قدرة  — no operational capacity
 
-    MINOR = auto()  # طفيف
-    MODERATE = auto()  # معتدل
-    CRITICAL = auto()  # حرج
-    FATAL = auto()  # قاتل
-    # backward-compatible aliases for old names
-    HIGH = CRITICAL  # alias → عالٍ
-    MEDIUM = MODERATE  # alias → متوسط
 
+class ConceptRelationType(Enum):
+    """نوع العلاقة بين المفاهيم — inter-concept relation type (20/20).
 
-class ContaminationLevel(Enum):
-    """مستوى تلوث الرأي المسبق — how much prior opinion contaminates the episode.
-
-    LOW is acceptable; MEDIUM triggers a warning; HIGH causes rejection.
-
-    ======  ===================================================================
-    Member   Meaning
-    ======  ===================================================================
-    NONE     لا تلوث
-    LOW      تلوث منخفض — acceptable
-    MEDIUM   تلوث متوسط — flagged, rank may be lowered
-    HIGH     تلوث مرتفع — causes EPI004 rejection
-    ======  ===================================================================
+    The top-level relation vocabulary for building a concept network.
+    These relations are used in :class:`~arabic_engine.core.types.ConceptRelation`
+    to wire concept nodes together into a full knowledge graph.
     """
-
-    NONE = auto()  # لا تلوث
-    LOW = auto()  # منخفض
-    MEDIUM = auto()  # متوسط
-    HIGH = auto()  # مرتفع
-
-
-class InsertionPolicy(Enum):
-    """سياسة الإدخال المعرفي — whether and how a validated episode may be stored.
-
-    ===========  ===============================================================
-    Member        Meaning
-    ===========  ===============================================================
-    FOUNDATIONAL  أساسي — unconditionally storable (CERTAIN rank)
-    ADMISSIBLE    مقبول — storable with normal confidence (TRUE_NON_CERTAIN)
-    GUARDED       محاط بحذر — storable with explicit uncertainty flag
-    BLOCKED       محجوب — must not be stored (invalid or rejected)
-    ===========  ===============================================================
-    """
-
-    FOUNDATIONAL = auto()  # أساسي
-    ADMISSIBLE = auto()  # مقبول
-    GUARDED = auto()  # محاط بحذر
-    BLOCKED = auto()  # محجوب
-
-
-# ── Backward-compatible enums (restored for episode_validator) ────────────────
-
-
-class ValidationState(Enum):
-    """حالة صحة الخبرة المعرفية — lifecycle state of a KnowledgeEpisode.
-
-    Restored for backward compatibility with the episode_validator module.
-    New code should prefer :class:`ValidationOutcome`.
-    """
-
-    PENDING = auto()  # pending — not yet validated
-    VALID = auto()  # valid — all checks passed
-    INVALID = auto()  # invalid — one or more checks failed
-
-
-class CarrierClass(Enum):
-    """صنف الحامل اللغوي — whether the carrier is utterance, concept, or both.
-
-    Restored for backward compatibility with the episode_validator module.
-    New code should prefer :class:`CarrierType`.
-    """
-
-    UTTERANCE = auto()  # منطوق فقط
-    CONCEPT = auto()  # مفهوم فقط
-    BOTH = auto()  # كلاهما
-
-
-class PathKind(Enum):
-    """نوع مسار الإثبات — the nature of the proof path.
-
-    Restored for backward compatibility with the episode_validator module.
-    New code should prefer :class:`ProofPathKind`.
-
-    =========  ===============================================
-    Member      Arabic meaning
-    =========  ===============================================
-    HISSI       حسي — direct sensory evidence
-    AQLI        عقلي — rational / logical proof
-    LINGUISTIC  لغوي — linguistic / textual evidence
-    FORMAL      صوري — formal mathematical / logical proof
-    =========  ===============================================
-    """
-
-    HISSI = auto()  # حسي
-    AQLI = auto()  # عقلي
-    LINGUISTIC = auto()  # لغوي
-    FORMAL = auto()  # صوري
-
-
-class TraceQuality(Enum):
-    """جودة الأثر الحسي — reliability of the sense trace.
-
-    Restored for backward compatibility with the episode_validator module.
-    """
-
-    STRONG = auto()  # قوي
-    MODERATE = auto()  # متوسط
-    WEAK = auto()  # ضعيف
-
-
-class InfoKind(Enum):
-    """نوع المعلومة السابقة — the category of prior information.
-
-    Restored for backward compatibility with the episode_validator module.
-
-    ====================  ===================================
-    Member                 Arabic meaning
-    ====================  ===================================
-    LEXICAL                معجمي
-    LINGUISTIC_RULE        قاعدة لغوية / دلالية
-    EMPIRICAL              تجريبي / مُختبَر
-    LOGICAL                منطقي / عقلي
-    FORMAL                 صوري / رياضي
-    ANALOGICAL             قياسي / تمثيلي
-    ====================  ===================================
-    """
-
-    LEXICAL = auto()  # معجمي
-    LINGUISTIC_RULE = auto()  # قاعدة لغوية
-    EMPIRICAL = auto()  # تجريبي
-    LOGICAL = auto()  # منطقي
-    FORMAL = auto()  # صوري
-    ANALOGICAL = auto()  # قياسي
-
-
-# ── Discourse Exchange enums (Schema التداول المعرفي) ───────────────────────────
-
-
-class ExchangeType(Enum):
-    """نوع التداول المعرفي — high-level discourse exchange category."""
-
-    REPORT = auto()
-    TEACHING = auto()
-    QUESTION = auto()
-    ANSWER = auto()
-    COMMAND = auto()
-    WARNING = auto()
-    PERSUASION = auto()
-    NEGOTIATION = auto()
-    TESTIMONY = auto()
-    EXPLANATION = auto()
-
-
-class ExchangePurposeType(Enum):
-    """صنف غرض التبادل — coarse-grained purpose class."""
-
-    INFORM = auto()
-    TEACH = auto()
-    VERIFY = auto()
-    GUIDE = auto()
-    BIND = auto()
-    PERSUADE = auto()
-    WARN = auto()
-    REQUEST = auto()
-    TEST = auto()
-    PRESERVE_KNOWLEDGE = auto()
-
-
-class ExchangeStyleType(Enum):
-    """صنف أسلوب التبادل — coarse-grained discourse style class."""
-
-    KHABARI = auto()
-    INSHAI = auto()
-    EXPLANATORY = auto()
-    ARGUMENTATIVE = auto()
-    DIRECTIVE = auto()
-    INTERROGATIVE = auto()
-    PEDAGOGICAL = auto()
-    TESTIMONIAL = auto()
-
-
-class ExchangeStatus(Enum):
-    """حالة التبادل — lifecycle state of discourse exchange."""
-
-    DRAFTED = auto()
-    TRANSMITTED = auto()
-    RECEIVED = auto()
-    INTERPRETED = auto()
-    ACCEPTED = auto()
-    REJECTED = auto()
-    SUSPENDED = auto()
-
-
-class RationalSelfKind(Enum):
-    """نوع الذات العاقلة الداخلة في التداول."""
-
-    INDIVIDUAL = auto()
-    COLLECTIVE = auto()
-    INSTITUTIONAL = auto()
-    MODELED_AGENT = auto()
-
-
-class SenderRoleType(Enum):
-    """نوع دور المرسل."""
-
-    SOURCE = auto()
-    EXPLAINER = auto()
-    WITNESS = auto()
-    TEACHER = auto()
-    COMMANDER = auto()
-    QUESTIONER = auto()
-    INTERPRETER = auto()
-
-
-class AuthorityLevel(Enum):
-    """درجة سلطة المرسل ضمن سياق التداول."""
-
-    LOW = auto()
-    MEDIUM = auto()
-    HIGH = auto()
-
-
-class ReceiverRoleType(Enum):
-    """نوع دور المستقبل."""
-
-    LISTENER = auto()
-    LEARNER = auto()
-    EXAMINER = auto()
-    ADDRESSEE = auto()
-    RESPONDENT = auto()
-    EVALUATOR = auto()
-
-
-class ReceiverExpectedAction(Enum):
-    """الفعل المتوقع من المستقبل بعد التداول."""
-
-    UNDERSTAND = auto()
-    VERIFY = auto()
-    ACT = auto()
-    ANSWER = auto()
-    PRESERVE = auto()
-    RELAY = auto()
-
-
-class PurposeType(Enum):
-    """الغرض التفصيلي للتداول."""
-
-    INFORM = auto()
-    INSTRUCT = auto()
-    PERSUADE = auto()
-    TEST = auto()
-    QUERY = auto()
-    PRESERVE = auto()
-    REFUTE = auto()
-    WARN = auto()
-    REQUEST_ACTION = auto()
-    CLARIFY = auto()
-
-
-class ExplicitnessLevel(Enum):
-    """درجة تصريح الأسلوب."""
-
-    DIRECT = auto()
-    SEMI_DIRECT = auto()
-    IMPLICIT = auto()
-
-
-class StyleKind(Enum):
-    """النمط التفصيلي لأسلوب الخطاب."""
-
-    KHABAR = auto()
-    INSHA = auto()
-    QUESTION = auto()
-    ANSWER = auto()
-    COMMAND = auto()
-    PROHIBITION = auto()
-    EXPLANATION = auto()
-    ARGUMENT = auto()
-    TESTIMONY = auto()
-    SYMBOLIC = auto()
-
-
-class UtteranceMode(Enum):
-    """نمط المنطوق المتداول."""
-
-    STATEMENT = auto()
-    QUESTION = auto()
-    COMMAND = auto()
-    REPORT = auto()
-    EXPLANATION = auto()
-    DIALOGUE_TURN = auto()
-
-
-class DalaalaKind(Enum):
-    """نوع الدلالة في طبقة التداول (distinct alias from DalalaType)."""
-
-    MUTABAQA = auto()
-    TADHAMMUN = auto()
-    ILTIZAM = auto()
-    ISHARA = auto()
-
-
-class ReceptionMode(Enum):
-    """نمط استقبال الرسالة."""
-
-    HEARD = auto()
-    READ = auto()
-    OBSERVED = auto()
-    INFERRED = auto()
-    RECALLED = auto()
-
-
-class ReceiverState(Enum):
-    """حالة المستقبل الذهنية عند الاستقبال."""
-
-    OPEN = auto()
-    RESISTANT = auto()
-    BIASED = auto()
-    UNCERTAIN = auto()
-    ATTENTIVE = auto()
-
-
-class ReceptionStateType(Enum):
-    """مآل الاستقبال بعد الفهم/الحكم."""
-
-    RECEIVED = auto()
-    UNDERSTOOD = auto()
-    MISUNDERSTOOD = auto()
-    ACCEPTED = auto()
-    REJECTED = auto()
-    SUSPENDED = auto()
-    PARTIALLY_UNDERSTOOD = auto()
-
-
-class TrustLevel(Enum):
-    """مستوى الثقة بالمصدر."""
-
-    LOW = auto()
-    MEDIUM = auto()
-    HIGH = auto()
-
-
-class TrustBasis(Enum):
-    """أساس الثقة بالمصدر."""
-
-    EXPERTISE = auto()
-    AUTHORITY = auto()
-    FAMILIARITY = auto()
-    TESTIMONY_CHAIN = auto()
-    NONE = auto()
-
-
-class InterpretiveOutcomeType(Enum):
-    """نتيجة التأويل عند المستقبل."""
-
-    ALIGNED = auto()
-    NARROWED = auto()
-    EXPANDED = auto()
-    DISTORTED = auto()
-    CONFLICTING = auto()
-    UNRESOLVED = auto()
-
-
-class DiscourseGapType(Enum):
-    """أنواع فجوات التداول المعرفي."""
-
-    MISSING_SENDER = auto()
-    MISSING_RECEIVER = auto()
-    MISSING_PURPOSE = auto()
-    MISSING_STYLE = auto()
-    INVALID_STYLE_PURPOSE_FIT = auto()
-    MISSING_CARRIER = auto()
-    INVALID_CARRIER = auto()
-    MISSING_RECEPTION = auto()
-    MISSING_RECEPTION_STATE = auto()
-    MISSING_TRANSFERRED_KNOWLEDGE = auto()
-    INVALID_TRANSFERRED_KNOWLEDGE = auto()
-    MISSING_TRUST_PROFILE = auto()
-    RECEPTION_INCONSISTENCY = auto()
-    SENDER_PURPOSE_MISMATCH = auto()
-
-
-class DiscourseValidationOutcome(Enum):
-    """نتيجة صلاحية التداول المعرفي."""
-
-    VALID = auto()
-    INVALID = auto()
-    INCOMPLETE = auto()
+    IS_A = auto()           # هو نوع من       — taxonomic (hyponymy)
+    PART_OF = auto()        # جزء من          — meronymy / part–whole
+    CAUSES = auto()         # يُسبِّب         — causal relation
+    ENABLES = auto()        # يُمكِّن         — enabling (weaker than causes)
+    OPPOSES = auto()        # يُعارض          — opposition / antonymy
+    PRESUPPOSES = auto()    # يفترض مسبقًا    — logical presupposition
+    SYMBOLIZES = auto()     # يرمز إلى        — symbolic / iconic link
+    INSTANTIATES = auto()   # يُمثِّل نموذجًا — instance-of
+    REALIZES = auto()       # يُجسِّد         — realisation / implementation
+    REGULATES = auto()      # يَضبط           — regulatory / governance link

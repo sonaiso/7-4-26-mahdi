@@ -12,46 +12,43 @@ from typing import FrozenSet, List, Optional, Tuple
 
 from .enums import (
     POS,
-    AuthorityLevel,
-    CarrierClass,
-    CarrierType,
+    AffectiveDimension,
+    CategorizationMode,
+    CausalRole,
     CellType,
     CombinationType,
-    ConceptualSignifiedClass,
+    ConceptFormationMode,
+    ConceptRelationType,
     ConditionToken,
     ConstraintType,
-    ContaminationLevel,
-    CouplingRelationType,
-    DalaalaKind,
+    CulturalScope,
     DalalaType,
-    DecisionCode,
-    DiscourseGapType,
-    DiscourseValidationOutcome,
+    DiachronicStatus,
     ElementClass,
     ElementFunction,
     ElementLayer,
-    EpistemicRank,
+    EmbodiedDomain,
+    EpistemicStatus,
     EvidenceType,
-    ExchangeStatus,
-    ExchangeType,
-    ExplicitnessLevel,
+    FrameType,
     FunctionRole,
     FuncTransitionClass,
     GapSeverity,
     GuidanceState,
-    InfoKind,
-    InsertionPolicy,
-    InterpretiveOutcomeType,
+    InstitutionalCategory,
+    InterpretiveStability,
     IrabCase,
     IrabRole,
     JudgementType,
     LinkKind,
     MafhumType,
-    MethodFamily,
-    OntologicalConstraintType,
+    MentalIntentionalType,
+    MetaConceptualLevel,
+    ModalCategory,
+    NormativeCategory,
     OntologicalLayer,
     OntologicalMode,
-    PathKind,  # noqa: F401 -- re-exported for episode_validator backward compat
+    OperationalCapacity,
     PhonCategory,
     PhonFeature,
     PhonGroup,
@@ -68,6 +65,9 @@ from .enums import (
     ReceptionMode,
     ReceptionStateType,
     ReversibleValue,
+    SalienceLevel,
+    ScriptPhase,
+    SelfModelAspect,
     SemanticType,
     SenderRoleType,
     SenseModality,
@@ -160,12 +160,91 @@ class LexicalClosure:
 
 @dataclass
 class Concept:
-    """An ontological node — the *signified* (التعريف 5)."""
+    """An ontological node — the *signified* (التعريف 5).
 
+    The v2 expansion adds nineteen optional axes that together cover
+    the full range of human conceptual knowledge.  All new fields
+    default to ``None`` so that existing callers require no changes.
+
+    Core fields (v1)
+    ----------------
+    concept_id      unique integer identifier
+    label           human-readable Arabic label
+    semantic_type   primary ontological type (entity / event / …)
+    properties      free-form property dict for ad-hoc extensions
+
+    Descriptive axes (v2)
+    ---------------------
+    epistemic_status       how knowledge of the concept is held
+    normative_category     intrinsic normative / deontic value
+    affective_dimension    affective / emotional charge
+    mental_intentional_type intentional mental state category
+    modal_category         alethic modal standing
+    frame_type             encyclopaedic frame membership
+    script_phase           phase within a cognitive script
+    causal_role            role in a causal-explanatory chain
+    institutional_category social / institutional fact category
+    categorization_mode    crisp / prototype / fuzzy membership
+    cultural_scope         cultural / civilisational reach
+    diachronic_status      semantic shift / historical status
+    formation_mode         how the concept was formed
+    meta_level             meta-conceptual order (1st / 2nd / 3rd)
+    interpretive_stability single reading vs. polysemy / contested
+    salience               cognitive salience / prominence
+    embodied_domain        embodied sensorimotor grounding domain
+    self_model_aspect      aspect of the self-model (if any)
+    operational_capacity   performative / operational capacity
+    """
+
+    # ── v1 core fields ───────────────────────────────────────────────
     concept_id: int
     label: str
     semantic_type: SemanticType
     properties: dict = field(default_factory=dict)
+
+    # ── v2 descriptive axes ──────────────────────────────────────────
+    epistemic_status: Optional[EpistemicStatus] = None
+    normative_category: Optional[NormativeCategory] = None
+    affective_dimension: Optional[AffectiveDimension] = None
+    mental_intentional_type: Optional[MentalIntentionalType] = None
+    modal_category: Optional[ModalCategory] = None
+    frame_type: Optional[FrameType] = None
+    script_phase: Optional[ScriptPhase] = None
+    causal_role: Optional[CausalRole] = None
+    institutional_category: Optional[InstitutionalCategory] = None
+    categorization_mode: Optional[CategorizationMode] = None
+    cultural_scope: Optional[CulturalScope] = None
+    diachronic_status: Optional[DiachronicStatus] = None
+    formation_mode: Optional[ConceptFormationMode] = None
+    meta_level: Optional[MetaConceptualLevel] = None
+    interpretive_stability: Optional[InterpretiveStability] = None
+    salience: Optional[SalienceLevel] = None
+    embodied_domain: Optional[EmbodiedDomain] = None
+    self_model_aspect: Optional[SelfModelAspect] = None
+    operational_capacity: Optional[OperationalCapacity] = None
+
+
+@dataclass
+class ConceptRelation:
+    """A directed relation between two concept nodes (شبكة المفاهيم).
+
+    Used to wire :class:`Concept` nodes into a knowledge graph via
+    :class:`~arabic_engine.signified.signified_v2.ConceptNetwork`.
+
+    Fields
+    ------
+    source_id       ``concept_id`` of the origin node
+    target_id       ``concept_id`` of the destination node
+    relation_type   the semantic relation linking source → target
+    weight          relation strength ∈ (0, 1] (default 1.0)
+    notes           optional free-text annotation
+    """
+
+    source_id: int
+    target_id: int
+    relation_type: ConceptRelationType
+    weight: float = 1.0
+    notes: str = ""
 
 
 # ── Linkage layer ───────────────────────────────────────────────────

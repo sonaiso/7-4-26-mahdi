@@ -16,30 +16,28 @@ from .enums import (
     POS as POS,
 )
 from .enums import (
-    AuthorityLevel as AuthorityLevel,
+    AffectiveDimension as AffectiveDimension,
 )
 from .enums import (
-    CarrierClass as CarrierClass,
+    CategorizationMode as CategorizationMode,
 )
-
-# ── Epistemic v1 enums ───────────────────────────────────────────────
 from .enums import (
-    CarrierType as CarrierType,
+    CausalRole as CausalRole,
 )
 from .enums import (
     CombinationType as CombinationType,
 )
 from .enums import (
-    ConceptualSignifiedClass as ConceptualSignifiedClass,
+    ConceptFormationMode as ConceptFormationMode,
+)
+from .enums import (
+    ConceptRelationType as ConceptRelationType,
 )
 from .enums import (
     ConstraintType as ConstraintType,
 )
 from .enums import (
-    ContaminationLevel as ContaminationLevel,
-)
-from .enums import (
-    CouplingRelationType as CouplingRelationType,
+    CulturalScope as CulturalScope,
 )
 from .enums import (
     DalaalaKind as DalaalaKind,
@@ -48,13 +46,7 @@ from .enums import (
     DalalaType as DalalaType,
 )
 from .enums import (
-    DecisionCode as DecisionCode,
-)
-from .enums import (
-    DiscourseGapType as DiscourseGapType,
-)
-from .enums import (
-    DiscourseValidationOutcome as DiscourseValidationOutcome,
+    DiachronicStatus as DiachronicStatus,
 )
 from .enums import (
     ElementClass as ElementClass,
@@ -66,37 +58,22 @@ from .enums import (
     ElementLayer as ElementLayer,
 )
 from .enums import (
-    EpistemicRank as EpistemicRank,
+    EmbodiedDomain as EmbodiedDomain,
 )
 from .enums import (
-    ExchangePurposeType as ExchangePurposeType,
+    EpistemicStatus as EpistemicStatus,
 )
 from .enums import (
-    ExchangeStatus as ExchangeStatus,
-)
-from .enums import (
-    ExchangeStyleType as ExchangeStyleType,
-)
-from .enums import (
-    ExchangeType as ExchangeType,
-)
-from .enums import (
-    ExplicitnessLevel as ExplicitnessLevel,
-)
-from .enums import (
-    GapSeverity as GapSeverity,
+    FrameType as FrameType,
 )
 from .enums import (
     GuidanceState as GuidanceState,
 )
 from .enums import (
-    InfoKind as InfoKind,
+    InstitutionalCategory as InstitutionalCategory,
 )
 from .enums import (
-    InsertionPolicy as InsertionPolicy,
-)
-from .enums import (
-    InterpretiveOutcomeType as InterpretiveOutcomeType,
+    InterpretiveStability as InterpretiveStability,
 )
 from .enums import (
     IrabCase as IrabCase,
@@ -114,6 +91,16 @@ from .enums import (
     MafhumType as MafhumType,
 )
 from .enums import (
+    MentalIntentionalType as MentalIntentionalType,
+)
+from .enums import (
+    MetaConceptualLevel as MetaConceptualLevel,
+)
+from .enums import (
+    ModalCategory as ModalCategory,
+)
+from .enums import (
+    NormativeCategory as NormativeCategory,
     MethodFamily as MethodFamily,
 )
 from .enums import (
@@ -123,7 +110,7 @@ from .enums import (
     OntologicalLayer as OntologicalLayer,
 )
 from .enums import (
-    PathKind as PathKind,
+    OperationalCapacity as OperationalCapacity,
 )
 from .enums import (
     PhonCategory as PhonCategory,
@@ -144,28 +131,13 @@ from .enums import (
     ProofStatus as ProofStatus,
 )
 from .enums import (
-    PurposeType as PurposeType,
+    SalienceLevel as SalienceLevel,
 )
 from .enums import (
-    RationalSelfKind as RationalSelfKind,
+    ScriptPhase as ScriptPhase,
 )
 from .enums import (
-    RealityKind as RealityKind,
-)
-from .enums import (
-    ReceiverExpectedAction as ReceiverExpectedAction,
-)
-from .enums import (
-    ReceiverRoleType as ReceiverRoleType,
-)
-from .enums import (
-    ReceiverState as ReceiverState,
-)
-from .enums import (
-    ReceptionMode as ReceptionMode,
-)
-from .enums import (
-    ReceptionStateType as ReceptionStateType,
+    SelfModelAspect as SelfModelAspect,
 )
 from .enums import (
     SemanticType as SemanticType,
@@ -294,21 +266,7 @@ from .types import (
     Concept as Concept,
 )
 from .types import (
-    ConceptRecord as ConceptRecord,
-)
-
-# ── Epistemic v1 types ───────────────────────────────────────────────
-from .types import (
-    ConflictResolutionResult as ConflictResolutionResult,
-)
-from .types import (
-    ConflictRuleNode as ConflictRuleNode,
-)
-from .types import (
-    ConflictRuleRecord as ConflictRuleRecord,
-)
-from .types import (
-    CouplingRecord as CouplingRecord,
+    ConceptRelation as ConceptRelation,
 )
 from .types import (
     DalalaLink as DalalaLink,
@@ -511,3 +469,82 @@ from .types import (
 from .types import (
     ZeroSlotRecord as ZeroSlotRecord,
 )
+
+__all__ = [
+    # enums
+    "POS",
+    "AffectiveDimension",
+    "CausalRole",
+    "CategorizationMode",
+    "CombinationType",
+    "ConceptFormationMode",
+    "ConceptRelationType",
+    "ConstraintType",
+    "CulturalScope",
+    "ConceptualSignifiedClass",
+    "ConstraintType",
+    "CouplingRelationType",
+    "DalalaType",
+    "DiachronicStatus",
+    "ElementClass",
+    "ElementFunction",
+    "ElementLayer",
+    "EmbodiedDomain",
+    "EpistemicStatus",
+    "FrameType",
+    "GuidanceState",
+    "InstitutionalCategory",
+    "InterpretiveStability",
+    "IrabCase",
+    "IrabRole",
+    "MafhumType",
+    "MentalIntentionalType",
+    "MetaConceptualLevel",
+    "ModalCategory",
+    "NormativeCategory",
+    "OntologicalConstraintType",
+    "OntologicalLayer",
+    "OperationalCapacity",
+    "PhonCategory",
+    "PhonFeature",
+    "PhonGroup",
+    "PhonTransform",
+    "ProofStatus",
+    "SalienceLevel",
+    "ScriptPhase",
+    "SemanticType",
+    "SelfModelAspect",
+    "SignifiedClass",
+    "SignifierClass",
+    "SlotState",
+    "SpaceRef",
+    "TimeRef",
+    "TruthState",
+    "UnicodeProfileType",
+    "UtteredFormClass",
+    "UtteranceToConceptConstraint",
+    # types
+    "AEU",
+    "Concept",
+    "ConceptRelation",
+    "CouplingRecord",
+    "DalalaLink",
+    "DMin",
+    "EvalResult",
+    "Grapheme",
+    "InferenceResult",
+    "LayerPromotionRule",
+    "LexicalClosure",
+    "OntologicalConstraintRecord",
+    "OntologyV1Record",
+    "Proposition",
+    "RootPattern",
+    "SignifiedNode",
+    "SignifierNode",
+    "Syllable",
+    "SyntaxNode",
+    "TimeSpaceTag",
+    "TriadicBlockRecord",
+    "WorldFact",
+    "ZeroSlotRecord",
+]
