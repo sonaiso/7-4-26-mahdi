@@ -102,7 +102,9 @@ def _build_knowledge_episode(
     semantic_roles: Dict[str, str],
 ) -> KnowledgeEpisode:
     judgement_type = (
-        JudgementType.EXISTENCE if proposition.predicate else JudgementType.INTERPRETIVE
+        JudgementType.EXISTENCE
+        if proposition.predicate is not None and proposition.predicate != ""
+        else JudgementType.INTERPRETIVE
     )
     reality_anchor = RealityAnchorRecord(
         anchor_id="RA_pipeline",
@@ -130,7 +132,11 @@ def _build_knowledge_episode(
     judgement = JudgementRecord(
         judgement_id="JD_pipeline",
         judgement_type=judgement_type,
-        content=f"{proposition.subject}::{proposition.predicate}::{proposition.obj}",
+        content=(
+            f"subject={proposition.subject};"
+            f"predicate={proposition.predicate};"
+            f"object={proposition.obj}"
+        ),
     )
     method = MethodRecord(
         method_id="M_pipeline",
@@ -189,7 +195,7 @@ def run(
     normalised = normalize(text)
 
     # L1 — Tokenize
-    tokens = tokenize(normalised)
+    tokens = tokenize(text)
 
     # L2 — Lexical Closure
     closures = batch_closure(tokens)
