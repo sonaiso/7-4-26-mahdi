@@ -1028,3 +1028,555 @@ class ConceptRelationType(Enum):
     INSTANTIATES = auto()   # يُمثِّل نموذجًا — instance-of
     REALIZES = auto()       # يُجسِّد         — realisation / implementation
     REGULATES = auto()      # يَضبط           — regulatory / governance link
+
+
+# ═══════════════════════════════════════════════════════════════════════
+# GROUP A — Epistemic Enums
+# ═══════════════════════════════════════════════════════════════════════
+
+
+class EpistemicRank(Enum):
+    """الرتبة المعرفية — epistemic rank of a knowledge episode.
+
+    Four-level ranking from certain (*qaṭʿī*) knowledge down to
+    impossibility (*muḥāl*).
+    """
+    CERTAIN = auto()              # قطعي           — certain knowledge
+    TRUE_NON_CERTAIN = auto()     # صحيح غير قطعي  — true but not certain
+    PROBABILISTIC_DOUBT = auto()  # ظني مشكوك      — probabilistic / doubtful
+    IMPOSSIBLE = auto()           # محال            — logically impossible
+
+
+class TrustLevel(Enum):
+    """مستوى الثقة — degree of trust in a source or transmission."""
+    LOW = auto()        # منخفض
+    MEDIUM = auto()     # متوسط
+    HIGH = auto()       # عالي
+
+
+class TrustBasis(Enum):
+    """أساس الثقة — the ground on which trust is established."""
+    EXPERTISE = auto()         # خبرة
+    AUTHORITY = auto()         # حجية
+    FAMILIARITY = auto()       # ألفة
+    TESTIMONY_CHAIN = auto()   # سلسلة شهادة
+    NONE = auto()              # لا أساس
+
+
+class ValidationOutcome(Enum):
+    """نتيجة التحقق — outcome of an epistemic validation step."""
+    VALID = auto()                       # صالح
+    PENDING = auto()                     # معلق
+    INVALID = auto()                     # غير صالح
+    REJECTED_METHODOLOGICALLY = auto()   # مرفوض منهجيًا
+
+
+class ValidationState(Enum):
+    """حالة التحقق — overall validation state."""
+    VALID = auto()    # صالح
+    PENDING = auto()  # معلق
+    INVALID = auto()  # غير صالح
+
+
+class InfoKind(Enum):
+    """نوع المعلومة — kind of information carried."""
+    LEXICAL = auto()       # معجمي
+    SYNTACTIC = auto()     # نحوي
+    SEMANTIC = auto()      # دلالي
+    PRAGMATIC = auto()     # تداولي
+    CONTEXTUAL = auto()    # سياقي
+    INFERENTIAL = auto()   # استدلالي
+
+
+class DecisionCode(Enum):
+    """رمز القرار — machine-readable codes for epistemic gap decisions."""
+    EPI001_MISSING_REALITY = auto()
+    EPI002_MISSING_SENSE = auto()
+    EPI003_MISSING_PRIOR_INFO = auto()
+    EPI004_OPINION_CONTAMINATION = auto()
+    EPI005_MISSING_LINKING = auto()
+    EPI006_MISSING_JUDGEMENT = auto()
+    EPI007_MISSING_METHOD = auto()
+    EPI008_METHOD_FIT_FAILURE = auto()
+    EPI009_CARRIER_INVALID = auto()
+    EPI010_MISSING_PROOF_PATH = auto()
+    EPI011_MISSING_CONFLICT_RULE = auto()
+    EPI012_CARRIER_BOTH_MISSING = auto()
+    EPI013_PROOF_METHOD_MISMATCH = auto()
+    EPI014_UTTERANCE_CONCEPT_CONFLICT = auto()
+
+
+class InsertionPolicy(Enum):
+    """سياسة الإدراج — storage policy for a validated episode."""
+    FOUNDATIONAL = auto()  # تأسيسي
+    ADMISSIBLE = auto()    # مقبول
+    GUARDED = auto()       # محروس
+    BLOCKED = auto()       # محظور
+
+
+# ═══════════════════════════════════════════════════════════════════════
+# GROUP B — Cognitive / Conceptual Enums
+# ═══════════════════════════════════════════════════════════════════════
+
+
+class JudgementType(Enum):
+    """نوع الحكم — the kind of epistemic judgement."""
+    EXISTENCE = auto()              # وجودي
+    ESSENCE = auto()                # ماهوي
+    ATTRIBUTE = auto()              # وصفي
+    RELATION = auto()               # علائقي
+    INTERPRETIVE = auto()           # تفسيري
+    FORMAL_CONTRADICTION = auto()   # تناقض صوري
+    NORMATIVE = auto()              # معياري
+    PURE_LINGUISTIC = auto()        # لغوي صرف
+    METAPHYSICAL = auto()           # ما وراء الطبيعة
+    CAUSAL = auto()                 # سببي
+    FORMAL = auto()                 # صوري
+
+
+class LinkKind(Enum):
+    """نوع الربط — how a knowledge link connects nodes."""
+    TEXTUAL_INFERENCE = auto()  # استدلال نصي
+    CAUSAL = auto()             # سببي
+    CONTEXTUAL = auto()         # سياقي
+    ANALOGICAL = auto()         # قياسي
+    REFERENTIAL = auto()        # إحالي
+
+
+class DalaalaKind(Enum):
+    """نوع الدلالة — fine-grained signification kind."""
+    MUTABAQA = auto()    # مطابقة — exact denotation
+    TADHAMMUN = auto()   # تضمن  — inclusion
+    TADAMMUN = TADHAMMUN  # backward-compat alias for legacy spelling
+    ILTIZAM = auto()     # التزام — necessary concomitant
+    ISHARA = auto()      # إشارة — allusion / indication
+
+
+class SenseModality(Enum):
+    """الحاسة — sense modality for perception traces."""
+    VISION = auto()    # بصر
+    HEARING = auto()   # سمع
+    TOUCH = auto()     # لمس
+    SMELL = auto()     # شم
+    TASTE = auto()     # ذوق
+    INTUITION = auto() # حدس
+    # backward-compat aliases
+    VISUAL = VISION
+
+
+class RealityKind(Enum):
+    """نوع الواقع — ontological kind of reality anchor."""
+    TEXT_OBJECT = auto()      # كائن نصي
+    EVENT = auto()            # حدث
+    MATERIAL = auto()         # مادي
+    ABSTRACT = auto()         # مجرد
+    SOCIAL = auto()           # اجتماعي
+    HISTORICAL = auto()       # تاريخي
+    PHYSICAL_OBJECT = auto()  # كائن مادي
+
+
+class RationalSelfKind(Enum):
+    """نوع الذات العاقلة — kind of rational self."""
+    INDIVIDUAL = auto()       # فردي
+    COLLECTIVE = auto()       # جماعي
+    INSTITUTIONAL = auto()    # مؤسسي
+    MODELED_AGENT = auto()    # وكيل مُنمذج
+
+
+class TraceMode(Enum):
+    """نمط التتبع — how a sense trace was acquired."""
+    DIRECT = auto()              # مباشر
+    MEDIATED = auto()            # بوساطة
+    # backward-compat alias
+    DIRECT_PERCEPTION = DIRECT
+
+
+class TraceQuality(Enum):
+    """جودة التتبع — quality assessment of a trace."""
+    STRONG = auto()     # قوي
+    MODERATE = auto()   # متوسط
+    WEAK = auto()       # ضعيف
+
+
+# ═══════════════════════════════════════════════════════════════════════
+# GROUP C — Exchange / Discourse Enums
+# ═══════════════════════════════════════════════════════════════════════
+
+
+class ExchangeType(Enum):
+    """نوع التبادل — kind of discourse exchange."""
+    REPORT = auto()       # تقرير
+    TEACHING = auto()     # تعليم
+    QUESTION = auto()     # سؤال
+    ANSWER = auto()       # جواب
+    COMMAND = auto()      # أمر
+    WARNING = auto()      # تحذير
+    PERSUASION = auto()   # إقناع
+    NEGOTIATION = auto()  # تفاوض
+    TESTIMONY = auto()    # شهادة
+    EXPLANATION = auto()  # شرح
+
+
+class ExchangeStatus(Enum):
+    """حالة التبادل — status of a discourse exchange."""
+    DRAFTED = auto()       # مسودة
+    TRANSMITTED = auto()   # مُرسَل
+    RECEIVED = auto()      # مستلم
+    INTERPRETED = auto()   # مُفسَّر
+    ACCEPTED = auto()      # مقبول
+    REJECTED = auto()      # مرفوض
+    SUSPENDED = auto()     # معلق
+
+
+class ExchangePurposeType(Enum):
+    """نوع غرض التبادل — purpose classification of an exchange."""
+    INFORM = auto()               # إعلام
+    TEACH = auto()                # تعليم
+    VERIFY = auto()               # تحقق
+    GUIDE = auto()                # إرشاد
+    BIND = auto()                 # إلزام
+    PERSUADE = auto()             # إقناع
+    WARN = auto()                 # تحذير
+    REQUEST = auto()              # طلب
+    TEST = auto()                 # اختبار
+    PRESERVE_KNOWLEDGE = auto()   # حفظ المعرفة
+
+
+class ExchangeStyleType(Enum):
+    """نوع أسلوب التبادل — style classification of an exchange."""
+    KHABARI = auto()         # خبري
+    INSHAI = auto()          # إنشائي
+    EXPLANATORY = auto()     # توضيحي
+    ARGUMENTATIVE = auto()   # حجاجي
+    DIRECTIVE = auto()       # توجيهي
+    INTERROGATIVE = auto()   # استفهامي
+    PEDAGOGICAL = auto()     # تعليمي
+    TESTIMONIAL = auto()     # شهادي
+
+
+class ReceptionMode(Enum):
+    """نمط الاستقبال — how the message was received."""
+    HEARD = auto()       # مسموع
+    READ = auto()        # مقروء
+    OBSERVED = auto()    # ملاحظ
+    INFERRED = auto()    # مستنبط
+    RECALLED = auto()    # مُستدعى
+
+
+class ReceptionStateType(Enum):
+    """نوع حالة الاستقبال — cognitive state after reception."""
+    RECEIVED = auto()              # مُستلم
+    UNDERSTOOD = auto()            # مفهوم
+    MISUNDERSTOOD = auto()         # مُساء فهمه
+    ACCEPTED = auto()              # مقبول
+    REJECTED = auto()              # مرفوض
+    SUSPENDED = auto()             # معلق
+    PARTIALLY_UNDERSTOOD = auto()  # مفهوم جزئيًا
+
+
+class ReceiverRoleType(Enum):
+    """نوع دور المتلقي — receiver's role in discourse."""
+    LISTENER = auto()     # مستمع
+    LEARNER = auto()      # متعلم
+    EXAMINER = auto()     # فاحص
+    ADDRESSEE = auto()    # مخاطب
+    RESPONDENT = auto()   # مجيب
+    EVALUATOR = auto()    # مقيّم
+
+
+class ReceiverState(Enum):
+    """حالة المتلقي — receiver's cognitive readiness."""
+    OPEN = auto()        # منفتح
+    RESISTANT = auto()   # مقاوم
+    BIASED = auto()      # منحاز
+    UNCERTAIN = auto()   # غير متأكد
+    ATTENTIVE = auto()   # يقظ
+
+
+class ReceiverExpectedAction(Enum):
+    """الإجراء المتوقع من المتلقي — expected action from receiver."""
+    UNDERSTAND = auto()   # فهم
+    VERIFY = auto()       # تحقق
+    ACT = auto()          # فعل
+    ANSWER = auto()       # إجابة
+    PRESERVE = auto()     # حفظ
+    RELAY = auto()        # نقل
+
+
+class PurposeType(Enum):
+    """نوع الغرض — communicative purpose of an exchange."""
+    INFORM = auto()          # إعلام
+    INSTRUCT = auto()        # تعليم
+    PERSUADE = auto()        # إقناع
+    TEST = auto()            # اختبار
+    QUERY = auto()           # استفسار
+    PRESERVE = auto()        # حفظ
+    REFUTE = auto()          # دحض
+    WARN = auto()            # تحذير
+    REQUEST_ACTION = auto()  # طلب إجراء
+    CLARIFY = auto()         # توضيح
+
+
+class SenderRoleType(Enum):
+    """نوع دور المرسل — sender's role in discourse."""
+    SOURCE = auto()       # مصدر
+    EXPLAINER = auto()    # شارح
+    WITNESS = auto()      # شاهد
+    TEACHER = auto()      # معلم
+    COMMANDER = auto()    # آمر
+    QUESTIONER = auto()   # سائل
+    INTERPRETER = auto()  # مفسر
+
+
+class UtteranceMode(Enum):
+    """نمط المنطوق — mode of the utterance."""
+    STATEMENT = auto()       # إخبار
+    QUESTION = auto()        # سؤال
+    COMMAND = auto()         # أمر
+    REPORT = auto()          # تقرير
+    EXPLANATION = auto()     # شرح
+    DIALOGUE_TURN = auto()   # دور حواري
+
+
+class StyleKind(Enum):
+    """نوع الأسلوب — rhetorical style of discourse."""
+    KHABAR = auto()        # خبر
+    INSHA = auto()         # إنشاء
+    QUESTION = auto()      # سؤال
+    ANSWER = auto()        # جواب
+    COMMAND = auto()       # أمر
+    PROHIBITION = auto()   # نهي
+    EXPLANATION = auto()   # شرح
+    ARGUMENT = auto()      # حجاج
+    TESTIMONY = auto()     # شهادة
+    SYMBOLIC = auto()      # رمزي
+
+
+# ═══════════════════════════════════════════════════════════════════════
+# GROUP D — Structural / Constraint Enums
+# ═══════════════════════════════════════════════════════════════════════
+
+
+class MethodFamily(Enum):
+    """عائلة المنهج — family of epistemic method."""
+    RATIONAL = auto()       # عقلي
+    SCIENTIFIC = auto()     # علمي
+    LINGUISTIC = auto()     # لغوي
+    MATHEMATICAL = auto()   # رياضي
+    PHYSICAL = auto()       # فيزيائي
+    TRADITIONAL = auto()    # نقلي
+
+
+class PathKind(Enum):
+    """نوع المسار — kind of proof / reasoning path."""
+    AQLI = auto()        # عقلي       — rational path
+    LINGUISTIC = auto()  # لغوي       — linguistic path
+    HISSI = auto()       # حسي        — sensory path
+    FORMAL = auto()      # صوري       — formal-logical path
+
+
+class ProofPathKind(Enum):
+    """نوع مسار البرهان — specific kind of proof path."""
+    DIRECT_PROOF = auto()       # برهان مباشر
+    INDIRECT_PROOF = auto()     # برهان غير مباشر
+    BY_CONTRADICTION = auto()   # برهان خلف
+    BY_INDUCTION = auto()       # استقراء
+
+
+class ExplicitnessLevel(Enum):
+    """مستوى الصراحة — how explicitly a concept is conveyed."""
+    DIRECT = auto()        # مباشر
+    SEMI_DIRECT = auto()   # شبه مباشر
+    IMPLICIT = auto()      # ضمني
+
+
+class OntologicalConstraintType(Enum):
+    """نوع القيد الأنطولوجي — kinds of ontological constraint."""
+    STRUCTURAL = auto()              # بنيوي
+    LEXICAL_CONSTRAINT = auto()      # قيد معجمي
+    CONTEXTUAL_CONSTRAINT = auto()   # قيد سياقي
+    INTERPRETIVE_CONSTRAINT = auto() # قيد تفسيري
+    RHETORICAL_CONSTRAINT = auto()   # قيد بلاغي
+    REFERENTIAL_CONSTRAINT = auto()  # قيد إحالي
+    LOGICAL_CONSTRAINT = auto()      # قيد منطقي
+    TEMPORAL_CONSTRAINT = auto()     # قيد زمني
+    SPATIAL_CONSTRAINT = auto()      # قيد مكاني
+    MODAL_CONSTRAINT = auto()        # قيد جهوي
+    PRAGMATIC_CONSTRAINT = auto()    # قيد تداولي
+    DEONTIC_CONSTRAINT = auto()      # قيد إلزامي
+    CAUSAL_CONSTRAINT = auto()       # قيد سببي
+
+
+class UtteranceToConceptConstraint(Enum):
+    """قيد المنطوق→المفهوم — constraints on the utterance-to-concept mapping."""
+    SURFACE_VALIDITY = auto()            # صلاحية سطحية
+    LEXICAL_ACCESS = auto()              # نفاذ معجمي
+    CONTEXT_RESOLUTION = auto()          # حل سياقي
+    CONCEPT_SELECTION = auto()           # اختيار مفهوم
+    FIGURATIVE_DISAMBIGUATION = auto()   # إزالة لبس مجازي
+    REFERENTIAL_RESOLUTION = auto()      # حل إحالي
+    LOGICAL_COHERENCE = auto()           # اتساق منطقي
+
+
+class AuthorityLevel(Enum):
+    """مستوى الحجية — authority level of a source or argument."""
+    HIGH = auto()     # عالي
+    MEDIUM = auto()   # متوسط
+    LOW = auto()      # منخفض
+
+
+# ═══════════════════════════════════════════════════════════════════════
+# GROUP E — Carrier / Representation Enums
+# ═══════════════════════════════════════════════════════════════════════
+
+
+class CarrierType(Enum):
+    """نوع الحامل — what kind of carrier is present."""
+    UTTERANCE = auto()  # منطوق
+    CONCEPT = auto()    # مفهوم
+    BOTH = auto()       # كلاهما
+
+
+class CarrierClass(Enum):
+    """صنف الحامل — classification of carrier."""
+    UTTERANCE = auto()  # منطوق
+    CONCEPT = auto()    # مفهوم
+    BOTH = auto()       # كلاهما
+
+
+class SignifierClass(Enum):
+    """صنف الدال — classification of the signifier."""
+    LEXICAL = auto()       # معجمي
+    SYNTACTIC = auto()     # نحوي
+    UTTERED_FORM = auto()  # صيغة ملفوظة
+    MORPHOLOGICAL = auto() # صرفي
+    PHONOLOGICAL = auto()  # صوتي
+    RHETORICAL = auto()    # بلاغي
+    PRAGMATIC = auto()     # تداولي
+    CONTEXTUAL = auto()    # سياقي
+
+
+class SignifiedClass(Enum):
+    """صنف المدلول — classification of the signified."""
+    CONCEPTUAL = auto()          # مفاهيمي
+    RELATIONAL = auto()          # علائقي
+    NORMATIVE = auto()           # معياري
+    REFERENTIAL = auto()         # إحالي
+    ONTOLOGICAL = auto()         # أنطولوجي
+    META_CONCEPTUAL = auto()     # فوق مفاهيمي
+    FUNCTIONAL = auto()          # وظيفي
+    EPISTEMIC = auto()           # معرفي
+    MODAL = auto()               # جهوي
+    EVALUATIVE = auto()          # تقييمي
+    TEMPORAL = auto()            # زماني
+    SPATIAL = auto()             # مكاني
+    CAUSAL = auto()              # سببي
+    INSTITUTIONAL = auto()       # مؤسسي
+    PERFORMATIVE = auto()        # إنجازي
+    AFFECTIVE = auto()           # عاطفي
+    CULTURAL = auto()            # ثقافي
+    DEONTIC = auto()             # إلزامي
+    EXPERIENTIAL = auto()        # خبراتي
+    CLASSIFICATORY = auto()      # تصنيفي
+    COMPOSITIONAL = auto()       # تركيبي
+    METAPHORICAL = auto()        # مجازي
+
+
+class ConceptualSignifiedClass(Enum):
+    """صنف المدلول المفاهيمي — sub-classification of conceptual signified."""
+    ENTITY_CONCEPT = auto()    # مفهوم ذات
+    EVENT_CONCEPT = auto()     # مفهوم حدث
+    PROPERTY_CONCEPT = auto()  # مفهوم صفة
+    RELATION_CONCEPT = auto()  # مفهوم علاقة
+    META_CONCEPT = auto()      # مفهوم فوقي
+    STATE_CONCEPT = auto()     # مفهوم حالة
+    PROCESS_CONCEPT = auto()   # مفهوم عملية
+    ABSTRACT_CONCEPT = auto()  # مفهوم مجرد
+
+
+class UtteredFormClass(Enum):
+    """صنف الصيغة الملفوظة — classification of the uttered form."""
+    WORD_UTTERANCE = auto()       # لفظ مفرد
+    MARKED_UTTERANCE = auto()     # لفظ معلّم
+    PHRASE_UTTERANCE = auto()     # عبارة
+    SENTENCE_UTTERANCE = auto()   # جملة
+    COMPOUND_UTTERANCE = auto()   # مركب
+
+
+class CouplingRelationType(Enum):
+    """نوع علاقة الاقتران — how signifier is coupled to signified."""
+    DIRECT = auto()                # مباشر
+    INFERENTIAL = auto()           # استدلالي
+    COMPOSITIONAL = auto()         # تركيبي
+    HIERARCHICAL = auto()          # هرمي
+    REFERENTIAL_COUPLING = auto()  # اقتران إحالي
+    FIGURATIVE = auto()            # مجازي
+    METONYMIC = auto()             # كنائي
+    CONTEXTUAL_COUPLING = auto()   # اقتران سياقي
+    PRAGMATIC_COUPLING = auto()    # اقتران تداولي
+    CONVENTIONAL = auto()          # عرفي
+
+
+# ═══════════════════════════════════════════════════════════════════════
+# GROUP F — Error / Gap / Validation Enums
+# ═══════════════════════════════════════════════════════════════════════
+
+
+class GapSeverity(Enum):
+    """شدة الفجوة — how severe an epistemic gap is.
+
+    Canonical members: FATAL, CRITICAL, MODERATE, MINOR.
+    Legacy aliases HIGH/MEDIUM/LOW are kept for backward compatibility
+    and should be considered deprecated in new code.
+    """
+    FATAL = auto()     # قاتلة
+    CRITICAL = auto()  # حرجة
+    MODERATE = auto()  # معتدلة
+    MINOR = auto()     # طفيفة
+    # backward-compat aliases (deprecated — prefer canonical names)
+    HIGH = CRITICAL
+    MEDIUM = MODERATE
+    LOW = MINOR
+
+
+class DiscourseGapType(Enum):
+    """نوع فجوة الخطاب — specific kind of discourse gap."""
+    MISSING_SENDER = auto()
+    SENDER_PURPOSE_MISMATCH = auto()
+    MISSING_RECEIVER = auto()
+    MISSING_PURPOSE = auto()
+    INVALID_STYLE_PURPOSE_FIT = auto()
+    MISSING_STYLE = auto()
+    MISSING_CARRIER = auto()
+    INVALID_CARRIER = auto()
+    MISSING_RECEPTION = auto()
+    MISSING_RECEPTION_STATE = auto()
+    RECEPTION_INCONSISTENCY = auto()
+    MISSING_TRUST_PROFILE = auto()
+    MISSING_TRANSFERRED_KNOWLEDGE = auto()
+    INVALID_TRANSFERRED_KNOWLEDGE = auto()
+
+
+class DiscourseValidationOutcome(Enum):
+    """نتيجة التحقق من الخطاب — outcome of discourse validation."""
+    VALID = auto()       # صالح
+    INCOMPLETE = auto()  # ناقص
+    INVALID = auto()     # غير صالح
+
+
+class InterpretiveOutcomeType(Enum):
+    """نوع النتيجة التفسيرية — outcome of interpretive analysis."""
+    ALIGNED = auto()      # متوافق
+    NARROWED = auto()     # مضيَّق
+    EXPANDED = auto()     # موسَّع
+    DISTORTED = auto()    # مشوّه
+    CONFLICTING = auto()  # متعارض
+    UNRESOLVED = auto()   # غير محسوم
+
+
+class ContaminationLevel(Enum):
+    """مستوى التلوث — degree of opinion contamination."""
+    NONE = auto()    # لا تلوث
+    LOW = auto()     # منخفض
+    MEDIUM = auto()  # متوسط
+    HIGH = auto()    # مرتفع
