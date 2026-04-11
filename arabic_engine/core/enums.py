@@ -1049,10 +1049,9 @@ class EpistemicRank(Enum):
 
 class TrustLevel(Enum):
     """مستوى الثقة — degree of trust in a source or transmission."""
-    HIGH = auto()       # عالي
-    MEDIUM = auto()     # متوسط
     LOW = auto()        # منخفض
-    UNKNOWN = auto()    # غير محدد
+    MEDIUM = auto()     # متوسط
+    HIGH = auto()       # عالي
 
 
 class TrustBasis(Enum):
@@ -1061,11 +1060,7 @@ class TrustBasis(Enum):
     AUTHORITY = auto()         # حجية
     FAMILIARITY = auto()       # ألفة
     TESTIMONY_CHAIN = auto()   # سلسلة شهادة
-    TESTIMONY = auto()         # شهادة
-    CONSENSUS = auto()         # إجماع
-    DIRECT_EVIDENCE = auto()   # دليل مباشر
     NONE = auto()              # لا أساس
-    UNKNOWN = auto()           # غير محدد
 
 
 class ValidationOutcome(Enum):
@@ -1090,6 +1085,7 @@ class InfoKind(Enum):
     SEMANTIC = auto()      # دلالي
     PRAGMATIC = auto()     # تداولي
     CONTEXTUAL = auto()    # سياقي
+    INFERENTIAL = auto()   # استدلالي
 
 
 class DecisionCode(Enum):
@@ -1163,16 +1159,20 @@ class SenseModality(Enum):
     TOUCH = auto()     # لمس
     SMELL = auto()     # شم
     TASTE = auto()     # ذوق
+    INTUITION = auto() # حدس
     # backward-compat aliases
     VISUAL = VISION
 
 
 class RealityKind(Enum):
     """نوع الواقع — ontological kind of reality anchor."""
-    TEXT_OBJECT = auto()  # كائن نصي
-    EVENT = auto()        # حدث
-    MATERIAL = auto()     # مادي
-    ABSTRACT = auto()     # مجرد
+    TEXT_OBJECT = auto()      # كائن نصي
+    EVENT = auto()            # حدث
+    MATERIAL = auto()         # مادي
+    ABSTRACT = auto()         # مجرد
+    SOCIAL = auto()           # اجتماعي
+    HISTORICAL = auto()       # تاريخي
+    PHYSICAL_OBJECT = auto()  # كائن مادي
 
 
 class RationalSelfKind(Enum):
@@ -1215,7 +1215,6 @@ class ExchangeType(Enum):
     NEGOTIATION = auto()  # تفاوض
     TESTIMONY = auto()    # شهادة
     EXPLANATION = auto()  # شرح
-    REQUEST = auto()      # طلب
 
 
 class ExchangeStatus(Enum):
@@ -1227,9 +1226,6 @@ class ExchangeStatus(Enum):
     ACCEPTED = auto()      # مقبول
     REJECTED = auto()      # مرفوض
     SUSPENDED = auto()     # معلق
-    IN_PROGRESS = auto()   # قيد التقدم
-    COMPLETED = auto()     # مكتمل
-    FAILED = auto()        # فاشل
 
 
 class ExchangePurposeType(Enum):
@@ -1276,7 +1272,6 @@ class ReceptionStateType(Enum):
     REJECTED = auto()              # مرفوض
     SUSPENDED = auto()             # معلق
     PARTIALLY_UNDERSTOOD = auto()  # مفهوم جزئيًا
-    CONFUSED = auto()              # مشوش
 
 
 class ReceiverRoleType(Enum):
@@ -1287,8 +1282,6 @@ class ReceiverRoleType(Enum):
     ADDRESSEE = auto()    # مخاطب
     RESPONDENT = auto()   # مجيب
     EVALUATOR = auto()    # مقيّم
-    JUDGE = auto()        # حاكم
-    OBSERVER = auto()     # مراقب
 
 
 class ReceiverState(Enum):
@@ -1298,7 +1291,6 @@ class ReceiverState(Enum):
     BIASED = auto()      # منحاز
     UNCERTAIN = auto()   # غير متأكد
     ATTENTIVE = auto()   # يقظ
-    NEUTRAL = auto()     # محايد
 
 
 class ReceiverExpectedAction(Enum):
@@ -1309,9 +1301,6 @@ class ReceiverExpectedAction(Enum):
     ANSWER = auto()       # إجابة
     PRESERVE = auto()     # حفظ
     RELAY = auto()        # نقل
-    OBEY = auto()         # طاعة
-    RESPOND = auto()      # رد
-    REFLECT = auto()      # تأمل
 
 
 class PurposeType(Enum):
@@ -1347,7 +1336,6 @@ class UtteranceMode(Enum):
     REPORT = auto()          # تقرير
     EXPLANATION = auto()     # شرح
     DIALOGUE_TURN = auto()   # دور حواري
-    EXCLAMATION = auto()     # تعجب
 
 
 class StyleKind(Enum):
@@ -1362,7 +1350,6 @@ class StyleKind(Enum):
     ARGUMENT = auto()      # حجاج
     TESTIMONY = auto()     # شهادة
     SYMBOLIC = auto()      # رمزي
-    NARRATION = auto()     # سرد
 
 
 # ═══════════════════════════════════════════════════════════════════════
@@ -1401,8 +1388,6 @@ class ExplicitnessLevel(Enum):
     DIRECT = auto()        # مباشر
     SEMI_DIRECT = auto()   # شبه مباشر
     IMPLICIT = auto()      # ضمني
-    INFERRED = auto()      # مستنبط
-    AMBIGUOUS = auto()     # ملتبس
 
 
 class OntologicalConstraintType(Enum):
@@ -1414,6 +1399,12 @@ class OntologicalConstraintType(Enum):
     RHETORICAL_CONSTRAINT = auto()   # قيد بلاغي
     REFERENTIAL_CONSTRAINT = auto()  # قيد إحالي
     LOGICAL_CONSTRAINT = auto()      # قيد منطقي
+    TEMPORAL_CONSTRAINT = auto()     # قيد زمني
+    SPATIAL_CONSTRAINT = auto()      # قيد مكاني
+    MODAL_CONSTRAINT = auto()        # قيد جهوي
+    PRAGMATIC_CONSTRAINT = auto()    # قيد تداولي
+    DEONTIC_CONSTRAINT = auto()      # قيد إلزامي
+    CAUSAL_CONSTRAINT = auto()       # قيد سببي
 
 
 class UtteranceToConceptConstraint(Enum):
@@ -1459,14 +1450,36 @@ class SignifierClass(Enum):
     SYNTACTIC = auto()     # نحوي
     UTTERED_FORM = auto()  # صيغة ملفوظة
     MORPHOLOGICAL = auto() # صرفي
+    PHONOLOGICAL = auto()  # صوتي
+    RHETORICAL = auto()    # بلاغي
+    PRAGMATIC = auto()     # تداولي
+    CONTEXTUAL = auto()    # سياقي
 
 
 class SignifiedClass(Enum):
     """صنف المدلول — classification of the signified."""
-    CONCEPTUAL = auto()   # مفاهيمي
-    RELATIONAL = auto()   # علائقي
-    NORMATIVE = auto()    # معياري
-    REFERENTIAL = auto()  # إحالي
+    CONCEPTUAL = auto()          # مفاهيمي
+    RELATIONAL = auto()          # علائقي
+    NORMATIVE = auto()           # معياري
+    REFERENTIAL = auto()         # إحالي
+    ONTOLOGICAL = auto()         # أنطولوجي
+    META_CONCEPTUAL = auto()     # فوق مفاهيمي
+    FUNCTIONAL = auto()          # وظيفي
+    EPISTEMIC = auto()           # معرفي
+    MODAL = auto()               # جهوي
+    EVALUATIVE = auto()          # تقييمي
+    TEMPORAL = auto()            # زماني
+    SPATIAL = auto()             # مكاني
+    CAUSAL = auto()              # سببي
+    INSTITUTIONAL = auto()       # مؤسسي
+    PERFORMATIVE = auto()        # إنجازي
+    AFFECTIVE = auto()           # عاطفي
+    CULTURAL = auto()            # ثقافي
+    DEONTIC = auto()             # إلزامي
+    EXPERIENTIAL = auto()        # خبراتي
+    CLASSIFICATORY = auto()      # تصنيفي
+    COMPOSITIONAL = auto()       # تركيبي
+    METAPHORICAL = auto()        # مجازي
 
 
 class ConceptualSignifiedClass(Enum):
@@ -1475,13 +1488,19 @@ class ConceptualSignifiedClass(Enum):
     EVENT_CONCEPT = auto()     # مفهوم حدث
     PROPERTY_CONCEPT = auto()  # مفهوم صفة
     RELATION_CONCEPT = auto()  # مفهوم علاقة
+    META_CONCEPT = auto()      # مفهوم فوقي
+    STATE_CONCEPT = auto()     # مفهوم حالة
+    PROCESS_CONCEPT = auto()   # مفهوم عملية
+    ABSTRACT_CONCEPT = auto()  # مفهوم مجرد
 
 
 class UtteredFormClass(Enum):
     """صنف الصيغة الملفوظة — classification of the uttered form."""
-    WORD_UTTERANCE = auto()    # لفظ مفرد
-    MARKED_UTTERANCE = auto()  # لفظ معلّم
-    PHRASE_UTTERANCE = auto()  # عبارة
+    WORD_UTTERANCE = auto()       # لفظ مفرد
+    MARKED_UTTERANCE = auto()     # لفظ معلّم
+    PHRASE_UTTERANCE = auto()     # عبارة
+    SENTENCE_UTTERANCE = auto()   # جملة
+    COMPOUND_UTTERANCE = auto()   # مركب
 
 
 class CouplingRelationType(Enum):
@@ -1492,6 +1511,10 @@ class CouplingRelationType(Enum):
     HIERARCHICAL = auto()          # هرمي
     REFERENTIAL_COUPLING = auto()  # اقتران إحالي
     FIGURATIVE = auto()            # مجازي
+    METONYMIC = auto()             # كنائي
+    CONTEXTUAL_COUPLING = auto()   # اقتران سياقي
+    PRAGMATIC_COUPLING = auto()    # اقتران تداولي
+    CONVENTIONAL = auto()          # عرفي
 
 
 # ═══════════════════════════════════════════════════════════════════════
@@ -1503,10 +1526,12 @@ class GapSeverity(Enum):
     """شدة الفجوة — how severe an epistemic gap is."""
     FATAL = auto()     # قاتلة
     CRITICAL = auto()  # حرجة
-    HIGH = auto()      # عالية
     MODERATE = auto()  # معتدلة
-    MEDIUM = MODERATE  # backward-compat alias
-    LOW = auto()       # منخفضة
+    MINOR = auto()     # طفيفة
+    # backward-compat aliases
+    HIGH = CRITICAL
+    MEDIUM = MODERATE
+    LOW = MINOR
 
 
 class DiscourseGapType(Enum):
@@ -1542,8 +1567,6 @@ class InterpretiveOutcomeType(Enum):
     DISTORTED = auto()    # مشوّه
     CONFLICTING = auto()  # متعارض
     UNRESOLVED = auto()   # غير محسوم
-    PARTIAL = auto()      # جزئي
-    REJECTED = auto()     # مرفوض
 
 
 class ContaminationLevel(Enum):

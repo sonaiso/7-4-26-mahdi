@@ -399,6 +399,12 @@ from .types import (
     ConceptRelation as ConceptRelation,
 )
 from .types import (
+    ConflictRuleNode as ConflictRuleNode,
+)
+from .types import (
+    CouplingRecord as CouplingRecord,
+)
+from .types import (
     DalalaLink as DalalaLink,
 )
 from .types import (
@@ -731,6 +737,8 @@ __all__ = [
     "AxiomRecord",
     "Concept",
     "ConceptRelation",
+    "ConflictRuleNode",
+    "CouplingRecord",
     "DalalaLink",
     "DiscourseCarrierRecord",
     "DiscourseConceptRecord",
