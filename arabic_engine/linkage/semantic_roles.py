@@ -34,9 +34,11 @@ def derive_semantic_roles(
 
     for cl in closures:
         if cl.pos == POS.ZARF:
-            if cl.temporal.name != "UNSPECIFIED" and not roles["time"]:
+            temporal_name = getattr(cl.temporal, "name", "UNSPECIFIED")
+            spatial_name = getattr(cl.spatial, "name", "UNSPECIFIED")
+            if temporal_name != "UNSPECIFIED" and not roles["time"]:
                 roles["time"] = cl.surface
-            if cl.spatial.name != "UNSPECIFIED" and not roles["place"]:
+            if spatial_name != "UNSPECIFIED" and not roles["place"]:
                 roles["place"] = cl.surface
 
     return roles
