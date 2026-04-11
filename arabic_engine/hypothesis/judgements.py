@@ -35,7 +35,7 @@ def generate(case_hypotheses: List[HypothesisNode]) -> List[HypothesisNode]:
                     ("proposition_type", "غير محدد"),
                     ("rank", "غير محدد"),
                 ),
-                confidence=0.0,
+                confidence=0.5,
                 status=HypothesisStatus.ACTIVE,
             )
         ]
