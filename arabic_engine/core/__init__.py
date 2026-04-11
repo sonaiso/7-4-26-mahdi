@@ -12,6 +12,7 @@ re-exported here because it is a utility/verification module, not a data
 type.
 """
 
+# ── Enum re-exports ─────────────────────────────────────────────────
 from .enums import (
     POS as POS,
 )
@@ -29,6 +30,9 @@ from .enums import (
 )
 from .enums import (
     CausalRole as CausalRole,
+)
+from .enums import (
+    CellType as CellType,
 )
 from .enums import (
     CombinationType as CombinationType,
@@ -166,6 +170,9 @@ from .enums import (
     OntologicalLayer as OntologicalLayer,
 )
 from .enums import (
+    OntologicalMode as OntologicalMode,
+)
+from .enums import (
     OperationalCapacity as OperationalCapacity,
 )
 from .enums import (
@@ -226,6 +233,9 @@ from .enums import (
     StyleKind as StyleKind,
 )
 from .enums import (
+    SyllablePosition as SyllablePosition,
+)
+from .enums import (
     TimeRef as TimeRef,
 )
 from .enums import (
@@ -233,6 +243,18 @@ from .enums import (
 )
 from .enums import (
     TraceQuality as TraceQuality,
+)
+from .enums import (
+    TransitionCondition as TransitionCondition,
+)
+from .enums import (
+    TransitionLaw as TransitionLaw,
+)
+from .enums import (
+    TransitionType as TransitionType,
+)
+from .enums import (
+    TriadType as TriadType,
 )
 from .enums import (
     TrustBasis as TrustBasis,
@@ -261,6 +283,8 @@ from .enums import (
 from .enums import (
     ValidationState as ValidationState,
 )
+
+# ── Kernel re-exports ───────────────────────────────────────────────
 from .kernel import (
     KERNEL_RELATION_PAIRS as KERNEL_RELATION_PAIRS,
 )
@@ -318,6 +342,8 @@ from .kernel import (
 from .kernel import (
     validate_kernel_graph as validate_kernel_graph,
 )
+
+# ── Type re-exports ─────────────────────────────────────────────────
 from .types import (  # noqa: F401 -- intentional re-exports
     AEU as AEU,
 )
@@ -542,80 +568,203 @@ from .types import (
 )
 
 __all__ = [
-    # enums
+    # ── enums ───────────────────────────────────────────────────────
     "POS",
     "AffectiveDimension",
-    "CausalRole",
+    "AuthorityLevel",
+    "CarrierClass",
+    "CarrierType",
     "CategorizationMode",
+    "CausalRole",
+    "CellType",
     "CombinationType",
     "ConceptFormationMode",
     "ConceptRelationType",
-    "ConstraintType",
-    "CulturalScope",
     "ConceptualSignifiedClass",
+    "ConditionToken",
     "ConstraintType",
+    "ContaminationLevel",
     "CouplingRelationType",
+    "CulturalScope",
+    "DalaalaKind",
     "DalalaType",
+    "DecisionCode",
     "DiachronicStatus",
+    "DiscourseGapType",
+    "DiscourseValidationOutcome",
     "ElementClass",
     "ElementFunction",
     "ElementLayer",
     "EmbodiedDomain",
+    "EpistemicRank",
     "EpistemicStatus",
+    "EvidenceType",
+    "ExchangeStatus",
+    "ExchangePurposeType",
+    "ExchangeStyleType",
+    "ExchangeType",
+    "ExplicitnessLevel",
     "FrameType",
+    "FuncTransitionClass",
+    "FunctionRole",
+    "GapSeverity",
     "GuidanceState",
+    "InfoKind",
+    "InsertionPolicy",
     "InstitutionalCategory",
+    "InterpretiveOutcomeType",
     "InterpretiveStability",
     "IrabCase",
     "IrabRole",
+    "JudgementType",
+    "LinkKind",
     "MafhumType",
     "MentalIntentionalType",
     "MetaConceptualLevel",
+    "MethodFamily",
     "ModalCategory",
     "NormativeCategory",
     "OntologicalConstraintType",
     "OntologicalLayer",
+    "OntologicalMode",
     "OperationalCapacity",
+    "PathKind",
     "PhonCategory",
     "PhonFeature",
     "PhonGroup",
     "PhonTransform",
+    "ProofPathKind",
     "ProofStatus",
+    "PurposeType",
+    "RankType",
+    "RationalSelfKind",
+    "RealityKind",
+    "ReceiverExpectedAction",
+    "ReceiverRoleType",
+    "ReceiverState",
+    "ReceptionMode",
+    "ReceptionStateType",
+    "ReversibleValue",
     "SalienceLevel",
     "ScriptPhase",
-    "SemanticType",
     "SelfModelAspect",
+    "SemanticType",
+    "SenderRoleType",
+    "SenseModality",
     "SignifiedClass",
     "SignifierClass",
     "SlotState",
     "SpaceRef",
+    "StyleKind",
+    "SyllablePosition",
     "TimeRef",
+    "TraceMode",
+    "TraceQuality",
+    "TransitionCondition",
+    "TransitionLaw",
+    "TransitionType",
+    "TriadType",
+    "TrustBasis",
+    "TrustLevel",
     "TruthState",
     "UnicodeProfileType",
-    "UtteredFormClass",
+    "UtteranceMode",
     "UtteranceToConceptConstraint",
-    # types
+    "UtteredFormClass",
+    "ValidationOutcome",
+    "ValidationState",
+    # ── kernel ──────────────────────────────────────────────────────
+    "KERNEL_RELATION_PAIRS",
+    "KERNEL_REQUIRED_FIELDS",
+    "KernelDiscourseExchange",
+    "KernelEdge",
+    "KernelGraph",
+    "KernelKnowledgeEpisode",
+    "KernelLabel",
+    "KernelLinguisticProfile",
+    "KernelNode",
+    "KernelRelation",
+    "KernelReusableModel",
+    "KernelUtterance",
+    "KernelValidationResult",
+    "derive_discourse_exchange",
+    "derive_knowledge_episode",
+    "derive_linguistic_profile",
+    "derive_reusable_model",
+    "derive_utterance_from_carrier",
+    "validate_kernel_graph",
+    # ── types ───────────────────────────────────────────────────────
     "AEU",
+    "AxiomRecord",
     "Concept",
     "ConceptRelation",
+    "ConflictRuleNode",
     "CouplingRecord",
     "DalalaLink",
+    "DiscourseCarrierRecord",
+    "DiscourseConceptRecord",
+    "DiscourseExchangeNode",
+    "DiscourseExchangeResult",
+    "DiscourseGapRecord",
+    "DiscourseUtteranceRecord",
     "DMin",
+    "EpisodeValidationResult",
+    "EpistemicConceptNode",
+    "EssenceConditionPair",
     "EvalResult",
+    "EvidenceNode",
+    "ExchangePurposeRecord",
+    "ExchangeStyleRecord",
+    "GapNode",
+    "GapRecord",
     "Grapheme",
     "InferenceResult",
+    "InterpretiveOutcomeRecord",
+    "JudgementNode",
+    "JudgementRecord",
+    "KnowledgeEpisode",
+    "KnowledgeEpisodeInput",
+    "KnowledgeEpisodeNode",
     "LayerPromotionRule",
     "LexicalClosure",
+    "LinguisticCarrierNode",
+    "LinguisticCarrierRecord",
+    "LinkingTraceNode",
+    "LinkingTraceRecord",
+    "MethodNode",
+    "MethodRecord",
     "OntologicalConstraintRecord",
     "OntologyV1Record",
+    "OpinionTraceNode",
+    "OpinionTraceRecord",
+    "PriorInfoNode",
+    "PriorInfoRecord",
+    "ProofDependencyGraph",
+    "ProofPathNode",
+    "ProofPathRecord",
     "Proposition",
+    "RationalSelfRecord",
+    "RealityAnchorNode",
+    "RealityAnchorRecord",
+    "ReceiverRoleRecord",
+    "ReceptionRecord",
+    "ReceptionStateRecord",
     "RootPattern",
+    "SelfNode",
+    "SenderRoleRecord",
+    "SenseTraceNode",
+    "SenseTraceRecord",
     "SignifiedNode",
     "SignifierNode",
     "Syllable",
     "SyntaxNode",
+    "TheoremRecord",
     "TimeSpaceTag",
     "TriadicBlockRecord",
+    "TrustProfileRecord",
+    "UtteranceNode",
+    "UtteranceRecord",
+    "ValidationResult",
     "WorldFact",
     "ZeroSlotRecord",
 ]
