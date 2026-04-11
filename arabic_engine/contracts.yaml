@@ -95,6 +95,16 @@ layers:
       - "time_ref is a valid TimeRef enum"
       - "space_ref is a valid SpaceRef enum"
 
+  # ── Layer 7b: Semantic Roles (v3) ──────────────────────────────────
+  - name: semantic_roles
+    module: arabic_engine.linkage.semantic_roles
+    function: derive_semantic_roles
+    input_type: "Tuple[List[LexicalClosure], List[SyntaxNode]]"
+    output_type: "Dict[str, str]"
+    invariants:
+      - "contains event/agent/patient keys"
+      - "all values are strings"
+
   # ── Layer 8: Evaluation ───────────────────────────────────────────
   - name: evaluation
     module: arabic_engine.cognition.evaluation
@@ -125,6 +135,17 @@ layers:
     output_type: float
     invariants:
       - "output in [0, 1]"
+
+  # ── Layer 11: Explanation (v3) ─────────────────────────────────────
+  - name: explanation
+    module: arabic_engine.cognition.explanation
+    function: build_explanation
+    input_type: "Tuple[Proposition, Dict[str, str], EvaluationResult, List[InferenceResult], Dict[str, Any]]"
+    output_type: "Dict[str, Any]"
+    invariants:
+      - "contains why_agent"
+      - "contains why_judgement"
+      - "contains why_rank"
 
 # ── Closure proof ───────────────────────────────────────────────────
 # The composition F = L10 ∘ L9 ∘ … ∘ L0 is well-typed if for every
