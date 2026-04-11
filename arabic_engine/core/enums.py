@@ -1580,3 +1580,66 @@ class ContaminationLevel(Enum):
     LOW = auto()     # منخفض
     MEDIUM = auto()  # متوسط
     HIGH = auto()    # مرتفع
+
+
+# ═══════════════════════════════════════════════════════════════════════
+# Fractal Kernel — Layered Hypothesis Graph Architecture
+# ═══════════════════════════════════════════════════════════════════════
+
+
+class HypothesisStatus(Enum):
+    """حالة الفرضية — status of a hypothesis node in the graph."""
+    ACTIVE = auto()       # نشط — still under consideration
+    PRUNED = auto()       # مقطوع — removed by constraint
+    STABILIZED = auto()   # مستقر — accepted as decision
+    SUSPENDED = auto()    # معلق — deferred pending more evidence
+    REVISED = auto()      # مُعدَّل — modified after feedback
+
+
+class ConstraintStrength(Enum):
+    """قوة القيد — how strongly a constraint restricts candidates."""
+    ABSOLUTE = auto()     # مطلق — violation is fatal
+    STRONG = auto()       # قوي — almost always enforced
+    MODERATE = auto()     # متوسط — enforced unless overridden
+    WEAK = auto()         # ضعيف — advisory / preference
+    TENTATIVE = auto()    # تجريبي — experimental, may be dropped
+
+
+class ConflictState(Enum):
+    """حالة التعارض — degree of conflict between hypotheses."""
+    NONE = auto()         # لا تعارض
+    SOFT = auto()         # تعارض خفيف — can coexist with scoring penalty
+    HARD = auto()         # تعارض حاد — only one can survive
+    UNRESOLVED = auto()   # غير محسوم — awaiting more evidence
+
+
+class RevisionType(Enum):
+    """نوع المراجعة — reason for a revision request."""
+    CONFLICT_RESOLUTION = auto()   # حل تعارض
+    AMBIGUITY_RESOLUTION = auto()  # حل التباس
+    FEEDBACK_UPDATE = auto()       # تحديث من طبقة أعلى
+    CONFIDENCE_SHIFT = auto()      # تغير في الثقة
+    EXTERNAL_EVIDENCE = auto()     # دليل خارجي جديد
+
+
+class SignalType(Enum):
+    """نوع الإشارة — classification of a Unicode atom."""
+    BASE_LETTER = auto()    # حرف أساسي
+    DIACRITIC = auto()      # حركة / علامة
+    PUNCTUATION = auto()    # ترقيم
+    WHITESPACE = auto()     # مسافة
+    NUMERAL = auto()        # رقم
+    UNKNOWN = auto()        # غير معروف
+
+
+class ActivationStage(Enum):
+    """مرحلة التفعيل — which processing stage a hypothesis belongs to."""
+    SIGNAL = auto()         # إشارة
+    MORPHOLOGY = auto()     # صرف
+    CONCEPT = auto()        # مفهوم
+    AXIS = auto()           # محور
+    RELATION = auto()       # علاقة
+    ROLE = auto()           # دور
+    FACTOR = auto()         # عامل
+    CASE = auto()           # حالة إعرابية
+    JUDGEMENT = auto()      # حكم

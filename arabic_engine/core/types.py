@@ -12,6 +12,7 @@ from typing import FrozenSet, List, Optional, Tuple
 
 from .enums import (
     POS,
+    ActivationStage,
     AffectiveDimension,
     AuthorityLevel,
     CarrierClass,
@@ -24,6 +25,8 @@ from .enums import (
     ConceptRelationType,
     ConceptualSignifiedClass,
     ConditionToken,
+    ConflictState,
+    ConstraintStrength,
     ConstraintType,
     ContaminationLevel,
     CouplingRelationType,
@@ -49,6 +52,7 @@ from .enums import (
     FuncTransitionClass,
     GapSeverity,
     GuidanceState,
+    HypothesisStatus,
     InfoKind,
     InsertionPolicy,
     InstitutionalCategory,
@@ -85,12 +89,14 @@ from .enums import (
     ReceptionMode,
     ReceptionStateType,
     ReversibleValue,
+    RevisionType,
     SalienceLevel,
     ScriptPhase,
     SelfModelAspect,
     SemanticType,
     SenderRoleType,
     SenseModality,
+    SignalType,
     SignifiedClass,
     SignifierClass,
     SlotState,
@@ -2252,3 +2258,158 @@ class DiscourseExchangeNode:
     interpretive_outcome: Optional[InterpretiveOutcomeRecord] = None
     validation_outcome: DiscourseValidationOutcome = DiscourseValidationOutcome.INCOMPLETE
     gaps: List[DiscourseGapRecord] = field(default_factory=list)
+
+
+# ═══════════════════════════════════════════════════════════════════════
+# Fractal Kernel — Layered Hypothesis Graph Types
+# ═══════════════════════════════════════════════════════════════════════
+
+
+@dataclass(frozen=True)
+class UnicodeAtom:
+    """ذرة يونيكودية — a single Unicode code-point with classification.
+
+    Every character in the input is decomposed into an atom before any
+    normalization or segmentation takes place.
+    """
+
+    atom_id: str
+    char: str
+    codepoint: int
+    unicode_category: str
+    combining_class: int
+    position_index: int
+    signal_type: SignalType = SignalType.UNKNOWN
+
+
+@dataclass(frozen=True)
+class SignalUnit:
+    """وحدة إشارية — a normalised signal unit ready for analysis.
+
+    Produced by the signal layer after normalization of Unicode atoms.
+    """
+
+    unit_id: str
+    surface_text: str
+    normalized_text: str
+    source_span: Tuple[int, int]
+    signal_type: SignalType = SignalType.BASE_LETTER
+
+
+@dataclass(frozen=True)
+class HypothesisNode:
+    """عقدة فرضية — a single hypothesis in the layered graph.
+
+    This is the **unified node type** for all hypothesis stages.
+    Instead of creating separate dataclasses for morphological,
+    conceptual, axis, relation, role, factor, case, and judgement
+    hypotheses, we use a single parameterised node with a typed
+    payload dictionary.
+
+    Fields
+    ------
+    node_id         unique identifier for this hypothesis
+    hypothesis_type short label (e.g. "morphology", "concept", "role")
+    stage           which activation stage this belongs to
+    source_refs     IDs of upstream nodes that generated this hypothesis
+    payload         stage-specific data (root, pattern, label, etc.)
+    confidence      score in [0.0, 1.0]
+    status          lifecycle status of the hypothesis
+    """
+
+    node_id: str
+    hypothesis_type: str
+    stage: ActivationStage
+    source_refs: Tuple[str, ...] = ()
+    payload: Tuple[Tuple[str, object], ...] = ()
+    confidence: float = 1.0
+    status: HypothesisStatus = HypothesisStatus.ACTIVE
+
+    def get(self, key: str, default: object = None) -> object:
+        """Look up a key in the payload tuple-of-pairs."""
+        for k, v in self.payload:
+            if k == key:
+                return v
+        return default
+
+
+@dataclass(frozen=True)
+class ConstraintEdge:
+    """حافة قيد — a constraint linking two hypotheses or a rule.
+
+    Represents a directed restriction: *source_ref* constrains or
+    influences *target_ref* with the given strength.
+    """
+
+    edge_id: str
+    source_ref: str
+    target_ref: str
+    relation: str
+    strength: ConstraintStrength = ConstraintStrength.MODERATE
+    justification: str = ""
+
+
+@dataclass(frozen=True)
+class SupportEdge:
+    """حافة دعم — an edge that supports a hypothesis.
+
+    When a hypothesis at one layer is consistent with / entailed by a
+    hypothesis at another layer, a support edge records that evidence.
+    """
+
+    edge_id: str
+    supporter_ref: str
+    target_ref: str
+    weight: float = 1.0
+    justification: str = ""
+
+
+@dataclass(frozen=True)
+class ConflictEdge:
+    """حافة تعارض — an edge recording a conflict between hypotheses.
+
+    Two hypotheses that cannot both be true are connected by a
+    conflict edge.  The constraint engine uses these to prune.
+    """
+
+    edge_id: str
+    node_a_ref: str
+    node_b_ref: str
+    conflict_state: ConflictState = ConflictState.HARD
+    justification: str = ""
+
+
+@dataclass(frozen=True)
+class ActivationRecord:
+    """سجل تفعيل — records the activation of a hypothesis node.
+
+    Tracks when a hypothesis transitions from ACTIVE to STABILIZED
+    (or to PRUNED / SUSPENDED) and why.
+    """
+
+    record_id: str
+    node_ref: str
+    old_status: HypothesisStatus
+    new_status: HypothesisStatus
+    reason: str = ""
+    revision_type: Optional[RevisionType] = None
+
+
+@dataclass(frozen=True)
+class DecisionTrace:
+    """أثر القرار — full causal trace of a single decision.
+
+    Every decision in the engine (pruning, stabilization, revision)
+    produces a trace so the complete reasoning chain is auditable.
+    """
+
+    trace_id: str
+    stage: ActivationStage
+    decision_type: str
+    input_refs: Tuple[str, ...] = ()
+    output_refs: Tuple[str, ...] = ()
+    applied_rules: Tuple[str, ...] = ()
+    rejected_refs: Tuple[str, ...] = ()
+    justification: str = ""
+    confidence: float = 1.0
+    parent_trace_refs: Tuple[str, ...] = ()
