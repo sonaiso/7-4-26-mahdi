@@ -1279,8 +1279,8 @@ class GapSeverity(Enum):
     MINOR = 4          # طفيف     — minor / informational
 
     # backward-compatibility aliases
-    HIGH = 2    # alias for CRITICAL
-    MEDIUM = 3  # alias for MODERATE
+    HIGH = CRITICAL    # alias for CRITICAL
+    MEDIUM = MODERATE  # alias for MODERATE
 
 
 # ── Info kind ────────────────────────────────────────────────────────
@@ -1562,11 +1562,11 @@ class SenseModality(Enum):
     KINESTHETIC = auto() # حركي  — kinesthetic / motion channel
 
     # backward-compatibility aliases
-    VISION = 1    # alias for VISUAL
-    HEARING = 2   # alias for AUDITORY
-    TOUCH = 3     # alias for TACTILE
-    SMELL = 4     # alias for OLFACTORY
-    TASTE = 5     # alias for GUSTATORY
+    VISION = VISUAL        # alias for VISUAL
+    HEARING = AUDITORY     # alias for AUDITORY
+    TOUCH = TACTILE        # alias for TACTILE
+    SMELL = OLFACTORY      # alias for OLFACTORY
+    TASTE = GUSTATORY      # alias for GUSTATORY
 
 
 # ── Signified class ──────────────────────────────────────────────────
@@ -1650,7 +1650,7 @@ class TraceMode(Enum):
     RECALLED = auto()  # استرجاعي   — recalled from memory
 
     # backward-compatibility aliases
-    DIRECT_PERCEPTION = 1  # alias for DIRECT
+    DIRECT_PERCEPTION = DIRECT  # alias for DIRECT
 
 
 # ── Trace quality ────────────────────────────────────────────────────
