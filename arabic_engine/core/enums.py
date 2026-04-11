@@ -1231,11 +1231,11 @@ class SenseModality(Enum):
     OLFACTORY = auto()      # شمي            — smell
     GUSTATORY = auto()      # ذوقي           — taste
     PROPRIOCEPTIVE = auto() # استشعار ذاتي   — proprioceptive
-    VISION = VISUAL         # alias (compat)
-    HEARING = AUDITORY      # alias (compat)
-    TOUCH = TACTILE         # alias (compat)
-    SMELL = OLFACTORY       # alias (compat)
-    TASTE = GUSTATORY       # alias (compat)
+    VISION = VISUAL         # backward-compat alias for VISUAL
+    HEARING = AUDITORY      # backward-compat alias for AUDITORY
+    TOUCH = TACTILE         # backward-compat alias for TACTILE
+    SMELL = OLFACTORY       # backward-compat alias for OLFACTORY
+    TASTE = GUSTATORY       # backward-compat alias for GUSTATORY
 
 
 class TraceMode(Enum):
@@ -1244,7 +1244,7 @@ class TraceMode(Enum):
     DIRECT = auto()                 # مباشر          — direct trace
     MEDIATED = auto()               # وسيط           — mediated trace
     BIDIRECTIONAL = auto()          # ثنائي الاتجاه  — bidirectional
-    DIRECT_PERCEPTION = DIRECT      # alias (compat)
+    DIRECT_PERCEPTION = DIRECT      # backward-compat alias for DIRECT
 
 
 class TraceQuality(Enum):
@@ -1462,8 +1462,8 @@ class GapSeverity(Enum):
     CRITICAL = auto()   # حرج        — critical gap
     FATAL = auto()      # قاتل       — fatal / blocking gap
     MINOR = auto()      # بسيط       — minor gap
-    HIGH = CRITICAL     # alias (compat)
-    MEDIUM = MODERATE   # alias (compat)
+    HIGH = CRITICAL     # backward-compat alias for CRITICAL
+    MEDIUM = MODERATE   # backward-compat alias for MODERATE
 
 
 class DiscourseGapType(Enum):
