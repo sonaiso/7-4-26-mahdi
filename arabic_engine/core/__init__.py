@@ -19,6 +19,15 @@ from .enums import (
     AffectiveDimension as AffectiveDimension,
 )
 from .enums import (
+    AuthorityLevel as AuthorityLevel,
+)
+from .enums import (
+    CarrierClass as CarrierClass,
+)
+from .enums import (
+    CarrierType as CarrierType,
+)
+from .enums import (
     CategorizationMode as CategorizationMode,
 )
 from .enums import (
@@ -34,7 +43,16 @@ from .enums import (
     ConceptRelationType as ConceptRelationType,
 )
 from .enums import (
+    ConceptualSignifiedClass as ConceptualSignifiedClass,
+)
+from .enums import (
     ConstraintType as ConstraintType,
+)
+from .enums import (
+    ContaminationLevel as ContaminationLevel,
+)
+from .enums import (
+    CouplingRelationType as CouplingRelationType,
 )
 from .enums import (
     CulturalScope as CulturalScope,
@@ -46,7 +64,16 @@ from .enums import (
     DalalaType as DalalaType,
 )
 from .enums import (
+    DecisionCode as DecisionCode,
+)
+from .enums import (
     DiachronicStatus as DiachronicStatus,
+)
+from .enums import (
+    DiscourseGapType as DiscourseGapType,
+)
+from .enums import (
+    DiscourseValidationOutcome as DiscourseValidationOutcome,
 )
 from .enums import (
     ElementClass as ElementClass,
@@ -61,16 +88,46 @@ from .enums import (
     EmbodiedDomain as EmbodiedDomain,
 )
 from .enums import (
+    EpistemicRank as EpistemicRank,
+)
+from .enums import (
     EpistemicStatus as EpistemicStatus,
+)
+from .enums import (
+    ExchangePurposeType as ExchangePurposeType,
+)
+from .enums import (
+    ExchangeStatus as ExchangeStatus,
+)
+from .enums import (
+    ExchangeStyleType as ExchangeStyleType,
+)
+from .enums import (
+    ExchangeType as ExchangeType,
+)
+from .enums import (
+    ExplicitnessLevel as ExplicitnessLevel,
 )
 from .enums import (
     FrameType as FrameType,
 )
 from .enums import (
+    GapSeverity as GapSeverity,
+)
+from .enums import (
     GuidanceState as GuidanceState,
 )
 from .enums import (
+    InfoKind as InfoKind,
+)
+from .enums import (
+    InsertionPolicy as InsertionPolicy,
+)
+from .enums import (
     InstitutionalCategory as InstitutionalCategory,
+)
+from .enums import (
+    InterpretiveOutcomeType as InterpretiveOutcomeType,
 )
 from .enums import (
     InterpretiveStability as InterpretiveStability,
@@ -115,6 +172,9 @@ from .enums import (
     OperationalCapacity as OperationalCapacity,
 )
 from .enums import (
+    PathKind as PathKind,
+)
+from .enums import (
     PhonCategory as PhonCategory,
 )
 from .enums import (
@@ -131,6 +191,30 @@ from .enums import (
 )
 from .enums import (
     ProofStatus as ProofStatus,
+)
+from .enums import (
+    PurposeType as PurposeType,
+)
+from .enums import (
+    RationalSelfKind as RationalSelfKind,
+)
+from .enums import (
+    RealityKind as RealityKind,
+)
+from .enums import (
+    ReceiverExpectedAction as ReceiverExpectedAction,
+)
+from .enums import (
+    ReceiverRoleType as ReceiverRoleType,
+)
+from .enums import (
+    ReceiverState as ReceiverState,
+)
+from .enums import (
+    ReceptionMode as ReceptionMode,
+)
+from .enums import (
+    ReceptionStateType as ReceptionStateType,
 )
 from .enums import (
     SalienceLevel as SalienceLevel,
@@ -269,6 +353,12 @@ from .types import (
 )
 from .types import (
     ConceptRelation as ConceptRelation,
+)
+from .types import (
+    ConflictRuleNode as ConflictRuleNode,
+)
+from .types import (
+    CouplingRecord as CouplingRecord,
 )
 from .types import (
     DalalaLink as DalalaLink,
