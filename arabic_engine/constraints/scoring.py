@@ -104,7 +104,6 @@ def build_constraint_edges(
     by_id: dict[str, HypothesisNode] = {h.node_id: h for h in hypotheses}
 
     # Index by stage
-    role_hyps = [h for h in hypotheses if h.stage == ActivationStage.ROLE]
     case_hyps = [h for h in hypotheses if h.stage == ActivationStage.CASE]
     axis_hyps = [h for h in hypotheses if h.stage == ActivationStage.AXIS]
 

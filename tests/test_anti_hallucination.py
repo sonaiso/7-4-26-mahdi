@@ -689,7 +689,8 @@ class TestStubDetection_Judgements:
         result_decl = judgements.generate(cases, decl_concepts, [])
         result_interrog = judgements.generate(cases, interrog_concepts, [])
 
-        assert result_decl[0].get("proposition_type") != result_interrog[0].get("proposition_type"), (
+        assert result_decl[0].get("proposition_type") != \
+            result_interrog[0].get("proposition_type"), (
             "Different proposition types should now be distinguished"
         )
 
@@ -810,31 +811,50 @@ class TestStubDetection_Axes:
 
 
 class TestStubDetection_Segmentation:
-    """Prove that segmentation.py is a passthrough — no clitic splitting."""
+    """Verify that segmentation.py now performs clitic splitting."""
 
-    def test_no_clitic_splitting(self):
-        """'وكتبوا' should ideally be split into 'و' + 'كتبوا'
-        or 'و' + 'كتب' + 'وا'. The stub doesn't split.
-        """
+    def test_clitic_splitting_produces_alternatives(self):
+        """'وكتبوا' should now produce clitic-split alternatives."""
         state = run("وكتبوا")
         seg_hyps = [
             h for h in state.hypotheses.all_hypotheses()
             if h.hypothesis_type == "segmentation"
         ]
-        # Only one segmentation hypothesis (no splitting)
-        assert len(seg_hyps) == 1, (
-            f"Stub produces {len(seg_hyps)} segments — "
-            "expected 1 (no clitic splitting)"
+        # Primary + split alternatives
+        assert len(seg_hyps) > 1, (
+            f"Expected >1 segments (primary + splits), got {len(seg_hyps)}"
         )
 
-    def test_no_proclitic_separation(self):
-        """'بالكتاب' = 'ب' + 'ال' + 'كتاب'. Stub treats as one token."""
+    def test_proclitic_separation(self):
+        """'بالكتاب' should now produce proclitic split alternatives."""
         state = run("بالكتاب")
         seg_hyps = [
             h for h in state.hypotheses.all_hypotheses()
             if h.hypothesis_type == "segmentation"
         ]
-        assert len(seg_hyps) == 1, "Stub doesn't separate proclitics"
+        assert len(seg_hyps) > 1, "Should now separate proclitics"
+
+        # Find a split hypothesis
+        split_hyps = [
+            h for h in seg_hyps
+            if str(h.get("boundary_basis", "")) == "proclitic_split"
+        ]
+        assert len(split_hyps) > 0, "Should have proclitic_split hypothesis"
+
+    def test_no_false_split_for_root_words(self):
+        """'ولد' should NOT be split — و is part of the root."""
+        state = run("ولد")
+        seg_hyps = [
+            h for h in state.hypotheses.all_hypotheses()
+            if h.hypothesis_type == "segmentation"
+        ]
+        split_hyps = [
+            h for h in seg_hyps
+            if str(h.get("boundary_basis", "")) != "whitespace"
+        ]
+        assert len(split_hyps) == 0, (
+            "ولد should not be split — و is part of the root"
+        )
 
 
 class TestStubDetection_Roles:

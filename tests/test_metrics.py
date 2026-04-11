@@ -28,7 +28,6 @@ from arabic_engine.metrics.stub_tracker import (
 from arabic_engine.metrics.trace_depth import compute_trace_depth
 from arabic_engine.runtime.orchestrator import run
 
-
 # ═══════════════════════════════════════════════════════════════════════
 # Stub Reduction Rate
 # ═══════════════════════════════════════════════════════════════════════
