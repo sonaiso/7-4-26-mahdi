@@ -576,21 +576,17 @@ class TestTraceCompleteness:
 
 
 class TestStubDetection_Judgements:
-    """Prove that judgements.py is a placeholder by showing it
-    returns the same proposition_type regardless of input semantics.
+    """Verify that judgements.py now distinguishes proposition types.
 
-    These tests are EXPECTED TO PASS — they document a known stub.
+    These tests confirm the stub has been replaced: the judgement
+    module now uses concept and role hypotheses to detect
+    interrogative, imperative, vocative, exclamatory, and
+    declarative propositions.
     """
 
-    def test_judgement_always_returns_declarative(self):
-        """judgements.generate() always returns تقريرية regardless
-        of whether the input is declarative, interrogative, or
-        imperative.
-
-        This proves it's a placeholder.
-        """
-        # Case A: Declarative input
-        decl_cases = [
+    def test_declarative_with_concepts(self):
+        """Declarative input with verb+entity concepts → تقريرية."""
+        cases = [
             HypothesisNode(
                 node_id="CASE_DECL",
                 hypothesis_type="case",
@@ -599,69 +595,118 @@ class TestStubDetection_Judgements:
                 confidence=0.8,
             ),
         ]
-        # Case B: Simulated interrogative context (هل)
-        interrog_cases = [
+        concepts = [
+            _make_concept("C0", "كتب", "EVENT", "indefinite"),
+            _make_concept("C1", "زيد", "ENTITY", "indefinite"),
+        ]
+        roles_h = roles.generate(concepts)
+        result = judgements.generate(cases, concepts, roles_h)
+        assert result[0].get("proposition_type") == "تقريرية"
+
+    def test_interrogative_detected(self):
+        """Interrogative particle هل → استفهام."""
+        cases = [
             HypothesisNode(
-                node_id="CASE_INTERROG",
+                node_id="CASE_Q",
                 hypothesis_type="case",
                 stage=ActivationStage.CASE,
-                payload=(("case_state", "مبني"), ("role", "حرف_استفهام")),
                 confidence=0.9,
             ),
         ]
-        # Case C: Simulated imperative context (اكتب)
-        imper_cases = [
+        concepts = [
+            _make_concept("C0", "هل", "ENTITY", "indefinite"),
+            _make_concept("C1", "كتب", "EVENT", "indefinite"),
+        ]
+        result = judgements.generate(cases, concepts, [])
+        assert result[0].get("proposition_type") == "استفهام"
+        assert result[0].get("rank") == "إنشائي_طلبي"
+
+    def test_vocative_detected(self):
+        """Vocative particle يا → نداء."""
+        cases = [
             HypothesisNode(
-                node_id="CASE_IMPER",
+                node_id="CASE_V",
                 hypothesis_type="case",
                 stage=ActivationStage.CASE,
-                payload=(("case_state", "مبني"), ("role", "فعل_أمر")),
                 confidence=0.85,
             ),
         ]
+        concepts = [
+            _make_concept("C0", "يا", "ENTITY", "indefinite"),
+            _make_concept("C1", "طالب", "ENTITY", "indefinite"),
+        ]
+        result = judgements.generate(cases, concepts, [])
+        assert result[0].get("proposition_type") == "نداء"
 
-        result_decl = judgements.generate(decl_cases)
-        result_interrog = judgements.generate(interrog_cases)
-        result_imper = judgements.generate(imper_cases)
-
-        # All three return تقريرية — proof this is a stub
-        assert result_decl[0].get("proposition_type") == "تقريرية"
-        assert result_interrog[0].get("proposition_type") == "تقريرية", (
-            "Stub returns تقريرية even for interrogative input"
-        )
-        assert result_imper[0].get("proposition_type") == "تقريرية", (
-            "Stub returns تقريرية even for imperative input"
-        )
-
-    def test_judgement_same_for_different_inputs(self):
-        """Two semantically different inputs produce identical
-        judgement proposition types.
-
-        This explicitly documents the stub behavior.
-        """
-        cases_a = [
+    def test_exclamatory_detected(self):
+        """Exclamatory pattern ما أجمل → تعجب."""
+        cases = [
             HypothesisNode(
-                node_id="CASE_A",
+                node_id="CASE_E",
+                hypothesis_type="case",
+                stage=ActivationStage.CASE,
+                confidence=0.85,
+            ),
+        ]
+        concepts = [
+            _make_concept("C0", "ما", "ENTITY", "indefinite"),
+            _make_concept("C1", "أجمل", "ENTITY", "indefinite"),
+        ]
+        result = judgements.generate(cases, concepts, [])
+        assert result[0].get("proposition_type") == "تعجب"
+
+    def test_oath_detected(self):
+        """Oath particle والله → قسم."""
+        cases = [
+            HypothesisNode(
+                node_id="CASE_O",
+                hypothesis_type="case",
+                stage=ActivationStage.CASE,
+                confidence=0.85,
+            ),
+        ]
+        concepts = [
+            _make_concept("C0", "والله", "ENTITY", "indefinite"),
+        ]
+        result = judgements.generate(cases, concepts, [])
+        assert result[0].get("proposition_type") == "قسم"
+
+    def test_different_inputs_produce_different_types(self):
+        """Semantically different inputs now produce different
+        proposition types — proof the stub is replaced.
+        """
+        cases = [
+            HypothesisNode(
+                node_id="CASE_X",
                 hypothesis_type="case",
                 stage=ActivationStage.CASE,
                 confidence=0.9,
             ),
         ]
-        cases_b = [
+        decl_concepts = [_make_concept("C0", "كتب", "EVENT", "indefinite")]
+        interrog_concepts = [_make_concept("C0", "هل", "ENTITY", "indefinite")]
+
+        result_decl = judgements.generate(cases, decl_concepts, [])
+        result_interrog = judgements.generate(cases, interrog_concepts, [])
+
+        assert result_decl[0].get("proposition_type") != result_interrog[0].get("proposition_type"), (
+            "Different proposition types should now be distinguished"
+        )
+
+    def test_backward_compat_case_only(self):
+        """Calling with only case_hypotheses still works (backward compat)."""
+        cases = [
             HypothesisNode(
-                node_id="CASE_B",
+                node_id="CASE_BC",
                 hypothesis_type="case",
                 stage=ActivationStage.CASE,
-                confidence=0.3,
+                confidence=0.9,
             ),
         ]
-        result_a = judgements.generate(cases_a)
-        result_b = judgements.generate(cases_b)
-
-        # Both return the same proposition type — proof of stub
-        assert result_a[0].get("proposition_type") == result_b[0].get("proposition_type")
-        # But confidence differs (the ONLY thing that changes)
-        assert result_a[0].confidence != result_b[0].confidence
+        result = judgements.generate(cases)
+        # No concepts/roles → defaults to suspended or declarative
+        prop = result[0].get("proposition_type")
+        assert prop is not None
 
 
 class TestStubDetection_Axes:

@@ -104,7 +104,7 @@ def run(text: str, *, max_iterations: int = 3) -> KernelRuntimeState:
     for h in case_hyps:
         state.hypotheses.add_hypothesis(h)
 
-    judgement_hyps = judgements.generate(case_hyps)
+    judgement_hyps = judgements.generate(case_hyps, concept_hyps, role_hyps)
     for h in judgement_hyps:
         state.hypotheses.add_hypothesis(h)
 
