@@ -4,19 +4,18 @@ from pathlib import Path
 
 import yaml
 
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+MATRIX_YAML_PATH = PROJECT_ROOT / "arabic_engine" / "data" / "cross_ladder_thresholds.yaml"
+
 
 def _load_matrix() -> dict:
-    project_root = Path(__file__).resolve().parents[1]
-    yaml_path = project_root / "arabic_engine" / "data" / "cross_ladder_thresholds.yaml"
-    with yaml_path.open(encoding="utf-8") as stream:
+    with MATRIX_YAML_PATH.open(encoding="utf-8") as stream:
         payload = yaml.safe_load(stream)
     return payload["matrix"]
 
 
 def test_cross_ladder_yaml_exists() -> None:
-    project_root = Path(__file__).resolve().parents[1]
-    yaml_path = project_root / "arabic_engine" / "data" / "cross_ladder_thresholds.yaml"
-    assert yaml_path.exists()
+    assert MATRIX_YAML_PATH.exists()
 
 
 def test_cross_ladder_yaml_structure_and_counts() -> None:
