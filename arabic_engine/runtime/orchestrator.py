@@ -175,7 +175,7 @@ def _stabilize(state: KernelRuntimeState, hypotheses: List[HypothesisNode]) -> N
             decision_type="stabilization",
             input_refs=tuple(h.node_id for h in hypotheses),
             output_refs=tuple(h.node_id for h in activated),
-            justification=f"Stabilised {len(activated)} hypotheses, suspended {len(suspended)}",
+            justification=f"Stabilized {len(activated)} hypotheses, suspended {len(suspended)}",
             confidence=1.0,
         )
     )

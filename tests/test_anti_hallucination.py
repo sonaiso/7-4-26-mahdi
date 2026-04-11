@@ -589,19 +589,49 @@ class TestStubDetection_Judgements:
 
         This proves it's a placeholder.
         """
-        # Declarative: كتب زيد
+        # Case A: Declarative input
         decl_cases = [
             HypothesisNode(
-                node_id="CASE_0",
+                node_id="CASE_DECL",
                 hypothesis_type="case",
                 stage=ActivationStage.CASE,
+                payload=(("case_state", "رفع"), ("role", "فاعل")),
                 confidence=0.8,
             ),
         ]
-        # The function should ideally distinguish sentence types
-        # but it always returns تقريرية
-        result = judgements.generate(decl_cases)
-        assert result[0].get("proposition_type") == "تقريرية"
+        # Case B: Simulated interrogative context (هل)
+        interrog_cases = [
+            HypothesisNode(
+                node_id="CASE_INTERROG",
+                hypothesis_type="case",
+                stage=ActivationStage.CASE,
+                payload=(("case_state", "مبني"), ("role", "حرف_استفهام")),
+                confidence=0.9,
+            ),
+        ]
+        # Case C: Simulated imperative context (اكتب)
+        imper_cases = [
+            HypothesisNode(
+                node_id="CASE_IMPER",
+                hypothesis_type="case",
+                stage=ActivationStage.CASE,
+                payload=(("case_state", "مبني"), ("role", "فعل_أمر")),
+                confidence=0.85,
+            ),
+        ]
+
+        result_decl = judgements.generate(decl_cases)
+        result_interrog = judgements.generate(interrog_cases)
+        result_imper = judgements.generate(imper_cases)
+
+        # All three return تقريرية — proof this is a stub
+        assert result_decl[0].get("proposition_type") == "تقريرية"
+        assert result_interrog[0].get("proposition_type") == "تقريرية", (
+            "Stub returns تقريرية even for interrogative input"
+        )
+        assert result_imper[0].get("proposition_type") == "تقريرية", (
+            "Stub returns تقريرية even for imperative input"
+        )
 
     def test_judgement_same_for_different_inputs(self):
         """Two semantically different inputs produce identical
