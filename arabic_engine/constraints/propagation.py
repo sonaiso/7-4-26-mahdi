@@ -1,22 +1,26 @@
 """Cross-layer constraint propagation — نشر القيود عبر الطبقات.
 
-In this first iteration, propagation is limited to:
+Propagation performs three tasks:
 
 1. Score all support edges.
-2. Mark conflicts between incompatible hypotheses at the same stage.
-3. Return updated edges for the hypothesis state.
+2. Build constraint edges from cross-layer compatibility rules.
+3. Mark conflicts between incompatible hypotheses at the same stage.
 
-Full cross-layer propagation with iterative tightening is reserved
-for future iterations.
+Returns updated edges for the hypothesis state.
 """
 
 from __future__ import annotations
 
 from typing import List
 
-from arabic_engine.constraints.scoring import score_support
+from arabic_engine.constraints.scoring import build_constraint_edges, score_support
 from arabic_engine.core.enums import ConflictState
-from arabic_engine.core.types import ConflictEdge, HypothesisNode, SupportEdge
+from arabic_engine.core.types import (
+    ConflictEdge,
+    ConstraintEdge,
+    HypothesisNode,
+    SupportEdge,
+)
 
 
 def propagate(
@@ -36,7 +40,72 @@ def propagate(
     """
     support = score_support(hypotheses)
     conflicts = _detect_conflicts(hypotheses)
+
+    # Build constraint edges and convert violations to conflicts
+    constraint_edges = build_constraint_edges(hypotheses)
+    constraint_conflicts = _constraints_to_conflicts(constraint_edges)
+    conflicts.extend(constraint_conflicts)
+
     return support, conflicts
+
+
+def get_constraint_edges(
+    hypotheses: List[HypothesisNode],
+) -> List[ConstraintEdge]:
+    """Return constraint edges for the given hypotheses.
+
+    Convenience function for callers that need the constraint edges
+    separately (e.g. the orchestrator stores them on HypothesisState).
+
+    Parameters
+    ----------
+    hypotheses : list[HypothesisNode]
+        All hypotheses across all stages.
+
+    Returns
+    -------
+    list[ConstraintEdge]
+        Constraint edges.
+    """
+    return build_constraint_edges(hypotheses)
+
+
+def _constraints_to_conflicts(
+    constraint_edges: List[ConstraintEdge],
+) -> List[ConflictEdge]:
+    """Convert constraint edge violations to conflict edges.
+
+    STRONG/ABSOLUTE constraints become HARD conflicts.
+    MODERATE constraints become SOFT conflicts.
+
+    Parameters
+    ----------
+    constraint_edges : list[ConstraintEdge]
+        Constraint edges from ``build_constraint_edges``.
+
+    Returns
+    -------
+    list[ConflictEdge]
+        Conflict edges derived from constraint violations.
+    """
+    from arabic_engine.core.enums import ConstraintStrength
+
+    conflicts: List[ConflictEdge] = []
+    for i, ce in enumerate(constraint_edges):
+        if ce.strength in (ConstraintStrength.ABSOLUTE, ConstraintStrength.STRONG):
+            state = ConflictState.HARD
+        else:
+            state = ConflictState.SOFT
+        conflicts.append(
+            ConflictEdge(
+                edge_id=f"CCONF_{i}",
+                node_a_ref=ce.source_ref,
+                node_b_ref=ce.target_ref,
+                conflict_state=state,
+                justification=ce.justification,
+            )
+        )
+    return conflicts
 
 
 def _detect_conflicts(hypotheses: List[HypothesisNode]) -> List[ConflictEdge]:

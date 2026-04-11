@@ -45,6 +45,7 @@ from arabic_engine.hypothesis import (
     cases,
     factors,
     judgements,
+    relations,
     roles,
 )
 from arabic_engine.runtime.orchestrator import run
@@ -576,21 +577,17 @@ class TestTraceCompleteness:
 
 
 class TestStubDetection_Judgements:
-    """Prove that judgements.py is a placeholder by showing it
-    returns the same proposition_type regardless of input semantics.
+    """Verify that judgements.py now distinguishes proposition types.
 
-    These tests are EXPECTED TO PASS — they document a known stub.
+    These tests confirm the stub has been replaced: the judgement
+    module now uses concept and role hypotheses to detect
+    interrogative, imperative, vocative, exclamatory, and
+    declarative propositions.
     """
 
-    def test_judgement_always_returns_declarative(self):
-        """judgements.generate() always returns تقريرية regardless
-        of whether the input is declarative, interrogative, or
-        imperative.
-
-        This proves it's a placeholder.
-        """
-        # Case A: Declarative input
-        decl_cases = [
+    def test_declarative_with_concepts(self):
+        """Declarative input with verb+entity concepts → تقريرية."""
+        cases = [
             HypothesisNode(
                 node_id="CASE_DECL",
                 hypothesis_type="case",
@@ -599,98 +596,148 @@ class TestStubDetection_Judgements:
                 confidence=0.8,
             ),
         ]
-        # Case B: Simulated interrogative context (هل)
-        interrog_cases = [
+        concepts = [
+            _make_concept("C0", "كتب", "EVENT", "indefinite"),
+            _make_concept("C1", "زيد", "ENTITY", "indefinite"),
+        ]
+        roles_h = roles.generate(concepts)
+        result = judgements.generate(cases, concepts, roles_h)
+        assert result[0].get("proposition_type") == "تقريرية"
+
+    def test_interrogative_detected(self):
+        """Interrogative particle هل → استفهام."""
+        cases = [
             HypothesisNode(
-                node_id="CASE_INTERROG",
+                node_id="CASE_Q",
                 hypothesis_type="case",
                 stage=ActivationStage.CASE,
-                payload=(("case_state", "مبني"), ("role", "حرف_استفهام")),
                 confidence=0.9,
             ),
         ]
-        # Case C: Simulated imperative context (اكتب)
-        imper_cases = [
+        concepts = [
+            _make_concept("C0", "هل", "ENTITY", "indefinite"),
+            _make_concept("C1", "كتب", "EVENT", "indefinite"),
+        ]
+        result = judgements.generate(cases, concepts, [])
+        assert result[0].get("proposition_type") == "استفهام"
+        assert result[0].get("rank") == "إنشائي_طلبي"
+
+    def test_vocative_detected(self):
+        """Vocative particle يا → نداء."""
+        cases = [
             HypothesisNode(
-                node_id="CASE_IMPER",
+                node_id="CASE_V",
                 hypothesis_type="case",
                 stage=ActivationStage.CASE,
-                payload=(("case_state", "مبني"), ("role", "فعل_أمر")),
                 confidence=0.85,
             ),
         ]
+        concepts = [
+            _make_concept("C0", "يا", "ENTITY", "indefinite"),
+            _make_concept("C1", "طالب", "ENTITY", "indefinite"),
+        ]
+        result = judgements.generate(cases, concepts, [])
+        assert result[0].get("proposition_type") == "نداء"
 
-        result_decl = judgements.generate(decl_cases)
-        result_interrog = judgements.generate(interrog_cases)
-        result_imper = judgements.generate(imper_cases)
-
-        # All three return تقريرية — proof this is a stub
-        assert result_decl[0].get("proposition_type") == "تقريرية"
-        assert result_interrog[0].get("proposition_type") == "تقريرية", (
-            "Stub returns تقريرية even for interrogative input"
-        )
-        assert result_imper[0].get("proposition_type") == "تقريرية", (
-            "Stub returns تقريرية even for imperative input"
-        )
-
-    def test_judgement_same_for_different_inputs(self):
-        """Two semantically different inputs produce identical
-        judgement proposition types.
-
-        This explicitly documents the stub behavior.
-        """
-        cases_a = [
+    def test_exclamatory_detected(self):
+        """Exclamatory pattern ما أجمل → تعجب."""
+        cases = [
             HypothesisNode(
-                node_id="CASE_A",
+                node_id="CASE_E",
+                hypothesis_type="case",
+                stage=ActivationStage.CASE,
+                confidence=0.85,
+            ),
+        ]
+        concepts = [
+            _make_concept("C0", "ما", "ENTITY", "indefinite"),
+            _make_concept("C1", "أجمل", "ENTITY", "indefinite"),
+        ]
+        result = judgements.generate(cases, concepts, [])
+        assert result[0].get("proposition_type") == "تعجب"
+
+    def test_oath_detected(self):
+        """Oath particle والله → قسم."""
+        cases = [
+            HypothesisNode(
+                node_id="CASE_O",
+                hypothesis_type="case",
+                stage=ActivationStage.CASE,
+                confidence=0.85,
+            ),
+        ]
+        concepts = [
+            _make_concept("C0", "والله", "ENTITY", "indefinite"),
+        ]
+        result = judgements.generate(cases, concepts, [])
+        assert result[0].get("proposition_type") == "قسم"
+
+    def test_different_inputs_produce_different_types(self):
+        """Semantically different inputs now produce different
+        proposition types — proof the stub is replaced.
+        """
+        cases = [
+            HypothesisNode(
+                node_id="CASE_X",
                 hypothesis_type="case",
                 stage=ActivationStage.CASE,
                 confidence=0.9,
             ),
         ]
-        cases_b = [
+        decl_concepts = [_make_concept("C0", "كتب", "EVENT", "indefinite")]
+        interrog_concepts = [_make_concept("C0", "هل", "ENTITY", "indefinite")]
+
+        result_decl = judgements.generate(cases, decl_concepts, [])
+        result_interrog = judgements.generate(cases, interrog_concepts, [])
+
+        assert (
+            result_decl[0].get("proposition_type")
+            != result_interrog[0].get("proposition_type")
+        ), "Different proposition types should now be distinguished"
+
+    def test_backward_compat_case_only(self):
+        """Calling with only case_hypotheses still works (backward compat)."""
+        cases = [
             HypothesisNode(
-                node_id="CASE_B",
+                node_id="CASE_BC",
                 hypothesis_type="case",
                 stage=ActivationStage.CASE,
-                confidence=0.3,
+                confidence=0.9,
             ),
         ]
-        result_a = judgements.generate(cases_a)
-        result_b = judgements.generate(cases_b)
-
-        # Both return the same proposition type — proof of stub
-        assert result_a[0].get("proposition_type") == result_b[0].get("proposition_type")
-        # But confidence differs (the ONLY thing that changes)
-        assert result_a[0].confidence != result_b[0].confidence
+        result = judgements.generate(cases)
+        # No concepts/roles → defaults to suspended or declarative
+        prop = result[0].get("proposition_type")
+        assert prop is not None
 
 
 class TestStubDetection_Axes:
-    """Prove that axes.py resolves only 1 of 6 axes.
+    """Verify that axes.py now resolves all 6 axes.
 
-    5 axes always return 'غير محدد' — this is a known stub.
+    The stub has been replaced — all axes return real values.
     """
 
-    def test_five_axes_return_undefined(self):
-        """5 out of 6 axes return 'غير محدد' regardless of input."""
-        concept = _make_concept("C1", "كتاب", "ENTITY", "definite")
+    def test_all_axes_resolved(self):
+        """All 6 axes should return non-'غير محدد' values for typical input."""
+        concept = _make_concept("C1", "كتب", "EVENT", "definite")
         axis_hyps = axes.generate([concept])
 
         undefined_count = sum(
             1 for h in axis_hyps if h.get("axis_value") == "غير محدد"
         )
-        assert undefined_count == 5, (
-            f"Expected 5 undefined axes, got {undefined_count}"
+        # At most 1 axis (زمني/مكاني for non-adverbs returns "غير زمني/مكاني")
+        assert undefined_count == 0, (
+            f"Expected 0 undefined axes, got {undefined_count}"
         )
 
-    def test_only_definiteness_is_resolved(self):
-        """Only معرفة/نكرة axis is actually resolved."""
+    def test_definiteness_still_works(self):
+        """معرفة/نكرة axis still resolves correctly."""
         definite = _make_concept("C1", "الكتاب", "ENTITY", "definite")
         indefinite = _make_concept("C2", "كتاب", "ENTITY", "indefinite")
 
         def_axes = axes.generate([definite])
         indef_axes = axes.generate([indefinite])
 
-        # Find the معرفة/نكرة axis
         def_value = next(
             h.get("axis_value") for h in def_axes
             if h.get("axis_name") == "معرفة/نكرة"
@@ -703,49 +750,112 @@ class TestStubDetection_Axes:
         assert def_value == "معرفة", "Definite must resolve to معرفة"
         assert indef_value == "نكرة", "Indefinite must resolve to نكرة"
 
-    def test_derived_frozen_axis_always_undefined(self):
-        """جامد/مشتق axis is always غير محدد even for obvious cases.
-
-        كاتب is clearly مشتق (derived), but the stub doesn't know.
-        """
-        concept = _make_concept("C1", "كاتب", "ENTITY", "indefinite")
+    def test_derived_axis_resolves_for_event(self):
+        """جامد/مشتق axis now resolves: EVENT → مشتق."""
+        concept = _make_concept("C1", "كتب", "EVENT", "indefinite")
         axis_hyps = axes.generate([concept])
 
         derived_axis = next(
             h for h in axis_hyps if h.get("axis_name") == "جامد/مشتق"
         )
-        # This PROVES the stub doesn't do real analysis
-        assert derived_axis.get("axis_value") == "غير محدد", (
-            "Stub must return غير محدد for جامد/مشتق"
+        assert derived_axis.get("axis_value") == "مشتق", (
+            "EVENT concepts should be مشتق (derived)"
+        )
+
+    def test_frozen_axis_for_entity(self):
+        """جامد/مشتق axis: non-derivative entity → جامد."""
+        concept = _make_concept("C1", "كتاب", "ENTITY", "indefinite")
+        axis_hyps = axes.generate([concept])
+
+        derived_axis = next(
+            h for h in axis_hyps if h.get("axis_name") == "جامد/مشتق"
+        )
+        assert derived_axis.get("axis_value") == "جامد", (
+            "Non-derivative entity should be جامد (frozen)"
+        )
+
+    def test_invariant_for_particle(self):
+        """مبني/معرب axis: particle → مبني."""
+        concept = _make_concept("C1", "في", "ENTITY", "indefinite")
+        axis_hyps = axes.generate([concept])
+
+        decl_axis = next(
+            h for h in axis_hyps if h.get("axis_name") == "مبني/معرب"
+        )
+        assert decl_axis.get("axis_value") == "مبني", (
+            "Particle should be مبني (invariant)"
+        )
+
+    def test_temporal_adverb(self):
+        """زمني/مكاني axis: اليوم → زمني."""
+        concept = _make_concept("C1", "اليوم", "ENTITY", "definite")
+        axis_hyps = axes.generate([concept])
+
+        ts_axis = next(
+            h for h in axis_hyps if h.get("axis_name") == "زمني/مكاني"
+        )
+        assert ts_axis.get("axis_value") == "زمني", (
+            "اليوم should be زمني (temporal)"
+        )
+
+    def test_spatial_adverb(self):
+        """زمني/مكاني axis: هنا → مكاني."""
+        concept = _make_concept("C1", "هنا", "ENTITY", "indefinite")
+        axis_hyps = axes.generate([concept])
+
+        ts_axis = next(
+            h for h in axis_hyps if h.get("axis_name") == "زمني/مكاني"
+        )
+        assert ts_axis.get("axis_value") == "مكاني", (
+            "هنا should be مكاني (spatial)"
         )
 
 
 class TestStubDetection_Segmentation:
-    """Prove that segmentation.py is a passthrough — no clitic splitting."""
+    """Verify that segmentation.py now performs clitic splitting."""
 
-    def test_no_clitic_splitting(self):
-        """'وكتبوا' should ideally be split into 'و' + 'كتبوا'
-        or 'و' + 'كتب' + 'وا'. The stub doesn't split.
-        """
+    def test_clitic_splitting_produces_alternatives(self):
+        """'وكتبوا' should now produce clitic-split alternatives."""
         state = run("وكتبوا")
         seg_hyps = [
             h for h in state.hypotheses.all_hypotheses()
             if h.hypothesis_type == "segmentation"
         ]
-        # Only one segmentation hypothesis (no splitting)
-        assert len(seg_hyps) == 1, (
-            f"Stub produces {len(seg_hyps)} segments — "
-            "expected 1 (no clitic splitting)"
+        # Primary + split alternatives
+        assert len(seg_hyps) > 1, (
+            f"Expected >1 segments (primary + splits), got {len(seg_hyps)}"
         )
 
-    def test_no_proclitic_separation(self):
-        """'بالكتاب' = 'ب' + 'ال' + 'كتاب'. Stub treats as one token."""
+    def test_proclitic_separation(self):
+        """'بالكتاب' should now produce proclitic split alternatives."""
         state = run("بالكتاب")
         seg_hyps = [
             h for h in state.hypotheses.all_hypotheses()
             if h.hypothesis_type == "segmentation"
         ]
-        assert len(seg_hyps) == 1, "Stub doesn't separate proclitics"
+        assert len(seg_hyps) > 1, "Should now separate proclitics"
+
+        # Find a split hypothesis
+        split_hyps = [
+            h for h in seg_hyps
+            if str(h.get("boundary_basis", "")) == "proclitic_split"
+        ]
+        assert len(split_hyps) > 0, "Should have proclitic_split hypothesis"
+
+    def test_no_false_split_for_root_words(self):
+        """'ولد' should NOT be split — و is part of the root."""
+        state = run("ولد")
+        seg_hyps = [
+            h for h in state.hypotheses.all_hypotheses()
+            if h.hypothesis_type == "segmentation"
+        ]
+        split_hyps = [
+            h for h in seg_hyps
+            if str(h.get("boundary_basis", "")) != "whitespace"
+        ]
+        assert len(split_hyps) == 0, (
+            "ولد should not be split — و is part of the root"
+        )
 
 
 class TestStubDetection_Roles:
@@ -784,6 +894,145 @@ class TestStubDetection_Roles:
 
         # But it never produces BOTH possibilities — proof of limitation
         # A real engine would emit alternatives with different confidences
+
+
+class TestStubDetection_Relations:
+    """Verify that relations.py now handles 9+ relation types."""
+
+    def test_conjunction_detected(self):
+        """Conjunction particle 'و' → عطف."""
+        concepts = [
+            _make_concept("C0", "زيد", "ENTITY", "definite"),
+            _make_concept("C1", "و", "ENTITY", "indefinite"),
+            _make_concept("C2", "عمرو", "ENTITY", "definite"),
+        ]
+        rel_hyps = relations.generate(concepts)
+        rel_types = [str(h.get("relation_type", "")) for h in rel_hyps]
+        assert "عطف" in rel_types, f"Expected عطف, got {rel_types}"
+
+    def test_predication_detected(self):
+        """EVENT → ENTITY still produces إسناد."""
+        concepts = [
+            _make_concept("C0", "كتب", "EVENT", "indefinite"),
+            _make_concept("C1", "الطالب", "ENTITY", "definite"),
+        ]
+        rel_hyps = relations.generate(concepts)
+        assert rel_hyps[0].get("relation_type") == "إسناد"
+
+    def test_entity_entity_produces_alternatives(self):
+        """Two adjacent entities produce multiple relation hypotheses."""
+        concepts = [
+            _make_concept("C0", "كتاب", "ENTITY", "indefinite"),
+            _make_concept("C1", "الطالب", "ENTITY", "definite"),
+        ]
+        rel_hyps = relations.generate(concepts)
+        # Should produce إضافة as primary for indef+def pattern
+        rel_types = [str(h.get("relation_type", "")) for h in rel_hyps]
+        assert "إضافة" in rel_types, f"Expected إضافة, got {rel_types}"
+
+    def test_preposition_produces_zarfiyya(self):
+        """Preposition → ظرفية."""
+        concepts = [
+            _make_concept("C0", "في", "ENTITY", "indefinite"),
+            _make_concept("C1", "المدرسة", "ENTITY", "definite"),
+        ]
+        rel_hyps = relations.generate(concepts)
+        assert rel_hyps[0].get("relation_type") == "ظرفية"
+
+    def test_emphasis_detected(self):
+        """Emphasis token 'نفس' → توكيد."""
+        concepts = [
+            _make_concept("C0", "الطالب", "ENTITY", "definite"),
+            _make_concept("C1", "نفس", "ENTITY", "definite"),
+        ]
+        rel_hyps = relations.generate(concepts)
+        rel_types = [str(h.get("relation_type", "")) for h in rel_hyps]
+        has_emphasis = "توكيد" in rel_types
+        assert has_emphasis, f"Expected توكيد, got {rel_types}"
+
+
+class TestStubDetection_Factors:
+    """Verify that factors.py now handles implicit/elided factors."""
+
+    def test_vocative_has_elided_factor(self):
+        """Vocative role (منادى) should have elided factor."""
+        role_h = HypothesisNode(
+            node_id="ROLE_C0",
+            hypothesis_type="role",
+            stage=ActivationStage.ROLE,
+            source_refs=("C0",),
+            payload=(("role", "منادى"), ("token_label", "طالب")),
+            confidence=0.9,
+            status=HypothesisStatus.ACTIVE,
+        )
+        concepts = [
+            _make_concept("C0", "يا", "ENTITY", "indefinite"),
+            _make_concept("C1", "طالب", "ENTITY", "indefinite"),
+        ]
+        factor_hyps = factors.generate([role_h], concepts)
+        factor_type = str(factor_hyps[0].get("factor_type", ""))
+        assert factor_type == "عامل_محذوف", (
+            f"Expected عامل_محذوف, got {factor_type}"
+        )
+
+    def test_subject_without_verb_has_implicit_factor(self):
+        """Subject (فاعل) without a verb → implicit factor."""
+        role_h = HypothesisNode(
+            node_id="ROLE_C0",
+            hypothesis_type="role",
+            stage=ActivationStage.ROLE,
+            source_refs=("C0",),
+            payload=(("role", "فاعل"), ("token_label", "زيد")),
+            confidence=0.9,
+            status=HypothesisStatus.ACTIVE,
+        )
+        # No EVENT concept → no verb
+        concepts = [
+            _make_concept("C0", "زيد", "ENTITY", "indefinite"),
+        ]
+        factor_hyps = factors.generate([role_h], concepts)
+        factor = str(factor_hyps[0].get("factor", ""))
+        assert factor == "مقدّر", f"Expected مقدّر, got {factor}"
+
+    def test_subject_with_verb_has_explicit_factor(self):
+        """Subject (فاعل) with a verb → verb is the factor."""
+        role_h = HypothesisNode(
+            node_id="ROLE_C1",
+            hypothesis_type="role",
+            stage=ActivationStage.ROLE,
+            source_refs=("C1",),
+            payload=(("role", "فاعل"), ("token_label", "زيد")),
+            confidence=0.9,
+            status=HypothesisStatus.ACTIVE,
+        )
+        concepts = [
+            _make_concept("C0", "كتب", "EVENT", "indefinite"),
+            _make_concept("C1", "زيد", "ENTITY", "indefinite"),
+        ]
+        factor_hyps = factors.generate([role_h], concepts)
+        factor = str(factor_hyps[0].get("factor", ""))
+        assert factor == "كتب", f"Expected كتب, got {factor}"
+
+    def test_inna_governed_has_particle_factor(self):
+        """اسم إنّ → particle factor from إنّ."""
+        role_h = HypothesisNode(
+            node_id="ROLE_C1",
+            hypothesis_type="role",
+            stage=ActivationStage.ROLE,
+            source_refs=("C1",),
+            payload=(("role", "اسم_إن"), ("token_label", "الطالب")),
+            confidence=0.9,
+            status=HypothesisStatus.ACTIVE,
+        )
+        concepts = [
+            _make_concept("C0", "إنّ", "ENTITY", "indefinite"),
+            _make_concept("C1", "الطالب", "ENTITY", "definite"),
+        ]
+        factor_hyps = factors.generate([role_h], concepts)
+        factor = str(factor_hyps[0].get("factor", ""))
+        factor_type = str(factor_hyps[0].get("factor_type", ""))
+        assert factor == "إنّ", f"Expected إنّ, got {factor}"
+        assert factor_type == "حرف_مشبه_بالفعل"
 
 
 # ═══════════════════════════════════════════════════════════════════════
