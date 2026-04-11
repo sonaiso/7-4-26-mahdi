@@ -689,10 +689,10 @@ class TestStubDetection_Judgements:
         result_decl = judgements.generate(cases, decl_concepts, [])
         result_interrog = judgements.generate(cases, interrog_concepts, [])
 
-        assert result_decl[0].get("proposition_type") != \
-            result_interrog[0].get("proposition_type"), (
-            "Different proposition types should now be distinguished"
-        )
+        assert (
+            result_decl[0].get("proposition_type")
+            != result_interrog[0].get("proposition_type")
+        ), "Different proposition types should now be distinguished"
 
     def test_backward_compat_case_only(self):
         """Calling with only case_hypotheses still works (backward compat)."""

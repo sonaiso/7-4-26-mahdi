@@ -73,6 +73,9 @@ _TEMPORAL_ADVERBS = frozenset({
 })
 
 # ── Spatial (مكاني) adverbs
+# Shadda diacritic — used to strip doubled consonant marks
+_SHADDA = "\u0651"
+
 _SPATIAL_ADVERBS = frozenset({
     "هنا", "هناك", "فوق", "تحت", "أمام", "خلف",
     "يمين", "يسار", "بين", "وسط", "حول",
@@ -170,7 +173,7 @@ def _matches_derivative_pattern(label: str) -> bool:
     # Passive participle: starts with م and ends with ون/ين/ة
     # Agent noun فاعل: second char is ا
     if len(label) >= 4 and len(label) <= 6:
-        stripped = label.replace("\u0651", "")  # remove shadda
+        stripped = label.replace(_SHADDA, "")  # remove shadda
         if len(stripped) >= 3 and stripped[1:2] == "ا":
             return True
     # أفعل pattern (superlative)

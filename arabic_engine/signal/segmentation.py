@@ -40,6 +40,9 @@ _NO_SPLIT_WORDS = frozenset({
     "كتب", "كبر", "كثر", "كلم", "كنز",
 })
 
+# Minimum remaining length after article removal
+_MIN_ARTICLE_REMAINDER = 3
+
 # Minimum remaining length after proclitic removal
 _MIN_STEM_LENGTH = 2
 
@@ -178,10 +181,11 @@ def _try_proclitic(
         return None
 
     # Check for ال after proclitic: بالكتاب → ب + الكتاب
-    if remainder.startswith("ال") and len(remainder) > 3:
+    if remainder.startswith("ال") and len(remainder) > _MIN_ARTICLE_REMAINDER:
         return ([first_char, remainder], "proclitic_split", 0.85)
 
     # Check for لل pattern: لله → ل + الله (lam + al)
+    # Lower confidence (0.8) because لل can also be a doubled lam root
     if first_char == "ل" and remainder.startswith("ل"):
         return ([first_char, remainder], "proclitic_split", 0.8)
 
