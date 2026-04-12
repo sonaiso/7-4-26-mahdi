@@ -21,6 +21,9 @@ _AUDIBILITY_MIN = 0.1
 _UNITY_MIN = 0.2
 _COHESION_MIN = 0.15
 
+# ── Scoring constants ────────────────────────────────────────────────
+_VOICING_AUDIBILITY_BOOST = 0.15
+
 
 def assess_audibility(generative: GenerativeProfileRecord) -> float:
     """الحضور السمعي — audibility from sonority and voicedness.
@@ -30,7 +33,7 @@ def assess_audibility(generative: GenerativeProfileRecord) -> float:
     """
     base = generative.sonority_level
     if generative.voicedness:
-        base += 0.15
+        base += _VOICING_AUDIBILITY_BOOST
     return min(1.0, base)
 
 

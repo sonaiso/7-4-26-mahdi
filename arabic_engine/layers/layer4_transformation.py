@@ -26,6 +26,9 @@ from arabic_engine.signifier.dmin import DMIN_REGISTRY
 # ── Weak letters (أحرف العلة) ─────────────────────────────────────────
 _WEAK_CODEPOINTS = {0x0627, 0x0648, 0x064A}  # ا و ي
 
+# ── Scoring constants ────────────────────────────────────────────────
+_TRANSFORM_COUNT_PENALTY = 0.1
+
 
 def assess_inflection_stability(
     codepoint: int,
@@ -42,7 +45,7 @@ def assess_inflection_stability(
     if entry is None:
         return 0.0
     # Consonants with few transforms are more stable
-    stability = 1.0 - min(1.0, len(entry.transforms) * 0.1)
+    stability = 1.0 - min(1.0, len(entry.transforms) * _TRANSFORM_COUNT_PENALTY)
     # Root consonants get a boost
     if structural and structural.root_slot in ("fa", "ayn", "lam"):
         stability = min(1.0, stability + 0.2)

@@ -21,6 +21,11 @@ from arabic_engine.core.types import (
 _AUGMENTATION_LETTERS = set("سألتمونيها")
 _AUGMENTATION_CODEPOINTS = {ord(c) for c in _AUGMENTATION_LETTERS}
 
+# ── Scoring constants ────────────────────────────────────────────────
+_ROOT_CONSTITUTIVE_WEIGHT = 0.7
+_ONSET_WEIGHT = 0.2
+_CODA_WEIGHT = 0.1
+
 
 def assign_syllable_slot(
     codepoint: int,
@@ -73,11 +78,11 @@ def assess_constitutiveness(
     """
     score = 0.0
     if root_slot in ("fa", "ayn", "lam"):
-        score += 0.7
+        score += _ROOT_CONSTITUTIVE_WEIGHT
     if syllable_slot == "onset":
-        score += 0.2
+        score += _ONSET_WEIGHT
     elif syllable_slot == "coda":
-        score += 0.1
+        score += _CODA_WEIGHT
     return min(1.0, score)
 
 

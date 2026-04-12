@@ -41,6 +41,11 @@ _SONORITY_BASE = {
     "SPECIAL_MARK": 0.2,
 }
 
+# ── Scoring constants ────────────────────────────────────────────────
+_VOICING_SONORITY_BOOST = 0.15
+_NASAL_SONORITY_BOOST = 0.2
+_CONTINUANT_SONORITY_BOOST = 0.1
+
 
 def extract_voicedness(dmin: DMin) -> bool:
     """مجهور أم مهموس — voiced or voiceless."""
@@ -89,13 +94,13 @@ def compute_sonority(dmin: DMin) -> float:
     base = _SONORITY_BASE.get(dmin.category.name, 0.2)
     # Voiced consonants are more sonorous
     if dmin.category == PhonCategory.CONSONANT and extract_voicedness(dmin):
-        base += 0.15
+        base += _VOICING_SONORITY_BOOST
     # Nasals add sonority
     if dmin.features & _NASAL_FEATURES:
-        base += 0.2
+        base += _NASAL_SONORITY_BOOST
     # Continuants add some
     if dmin.features & _CONTINUANT_FEATURES:
-        base += 0.1
+        base += _CONTINUANT_SONORITY_BOOST
     return min(1.0, base)
 
 

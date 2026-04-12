@@ -25,6 +25,13 @@ _DIFFERENCE_THRESHOLD = 0.2
 _RANK_THRESHOLD = 0.1
 _REALITY_THRESHOLD = 0.1
 
+# ── Pre-computed average feature count (DMIN_REGISTRY is static) ────
+_AVG_FEATURE_COUNT = (
+    sum(len(d.features) for d in DMIN_REGISTRY.values()) / len(DMIN_REGISTRY)
+    if DMIN_REGISTRY
+    else 1.0
+)
+
 
 def assess_identity(codepoint: int) -> float:
     """هل له هوية قابلة للإشارة؟
@@ -44,14 +51,9 @@ def assess_difference(codepoint: int) -> float:
     if entry is None:
         return 0.0
     my_features = len(entry.features)
-    if not DMIN_REGISTRY:
-        return 0.0
-    avg_features = sum(len(d.features) for d in DMIN_REGISTRY.values()) / len(
-        DMIN_REGISTRY
-    )
-    if avg_features == 0:
+    if _AVG_FEATURE_COUNT == 0:
         return 1.0
-    return min(1.0, my_features / avg_features)
+    return min(1.0, my_features / _AVG_FEATURE_COUNT)
 
 
 def assess_rank(codepoint: int) -> float:

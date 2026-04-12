@@ -26,6 +26,12 @@ from arabic_engine.core.types import (
 # ── Judgment thresholds ──────────────────────────────────────────────
 _CONFIDENCE_MIN = 0.3
 
+# ── Scoring weights ─────────────────────────────────────────────────
+_CONSTITUTIVE_WEIGHT = 0.6
+_STABILITY_WEIGHT = 0.3
+_ROOT_TRANSFORM_PENALTY = 0.1
+_NONROOT_TRANSFORM_PENALTY = 0.3
+
 
 def judge_original(
     structural: StructuralProfileRecord,
@@ -38,8 +44,8 @@ def judge_original(
     the ORIGINAL judgment — transformation potentials are only
     *potential* and do not override actual root membership.
     """
-    score = structural.constitutiveness_score * 0.6
-    score += transformation.inflection_stability_score * 0.3
+    score = structural.constitutiveness_score * _CONSTITUTIVE_WEIGHT
+    score += transformation.inflection_stability_score * _STABILITY_WEIGHT
     # Only penalize if transformation is actually realized, not potential
     # Confirmed root consonants should not lose to potential transforms
     if structural.constitutiveness_score >= 0.5:
@@ -50,7 +56,7 @@ def judge_original(
             transformation.illal_confidence,
             transformation.idgham_confidence,
         )
-        score -= max_transform * 0.1
+        score -= max_transform * _ROOT_TRANSFORM_PENALTY
     else:
         max_transform = max(
             transformation.substitution_confidence,
@@ -58,7 +64,7 @@ def judge_original(
             transformation.illal_confidence,
             transformation.idgham_confidence,
         )
-        score -= max_transform * 0.3
+        score -= max_transform * _NONROOT_TRANSFORM_PENALTY
     return max(0.0, min(1.0, score))
 
 
