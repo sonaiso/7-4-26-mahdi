@@ -24,6 +24,11 @@ from .enums import (
 from .enums import (
     AffectiveDimension as AffectiveDimension,
 )
+
+# ── Strict 7-Layer System enum re-exports ─────────────────────────
+from .enums import (
+    AuditoryNode as AuditoryNode,
+)
 from .enums import (
     CarrierClass as CarrierClass,
 )
@@ -121,6 +126,9 @@ from .enums import (
     GapSeverity as GapSeverity,
 )
 from .enums import (
+    GenerativeNode as GenerativeNode,
+)
+from .enums import (
     GuidanceState as GuidanceState,
 )
 from .enums import (
@@ -151,13 +159,25 @@ from .enums import (
     JudgementType as JudgementType,
 )
 from .enums import (
+    JudgmentCategory as JudgmentCategory,
+)
+from .enums import (
+    LayerEdgeType as LayerEdgeType,
+)
+from .enums import (
     LinkKind as LinkKind,
 )
 from .enums import (
     MafhumType as MafhumType,
 )
 from .enums import (
+    MentalEdgeType as MentalEdgeType,
+)
+from .enums import (
     MentalIntentionalType as MentalIntentionalType,
+)
+from .enums import (
+    MentalPrimitive as MentalPrimitive,
 )
 from .enums import (
     MetaConceptualLevel as MetaConceptualLevel,
@@ -241,6 +261,12 @@ from .enums import (
     SpaceRef as SpaceRef,
 )
 from .enums import (
+    StrictLayerID as StrictLayerID,
+)
+from .enums import (
+    StructuralNode as StructuralNode,
+)
+from .enums import (
     StyleKind as StyleKind,
 )
 from .enums import (
@@ -256,7 +282,13 @@ from .enums import (
     TraceQuality as TraceQuality,
 )
 from .enums import (
+    TransformationNode as TransformationNode,
+)
+from .enums import (
     TransitionCondition as TransitionCondition,
+)
+from .enums import (
+    TransitionGateStatus as TransitionGateStatus,
 )
 from .enums import (
     TransitionLaw as TransitionLaw,
@@ -377,6 +409,11 @@ from .types import (  # noqa: F401 -- intentional re-exports
 from .types import (
     ActivationRecord as ActivationRecord,
 )
+
+# ── Strict 7-Layer System type re-exports ─────────────────────────
+from .types import (
+    AuditoryMinimumRecord as AuditoryMinimumRecord,
+)
 from .types import (
     AxiomRecord as AxiomRecord,
 )
@@ -453,6 +490,9 @@ from .types import (
     GapRecord as GapRecord,
 )
 from .types import (
+    GenerativeProfileRecord as GenerativeProfileRecord,
+)
+from .types import (
     Grapheme as Grapheme,
 )
 from .types import (
@@ -471,6 +511,9 @@ from .types import (
     JudgementRecord as JudgementRecord,
 )
 from .types import (
+    JudgmentRecordL5 as JudgmentRecordL5,
+)
+from .types import (
     KnowledgeEpisode as KnowledgeEpisode,
 )
 from .types import (
@@ -481,6 +524,9 @@ from .types import (
 )
 from .types import (
     LayerPromotionRule as LayerPromotionRule,
+)
+from .types import (
+    LayerTraceRecord as LayerTraceRecord,
 )
 from .types import (
     LexicalClosure as LexicalClosure,
@@ -496,6 +542,9 @@ from .types import (
 )
 from .types import (
     LinkingTraceRecord as LinkingTraceRecord,
+)
+from .types import (
+    MentalFoundationRecord as MentalFoundationRecord,
 )
 from .types import (
     MethodNode as MethodNode,
@@ -552,6 +601,9 @@ from .types import (
     ReceptionStateRecord as ReceptionStateRecord,
 )
 from .types import (
+    RepresentationRecord as RepresentationRecord,
+)
+from .types import (
     RootPattern as RootPattern,
 )
 from .types import (
@@ -576,6 +628,9 @@ from .types import (
     SignifierNode as SignifierNode,
 )
 from .types import (
+    StructuralProfileRecord as StructuralProfileRecord,
+)
+from .types import (
     SupportEdge as SupportEdge,
 )
 from .types import (
@@ -589,6 +644,12 @@ from .types import (
 )
 from .types import (
     TimeSpaceTag as TimeSpaceTag,
+)
+from .types import (
+    TransformationProfileRecord as TransformationProfileRecord,
+)
+from .types import (
+    TransitionGate as TransitionGate,
 )
 from .types import (
     TriadicBlockRecord as TriadicBlockRecord,
@@ -836,4 +897,26 @@ __all__ = [
     "HypothesisState",
     "KernelRuntimeState",
     "SignalState",
+    # ── Strict 7-Layer System enums ────────────────────────────────
+    "AuditoryNode",
+    "GenerativeNode",
+    "JudgmentCategory",
+    "LayerEdgeType",
+    "MentalEdgeType",
+    "MentalPrimitive",
+    "RepresentationNode",
+    "StrictLayerID",
+    "StructuralNode",
+    "TransformationNode",
+    "TransitionGateStatus",
+    # ── Strict 7-Layer System types ────────────────────────────────
+    "AuditoryMinimumRecord",
+    "GenerativeProfileRecord",
+    "JudgmentRecordL5",
+    "LayerTraceRecord",
+    "MentalFoundationRecord",
+    "RepresentationRecord",
+    "StructuralProfileRecord",
+    "TransformationProfileRecord",
+    "TransitionGate",
 ]
