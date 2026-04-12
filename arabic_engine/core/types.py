@@ -52,6 +52,7 @@ from .enums import (
     FuncTransitionClass,
     GapSeverity,
     GuidanceState,
+    HypothesisStatus,
     InfoKind,
     InsertionPolicy,
     InstitutionalCategory,

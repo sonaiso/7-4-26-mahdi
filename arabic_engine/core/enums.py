@@ -1629,3 +1629,234 @@ class ReceiverState(Enum):
     BIASED = auto()         # متحيِّز    — biased
     UNCERTAIN = auto()      # متردِّد    — uncertain / hesitant
     ATTENTIVE = auto()      # منتبه      — actively attentive
+
+
+# ── Fractal Kernel enums ─────────────────────────────────────────────
+
+
+class ActivationStage(Enum):
+    """مرحلة التنشيط — activation stage in the fractal kernel."""
+
+    SIGNAL = auto()
+    MORPHOLOGY = auto()
+    CONCEPT = auto()
+    AXIS = auto()
+    RELATION = auto()
+    ROLE = auto()
+    FACTOR = auto()
+    CASE = auto()
+    JUDGEMENT = auto()
+
+
+class HypothesisStatus(Enum):
+    """حالة الفرضية — status of a hypothesis node."""
+
+    ACTIVE = auto()
+    PRUNED = auto()
+    STABILIZED = auto()
+    SUSPENDED = auto()
+    REVISED = auto()
+
+
+class ConstraintStrength(Enum):
+    """قوة القيد — strength of a constraint in the kernel."""
+
+    ABSOLUTE = auto()
+    STRONG = auto()
+    MODERATE = auto()
+    TENTATIVE = auto()
+    WEAK = auto()
+
+
+class ConflictState(Enum):
+    """حالة التعارض — conflict state between kernel nodes."""
+
+    NONE = auto()
+    SOFT = auto()
+    HARD = auto()
+    UNRESOLVED = auto()
+
+
+class RevisionType(Enum):
+    """نوع المراجعة — type of belief revision."""
+
+    CONFLICT_RESOLUTION = auto()
+    EXTERNAL_EVIDENCE = auto()
+    EXPANSION = auto()
+    CONTRACTION = auto()
+    REVISION = auto()
+
+
+class SignalType(Enum):
+    """نوع الإشارة — type of signal in the kernel."""
+
+    BASE_LETTER = auto()
+    DIACRITIC = auto()
+    NUMERAL = auto()
+    WHITESPACE = auto()
+    PUNCTUATION = auto()
+    UNKNOWN = auto()
+
+
+# ── Strict 7-Layer System enums ──────────────────────────────────────
+
+
+class StrictLayerID(Enum):
+    """معرّف الطبقة الصارمة — layer identifier in the strict 7-layer system."""
+
+    MENTAL_FOUNDATION = auto()
+    GENERATIVE = auto()
+    AUDITORY_MINIMUM = auto()
+    STRUCTURAL = auto()
+    TRANSFORMATION = auto()
+    HIGHER_FUNCTION = auto()
+    PROGRAMMATIC = auto()
+
+
+class AuditoryNode(Enum):
+    """عقدة الطبقة السمعية — node type in the auditory/phonological layer."""
+
+    PHONEME = auto()
+    SYLLABLE = auto()
+    WORD_FORM = auto()
+    PROSODIC = auto()
+    ONSET = auto()
+    NUCLEUS = auto()
+    CODA = auto()
+
+
+class StructuralNode(Enum):
+    """عقدة بنيوية — structural node type."""
+
+    ROOT = auto()
+    PATTERN = auto()
+    MORPHEME = auto()
+    WORD = auto()
+    AFFIX = auto()
+    PREFIX = auto()
+    SUFFIX = auto()
+    CLITIC = auto()
+    STEM = auto()
+
+
+class TransformationNode(Enum):
+    """عقدة التحول — transformation node type."""
+
+    INPUT = auto()
+    RULE = auto()
+    OUTPUT = auto()
+    TRIGGER = auto()
+    CONTEXT = auto()
+    RESULT = auto()
+    INTERMEDIATE = auto()
+    EXCEPTION = auto()
+
+
+class MentalPrimitive(Enum):
+    """البدائي الذهني — mental primitive type."""
+
+    CONCEPT = auto()
+    RELATION = auto()
+    SCHEMA = auto()
+    SCRIPT = auto()
+    EVENT = auto()
+    PROPERTY = auto()
+    INDIVIDUAL = auto()
+    PROCESS = auto()
+    FRAME = auto()
+
+
+class MentalEdgeType(Enum):
+    """نوع الحافة الذهنية — mental graph edge type."""
+
+    ASSOCIATION = auto()
+    CAUSAL = auto()
+    HIERARCHICAL = auto()
+    TEMPORAL = auto()
+    SPATIAL = auto()
+    INSTRUMENTAL = auto()
+    CONDITIONAL = auto()
+
+
+class LayerEdgeType(Enum):
+    """نوع الحافة بين الطبقات — edge type between system layers."""
+
+    PROJECTION = auto()
+    REALIZATION = auto()
+    CONSTRAINT = auto()
+    FEEDBACK = auto()
+    ACTIVATION = auto()
+    INHIBITION = auto()
+    SUPPORT = auto()
+    CONFLICT = auto()
+    INHERITANCE = auto()
+    COMPOSITION = auto()
+    DEPENDENCY = auto()
+    ENTAILMENT = auto()
+    ANALOGY = auto()
+    REVISION = auto()
+    ENDORSEMENT = auto()
+    CONTRADICTION = auto()
+    ELABORATION = auto()
+    SPECIFICATION = auto()
+    GENERALIZATION = auto()
+    INSTANCE = auto()
+    PART_OF = auto()
+    CAUSE = auto()
+    EFFECT = auto()
+    CONDITION = auto()
+    CONCESSION = auto()
+    CONTRAST = auto()
+    PARALLEL = auto()
+    TEMPORAL = auto()
+    SPATIAL = auto()
+
+
+class JudgmentCategory(Enum):
+    """فئة الحكم — judgment category in layer 5."""
+
+    ORIGINAL = auto()
+    AUGMENTED = auto()
+    SUBSTITUTED = auto()
+    DELETED = auto()
+    WEAKENED_TRANSFORMED = auto()
+    ASSIMILATED = auto()
+    ATTACHED_MARKER = auto()
+    DEICTIC_BUILDER = auto()
+    RELATIONAL_CONNECTOR = auto()
+
+
+class GenerativeNode(Enum):
+    """عقدة توليدية — generative node type."""
+
+    BASE = auto()
+    DERIVED = auto()
+    COMPOUND = auto()
+    PATTERN = auto()
+    BROKEN_PLURAL = auto()
+    VERBAL_NOUN = auto()
+    PARTICIPLE = auto()
+    DIMINUTIVE = auto()
+
+
+class RepresentationNode(Enum):
+    """عقدة تمثيلية — representation node type."""
+
+    LEXICAL = auto()
+    MORPHOLOGICAL = auto()
+    SYNTACTIC = auto()
+    SEMANTIC = auto()
+    PRAGMATIC = auto()
+    PHONOLOGICAL = auto()
+    GRAPHEMIC = auto()
+    DIACRITIC = auto()
+    PROSODIC = auto()
+    DISCOURSE = auto()
+
+
+class TransitionGateStatus(Enum):
+    """حالة بوابة الانتقال — status of a transition gate."""
+
+    PASSED = auto()
+    BLOCKED = auto()
+    INSUFFICIENT_DATA = auto()

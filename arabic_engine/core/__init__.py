@@ -39,15 +39,6 @@ from .enums import (
     CarrierType as CarrierType,
 )
 from .enums import (
-    AuthorityLevel as AuthorityLevel,
-)
-from .enums import (
-    CarrierClass as CarrierClass,
-)
-from .enums import (
-    CarrierType as CarrierType,
-)
-from .enums import (
     CategorizationMode as CategorizationMode,
 )
 from .enums import (
@@ -67,6 +58,15 @@ from .enums import (
 )
 from .enums import (
     ConceptualSignifiedClass as ConceptualSignifiedClass,
+)
+from .enums import (
+    ConditionToken as ConditionToken,
+)
+from .enums import (
+    ConflictState as ConflictState,
+)
+from .enums import (
+    ConstraintStrength as ConstraintStrength,
 )
 from .enums import (
     ConstraintType as ConstraintType,
@@ -117,6 +117,9 @@ from .enums import (
     EpistemicStatus as EpistemicStatus,
 )
 from .enums import (
+    EvidenceType as EvidenceType,
+)
+from .enums import (
     ExchangePurposeType as ExchangePurposeType,
 )
 from .enums import (
@@ -135,10 +138,22 @@ from .enums import (
     FrameType as FrameType,
 )
 from .enums import (
+    FunctionRole as FunctionRole,
+)
+from .enums import (
+    FuncTransitionClass as FuncTransitionClass,
+)
+from .enums import (
     GapSeverity as GapSeverity,
 )
 from .enums import (
+    GenerativeNode as GenerativeNode,
+)
+from .enums import (
     GuidanceState as GuidanceState,
+)
+from .enums import (
+    HypothesisStatus as HypothesisStatus,
 )
 from .enums import (
     InfoKind as InfoKind,
@@ -234,6 +249,9 @@ from .enums import (
     PurposeType as PurposeType,
 )
 from .enums import (
+    RankType as RankType,
+)
+from .enums import (
     RationalSelfKind as RationalSelfKind,
 )
 from .enums import (
@@ -253,6 +271,15 @@ from .enums import (
 )
 from .enums import (
     ReceptionStateType as ReceptionStateType,
+)
+from .enums import (
+    RepresentationNode as RepresentationNode,
+)
+from .enums import (
+    ReversibleValue as ReversibleValue,
+)
+from .enums import (
+    RevisionType as RevisionType,
 )
 from .enums import (
     SalienceLevel as SalienceLevel,
@@ -451,7 +478,13 @@ from .types import (
     ConceptRelation as ConceptRelation,
 )
 from .types import (
+    ConflictEdge as ConflictEdge,
+)
+from .types import (
     ConflictRuleNode as ConflictRuleNode,
+)
+from .types import (
+    ConstraintEdge as ConstraintEdge,
 )
 from .types import (
     CouplingRecord as CouplingRecord,
