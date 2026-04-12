@@ -16,6 +16,11 @@ type.
 from .enums import (
     POS as POS,
 )
+
+# ── Fractal Kernel enum re-exports ──────────────────────────────────
+from .enums import (
+    ActivationStage as ActivationStage,
+)
 from .enums import (
     AffectiveDimension as AffectiveDimension,
 )
@@ -119,6 +124,9 @@ from .enums import (
     GuidanceState as GuidanceState,
 )
 from .enums import (
+    HypothesisStatus as HypothesisStatus,
+)
+from .enums import (
     InfoKind as InfoKind,
 )
 from .enums import (
@@ -216,6 +224,9 @@ from .enums import (
 )
 from .enums import (
     SenseModality as SenseModality,
+)
+from .enums import (
+    SignalType as SignalType,
 )
 from .enums import (
     SignifiedClass as SignifiedClass,
@@ -343,9 +354,28 @@ from .kernel import (
     validate_kernel_graph as validate_kernel_graph,
 )
 
+# ── Trace module re-exports ─────────────────────────────────────────
+from .trace import (
+    DecisionState as DecisionState,
+)
+from .trace import (
+    HypothesisState as HypothesisState,
+)
+from .trace import (
+    KernelRuntimeState as KernelRuntimeState,
+)
+from .trace import (
+    SignalState as SignalState,
+)
+
 # ── Type re-exports ─────────────────────────────────────────────────
 from .types import (  # noqa: F401 -- intentional re-exports
     AEU as AEU,
+)
+
+# ── Fractal Kernel type re-exports ──────────────────────────────────
+from .types import (
+    ActivationRecord as ActivationRecord,
 )
 from .types import (
     AxiomRecord as AxiomRecord,
@@ -355,6 +385,9 @@ from .types import (
 )
 from .types import (
     ConceptRelation as ConceptRelation,
+)
+from .types import (
+    ConflictEdge as ConflictEdge,
 )
 from .types import (
     ConflictRuleNode as ConflictRuleNode,
@@ -367,6 +400,9 @@ from .types import (
 )
 from .types import (
     DalalaLink as DalalaLink,
+)
+from .types import (
+    DecisionTrace as DecisionTrace,
 )
 from .types import (
     DiscourseCarrierRecord as DiscourseCarrierRecord,
@@ -418,6 +454,9 @@ from .types import (
 )
 from .types import (
     Grapheme as Grapheme,
+)
+from .types import (
+    HypothesisNode as HypothesisNode,
 )
 from .types import (
     InferenceResult as InferenceResult,
@@ -528,10 +567,16 @@ from .types import (
     SenseTraceRecord as SenseTraceRecord,
 )
 from .types import (
+    SignalUnit as SignalUnit,
+)
+from .types import (
     SignifiedNode as SignifiedNode,
 )
 from .types import (
     SignifierNode as SignifierNode,
+)
+from .types import (
+    SupportEdge as SupportEdge,
 )
 from .types import (
     Syllable as Syllable,
@@ -550,6 +595,9 @@ from .types import (
 )
 from .types import (
     TrustProfileRecord as TrustProfileRecord,
+)
+from .types import (
+    UnicodeAtom as UnicodeAtom,
 )
 from .types import (
     UtteranceNode as UtteranceNode,
@@ -673,6 +721,13 @@ __all__ = [
     "UtteredFormClass",
     "ValidationOutcome",
     "ValidationState",
+    # ── Fractal Kernel enums ───────────────────────────────────────
+    "ActivationStage",
+    "ConflictState",
+    "ConstraintStrength",
+    "HypothesisStatus",
+    "RevisionType",
+    "SignalType",
     # ── kernel ──────────────────────────────────────────────────────
     "KERNEL_RELATION_PAIRS",
     "KERNEL_REQUIRED_FIELDS",
@@ -767,4 +822,18 @@ __all__ = [
     "ValidationResult",
     "WorldFact",
     "ZeroSlotRecord",
+    # ── Fractal Kernel types ───────────────────────────────────────
+    "ActivationRecord",
+    "ConflictEdge",
+    "ConstraintEdge",
+    "DecisionTrace",
+    "HypothesisNode",
+    "SignalUnit",
+    "SupportEdge",
+    "UnicodeAtom",
+    # ── Trace module ───────────────────────────────────────────────
+    "DecisionState",
+    "HypothesisState",
+    "KernelRuntimeState",
+    "SignalState",
 ]
