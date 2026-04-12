@@ -1048,6 +1048,7 @@ class DalaalaKind(Enum):
 
     MUTABAQA = auto()    # مطابقة  — full correspondence / exact match
     TADHAMMUN = auto()   # تضمن    — containment / partial inclusion
+    TADAMMUN = TADHAMMUN  # Backward-compatible alias matching DalalaType
     ILTIZAM = auto()     # التزام  — implication / connotation
     ISHARA = auto()      # إشارة   — indication / indexical signification
 
