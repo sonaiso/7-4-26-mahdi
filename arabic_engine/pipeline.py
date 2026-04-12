@@ -36,6 +36,7 @@ from arabic_engine.core.types import (
     JudgementRecord,
     KnowledgeEpisode,
     KnowledgeEpisodeInput,
+    LayerTraceRecord,
     LexicalClosure,
     LinguisticCarrierRecord,
     LinkingTraceRecord,
@@ -86,6 +87,7 @@ class PipelineResult:
     world_adjustment: float = 0.5
     world_update: Dict[str, object] = field(default_factory=dict)
     explanation: Dict[str, object] = field(default_factory=dict)
+    layer_traces: List[LayerTraceRecord] = field(default_factory=list)
 
 
 def _to_validation_state(outcome: ValidationOutcome) -> ValidationState:
@@ -189,6 +191,7 @@ def run(
     *,
     world: Optional[WorldModel] = None,
     inference_engine: Optional[InferenceEngine] = None,
+    analyze_layers: bool = False,
 ) -> PipelineResult:
     """Execute the full v3 pipeline on *text*."""
     # L0 — Normalise
@@ -199,6 +202,17 @@ def run(
 
     # L2 — Lexical Closure
     closures = batch_closure(tokens)
+
+    # L2b — Optional strict 7-layer element analysis
+    layer_traces: List[LayerTraceRecord] = []
+    if analyze_layers:
+        from arabic_engine.layers.layer_pipeline import analyze_word as _analyze_word
+        from arabic_engine.signifier.root_pattern import extract_root_pattern
+
+        for closure in closures:
+            rp = extract_root_pattern(closure.surface)
+            traces = _analyze_word(closure.surface, root_pattern=rp)
+            layer_traces.extend(traces)
 
     # L3 — Syntax (v2)
     syntax_nodes = syntax_analyse(closures)
@@ -343,4 +357,5 @@ def run(
         world_adjustment=adjustment,
         world_update=world_update,
         explanation=explanation,
+        layer_traces=layer_traces,
     )
