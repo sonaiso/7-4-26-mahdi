@@ -24,6 +24,9 @@ from .enums import (
 from .enums import (
     AffectiveDimension as AffectiveDimension,
 )
+from .enums import (
+    AuthorityLevel as AuthorityLevel,
+)
 
 # ── Strict 7-Layer System enum re-exports ─────────────────────────
 from .enums import (
@@ -57,10 +60,19 @@ from .enums import (
     ConceptualSignifiedClass as ConceptualSignifiedClass,
 )
 from .enums import (
+    ConditionToken as ConditionToken,
+)
+from .enums import (
     ConstraintType as ConstraintType,
 )
 from .enums import (
     ContaminationLevel as ContaminationLevel,
+)
+from .enums import (
+    ConflictState as ConflictState,
+)
+from .enums import (
+    ConstraintStrength as ConstraintStrength,
 )
 from .enums import (
     CouplingRelationType as CouplingRelationType,
@@ -120,7 +132,16 @@ from .enums import (
     ExplicitnessLevel as ExplicitnessLevel,
 )
 from .enums import (
+    EvidenceType as EvidenceType,
+)
+from .enums import (
     FrameType as FrameType,
+)
+from .enums import (
+    FuncTransitionClass as FuncTransitionClass,
+)
+from .enums import (
+    FunctionRole as FunctionRole,
 )
 from .enums import (
     GapSeverity as GapSeverity,
@@ -225,7 +246,40 @@ from .enums import (
     ProofStatus as ProofStatus,
 )
 from .enums import (
+    PurposeType as PurposeType,
+)
+from .enums import (
+    RankType as RankType,
+)
+from .enums import (
+    RationalSelfKind as RationalSelfKind,
+)
+from .enums import (
     RealityKind as RealityKind,
+)
+from .enums import (
+    ReceiverExpectedAction as ReceiverExpectedAction,
+)
+from .enums import (
+    ReceiverRoleType as ReceiverRoleType,
+)
+from .enums import (
+    ReceiverState as ReceiverState,
+)
+from .enums import (
+    ReceptionMode as ReceptionMode,
+)
+from .enums import (
+    ReceptionStateType as ReceptionStateType,
+)
+from .enums import (
+    RepresentationNode as RepresentationNode,
+)
+from .enums import (
+    ReversibleValue as ReversibleValue,
+)
+from .enums import (
+    RevisionType as RevisionType,
 )
 from .enums import (
     SalienceLevel as SalienceLevel,
@@ -425,6 +479,9 @@ from .types import (
 )
 from .types import (
     ConflictEdge as ConflictEdge,
+)
+from .types import (
+    ConstraintEdge as ConstraintEdge,
 )
 from .types import (
     ConflictRuleNode as ConflictRuleNode,

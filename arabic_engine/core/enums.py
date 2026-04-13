@@ -1763,3 +1763,238 @@ class ValidationState(Enum):
     PENDING = auto()   # قيد الانتظار — not yet started
     VALID = auto()     # صالح          — validated successfully
     INVALID = auto()   # غير صالح      — validation failed
+
+
+# ═══════════════════════════════════════════════════════════════════════
+# Fractal Kernel — Layered Hypothesis Graph Architecture
+# ═══════════════════════════════════════════════════════════════════════
+
+
+class HypothesisStatus(Enum):
+    """حالة الفرضية — status of a hypothesis node in the graph."""
+
+    ACTIVE = auto()       # نشط — still under consideration
+    PRUNED = auto()       # مقطوع — removed by constraint
+    STABILIZED = auto()   # مستقر — accepted as decision
+    SUSPENDED = auto()    # معلق — deferred pending more evidence
+    REVISED = auto()      # مُعدَّل — modified after feedback
+
+
+class ConstraintStrength(Enum):
+    """قوة القيد — how strongly a constraint restricts candidates."""
+
+    ABSOLUTE = auto()     # مطلق — violation is fatal
+    STRONG = auto()       # قوي — almost always enforced
+    MODERATE = auto()     # متوسط — enforced unless overridden
+    WEAK = auto()         # ضعيف — advisory / preference
+    TENTATIVE = auto()    # تجريبي — experimental, may be dropped
+
+
+class ConflictState(Enum):
+    """حالة التعارض — degree of conflict between hypotheses."""
+
+    NONE = auto()         # لا تعارض
+    SOFT = auto()         # تعارض خفيف — can coexist with scoring penalty
+    HARD = auto()         # تعارض حاد — only one can survive
+    UNRESOLVED = auto()   # غير محسوم — awaiting more evidence
+
+
+class RevisionType(Enum):
+    """نوع المراجعة — reason for a revision request."""
+
+    CONFLICT_RESOLUTION = auto()   # حل تعارض
+    AMBIGUITY_RESOLUTION = auto()  # حل التباس
+    FEEDBACK_UPDATE = auto()       # تحديث من طبقة أعلى
+    CONFIDENCE_SHIFT = auto()      # تغير في الثقة
+    EXTERNAL_EVIDENCE = auto()     # دليل خارجي جديد
+
+
+class SignalType(Enum):
+    """نوع الإشارة — classification of a Unicode atom."""
+
+    BASE_LETTER = auto()    # حرف أساسي
+    DIACRITIC = auto()      # حركة / علامة
+    PUNCTUATION = auto()    # ترقيم
+    WHITESPACE = auto()     # مسافة
+    NUMERAL = auto()        # رقم
+    UNKNOWN = auto()        # غير معروف
+
+
+class ActivationStage(Enum):
+    """مرحلة التفعيل — which processing stage a hypothesis belongs to."""
+
+    SIGNAL = auto()         # إشارة
+    MORPHOLOGY = auto()     # صرف
+    CONCEPT = auto()        # مفهوم
+    AXIS = auto()           # محور
+    RELATION = auto()       # علاقة
+    ROLE = auto()           # دور
+    FACTOR = auto()         # عامل
+    CASE = auto()           # حالة إعرابية
+    JUDGEMENT = auto()      # حكم
+
+
+# ══════════════════════════════════════════════════════════════════════
+# Strict 7-Layer Analysis System  —  النموذج الطبقي الصارم
+# ══════════════════════════════════════════════════════════════════════
+
+
+class StrictLayerID(Enum):
+    """معرّف الطبقة الصارمة — strict layer identifier (Layer 0→6)."""
+
+    MENTAL_FOUNDATION = auto()   # الأساس العقلي
+    GENERATIVE = auto()          # القوام التوليدي
+    AUDITORY_MINIMUM = auto()    # القوام السمعي الأدنى
+    STRUCTURAL = auto()          # القوام البنيوي
+    TRANSFORMATION = auto()      # التحول
+    HIGHER_FUNCTION = auto()     # الوظيفة العليا والحكم
+    PROGRAMMATIC = auto()        # التمثيل البرمجي
+
+
+class MentalPrimitive(Enum):
+    """أوليات الطبقة العقلية المؤسسة — Layer 0 mental primitives."""
+
+    IDENTITY = auto()            # الهوية
+    DIFFERENCE = auto()          # المغايرة
+    RANK = auto()                # الرتبة
+    CONSTITUTIVENESS = auto()    # المقومية
+    DEPENDENCY = auto()          # التبعية
+    STABILITY = auto()           # الثبات
+    TRANSFORMATION = auto()      # التحول
+    CAUSALITY = auto()           # العلية
+    REALITY_MATCH = auto()       # مطابقة الواقع
+
+
+class MentalEdgeType(Enum):
+    """حواف الطبقة العقلية — Layer 0 edge types."""
+
+    DISTINGUISHED_BY = auto()    # يتميز بـ
+    ORDERED_AS = auto()          # يرتب كـ
+    EVALUATED_FOR = auto()       # يُقيَّم لـ
+    CONTRASTS_WITH = auto()      # يتقابل مع
+    MEASURED_AGAINST = auto()    # يُقاس بـ
+    EXPLAINS = auto()            # يفسّر
+    VALIDATES = auto()           # يُصادِق
+
+
+class GenerativeNode(Enum):
+    """عقد القوام التوليدي — Layer 1 generative phonetic nodes."""
+
+    ENERGY_SOURCE = auto()       # مصدر الطاقة
+    VOCAL_FOLD_STATE = auto()    # حالة الأحبال الصوتية
+    AIRFLOW_PATH = auto()        # مسار الهواء
+    ARTICULATION_PLACE = auto()  # موضع التحقق
+    ARTICULATION_MODE = auto()   # نوع الاعتراض
+    CLOSURE_DEGREE = auto()      # درجة الانغلاق
+    RELEASE_SHAPE = auto()       # هيئة الانفراج
+    RESONANCE_PROFILE = auto()   # الرنين
+
+
+class AuditoryNode(Enum):
+    """عقد القوام السمعي الأدنى — Layer 2 auditory minimum nodes."""
+
+    AUDITORY_PRESENCE = auto()   # الحضور السمعي
+    BOUNDARY = auto()            # الحد
+    EXTENSION = auto()           # الامتداد
+    PHASE = auto()               # الطور
+    ORDERLINESS = auto()         # الانتظام
+    COHESION = auto()            # التماسك
+    UNITY = auto()               # الوحدة
+
+
+class StructuralNode(Enum):
+    """عقد القوام البنيوي — Layer 3 structural nodes."""
+
+    SYLLABIC_RANK = auto()           # الرتبة المقطعية
+    ROOT_RANK = auto()               # الرتبة الجذرية
+    CONSTITUTIVE_ROLE = auto()       # الدور المقوم
+    DEPENDENT_ROLE = auto()          # الدور التابع
+    ATTACHMENT_CAPACITY = auto()     # قابلية الإلصاق
+    AUGMENTATION_CAPACITY = auto()   # قابلية الزيادة
+    ROOT_POSITION_FA = auto()        # فاء
+    ROOT_POSITION_AYN = auto()       # عين
+    ROOT_POSITION_LAM = auto()       # لام
+
+
+class TransformationNode(Enum):
+    """عقد طبقة التحول — Layer 4 transformation nodes."""
+
+    STABILITY_ACROSS_INFLECTION = auto()   # الثبات عبر التصريف
+    RECOVERABILITY = auto()                # إمكان الرد إلى الأصل
+    SUBSTITUTION = auto()                  # الإبدال
+    DELETION = auto()                      # الحذف
+    ILLAL = auto()                         # الإعلال
+    IDGHAM = auto()                        # الإدغام
+    SURFACE_ABSENCE = auto()               # الغياب السطحي
+    UNDERLYING_PRESENCE = auto()           # الحضور العميق
+
+
+class JudgmentCategory(Enum):
+    """أحكام الوظيفة العليا — Layer 5 judgment categories."""
+
+    ORIGINAL = auto()              # أصل
+    AUGMENTED = auto()             # زائد
+    SUBSTITUTED = auto()           # مبدل
+    DELETED = auto()               # محذوف
+    WEAKENED_TRANSFORMED = auto()  # معلول
+    ASSIMILATED = auto()           # مدغم
+    ATTACHED_MARKER = auto()       # عنصر إلصاق
+    DEICTIC_BUILDER = auto()       # باني مبنيات
+    RELATIONAL_CONNECTOR = auto()  # أداة ربط
+
+
+class RepresentationNode(Enum):
+    """عقد التمثيل البرمجي — Layer 6 representation nodes."""
+
+    PHONEME_ENTITY = auto()        # كيان صوتي
+    FEATURE_VECTOR = auto()        # متجه الخصائص
+    SYLLABLE_NODE = auto()         # عقدة مقطعية
+    ROOT_NODE = auto()             # عقدة جذرية
+    TRANSFORMATION_RULE = auto()   # قاعدة تحول
+    JUDGMENT_ENGINE = auto()       # محرك الحكم
+    REALITY_VALIDATION = auto()    # تحقق الواقع
+    LEXICAL_GRAPH = auto()         # رسم معجمي
+    DEICTIC_GRAPH = auto()         # رسم إشاري
+    RELATIONAL_GRAPH = auto()      # رسم علائقي
+
+
+class LayerEdgeType(Enum):
+    """أنواع الحواف بين طبقات النموذج الصارم — inter-layer edge types."""
+
+    DRIVES = auto()              # يحرّك
+    CONDITIONS = auto()          # يشترط
+    PASSES_THROUGH = auto()      # يمر عبر
+    REALIZED_AS = auto()         # يتحقق كـ
+    QUANTIFIED_BY = auto()       # يُكَمَّم بـ
+    ENDS_IN = auto()             # ينتهي بـ
+    CONTRIBUTES_TO = auto()      # يسهم في
+    BOUNDED_AS = auto()          # يُحَدّ بـ
+    OCCUPIES = auto()            # يشغل
+    DIVIDES_INTO = auto()        # ينقسم إلى
+    ORGANIZED_AS = auto()        # ينتظم كـ
+    STABILIZES = auto()          # يثبّت
+    YIELDS = auto()              # ينتج
+    PLACED_IN = auto()           # يوضع في
+    MAPPED_TO = auto()           # يقابَل بـ
+    MAY_BE = auto()              # يمكن أن يكون
+    SUPPORTS = auto()            # يدعم
+    INSTANTIATES = auto()        # يجسّد
+    INFERS = auto()              # يستدل
+    REALIZES_AS = auto()         # يتحقق كـ
+    IMPLIES = auto()             # يستلزم
+    HAS_FEATURES = auto()        # له خصائص
+    BELONGS_TO = auto()          # ينتمي إلى
+    MAPS_TO = auto()             # يقابل
+    GOVERNED_BY = auto()         # يحكمه
+    FEEDS = auto()               # يغذي
+    CHECKED_BY = auto()          # يتحقق منه
+    STORES_IF_VALID = auto()     # يخزّن إذا صحّ
+    ROUTES_TO = auto()           # يوجّه إلى
+
+
+class TransitionGateStatus(Enum):
+    """حالة بوابة الانتقال — transition gate status between layers."""
+
+    PASSED = auto()              # اجتاز
+    BLOCKED = auto()             # مُنِعَ
+    INSUFFICIENT_DATA = auto()   # بيانات غير كافية
