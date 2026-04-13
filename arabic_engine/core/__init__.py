@@ -24,13 +24,13 @@ from .enums import (
 from .enums import (
     AffectiveDimension as AffectiveDimension,
 )
-from .enums import (
-    AuthorityLevel as AuthorityLevel,
-)
 
 # ── Strict 7-Layer System enum re-exports ─────────────────────────
 from .enums import (
     AuditoryNode as AuditoryNode,
+)
+from .enums import (
+    AuthorityLevel as AuthorityLevel,
 )
 from .enums import (
     CarrierClass as CarrierClass,
@@ -63,16 +63,16 @@ from .enums import (
     ConditionToken as ConditionToken,
 )
 from .enums import (
-    ConstraintType as ConstraintType,
-)
-from .enums import (
-    ContaminationLevel as ContaminationLevel,
-)
-from .enums import (
     ConflictState as ConflictState,
 )
 from .enums import (
     ConstraintStrength as ConstraintStrength,
+)
+from .enums import (
+    ConstraintType as ConstraintType,
+)
+from .enums import (
+    ContaminationLevel as ContaminationLevel,
 )
 from .enums import (
     CouplingRelationType as CouplingRelationType,
@@ -117,6 +117,9 @@ from .enums import (
     EpistemicStatus as EpistemicStatus,
 )
 from .enums import (
+    EvidenceType as EvidenceType,
+)
+from .enums import (
     ExchangePurposeType as ExchangePurposeType,
 )
 from .enums import (
@@ -132,16 +135,13 @@ from .enums import (
     ExplicitnessLevel as ExplicitnessLevel,
 )
 from .enums import (
-    EvidenceType as EvidenceType,
-)
-from .enums import (
     FrameType as FrameType,
 )
 from .enums import (
-    FuncTransitionClass as FuncTransitionClass,
+    FunctionRole as FunctionRole,
 )
 from .enums import (
-    FunctionRole as FunctionRole,
+    FuncTransitionClass as FuncTransitionClass,
 )
 from .enums import (
     GapSeverity as GapSeverity,
@@ -481,13 +481,13 @@ from .types import (
     ConflictEdge as ConflictEdge,
 )
 from .types import (
-    ConstraintEdge as ConstraintEdge,
-)
-from .types import (
     ConflictRuleNode as ConflictRuleNode,
 )
 from .types import (
     ConflictRuleRecord as ConflictRuleRecord,
+)
+from .types import (
+    ConstraintEdge as ConstraintEdge,
 )
 from .types import (
     CouplingRecord as CouplingRecord,
