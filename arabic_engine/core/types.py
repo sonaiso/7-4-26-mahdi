@@ -34,6 +34,7 @@ from .enums import (
     DalaalaKind,
     DalalaType,
     DecisionCode,
+    DefinitenessRole,
     DiachronicStatus,
     DiscourseGapType,
     DiscourseValidationOutcome,
@@ -78,6 +79,7 @@ from .enums import (
     PhonFeature,
     PhonGroup,
     PhonTransform,
+    PredicationBasis,
     ProofPathKind,
     ProofStatus,
     PurposeType,
@@ -89,6 +91,10 @@ from .enums import (
     ReceiverState,
     ReceptionMode,
     ReceptionStateType,
+    ReferenceDegree,
+    ReferenceOrigin,
+    ReferenceToolKind,
+    ReferenceType,
     ReversibleValue,
     RevisionType,
     SalienceLevel,
@@ -117,6 +123,7 @@ from .enums import (
     TrustLevel,
     TruthState,
     UnicodeProfileType,
+    UniversalParticular,
     UtteranceMode,
     UtteranceToConceptConstraint,
     UtteredFormClass,
@@ -2585,3 +2592,58 @@ class LayerTraceRecord:
     layer_6: Optional[RepresentationRecord] = None
     gates: Tuple[TransitionGate, ...] = ()
     final_gate_status: TransitionGateStatus = TransitionGateStatus.INSUFFICIENT_DATA
+
+
+# ── Reference Constitution v1 types ─────────────────────────────────
+
+
+@dataclass(frozen=True)
+class ReferenceRecord:
+    """سجل الإحالة — Reference record (المادة 85).
+
+    The core referential tuple: Ref = (O, T, G, D, A, Rf, Ready).
+    """
+
+    record_id: str                                     # معرّف السجل
+    subject_type: str                                  # O — ذات/صفة/تابع/أداة
+    reference_type: ReferenceType                      # T — نوع الإحالة
+    reference_degree: ReferenceDegree                  # G — درجة الإحالة
+    tool_kind: Optional[ReferenceToolKind]              # D — الأداة الإحالية
+    predication_relation: PredicationBasis             # A — العلاقة مع الحمل
+    referent: str                                      # Rf — المرجع أو الدائرة المرجعية
+    ready_for_predication: bool                        # Ready — الجاهزية للإسناد
+    origin: ReferenceOrigin                            # أصالة أو تبعية
+    definiteness: Optional[DefinitenessRole] = None    # معرفة/نكرة
+    universality: Optional[UniversalParticular] = None  # كلي/جزئي
+    confidence: float = 1.0                            # ثقة
+    notes: str = ""                                    # ملاحظات
+
+
+@dataclass(frozen=True)
+class PredicationReadinessScore:
+    """درجة الجاهزية للإسناد — Predication readiness score (المادة 87).
+
+    Ready_Ref = (Type + Degree + Anchor + Tool + Recover) / 5
+    """
+
+    type_score: float       # Type — نوع الإحالة مضبوط
+    degree_score: float     # Degree — درجة الإحالة مضبوطة
+    anchor_score: float     # Anchor — المرجع مضبوط
+    tool_score: float       # Tool — الأداة مضبوطة
+    recover_score: float    # Recover — قابلية الرد
+    total: float            # المتوسط
+    ready: bool             # بلغ العتبة أم لا
+
+
+@dataclass(frozen=True)
+class ReferenceTransition:
+    """انتقال الصفة من الحمل إلى الإحالة — Attribute transition (المواد 44–47).
+
+    Tracks when an attribute transitions from predication to reference.
+    """
+
+    source_concept_id: int               # معرّف المفهوم المصدر
+    from_basis: PredicationBasis         # PREDICATION
+    to_basis: PredicationBasis           # REFERENCE
+    reason: str                          # سبب الانتقال
+    resulting_degree: ReferenceDegree    # الدرجة الناتجة

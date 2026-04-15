@@ -1860,3 +1860,88 @@ class TransitionGateStatus(Enum):
     PASSED = auto()
     BLOCKED = auto()
     INSUFFICIENT_DATA = auto()
+
+
+# ── Reference Constitution v1 enums ─────────────────────────────────
+
+
+class ReferenceType(Enum):
+    """نوع الإحالة — the ten major reference types (المادة 15).
+
+    Maps to الباب الخامس of the Reference Constitution.
+    """
+
+    SELF_REFERENCE = auto()   # إحالة ذاتية — proper name / entity
+    DESCRIPTIVE = auto()      # إحالة وصفية — attribute-turned-reference
+    PRONOMINAL = auto()       # إحالة ضميرية — pronoun reference
+    DEMONSTRATIVE = auto()    # إحالة إشارية — demonstrative reference
+    RELATIVE = auto()         # إحالة موصولية — relative pronoun reference
+    TEMPORAL = auto()         # إحالة زمانية — time-bound reference
+    SPATIAL = auto()          # إحالة مكانية — place-bound reference
+    NUMERICAL = auto()        # إحالة عددية — number-bound reference
+    DEPENDENT = auto()        # إحالة تبعية — adjunct/follower (نعت/بدل/توكيد)
+    EXPLICATIVE = auto()      # إحالة تفسيرية/تمييزية — disambiguating (حال/تمييز)
+
+
+class ReferenceDegree(Enum):
+    """درجة الإحالة — referential closure degree (المادة 38).
+
+    Four degrees from الباب السابع.
+    """
+
+    CLOSED = auto()           # مغلقة — fully closed referent
+    SEMI_CLOSED = auto()      # شبه مغلقة — nearly closed, needs qualifier
+    OPEN = auto()             # مفتوحة — open/diffuse referent
+    DEPENDENT = auto()        # تابعة — follows another referent
+
+
+class ReferenceToolKind(Enum):
+    """أداة الإحالة — reference tool kind (المادة 26).
+
+    The eleven reference tools from الباب السادس.
+    """
+
+    PROPER_NAME = auto()          # علم
+    PRONOUN = auto()              # ضمير
+    DEMONSTRATIVE = auto()        # اسم إشارة
+    RELATIVE_NOUN = auto()        # اسم موصول
+    GENITIVE_CONSTRUCT = auto()   # إضافة معرفة
+    RESTRICTIVE_ADJUNCT = auto()  # نعت مقيد
+    APPOSITION = auto()           # بدل
+    EMPHASIS = auto()             # توكيد
+    NUMERAL = auto()              # عدد
+    TIME_PLACE = auto()           # ظرف زمان/مكان
+    STATE_SPECIFICATION = auto()  # حال/تمييز
+
+
+class PredicationBasis(Enum):
+    """أساس الحمل أو الإحالة — predication vs reference (المواد 7–9).
+
+    Distinguishes whether a concept is fundamentally predication (حمل) or
+    referent-binding (إحالة).
+    """
+
+    PREDICATION = auto()  # حمل — attribution / description
+    REFERENCE = auto()    # إحالة — referent binding
+
+
+class ReferenceOrigin(Enum):
+    """أصل الإحالة — whether the concept is originally referential (المواد 12–13)."""
+
+    PRIMARY = auto()      # أصيل — originally referential (entities)
+    DERIVED = auto()      # تحويلي — transitioned from predication to reference
+    SUBORDINATE = auto()  # تابع — dependent reference
+
+
+class DefinitenessRole(Enum):
+    """دور المعرفة والنكرة — definiteness role in reference (المواد 52–55)."""
+
+    DEFINITE = auto()    # معرفة — tends toward closed / semi-closed reference
+    INDEFINITE = auto()  # نكرة — tends toward open reference
+
+
+class UniversalParticular(Enum):
+    """كلي وجزئي — universal vs particular scope (المواد 48–51)."""
+
+    UNIVERSAL = auto()    # كلي — tends to open reference
+    PARTICULAR = auto()   # جزئي — tends to closed / semi-closed reference
