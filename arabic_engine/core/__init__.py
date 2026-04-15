@@ -180,7 +180,10 @@ from .enums import (
     ParticleDalala as ParticleDalala,
 )
 from .enums import (
-    ParticleDirection as ParticleDirection,
+    NasikhType as NasikhType,
+)
+from .enums import (
+    NormativeCategory as NormativeCategory,
 )
 from .enums import (
     ParticleEffect as ParticleEffect,
@@ -345,6 +348,42 @@ from .enums import (
 )
 from .types import (
     ConceptRecord as ConceptRecord,
+)
+from .enums import (
+    VerbAugmentation as VerbAugmentation,
+)
+from .enums import (
+    VerbBab as VerbBab,
+)
+from .enums import (
+    VerbDerivativeType as VerbDerivativeType,
+)
+from .enums import (
+    VerbEventType as VerbEventType,
+)
+from .enums import (
+    VerbGender as VerbGender,
+)
+from .enums import (
+    VerbMode as VerbMode,
+)
+from .enums import (
+    VerbNumber as VerbNumber,
+)
+from .enums import (
+    VerbPerson as VerbPerson,
+)
+from .enums import (
+    VerbReadiness as VerbReadiness,
+)
+from .enums import (
+    VerbTense as VerbTense,
+)
+from .enums import (
+    VerbTransitivity as VerbTransitivity,
+)
+from .enums import (
+    VerbVoice as VerbVoice,
 )
 
 # Epistemic v1 types
@@ -562,6 +601,24 @@ from .types import (
     ValidationResult as ValidationResult,
 )
 from .types import (
+    VerbConstitutionRecord as VerbConstitutionRecord,
+)
+from .types import (
+    VerbDerivativeRecord as VerbDerivativeRecord,
+)
+from .types import (
+    VerbEventRecord as VerbEventRecord,
+)
+from .types import (
+    VerbInflection as VerbInflection,
+)
+from .types import (
+    VerbMasdarRecord as VerbMasdarRecord,
+)
+from .types import (
+    VerbReadinessScore as VerbReadinessScore,
+)
+from .types import (
     WorldFact as WorldFact,
 )
 from .types import (
@@ -653,7 +710,48 @@ __all__ = [
     "SenseModality",
     "TraceMode",
     "ValidationState",
-    # types
+    # ── Verb Fractal Constitution v1 enums ────────────────────────
+    "NasikhType",
+    "VerbAugmentation",
+    "VerbBab",
+    "VerbDerivativeType",
+    "VerbEventType",
+    "VerbGender",
+    "VerbMode",
+    "VerbNumber",
+    "VerbPerson",
+    "VerbReadiness",
+    "VerbTense",
+    "VerbTransitivity",
+    "VerbVoice",
+    # ── Fractal Kernel enums ───────────────────────────────────────
+    "ActivationStage",
+    "ConflictState",
+    "ConstraintStrength",
+    "HypothesisStatus",
+    "RevisionType",
+    "SignalType",
+    # ── kernel ──────────────────────────────────────────────────────
+    "KERNEL_RELATION_PAIRS",
+    "KERNEL_REQUIRED_FIELDS",
+    "KernelDiscourseExchange",
+    "KernelEdge",
+    "KernelGraph",
+    "KernelKnowledgeEpisode",
+    "KernelLabel",
+    "KernelLinguisticProfile",
+    "KernelNode",
+    "KernelRelation",
+    "KernelReusableModel",
+    "KernelUtterance",
+    "KernelValidationResult",
+    "derive_discourse_exchange",
+    "derive_knowledge_episode",
+    "derive_linguistic_profile",
+    "derive_reusable_model",
+    "derive_utterance_from_carrier",
+    "validate_kernel_graph",
+    # ── types ───────────────────────────────────────────────────────
     "AEU",
     "AxiomRecord",
     "Concept",
@@ -709,7 +807,13 @@ __all__ = [
     "UtteranceNode",
     "UtteranceRecord",
     "ValidationResult",
-    "ValidatedJudgment",
+    # ── Verb Fractal Constitution v1 types ────────────────────────
+    "VerbConstitutionRecord",
+    "VerbDerivativeRecord",
+    "VerbEventRecord",
+    "VerbInflection",
+    "VerbMasdarRecord",
+    "VerbReadinessScore",
     "WorldFact",
     "ZeroSlotRecord",
     # Epistemic v1 types
