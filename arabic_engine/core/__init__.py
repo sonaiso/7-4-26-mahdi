@@ -639,8 +639,11 @@ from .types import (
 from .types import (
     Concept as Concept,
 )
-from .types import (
-    ConceptRelation as ConceptRelation,
+from .enums import (
+    LinguisticZeroType as LinguisticZeroType,
+)
+from .enums import (
+    MafhumType as MafhumType,
 )
 from .types import (
     ConceptSeed as ConceptSeed,
@@ -677,6 +680,12 @@ from .types import (
 )
 from .types import (
     DiscourseCarrierRecord as DiscourseCarrierRecord,
+)
+from .enums import (
+    WordClass as WordClass,
+)
+from .enums import (
+    ZeroCoverage as ZeroCoverage,
 )
 from .types import (
     DiscourseConceptRecord as DiscourseConceptRecord,
@@ -980,34 +989,13 @@ from .types import (
     TriadicBlockRecord as TriadicBlockRecord,
 )
 from .types import (
-    TrustProfileRecord as TrustProfileRecord,
-)
-from .types import (
-    TruthRecord as TruthRecord,
-)
-from .types import (
-    UnicodeAtom as UnicodeAtom,
-)
-from .types import (
-    UniversalParticularRecord as UniversalParticularRecord,
-)
-from .types import (
-    UPConstitutionResult as UPConstitutionResult,
-)
-from .types import (
-    UtteranceNode as UtteranceNode,
-)
-from .types import (
-    UtteranceRecord as UtteranceRecord,
-)
-from .types import (
-    ValidatedJudgment as ValidatedJudgment,
-)
-from .types import (
-    ValidationResult as ValidationResult,
+    WordZeroCoverageReport as WordZeroCoverageReport,
 )
 from .types import (
     WorldFact as WorldFact,
+)
+from .types import (
+    ZeroCoverageDetail as ZeroCoverageDetail,
 )
 from .types import (
     ZeroSlotRecord as ZeroSlotRecord,

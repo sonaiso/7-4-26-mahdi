@@ -59,11 +59,12 @@ from arabic_engine.core.types import (
     SenseTraceRecord,
     SyntaxNode,
     TimeSpaceTag,
-    UtteranceRecord,
+    WordZeroCoverageReport,
 )
 from arabic_engine.linkage.dalala import full_validation
 from arabic_engine.linkage.semantic_roles import derive_semantic_roles
 from arabic_engine.signified.ontology import batch_map
+from arabic_engine.signified.zero_coverage import analyze_word_zero_coverage
 from arabic_engine.signifier.root_pattern import batch_closure
 from arabic_engine.signifier.unicode_norm import normalize, tokenize
 from arabic_engine.syntax.syntax import analyse as syntax_analyse
@@ -72,7 +73,29 @@ from arabic_engine.syntax.syntax import analyse as syntax_analyse
 
 @dataclass
 class PipelineResult:
-    """Container for the full analysis of a single sentence."""
+    """Container for the full analysis of a single sentence.
+
+    Every field maps directly to the output of a named pipeline layer,
+    so the object forms a complete audit trail of the computation.
+
+    Attributes:
+        raw: The original, unmodified input string.
+        normalised: The string after Unicode normalisation (L0).
+        tokens: Whitespace-delimited tokens (L1).
+        closures: Lexical closures for each token (L2).
+        syntax_nodes: I'rāb-annotated syntax nodes (L3).
+        concepts: Ontological concept nodes for each closure (L4).
+        dalala_links: Signification (dalāla) validation links (L5).
+        proposition: The structured judgment built from the sentence (L6).
+        time_space: Temporal and spatial anchoring tag (L7).
+        eval_result: Truth/guidance/confidence evaluation vector (L8).
+        inferences: Derived propositions from the rule engine (L9).
+            Empty list when no inference engine was provided.
+        world_adjustment: Confidence multiplier from the world model (L10).
+            Defaults to ``0.5`` when no world model was provided.
+        word_zero_coverage: Per-token linguistic-zero coverage reports (L11).
+            Empty list when ``analyze_zeros=False`` (the default).
+    """
 
     raw: str
     normalised: str
@@ -93,104 +116,7 @@ class PipelineResult:
     evaluation_result: EvaluationResult
     inferences: List[InferenceResult] = field(default_factory=list)
     world_adjustment: float = 0.5
-    world_update: Dict[str, object] = field(default_factory=dict)
-    explanation: Dict[str, object] = field(default_factory=dict)
-    layer_traces: List[LayerTraceRecord] = field(default_factory=list)
-    isg_result: Optional[ISGValidationResult] = None
-
-
-def _to_validation_state(outcome: ValidationOutcome) -> ValidationState:
-    if outcome == ValidationOutcome.VALID:
-        return ValidationState.VALID
-    if outcome == ValidationOutcome.PENDING:
-        return ValidationState.PENDING
-    return ValidationState.INVALID
-
-
-def _build_knowledge_episode(
-    text: str,
-    proposition: Proposition,
-    semantic_roles: Dict[str, str],
-) -> KnowledgeEpisode:
-    judgement_type = (
-        JudgementType.EXISTENCE
-        if proposition.predicate is not None and proposition.predicate != ""
-        else JudgementType.INTERPRETIVE
-    )
-    reality_anchor = RealityAnchorRecord(
-        anchor_id="RA_pipeline",
-        kind=RealityKind.MATERIAL,
-        description=f"Sentence reality anchor from input: {text}",
-    )
-    sense_trace = SenseTraceRecord(
-        trace_id="ST_pipeline",
-        modality=SenseModality.VISUAL,
-        mode=TraceMode.DIRECT,
-        description="Direct textual perception from input sentence.",
-    )
-    prior_infos = (
-        PriorInfoRecord(
-            info_id="PI_pipeline_syntax",
-            content=f"Semantic roles observed: {semantic_roles}",
-            source="pipeline.syntax.semantic_roles",
-        ),
-    )
-    linking_trace = LinkingTraceRecord(
-        link_id="LT_pipeline",
-        kind=LinkKind.CONTEXTUAL,
-        description="Linked morphology + syntax + dalala into proposition.",
-    )
-    judgement = JudgementRecord(
-        judgement_id="JD_pipeline",
-        judgement_type=judgement_type,
-        content=(
-            f"subject={proposition.subject};"
-            f"predicate={proposition.predicate};"
-            f"object={proposition.obj}"
-        ),
-    )
-    method = MethodRecord(
-        method_id="M_pipeline",
-        family=MethodFamily.RATIONAL,
-        name="Pipeline Rational Method",
-        domain_fit=(
-            JudgementType.EXISTENCE,
-            JudgementType.ESSENCE,
-            JudgementType.ATTRIBUTE,
-            JudgementType.RELATION,
-            JudgementType.INTERPRETIVE,
-        ),
-    )
-    carrier = LinguisticCarrierRecord(
-        carrier_id="LC_pipeline",
-        carrier_type=CarrierType.BOTH,
-        utterance=UtteranceRecord(utterance_id="UT_pipeline", text=text),
-        concept=ConceptRecord(concept_record_id="CR_pipeline", label=text),
-    )
-    proof_path = ProofPathRecord(
-        path_id="PP_pipeline",
-        kind=ProofPathKind.DIRECT_PROOF,
-        steps=("normalize", "morphology", "syntax", "dalala", "judgement"),
-        method_fit=MethodFamily.RATIONAL,
-    )
-    conflict_rule = ConflictRuleRecord(
-        rule_id="CF_pipeline_default",
-        prefer_concept=True,
-        rationale="Prefer concept when utterance/concept mismatch appears.",
-    )
-    return KnowledgeEpisode(
-        episode_id="KE_pipeline",
-        reality_anchor=reality_anchor,
-        sense_trace=sense_trace,
-        prior_infos=prior_infos,
-        opinion_traces=(),
-        linking_trace=linking_trace,
-        judgement=judgement,
-        method=method,
-        carrier=carrier,
-        proof_path=proof_path,
-        conflict_rule=conflict_rule,
-    )
+    word_zero_coverage: List[WordZeroCoverageReport] = field(default_factory=list)
 
 
 # ── Pipeline ────────────────────────────────────────────────────────
@@ -200,10 +126,39 @@ def run(
     *,
     world: Optional[WorldModel] = None,
     inference_engine: Optional[InferenceEngine] = None,
-    analyze_layers: bool = False,
-    analyze_reference: bool = False,
+    analyze_zeros: bool = False,
 ) -> PipelineResult:
-    """Execute the full v3 pipeline on *text*."""
+    """Execute the full v2 pipeline on *text*.
+
+    The pipeline runs up to twelve sequential layers (L0–L11):
+
+    * L0  — Unicode normalisation
+    * L1  — Tokenisation
+    * L2  — Lexical closure (root/pattern extraction)
+    * L3  — Syntax (i'rāb assignment and dependency linking)
+    * L4  — Ontological mapping (signifier → signified)
+    * L5  — Dalāla validation (signification links)
+    * L6  — Judgment / proposition construction
+    * L7  — Time/space anchoring
+    * L8  — Truth and guidance evaluation
+    * L9  — Inference rule application (optional)
+    * L10 — World-model confidence adjustment (optional)
+    * L11 — Linguistic-zero coverage analysis (optional)
+
+    Args:
+        text: Raw Arabic input (may include tashkīl).
+        world: An external world model for confidence adjustment.
+            When ``None``, the world-adjustment factor defaults to 0.5.
+        inference_engine: A rule engine for deriving new propositions.
+            When ``None``, the ``inferences`` list in the result is empty.
+        analyze_zeros: When ``True``, run L11 and populate
+            ``word_zero_coverage`` with one report per token.
+            Defaults to ``False``.
+
+    Returns:
+        A :class:`PipelineResult` containing the outputs of all pipeline
+        layers.
+    """
     # L0 — Normalise
     normalised = normalize(text)
 
@@ -379,6 +334,11 @@ def run(
             input_domain="linguistic",
         )
 
+    # L11 — Linguistic-zero coverage (optional)
+    zero_coverage: List[WordZeroCoverageReport] = []
+    if analyze_zeros:
+        zero_coverage = [analyze_word_zero_coverage(tok) for tok in tokens]
+
     return PipelineResult(
         raw=text,
         normalised=normalised,
@@ -399,8 +359,5 @@ def run(
         evaluation_result=evaluation_result,
         inferences=inferences,
         world_adjustment=adjustment,
-        world_update=world_update,
-        explanation=explanation,
-        layer_traces=layer_traces,
-        isg_result=isg_result,
+        word_zero_coverage=zero_coverage,
     )
