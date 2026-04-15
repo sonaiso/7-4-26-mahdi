@@ -564,15 +564,12 @@ from .types import (
     AxiomRecord as AxiomRecord,
 )
 
-# ── Universal / Particular Constitution v1 type re-exports ──────────
+# ── Enriched signifier model re-exports ─────────────────────────────
 from .types import (
-    BoundaryRecord as BoundaryRecord,
+    CliticRecord as CliticRecord,
 )
 from .types import (
-    CompositionRecord as CompositionRecord,
-)
-from .types import (
-    CompositionRoleRecord as CompositionRoleRecord,
+    CombiningMarkDetail as CombiningMarkDetail,
 )
 from .types import (
     Concept as Concept,
@@ -633,6 +630,12 @@ from .types import (
 )
 from .types import (
     DMin as DMin,
+)
+from .types import (
+    EnrichedGrapheme as EnrichedGrapheme,
+)
+from .types import (
+    EnrichedSyllable as EnrichedSyllable,
 )
 from .types import (
     EpisodeValidationResult as EpisodeValidationResult,
@@ -749,10 +752,7 @@ from .types import (
     OpinionTraceRecord as OpinionTraceRecord,
 )
 from .types import (
-    PhonemeCandidate as PhonemeCandidate,
-)
-from .types import (
-    PhoneticEvent as PhoneticEvent,
+    PatternCandidate as PatternCandidate,
 )
 from .types import (
     PriorInfoNode as PriorInfoNode,
@@ -797,7 +797,7 @@ from .types import (
     RepresentationRecord as RepresentationRecord,
 )
 from .types import (
-    RestrictionRecord as RestrictionRecord,
+    RootCandidate as RootCandidate,
 )
 from .types import (
     RootPattern as RootPattern,
@@ -848,7 +848,13 @@ from .types import (
     TimeSpaceTag as TimeSpaceTag,
 )
 from .types import (
-    TransformCandidate as TransformCandidate,
+    TokenAnalysis as TokenAnalysis,
+)
+from .types import (
+    TransformationProfileRecord as TransformationProfileRecord,
+)
+from .types import (
+    TransitionGate as TransitionGate,
 )
 from .types import (
     TriadicBlockRecord as TriadicBlockRecord,
@@ -1129,9 +1135,34 @@ __all__ = [
     "HypothesisState",
     "KernelRuntimeState",
     "SignalState",
-    # ── State-machine engine ──────────────────────────────────────
-    "MachineSnapshot",
-    "StateMachine",
-    "StateMachineConfig",
-    "StateTransition",
+    # ── Strict 7-Layer System enums ────────────────────────────────
+    "AuditoryNode",
+    "GenerativeNode",
+    "JudgmentCategory",
+    "LayerEdgeType",
+    "MentalEdgeType",
+    "MentalPrimitive",
+    "RepresentationNode",
+    "StrictLayerID",
+    "StructuralNode",
+    "TransformationNode",
+    "TransitionGateStatus",
+    # ── Strict 7-Layer System types ────────────────────────────────
+    "AuditoryMinimumRecord",
+    "GenerativeProfileRecord",
+    "JudgmentRecordL5",
+    "LayerTraceRecord",
+    "MentalFoundationRecord",
+    "RepresentationRecord",
+    "StructuralProfileRecord",
+    "TransformationProfileRecord",
+    "TransitionGate",
+    # ── Enriched signifier models ─────────────────────────────────
+    "CliticRecord",
+    "CombiningMarkDetail",
+    "EnrichedGrapheme",
+    "EnrichedSyllable",
+    "PatternCandidate",
+    "RootCandidate",
+    "TokenAnalysis",
 ]
