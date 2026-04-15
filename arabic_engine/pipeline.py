@@ -1,36 +1,68 @@
-"""Main pipeline — orchestrates all layers of the Arabic engine.
-
-Pipeline (v2):
-  Normalize → Tokenize → Lexical Closure → Syntax → Ontology
-  → Dalāla Validation → Judgment → Time/Space → Evaluation
-  → Inference → World-Model check
-
-Each step is a pure(ish) function operating on typed records, so the
-full composition F is computable (see README proof).
-"""
+"""Main pipeline — orchestrates all layers of the Arabic engine."""
 
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import List, Optional
+from typing import Dict, List, Optional
 
+from arabic_engine.cognition.epistemic_v1 import validate_episode
 from arabic_engine.cognition.evaluation import build_proposition, evaluate
+from arabic_engine.cognition.explanation import build_explanation
 from arabic_engine.cognition.inference_rules import InferenceEngine
+from arabic_engine.cognition.isg_v1 import govern as isg_govern
+from arabic_engine.cognition.isg_v1 import identify_atom as _isg_identify
 from arabic_engine.cognition.time_space import tag as time_space_tag
 from arabic_engine.cognition.world_model import WorldModel
 from arabic_engine.core.contracts import verify_contracts  # noqa: F401 — re-export
+from arabic_engine.core.enums import (
+    CarrierType,
+    ConfirmationRank,
+    EpistemicEntryKind,
+    JudgementType,
+    KnowledgeAtomType,
+    LinkKind,
+    MethodFamily,
+    ProofPathKind,
+    RealityKind,
+    SenseModality,
+    SourceType,
+    TraceMode,
+    ValidationOutcome,
+    ValidationState,
+)
 from arabic_engine.core.types import (
     Concept,
+    ConceptNode,
+    ConceptRecord,
+    ConflictRuleRecord,
     DalalaLink,
     EvalResult,
+    EvaluationResult,
     InferenceResult,
+    ISGValidationResult,
+    JudgementRecord,
+    KnowledgeEpisode,
+    KnowledgeEpisodeInput,
+    LayerTraceRecord,
     LexicalClosure,
+    LinguisticCarrierRecord,
+    LinkingTraceRecord,
+    LinkOperation,
+    MethodRecord,
+    PerceptTrace,
+    PriorInfoRecord,
+    PriorKnowledgeUnit,
+    ProofPathRecord,
     Proposition,
+    RealityAnchorRecord,
+    ReferenceRecord,
+    SenseTraceRecord,
     SyntaxNode,
     TimeSpaceTag,
     WordZeroCoverageReport,
 )
 from arabic_engine.linkage.dalala import full_validation
+from arabic_engine.linkage.semantic_roles import derive_semantic_roles
 from arabic_engine.signified.ontology import batch_map
 from arabic_engine.signified.zero_coverage import analyze_word_zero_coverage
 from arabic_engine.signifier.root_pattern import batch_closure
@@ -75,6 +107,13 @@ class PipelineResult:
     proposition: Proposition
     time_space: TimeSpaceTag
     eval_result: EvalResult
+    percept_trace: PerceptTrace
+    prior_knowledge: List[PriorKnowledgeUnit]
+    link_operations: List[LinkOperation]
+    concept_nodes: List[ConceptNode]
+    semantic_roles: Dict[str, str]
+    knowledge_episode: KnowledgeEpisode
+    evaluation_result: EvaluationResult
     inferences: List[InferenceResult] = field(default_factory=list)
     world_adjustment: float = 0.5
     word_zero_coverage: List[WordZeroCoverageReport] = field(default_factory=list)
@@ -129,11 +168,29 @@ def run(
     # L2 — Lexical Closure
     closures = batch_closure(tokens)
 
+    # L2b — Optional strict 7-layer element analysis
+    layer_traces: List[LayerTraceRecord] = []
+    if analyze_layers:
+        from arabic_engine.layers.layer_pipeline import analyze_word as _analyze_word
+        from arabic_engine.signifier.root_pattern import extract_root_pattern
+
+        for closure in closures:
+            rp = extract_root_pattern(closure.surface)
+            traces = _analyze_word(closure.surface, root_pattern=rp)
+            layer_traces.extend(traces)
+
     # L3 — Syntax (v2)
     syntax_nodes = syntax_analyse(closures)
 
     # L4 — Ontological Mapping
     concepts = batch_map(closures)
+
+    # L4b — Optional reference analysis
+    reference_records: List[ReferenceRecord] = []
+    if analyze_reference:
+        from arabic_engine.signified.reference_v1 import batch_build as _ref_batch_build
+
+        reference_records = _ref_batch_build(closures, concepts)
 
     # L5 — Dalāla Validation
     links = full_validation(closures, concepts)
@@ -144,8 +201,36 @@ def run(
     # L7 — Time/Space (v2)
     ts_tag = time_space_tag(closures, proposition)
 
+    # L7b — Semantic roles
+    semantic_roles = derive_semantic_roles(closures, syntax_nodes)
+
     # L8 — Evaluation
     eval_result = evaluate(proposition, links)
+
+    # L8b — Build epistemic knowledge episode
+    episode = _build_knowledge_episode(text, proposition, semantic_roles)
+    episode_input = KnowledgeEpisodeInput(
+        episode_id=episode.episode_id,
+        reality_anchor=episode.reality_anchor,
+        sense_trace=episode.sense_trace,
+        prior_infos=episode.prior_infos,
+        opinion_traces=episode.opinion_traces,
+        linking_trace=episode.linking_trace,
+        judgement=episode.judgement,
+        method=episode.method,
+        carrier=episode.carrier,
+        proof_path=episode.proof_path,
+        conflict_rule=episode.conflict_rule,
+    )
+    validation = validate_episode(episode_input)
+    validation_state = _to_validation_state(validation.outcome)
+    evaluation_result = EvaluationResult(
+        truth_state=eval_result.truth_state,
+        epistemic_rank=validation.rank,
+        confidence=eval_result.confidence,
+        validation_state=validation_state,
+        consistency="; ".join(validation.messages),
+    )
 
     # L9 — Inference (v2)
     inferences: List[InferenceResult] = []
@@ -154,11 +239,99 @@ def run(
 
     # L10 — World-Model adjustment (v2)
     adjustment = 0.5
+    world_update: Dict[str, object] = {
+        "applied": False,
+        "reason": "no_world_model",
+        "fact_id": None,
+    }
     if world is not None:
         adjustment = world.confidence_adjustment(proposition)
         # Blend world-model confidence with dalāla confidence
         eval_result.confidence = round(
             eval_result.confidence * adjustment, 4
+        )
+        evaluation_result = EvaluationResult(
+            truth_state=evaluation_result.truth_state,
+            epistemic_rank=evaluation_result.epistemic_rank,
+            confidence=eval_result.confidence,
+            validation_state=evaluation_result.validation_state,
+            consistency=evaluation_result.consistency,
+        )
+        world_update = world.apply_validated_proposition(
+            proposition,
+            validation_state=evaluation_result.validation_state,
+            source="pipeline.v3",
+        )
+
+    explanation = build_explanation(
+        proposition=proposition,
+        semantic_roles=semantic_roles,
+        evaluation=evaluation_result,
+        inferences=inferences,
+        world_update=world_update,
+    )
+
+    link_operations = [
+        LinkOperation(
+            operation_id=f"LO_{idx}",
+            operation_type=link.dalala_type,
+            source=link.source_lemma,
+            target=str(link.target_concept_id),
+            accepted=link.accepted,
+            confidence=link.confidence,
+        )
+        for idx, link in enumerate(links, start=1)
+    ]
+    concept_nodes = [
+        ConceptNode(
+            concept_id=f"C_{concept.concept_id}",
+            label=concept.label,
+            semantic_type=concept.semantic_type,
+            properties=concept.properties,
+        )
+        for concept in concepts
+    ]
+    prior_knowledge = [
+        PriorKnowledgeUnit(
+            unit_id=f"PK_{idx}",
+            content=f"Token '{cl.surface}' -> lemma '{cl.lemma}'",
+            source="lexical_closure",
+            weight=cl.confidence,
+        )
+        for idx, cl in enumerate(closures, start=1)
+    ]
+    percept_trace = PerceptTrace(
+        raw_text=text,
+        normalized_text=normalised,
+        tokens=tuple(tokens),
+        trace_quality=1.0 if tokens else 0.0,
+    )
+
+    # L-ISG — Informational Stock Governance (ISG Constitution v1)
+    isg_atoms = []
+    for pk in prior_knowledge:
+        try:
+            atom = _isg_identify(
+                label=pk.content,
+                atom_type=KnowledgeAtomType.LEXICAL,
+                knowledge_level="token",
+                domain="linguistic",
+                source=pk.source,
+                source_type=SourceType.PRIMARY,
+                confirmation_rank=ConfirmationRank.ESTABLISHED,
+                context=normalised,
+                entry_kind=EpistemicEntryKind.INFORMATION,
+            )
+            isg_atoms.append(atom)
+        except ValueError:
+            pass
+    isg_result: Optional[ISGValidationResult] = None
+    if isg_atoms:
+        isg_result = isg_govern(
+            isg_atoms,
+            input_id=f"pipeline:{normalised[:40]}",
+            input_level="token",
+            input_domain="linguistic",
         )
 
     # L11 — Linguistic-zero coverage (optional)
@@ -177,6 +350,13 @@ def run(
         proposition=proposition,
         time_space=ts_tag,
         eval_result=eval_result,
+        percept_trace=percept_trace,
+        prior_knowledge=prior_knowledge,
+        link_operations=link_operations,
+        concept_nodes=concept_nodes,
+        semantic_roles=semantic_roles,
+        knowledge_episode=episode,
+        evaluation_result=evaluation_result,
         inferences=inferences,
         world_adjustment=adjustment,
         word_zero_coverage=zero_coverage,

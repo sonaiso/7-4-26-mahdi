@@ -41,6 +41,14 @@ def _transitivity_rule(propositions: List[Proposition]) -> Optional[InferenceRes
                     conclusion=conclusion,
                     confidence=0.85,
                     valid=True,
+                    rule_category="existential",
+                    conditions=(
+                        "p1.obj == p2.subject",
+                        "p1.predicate == p2.predicate",
+                    ),
+                    outcome="derived transitive proposition",
+                    strength=0.85,
+                    explanation="Applied transitivity over two aligned propositions.",
                 )
     return None
 
@@ -63,6 +71,19 @@ def _negation_rule(propositions: List[Proposition]) -> Optional[InferenceResult]
                     conclusion=p1,  # mark the affirmative as suspect
                     confidence=0.0,
                     valid=False,
+                    rule_category="contradiction",
+                    conditions=(
+                        "same subject",
+                        "same predicate",
+                        "same object",
+                        "opposite polarity",
+                    ),
+                    outcome="contradiction detected",
+                    strength=1.0,
+                    explanation=(
+                        "Detected both affirmative and negative forms "
+                        "of the same proposition."
+                    ),
                 )
     return None
 
@@ -89,6 +110,15 @@ def _event_existence_rule(propositions: List[Proposition]) -> Optional[Inference
                 conclusion=conclusion,
                 confidence=0.9,
                 valid=True,
+                rule_category="existential",
+                conditions=(
+                    "subject present",
+                    "predicate present",
+                    "polarity is affirmative",
+                ),
+                outcome="event existence asserted",
+                strength=0.9,
+                explanation="From an affirmative event proposition, infer event existence.",
             )
     return None
 

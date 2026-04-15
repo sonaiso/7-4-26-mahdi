@@ -11,7 +11,7 @@ from __future__ import annotations
 
 from typing import Dict, List, Optional
 
-from arabic_engine.core.enums import TruthState
+from arabic_engine.core.enums import TruthState, ValidationState
 from arabic_engine.core.types import Proposition, WorldFact
 
 _next_fact_id = 0
@@ -144,6 +144,28 @@ class WorldModel:
         if fact.truth_state == TruthState.FALSE:
             return 0.1
         return 0.5
+
+    def apply_validated_proposition(
+        self,
+        proposition: Proposition,
+        validation_state: ValidationState,
+        source: str = "pipeline",
+    ) -> dict:
+        """Update world facts only when validation state is VALID."""
+        if validation_state != ValidationState.VALID:
+            return {
+                "applied": False,
+                "reason": f"validation_state={validation_state.name}",
+                "fact_id": None,
+            }
+        fact = self.add_fact(
+            subject=proposition.subject,
+            predicate=proposition.predicate,
+            obj=proposition.obj,
+            truth_state=TruthState.CERTAIN,
+            source=source,
+        )
+        return {"applied": True, "reason": "validated", "fact_id": fact.fact_id}
 
     @property
     def all_facts(self) -> List[WorldFact]:

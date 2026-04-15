@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "pattern.schema.json",
+  "title": "Pattern Candidate",
+  "description": "Schema for a morphological pattern candidate.",
+  "type": "object",
+  "properties": {
+    "id": { "type": "string", "pattern": "^pattern_\\d+$" },
+    "layer": { "type": "integer", "const": 4 },
+    "surface": { "type": "string" },
+    "root_length": { "type": "integer", "minimum": 0 },
+    "pattern_code": { "type": "string" },
+    "pattern_type": { "type": "string" },
+    "augment_count": { "type": "integer", "minimum": 0 },
+    "syllable_sequence": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "root_candidate": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "entity_score": { "type": "number", "minimum": 0, "maximum": 1 },
+    "reality_match_score": { "type": "number", "minimum": 0, "maximum": 1 }
+  },
+  "required": ["id", "layer", "surface", "pattern_code", "pattern_type"]
+}

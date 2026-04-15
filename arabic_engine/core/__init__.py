@@ -12,17 +12,131 @@ re-exported here because it is a utility/verification module, not a data
 type.
 """
 
+# ── Enum re-exports ─────────────────────────────────────────────────
 from .enums import (
     POS as POS,
+)
+
+# ── Fractal Kernel enum re-exports ──────────────────────────────────
+from .enums import (
+    ActivationStage as ActivationStage,
+)
+from .enums import (
+    AffectiveDimension as AffectiveDimension,
+)
+
+# ── Composition / Syntax Constitution v1 enum re-exports ────────────
+from .enums import (
+    AmbiguityResolution as AmbiguityResolution,
+)
+from .enums import (
+    AmbiguityType as AmbiguityType,
+)
+
+# ── Strict 7-Layer System enum re-exports ─────────────────────────
+from .enums import (
+    AuditoryNode as AuditoryNode,
+)
+from .enums import (
+    AuthorityLevel as AuthorityLevel,
+)
+
+# ── Informational Stock Governance (ISG) Constitution v1 enum re-exports ──
+from .enums import (
+    CallabilityStatus as CallabilityStatus,
+)
+from .enums import (
+    CarrierClass as CarrierClass,
+)
+from .enums import (
+    CarrierType as CarrierType,
+)
+from .enums import (
+    CategorizationMode as CategorizationMode,
+)
+from .enums import (
+    CausalRole as CausalRole,
+)
+from .enums import (
+    CellType as CellType,
 )
 from .enums import (
     CombinationType as CombinationType,
 )
 from .enums import (
+    ConceptClosureStatus as ConceptClosureStatus,
+)
+from .enums import (
+    ConceptEntityAttribute as ConceptEntityAttribute,
+)
+from .enums import (
+    ConceptFormationMode as ConceptFormationMode,
+)
+from .enums import (
+    ConceptGateID as ConceptGateID,
+)
+from .enums import (
+    ConceptIndependence as ConceptIndependence,
+)
+from .enums import (
+    ConceptRelationType as ConceptRelationType,
+)
+from .enums import (
+    ConceptualSignifiedClass as ConceptualSignifiedClass,
+)
+from .enums import (
+    ConceptUniversalParticular as ConceptUniversalParticular,
+)
+from .enums import (
+    ConditionToken as ConditionToken,
+)
+from .enums import (
+    ConfirmationRank as ConfirmationRank,
+)
+from .enums import (
+    ConflictResolutionMethod as ConflictResolutionMethod,
+)
+from .enums import (
+    ConflictState as ConflictState,
+)
+from .enums import (
+    ConflictType as ConflictType,
+)
+from .enums import (
+    ConstraintStrength as ConstraintStrength,
+)
+from .enums import (
     ConstraintType as ConstraintType,
 )
 from .enums import (
+    ContaminationLevel as ContaminationLevel,
+)
+from .enums import (
+    CouplingRelationType as CouplingRelationType,
+)
+from .enums import (
+    CulturalScope as CulturalScope,
+)
+from .enums import (
+    DalaalaKind as DalaalaKind,
+)
+from .enums import (
     DalalaType as DalalaType,
+)
+from .enums import (
+    DecisionCode as DecisionCode,
+)
+from .enums import (
+    DefinitenessRole as DefinitenessRole,
+)
+from .enums import (
+    DiachronicStatus as DiachronicStatus,
+)
+from .enums import (
+    DiscourseGapType as DiscourseGapType,
+)
+from .enums import (
+    DiscourseValidationOutcome as DiscourseValidationOutcome,
 )
 from .enums import (
     ElementClass as ElementClass,
@@ -34,7 +148,82 @@ from .enums import (
     ElementLayer as ElementLayer,
 )
 from .enums import (
+    EmbodiedDomain as EmbodiedDomain,
+)
+from .enums import (
+    EpistemicEntryKind as EpistemicEntryKind,
+)
+from .enums import (
+    EpistemicRank as EpistemicRank,
+)
+from .enums import (
+    EpistemicStatus as EpistemicStatus,
+)
+from .enums import (
+    EvidenceType as EvidenceType,
+)
+from .enums import (
+    ExchangePurposeType as ExchangePurposeType,
+)
+from .enums import (
+    ExchangeStatus as ExchangeStatus,
+)
+from .enums import (
+    ExchangeStyleType as ExchangeStyleType,
+)
+from .enums import (
+    ExchangeType as ExchangeType,
+)
+from .enums import (
+    ExplicitnessLevel as ExplicitnessLevel,
+)
+from .enums import (
+    FrameType as FrameType,
+)
+from .enums import (
+    FunctionRole as FunctionRole,
+)
+from .enums import (
+    FuncTransitionClass as FuncTransitionClass,
+)
+from .enums import (
+    GapSeverity as GapSeverity,
+)
+from .enums import (
+    GateDecision as GateDecision,
+)
+from .enums import (
+    GenerativeNode as GenerativeNode,
+)
+from .enums import (
     GuidanceState as GuidanceState,
+)
+from .enums import (
+    HarakaState as HarakaState,
+)
+from .enums import (
+    HypothesisStatus as HypothesisStatus,
+)
+from .enums import (
+    InfoKind as InfoKind,
+)
+from .enums import (
+    InsertionPolicy as InsertionPolicy,
+)
+from .enums import (
+    InstitutionalCategory as InstitutionalCategory,
+)
+from .enums import (
+    InternalConflictType as InternalConflictType,
+)
+from .enums import (
+    InterpretiveOutcomeType as InterpretiveOutcomeType,
+)
+from .enums import (
+    InterpretiveStability as InterpretiveStability,
+)
+from .enums import (
+    InterPropositionLink as InterPropositionLink,
 )
 from .enums import (
     IrabCase as IrabCase,
@@ -43,13 +232,84 @@ from .enums import (
     IrabRole as IrabRole,
 )
 from .enums import (
-    LinguisticZeroType as LinguisticZeroType,
+    ISGConflictResolution as ISGConflictResolution,
+)
+from .enums import (
+    JudgementType as JudgementType,
+)
+from .enums import (
+    JudgmentState as JudgmentState,
+)
+from .enums import (
+    KnowledgeAtomType as KnowledgeAtomType,
+)
+from .enums import (
+    LayerEdgeType as LayerEdgeType,
+)
+from .enums import (
+    LevelMatchStatus as LevelMatchStatus,
+)
+from .enums import (
+    LinkKind as LinkKind,
 )
 from .enums import (
     MafhumType as MafhumType,
 )
 from .enums import (
+    MCIDecision as MCIDecision,
+)
+from .enums import (
+    MentalIntentionalType as MentalIntentionalType,
+)
+from .enums import (
+    MentalPrimitive as MentalPrimitive,
+)
+from .enums import (
+    MetaConceptualLevel as MetaConceptualLevel,
+)
+from .enums import (
+    MethodFamily as MethodFamily,
+)
+from .enums import (
+    ModalCategory as ModalCategory,
+)
+from .enums import (
+    NormativeCategory as NormativeCategory,
+)
+from .enums import (
+    OntologicalConstraintType as OntologicalConstraintType,
+)
+from .enums import (
     OntologicalLayer as OntologicalLayer,
+)
+from .enums import (
+    OntologicalMode as OntologicalMode,
+)
+from .enums import (
+    OperationalCapacity as OperationalCapacity,
+)
+
+# ── Particle Fractal Constitution v1 enum re-exports ────────────────
+from .enums import (
+    ParticleDalala as ParticleDalala,
+)
+from .enums import (
+    ParticleDirection as ParticleDirection,
+)
+from .enums import (
+    ParticleEffect as ParticleEffect,
+)
+from .enums import (
+    ParticleKind as ParticleKind,
+)
+from .enums import (
+    ParticleReadiness as ParticleReadiness,
+)
+from .enums import (
+    ParticleScope as ParticleScope,
+)
+from .enums import (
+    PathKind as PathKind,
 )
 from .enums import (
     PhonCategory as PhonCategory,
@@ -64,19 +324,169 @@ from .enums import (
     PhonTransform as PhonTransform,
 )
 from .enums import (
+    PredicationBasis as PredicationBasis,
+)
+from .enums import (
+    PriorKnowledgeType as PriorKnowledgeType,
+)
+from .enums import (
+    ProofPathKind as ProofPathKind,
+)
+from .enums import (
     ProofStatus as ProofStatus,
+)
+from .enums import (
+    PropositionType as PropositionType,
+)
+from .enums import (
+    PurposeType as PurposeType,
+)
+from .enums import (
+    RankType as RankType,
+)
+from .enums import (
+    RationalSelfKind as RationalSelfKind,
+)
+from .enums import (
+    ReadinessLevel as ReadinessLevel,
+)
+from .enums import (
+    RealityKind as RealityKind,
+)
+from .enums import (
+    ReceiverExpectedAction as ReceiverExpectedAction,
+)
+from .enums import (
+    ReceiverRoleType as ReceiverRoleType,
+)
+from .enums import (
+    ReceiverState as ReceiverState,
+)
+from .enums import (
+    ReceptionMode as ReceptionMode,
+)
+from .enums import (
+    ReceptionStateType as ReceptionStateType,
+)
+from .enums import (
+    ReferenceDegree as ReferenceDegree,
+)
+from .enums import (
+    ReferenceOrigin as ReferenceOrigin,
+)
+from .enums import (
+    ReferenceToolKind as ReferenceToolKind,
+)
+from .enums import (
+    ReferenceType as ReferenceType,
+)
+from .enums import (
+    RepresentationNode as RepresentationNode,
+)
+from .enums import (
+    RestrictionType as RestrictionType,
+)
+from .enums import (
+    ReversibleValue as ReversibleValue,
+)
+from .enums import (
+    RevisionType as RevisionType,
+)
+from .enums import (
+    RootRankState as RootRankState,
+)
+from .enums import (
+    SalienceLevel as SalienceLevel,
+)
+from .enums import (
+    ScriptPhase as ScriptPhase,
+)
+from .enums import (
+    SelfModelAspect as SelfModelAspect,
 )
 from .enums import (
     SemanticType as SemanticType,
 )
 from .enums import (
+    SenderRoleType as SenderRoleType,
+)
+from .enums import (
+    SenseModality as SenseModality,
+)
+from .enums import (
+    SignalType as SignalType,
+)
+from .enums import (
+    SignifiedClass as SignifiedClass,
+)
+from .enums import (
+    SignifierClass as SignifierClass,
+)
+from .enums import (
+    SingleConceptType as SingleConceptType,
+)
+from .enums import (
     SlotState as SlotState,
+)
+from .enums import (
+    SourceType as SourceType,
 )
 from .enums import (
     SpaceRef as SpaceRef,
 )
 from .enums import (
+    StrictLayerID as StrictLayerID,
+)
+from .enums import (
+    StructuralNode as StructuralNode,
+)
+from .enums import (
+    StyleKind as StyleKind,
+)
+from .enums import (
+    SyllablePosition as SyllablePosition,
+)
+from .enums import (
+    SyllableState as SyllableState,
+)
+from .enums import (
     TimeRef as TimeRef,
+)
+from .enums import (
+    TraceMode as TraceMode,
+)
+from .enums import (
+    TraceQuality as TraceQuality,
+)
+from .enums import (
+    TransformJudgment as TransformJudgment,
+)
+from .enums import (
+    TransformState as TransformState,
+)
+from .enums import (
+    TransitionCondition as TransitionCondition,
+)
+from .enums import (
+    TransitionGateStatus as TransitionGateStatus,
+)
+from .enums import (
+    TransitionLaw as TransitionLaw,
+)
+from .enums import (
+    TransitionType as TransitionType,
+)
+from .enums import (
+    TriadType as TriadType,
+)
+from .enums import (
+    TrustBasis as TrustBasis,
+)
+from .enums import (
+    TrustLevel as TrustLevel,
+)
+from .enums import (
+    TruthCategory as TruthCategory,
 )
 from .enums import (
     TruthState as TruthState,
@@ -85,25 +495,227 @@ from .enums import (
     UnicodeProfileType as UnicodeProfileType,
 )
 from .enums import (
+    UniversalParticular as UniversalParticular,
+)
+from .enums import (
+    UtteranceMode as UtteranceMode,
+)
+from .enums import (
+    UtteranceToConceptConstraint as UtteranceToConceptConstraint,
+)
+from .enums import (
+    UtteredFormClass as UtteredFormClass,
+)
+from .enums import (
+    ValidationOutcome as ValidationOutcome,
+)
+from .enums import (
+    ValidationState as ValidationState,
+)
+from .enums import (
+    VerificationStatus as VerificationStatus,
+)
+
+# ── Kernel re-exports ───────────────────────────────────────────────
+from .kernel import (
+    KERNEL_RELATION_PAIRS as KERNEL_RELATION_PAIRS,
+)
+from .kernel import (
+    KERNEL_REQUIRED_FIELDS as KERNEL_REQUIRED_FIELDS,
+)
+from .kernel import (
+    KernelDiscourseExchange as KernelDiscourseExchange,
+)
+from .kernel import (
+    KernelEdge as KernelEdge,
+)
+from .kernel import (
+    KernelGraph as KernelGraph,
+)
+from .kernel import (
+    KernelKnowledgeEpisode as KernelKnowledgeEpisode,
+)
+from .kernel import (
+    KernelLabel as KernelLabel,
+)
+from .kernel import (
+    KernelLinguisticProfile as KernelLinguisticProfile,
+)
+from .kernel import (
+    KernelNode as KernelNode,
+)
+from .kernel import (
+    KernelRelation as KernelRelation,
+)
+from .kernel import (
+    KernelReusableModel as KernelReusableModel,
+)
+from .kernel import (
+    KernelUtterance as KernelUtterance,
+)
+from .kernel import (
+    KernelValidationResult as KernelValidationResult,
+)
+from .kernel import (
+    derive_discourse_exchange as derive_discourse_exchange,
+)
+from .kernel import (
+    derive_knowledge_episode as derive_knowledge_episode,
+)
+from .kernel import (
+    derive_linguistic_profile as derive_linguistic_profile,
+)
+from .kernel import (
+    derive_reusable_model as derive_reusable_model,
+)
+from .kernel import (
+    derive_utterance_from_carrier as derive_utterance_from_carrier,
+)
+from .kernel import (
+    validate_kernel_graph as validate_kernel_graph,
+)
+
+# ── State-machine engine re-exports ────────────────────────────────
+from .state_machine import (
+    MachineSnapshot as MachineSnapshot,
+)
+from .state_machine import (
+    StateMachine as StateMachine,
+)
+from .state_machine import (
+    StateMachineConfig as StateMachineConfig,
+)
+from .state_machine import (
+    StateTransition as StateTransition,
+)
+
+# ── Trace module re-exports ─────────────────────────────────────────
+from .trace import (
+    DecisionState as DecisionState,
+)
+from .trace import (
+    HypothesisState as HypothesisState,
+)
+from .trace import (
+    KernelRuntimeState as KernelRuntimeState,
+)
+from .trace import (
+    SignalState as SignalState,
+)
+
+# ── Type re-exports ─────────────────────────────────────────────────
+from .types import (  # noqa: F401 -- intentional re-exports
+    AEU as AEU,
+)
+
+# ── Fractal Kernel type re-exports ──────────────────────────────────
+from .types import (
+    ActivationRecord as ActivationRecord,
+)
+
+# ── Composition / Syntax Constitution v1 type re-exports ────────────
+from .types import (
+    AmbiguityRecord as AmbiguityRecord,
+)
+
+# ── Strict 7-Layer System type re-exports ─────────────────────────
+from .types import (
+    AuditoryMinimumRecord as AuditoryMinimumRecord,
+)
+from .types import (
+    AxiomRecord as AxiomRecord,
+)
+
+# ── Informational Stock Governance (ISG) Constitution v1 type re-exports ──
+from .types import (
+    CallabilityResult as CallabilityResult,
+)
+from .types import (
+    CliticRecord as CliticRecord,
+)
+from .types import (
+    CombiningMarkDetail as CombiningMarkDetail,
+)
+from .types import (
+    Concept as Concept,
+)
+from .enums import (
+    LinguisticZeroType as LinguisticZeroType,
+)
+from .enums import (
+    MafhumType as MafhumType,
+)
+from .types import (
+    ConceptSeed as ConceptSeed,
+)
+from .types import (
+    ConflictEdge as ConflictEdge,
+)
+from .types import (
+    ConflictRecord as ConflictRecord,
+)
+from .types import (
+    ConflictRuleNode as ConflictRuleNode,
+)
+from .types import (
+    ConflictRuleRecord as ConflictRuleRecord,
+)
+from .types import (
+    ConstraintEdge as ConstraintEdge,
+)
+from .types import (
+    CouplingRecord as CouplingRecord,
+)
+from .types import (
+    DalalaLink as DalalaLink,
+)
+from .types import (
+    DecisionTrace as DecisionTrace,
+)
+from .types import (
+    DependencyRecord as DependencyRecord,
+)
+from .types import (
+    DisambiguationResult as DisambiguationResult,
+)
+from .types import (
+    DiscourseCarrierRecord as DiscourseCarrierRecord,
+)
+from .enums import (
     WordClass as WordClass,
 )
 from .enums import (
     ZeroCoverage as ZeroCoverage,
 )
 from .types import (
-    AEU as AEU,
+    DiscourseConceptRecord as DiscourseConceptRecord,
 )
 from .types import (
-    AxiomRecord as AxiomRecord,
+    DiscourseExchangeNode as DiscourseExchangeNode,
 )
 from .types import (
-    Concept as Concept,
+    DiscourseExchangeResult as DiscourseExchangeResult,
 )
 from .types import (
-    DalalaLink as DalalaLink,
+    DiscourseGapRecord as DiscourseGapRecord,
+)
+from .types import (
+    DiscourseUtteranceRecord as DiscourseUtteranceRecord,
 )
 from .types import (
     DMin as DMin,
+)
+from .types import (
+    EnrichedGrapheme as EnrichedGrapheme,
+)
+from .types import (
+    EnrichedSyllable as EnrichedSyllable,
+)
+from .types import (
+    EpisodeValidationResult as EpisodeValidationResult,
+)
+from .types import (
+    EpistemicConceptNode as EpistemicConceptNode,
 )
 from .types import (
     EssenceConditionPair as EssenceConditionPair,
@@ -112,28 +724,248 @@ from .types import (
     EvalResult as EvalResult,
 )
 from .types import (
+    EvidenceNode as EvidenceNode,
+)
+from .types import (
+    ExchangePurposeRecord as ExchangePurposeRecord,
+)
+from .types import (
+    ExchangeStyleRecord as ExchangeStyleRecord,
+)
+from .types import (
+    FinalApprovalComponents as FinalApprovalComponents,
+)
+from .types import (
+    GapNode as GapNode,
+)
+from .types import (
+    GapRecord as GapRecord,
+)
+from .types import (
+    GateResult as GateResult,
+)
+from .types import (
+    GenerativeProfileRecord as GenerativeProfileRecord,
+)
+from .types import (
+    GovernanceGateResult as GovernanceGateResult,
+)
+from .types import (
     Grapheme as Grapheme,
+)
+from .types import (
+    HarakaUnit as HarakaUnit,
+)
+from .types import (
+    HypothesisNode as HypothesisNode,
 )
 from .types import (
     InferenceResult as InferenceResult,
 )
 from .types import (
+    InternalConflictRecord as InternalConflictRecord,
+)
+from .types import (
+    InterpretiveOutcomeRecord as InterpretiveOutcomeRecord,
+)
+from .types import (
+    ISGValidationResult as ISGValidationResult,
+)
+from .types import (
+    JudgementNode as JudgementNode,
+)
+from .types import (
+    JudgementRecord as JudgementRecord,
+)
+from .types import (
+    JudgmentRecordL5 as JudgmentRecordL5,
+)
+from .types import (
+    KnowledgeAtom as KnowledgeAtom,
+)
+from .types import (
+    KnowledgeEpisode as KnowledgeEpisode,
+)
+from .types import (
+    KnowledgeEpisodeInput as KnowledgeEpisodeInput,
+)
+from .types import (
+    KnowledgeEpisodeNode as KnowledgeEpisodeNode,
+)
+from .types import (
     LayerPromotionRule as LayerPromotionRule,
+)
+from .types import (
+    LayerTraceRecord as LayerTraceRecord,
+)
+from .types import (
+    LevelMatchResult as LevelMatchResult,
 )
 from .types import (
     LexicalClosure as LexicalClosure,
 )
 from .types import (
+    LinguisticCarrierNode as LinguisticCarrierNode,
+)
+from .types import (
+    LinguisticCarrierRecord as LinguisticCarrierRecord,
+)
+from .types import (
+    LinkingTraceNode as LinkingTraceNode,
+)
+from .types import (
+    LinkingTraceRecord as LinkingTraceRecord,
+)
+from .types import (
+    MCIResult as MCIResult,
+)
+from .types import (
+    MCIScores as MCIScores,
+)
+from .types import (
+    MethodNode as MethodNode,
+)
+from .types import (
+    MethodRecord as MethodRecord,
+)
+from .types import (
+    OntologicalConstraintRecord as OntologicalConstraintRecord,
+)
+from .types import (
+    OntologyV1Record as OntologyV1Record,
+)
+from .types import (
+    OpinionTraceNode as OpinionTraceNode,
+)
+from .types import (
+    OpinionTraceRecord as OpinionTraceRecord,
+)
+
+# ── Particle Fractal Constitution v1 type re-exports ────────────────
+from .types import (
+    ParticleFractalTrace as ParticleFractalTrace,
+)
+from .types import (
+    ParticleMinimum as ParticleMinimum,
+)
+from .types import (
+    ParticleRecord as ParticleRecord,
+)
+from .types import (
+    ParticleValidation as ParticleValidation,
+)
+from .types import (
+    PatternCandidate as PatternCandidate,
+)
+from .types import (
+    PredicationReadinessScore as PredicationReadinessScore,
+)
+from .types import (
+    PriorInfoNode as PriorInfoNode,
+)
+from .types import (
+    PriorInfoRecord as PriorInfoRecord,
+)
+from .types import (
     ProofDependencyGraph as ProofDependencyGraph,
+)
+from .types import (
+    ProofPathNode as ProofPathNode,
+)
+from .types import (
+    ProofPathRecord as ProofPathRecord,
 )
 from .types import (
     Proposition as Proposition,
 )
 from .types import (
+    RankScoreComponents as RankScoreComponents,
+)
+from .types import (
+    RationalSelfRecord as RationalSelfRecord,
+)
+from .types import (
+    RealityAnchorNode as RealityAnchorNode,
+)
+from .types import (
+    RealityAnchorRecord as RealityAnchorRecord,
+)
+from .types import (
+    ReceiverRoleRecord as ReceiverRoleRecord,
+)
+from .types import (
+    ReceptionRecord as ReceptionRecord,
+)
+from .types import (
+    ReceptionStateRecord as ReceptionStateRecord,
+)
+from .types import (
+    ReferenceRecord as ReferenceRecord,
+)
+from .types import (
+    ReferenceTransition as ReferenceTransition,
+)
+from .types import (
+    RepresentationRecord as RepresentationRecord,
+)
+from .types import (
+    RootCandidate as RootCandidate,
+)
+from .types import (
     RootPattern as RootPattern,
 )
 from .types import (
+    RootSlot as RootSlot,
+)
+from .types import (
+    SelfNode as SelfNode,
+)
+from .types import (
+    SenderRoleRecord as SenderRoleRecord,
+)
+from .types import (
+    SenseTraceNode as SenseTraceNode,
+)
+from .types import (
+    SenseTraceRecord as SenseTraceRecord,
+)
+from .types import (
+    SignalUnit as SignalUnit,
+)
+from .types import (
+    SignifiedNode as SignifiedNode,
+)
+from .types import (
+    SignifierNode as SignifierNode,
+)
+
+# ── Single Concept Constitution v1 type re-exports ──────────────────
+from .types import (
+    SingleConceptDalala as SingleConceptDalala,
+)
+from .types import (
+    SingleConceptGateResult as SingleConceptGateResult,
+)
+from .types import (
+    SingleConceptIsomorphism as SingleConceptIsomorphism,
+)
+from .types import (
+    SingleConceptRecord as SingleConceptRecord,
+)
+from .types import (
+    SourceRecord as SourceRecord,
+)
+from .types import (
+    StructuralProfileRecord as StructuralProfileRecord,
+)
+from .types import (
+    SupportEdge as SupportEdge,
+)
+from .types import (
     Syllable as Syllable,
+)
+from .types import (
+    SyllableUnit as SyllableUnit,
 )
 from .types import (
     SyntaxNode as SyntaxNode,
@@ -143,6 +975,15 @@ from .types import (
 )
 from .types import (
     TimeSpaceTag as TimeSpaceTag,
+)
+from .types import (
+    TokenAnalysis as TokenAnalysis,
+)
+from .types import (
+    TransformationProfileRecord as TransformationProfileRecord,
+)
+from .types import (
+    TransitionGate as TransitionGate,
 )
 from .types import (
     TriadicBlockRecord as TriadicBlockRecord,
@@ -159,3 +1000,335 @@ from .types import (
 from .types import (
     ZeroSlotRecord as ZeroSlotRecord,
 )
+
+__all__ = [
+    # ── enums ───────────────────────────────────────────────────────
+    "POS",
+    "AffectiveDimension",
+    "AuthorityLevel",
+    "CarrierClass",
+    "CarrierType",
+    "CategorizationMode",
+    "CausalRole",
+    "CellType",
+    "CombinationType",
+    "ConceptFormationMode",
+    "ConceptRelationType",
+    "ConceptualSignifiedClass",
+    "ConditionToken",
+    "ConstraintType",
+    "ContaminationLevel",
+    "CouplingRelationType",
+    "CulturalScope",
+    "DalaalaKind",
+    "DalalaType",
+    "DecisionCode",
+    "DiachronicStatus",
+    "DiscourseGapType",
+    "DiscourseValidationOutcome",
+    "ElementClass",
+    "ElementFunction",
+    "ElementLayer",
+    "EmbodiedDomain",
+    "EpistemicRank",
+    "EpistemicStatus",
+    "EvidenceType",
+    "ExchangeStatus",
+    "ExchangePurposeType",
+    "ExchangeStyleType",
+    "ExchangeType",
+    "ExplicitnessLevel",
+    "FrameType",
+    "FuncTransitionClass",
+    "FunctionRole",
+    "GapSeverity",
+    "GuidanceState",
+    "HarakaState",
+    "InfoKind",
+    "InsertionPolicy",
+    "InstitutionalCategory",
+    "InterpretiveOutcomeType",
+    "InterpretiveStability",
+    "IrabCase",
+    "IrabRole",
+    "JudgementType",
+    "JudgmentState",
+    "LinkKind",
+    "LayerEvent",
+    "MCIDecision",
+    "MafhumType",
+    "MentalIntentionalType",
+    "MetaConceptualLevel",
+    "MethodFamily",
+    "ModalCategory",
+    "NormativeCategory",
+    "OntologicalConstraintType",
+    "OntologicalLayer",
+    "OntologicalMode",
+    "OperationalCapacity",
+    "PathKind",
+    "PhonCategory",
+    "PhonFeature",
+    "PhonGroup",
+    "PhonTransform",
+    "ProofPathKind",
+    "ProofStatus",
+    "PurposeType",
+    "RankType",
+    "RationalSelfKind",
+    "RealityKind",
+    "ReceiverExpectedAction",
+    "ReceiverRoleType",
+    "ReceiverState",
+    "ReceptionMode",
+    "ReceptionStateType",
+    "ReversibleValue",
+    "SalienceLevel",
+    "ScriptPhase",
+    "SelfModelAspect",
+    "SemanticType",
+    "SenderRoleType",
+    "SenseModality",
+    "SignifiedClass",
+    "SignifierClass",
+    "SlotState",
+    "SpaceRef",
+    "StyleKind",
+    "SyllablePosition",
+    "TimeRef",
+    "TraceMode",
+    "TraceQuality",
+    "TransitionCondition",
+    "TransitionLaw",
+    "TransitionType",
+    "TransformJudgment",
+    "TransformState",
+    "TriadType",
+    "TrustBasis",
+    "TrustLevel",
+    "TruthState",
+    "UnicodeProfileType",
+    "UtteranceMode",
+    "UtteranceToConceptConstraint",
+    "UtteredFormClass",
+    "ValidationOutcome",
+    "ValidationState",
+    # ── Reference Constitution v1 enums ───────────────────────────
+    "DefinitenessRole",
+    "PredicationBasis",
+    "ReferenceDegree",
+    "ReferenceOrigin",
+    "ReferenceToolKind",
+    "ReferenceType",
+    "UniversalParticular",
+    # ── Fractal Kernel enums ───────────────────────────────────────
+    "ActivationStage",
+    "ConflictState",
+    "ConstraintStrength",
+    "HypothesisStatus",
+    "RevisionType",
+    "RootRankState",
+    "SignalType",
+    "SoundState",
+    "SyllableState",
+    # ── kernel ──────────────────────────────────────────────────────
+    "KERNEL_RELATION_PAIRS",
+    "KERNEL_REQUIRED_FIELDS",
+    "KernelDiscourseExchange",
+    "KernelEdge",
+    "KernelGraph",
+    "KernelKnowledgeEpisode",
+    "KernelLabel",
+    "KernelLinguisticProfile",
+    "KernelNode",
+    "KernelRelation",
+    "KernelReusableModel",
+    "KernelUtterance",
+    "KernelValidationResult",
+    "derive_discourse_exchange",
+    "derive_knowledge_episode",
+    "derive_linguistic_profile",
+    "derive_reusable_model",
+    "derive_utterance_from_carrier",
+    "validate_kernel_graph",
+    # ── types ───────────────────────────────────────────────────────
+    "AEU",
+    "AxiomRecord",
+    "Concept",
+    "ConceptRelation",
+    "ConflictRuleNode",
+    "ConceptSeed",
+    "CouplingRecord",
+    "DalalaLink",
+    "DiscourseCarrierRecord",
+    "DiscourseConceptRecord",
+    "DiscourseExchangeNode",
+    "DiscourseExchangeResult",
+    "DiscourseGapRecord",
+    "DiscourseUtteranceRecord",
+    "DMin",
+    "EpisodeValidationResult",
+    "EpistemicConceptNode",
+    "EssenceConditionPair",
+    "EvalResult",
+    "FinalApprovalComponents",
+    "EvidenceNode",
+    "ExchangePurposeRecord",
+    "ExchangeStyleRecord",
+    "GapNode",
+    "GapRecord",
+    "Grapheme",
+    "HarakaUnit",
+    "InferenceResult",
+    "InterpretiveOutcomeRecord",
+    "JudgementNode",
+    "JudgementRecord",
+    "KnowledgeEpisode",
+    "KnowledgeEpisodeInput",
+    "KnowledgeEpisodeNode",
+    "LayerPromotionRule",
+    "LexicalClosure",
+    "MCIResult",
+    "MCIScores",
+    "LinguisticCarrierNode",
+    "LinguisticCarrierRecord",
+    "LinkingTraceNode",
+    "LinkingTraceRecord",
+    "MethodNode",
+    "MethodRecord",
+    "OntologicalConstraintRecord",
+    "OntologyV1Record",
+    "OpinionTraceNode",
+    "OpinionTraceRecord",
+    "PriorInfoNode",
+    "PriorInfoRecord",
+    "ProofDependencyGraph",
+    "ProofPathNode",
+    "ProofPathRecord",
+    "Proposition",
+    "PhonemeCandidate",
+    "PhoneticEvent",
+    "RationalSelfRecord",
+    "RealityAnchorNode",
+    "RealityAnchorRecord",
+    "ReceiverRoleRecord",
+    "ReceptionRecord",
+    "ReceptionStateRecord",
+    "RootPattern",
+    "RankScoreComponents",
+    "RootSlot",
+    "SelfNode",
+    "SenderRoleRecord",
+    "SenseTraceNode",
+    "SenseTraceRecord",
+    "SignifiedNode",
+    "SignifierNode",
+    "Syllable",
+    "SyllableUnit",
+    "SyntaxNode",
+    "TheoremRecord",
+    "TransformCandidate",
+    "TimeSpaceTag",
+    "TriadicBlockRecord",
+    "TrustProfileRecord",
+    "UtteranceNode",
+    "UtteranceRecord",
+    "ValidationResult",
+    "ValidatedJudgment",
+    "WorldFact",
+    "ZeroSlotRecord",
+    # ── Fractal Kernel types ───────────────────────────────────────
+    "ActivationRecord",
+    "ConflictEdge",
+    "ConstraintEdge",
+    "DecisionTrace",
+    "HypothesisNode",
+    "SignalUnit",
+    "SupportEdge",
+    "UnicodeAtom",
+    # ── Trace module ───────────────────────────────────────────────
+    "DecisionState",
+    "HypothesisState",
+    "KernelRuntimeState",
+    "SignalState",
+    # ── Strict 7-Layer System enums ────────────────────────────────
+    "AuditoryNode",
+    "GenerativeNode",
+    "JudgmentCategory",
+    "LayerEdgeType",
+    "MentalEdgeType",
+    "MentalPrimitive",
+    "RepresentationNode",
+    "StrictLayerID",
+    "StructuralNode",
+    "TransformationNode",
+    "TransitionGateStatus",
+    # ── Particle Fractal Constitution v1 enums ─────────────────────
+    "ParticleDalala",
+    "ParticleDirection",
+    "ParticleEffect",
+    "ParticleKind",
+    "ParticleReadiness",
+    "ParticleScope",
+    # ── Strict 7-Layer System types ────────────────────────────────
+    "AuditoryMinimumRecord",
+    "GenerativeProfileRecord",
+    "JudgmentRecordL5",
+    "LayerTraceRecord",
+    "MentalFoundationRecord",
+    "RepresentationRecord",
+    "StructuralProfileRecord",
+    "TransformationProfileRecord",
+    "TransitionGate",
+    # ── Composition / Syntax Constitution v1 enums ─────────────────
+    "AmbiguityResolution",
+    "AmbiguityType",
+    "CompositionGate",
+    "CompositionRelation",
+    "CompositionRole",
+    "CompositionVerdict",
+    "ConflictResolutionMethod",
+    "ConflictType",
+    "DependencyType",
+    "InterPropositionLink",
+    "PredicationType",
+    "PropositionType",
+    "RestrictionType",
+    "RoleStatus",
+    "TransferType",
+    "TruthCategory",
+    # ── Composition / Syntax Constitution v1 types ─────────────────
+    "AmbiguityRecord",
+    "CompositionRecord",
+    "CompositionRoleRecord",
+    "ConflictRecord",
+    "DependencyRecord",
+    "DisambiguationResult",
+    "GateResult",
+    "PredicationRecord",
+    "PropositionRecord",
+    "RestrictionRecord",
+    "TransferRecord",
+    "TruthRecord",
+    # ── Informational Stock Governance (ISG) Constitution v1 enums ──
+    "CallabilityStatus",
+    "ConfirmationRank",
+    "EpistemicEntryKind",
+    "GateDecision",
+    "InternalConflictType",
+    "ISGConflictResolution",
+    "KnowledgeAtomType",
+    "LevelMatchStatus",
+    "PriorKnowledgeType",
+    "ReadinessLevel",
+    "SourceType",
+    "VerificationStatus",
+    # ── Informational Stock Governance (ISG) Constitution v1 types ──
+    "CallabilityResult",
+    "GovernanceGateResult",
+    "InternalConflictRecord",
+    "ISGValidationResult",
+    "KnowledgeAtom",
+    "LevelMatchResult",
+    "SourceRecord",
+]

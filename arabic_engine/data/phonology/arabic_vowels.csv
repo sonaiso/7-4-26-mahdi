@@ -1,0 +1,6 @@
+id,char,codepoint,height_code,length_code,role_code,vowel_code,entity_score
+vowel_0001,َ,U+064E,1,1,1,2.1.1.1,0.84
+vowel_0002,ُ,U+064F,2,1,1,2.2.1.1,0.84
+vowel_0003,ِ,U+0650,3,1,1,2.3.1.1,0.84
+vowel_0004,ْ,U+0652,4,3,3,2.4.3.3,0.80
+vowel_0005,ّ,U+0651,11,4,6,2.11.4.6,0.88
