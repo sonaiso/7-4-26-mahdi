@@ -405,7 +405,7 @@ class TestMakeSignified:
     def test_auto_id_prefix(self):
         cl = self._make_closure("مجهول", POS.UNKNOWN)
         rec = make_signified(cl)
-        assert rec.id.startswith("SIG-AUTO-")
+        assert rec.id.startswith("SIG-GEN-")
 
     def test_auto_record_is_frozen(self):
         cl = self._make_closure("مجهول2", POS.UNKNOWN)

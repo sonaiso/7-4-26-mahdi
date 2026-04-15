@@ -150,7 +150,7 @@ _STYPE_DEFAULTS: Dict[SemanticType, dict] = {
     },
 }
 
-_next_sig_id = 900
+_next_sig_id = 10_000
 
 
 def make_signified(closure: LexicalClosure) -> SignifiedRecord:
@@ -183,7 +183,7 @@ def make_signified(closure: LexicalClosure) -> SignifiedRecord:
     _next_sig_id += 1
 
     return SignifiedRecord(
-        id=f"SIG-AUTO-{_next_sig_id:04d}",
+        id=f"SIG-GEN-{_next_sig_id:05d}",
         label_ar=closure.lemma,
         label_en=closure.lemma,
         definition=f"Auto-generated signified for '{closure.lemma}'",
