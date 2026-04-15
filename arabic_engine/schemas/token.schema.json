@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "token.schema.json",
+  "title": "Token Analysis",
+  "description": "Schema for a full token-level Arabic word analysis.",
+  "type": "object",
+  "properties": {
+    "id": { "type": "string", "pattern": "^token_\\d+$" },
+    "surface": { "type": "string", "minLength": 1 },
+    "normalized_form": { "type": "string" },
+    "unicode_form": { "type": "string", "enum": ["NFC", "NFD", "NFKC", "NFKD"] },
+    "graphemes": {
+      "type": "array",
+      "items": { "$ref": "grapheme.schema.json" }
+    },
+    "clitics": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "surface": { "type": "string" },
+          "type": { "type": "string", "enum": ["connector", "relation_marker", "definite_article"] },
+          "confidence": { "type": "number", "minimum": 0, "maximum": 1 }
+        },
+        "required": ["surface", "type", "confidence"]
+      }
+    },
+    "core_surface": { "type": "string" },
+    "syllables": {
+      "type": "array",
+      "items": { "$ref": "syllable.schema.json" }
+    },
+    "root_candidates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "root": { "type": "array", "items": { "type": "string" } },
+          "confidence": { "type": "number", "minimum": 0, "maximum": 1 }
+        },
+        "required": ["root", "confidence"]
+      }
+    },
+    "pattern_candidates": {
+      "type": "array",
+      "items": { "$ref": "pattern.schema.json" }
+    },
+    "final_status": { "type": "string" }
+  },
+  "required": ["id", "surface", "normalized_form", "graphemes"]
+}

@@ -12,42 +12,28 @@ from typing import FrozenSet, List, Optional, Tuple
 
 from .enums import (
     POS,
-    ActivationStage,
-    AffectiveDimension,
-    AuthorityLevel,
-    CarrierClass,
+    # Epistemic v1 enums
     CarrierType,
-    CategorizationMode,
-    CausalRole,
     CellType,
     CombinationType,
-    ConceptFormationMode,
-    ConceptRelationType,
-    ConceptualSignifiedClass,
+    CompositionDegree,
     ConditionToken,
+    ConfirmationRank,
+    ConflictResolutionMethod,
     ConflictState,
+    ConflictType,
     ConstraintStrength,
     ConstraintType,
     ContaminationLevel,
     CouplingRelationType,
-    CulturalScope,
-    DalaalaKind,
     DalalaType,
-    DecisionCode,
-    DiachronicStatus,
-    DiscourseGapType,
-    DiscourseValidationOutcome,
+    DependencyDegree,
     ElementClass,
     ElementFunction,
     ElementLayer,
-    EmbodiedDomain,
     EpistemicRank,
-    EpistemicStatus,
     EvidenceType,
-    ExchangeStatus,
-    ExchangeType,
-    ExplicitnessLevel,
-    FrameType,
+    ExistenceMode,
     FunctionRole,
     FuncTransitionClass,
     GapSeverity,
@@ -56,16 +42,15 @@ from .enums import (
     InfoKind,
     InsertionPolicy,
     InstitutionalCategory,
+    InterpretationSource,
     InterpretiveOutcomeType,
     InterpretiveStability,
+    InterPropositionLink,
     IrabCase,
     IrabRole,
     JudgementType,
-    JudgmentCategory,
     LinkKind,
     MafhumType,
-    MentalIntentionalType,
-    MetaConceptualLevel,
     MethodFamily,
     ModalCategory,
     NominalAttributeKind,
@@ -85,8 +70,7 @@ from .enums import (
     OntologicalConstraintType,
     OntologicalLayer,
     OntologicalMode,
-    OperationalCapacity,
-    PathKind,
+    OntologicalSubtype,
     PhonCategory,
     PhonFeature,
     PhonGroup,
@@ -97,31 +81,26 @@ from .enums import (
     PurposeType,
     RankType,
     RationalSelfKind,
+    ReadinessLevel,
+    ReadinessStatus,
     RealityKind,
-    ReceiverExpectedAction,
-    ReceiverRoleType,
-    ReceiverState,
-    ReceptionMode,
-    ReceptionStateType,
     ReversibleValue,
-    RevisionType,
-    SalienceLevel,
-    ScriptPhase,
-    SelfModelAspect,
+    RhetoricalStatus,
     SemanticType,
-    SenderRoleType,
     SenseModality,
-    SignalType,
     SignifiedClass,
     SignifierClass,
     SlotState,
+    SourceType,
     SpaceRef,
+    StockComponent,
+    StockSufficiency,
     StrictLayerID,
     StyleKind,
     SyllablePosition,
+    SymbolicStatus,
     TimeRef,
     TraceMode,
-    TraceQuality,
     TransitionCondition,
     TransitionGateStatus,
     TransitionLaw,
@@ -129,14 +108,161 @@ from .enums import (
     TriadType,
     TrustBasis,
     TrustLevel,
+    TruthCategory,
     TruthState,
     UnicodeProfileType,
-    UtteranceMode,
     UtteranceToConceptConstraint,
     UtteredFormClass,
-    ValidationOutcome,
     ValidationState,
+    VerbAugmentation,
+    VerbBab,
+    VerbDerivativeType,
+    VerbEventType,
+    VerbGender,
+    VerbMode,
+    VerbNumber,
+    VerbPerson,
+    VerbReadiness,
+    VerbTense,
+    VerbTransitivity,
+    VerbVoice,
 )
+
+# ── State-machine layer types ──────────────────────────────────────
+
+
+@dataclass(frozen=True)
+class MCIScores:
+    """Component scores for the Minimum-Completeness Index.
+
+    Each score is a float in [0, 1].
+    """
+
+    boundary: float = 0.0       # B — Boundary Score
+    unity: float = 0.0          # U — Unity Score
+    cohesion: float = 0.0       # C — Cohesion Score
+    extension: float = 0.0      # E — Extension Score
+    phase_order: float = 0.0    # P — Phase Order Score
+    orderliness: float = 0.0    # O — Orderliness Score
+
+
+@dataclass(frozen=True)
+class MCIResult:
+    """Result of MCI (Minimum-Completeness Index) evaluation."""
+
+    scores: MCIScores
+    mci_value: float
+    decision: str               # human-readable decision label
+
+
+@dataclass(frozen=True)
+class ConceptSeed:
+    """Layer 0 output — initial concept seed from the foundational machine."""
+
+    seed_id: str
+    unit_label: str = ""
+    identity_score: float = 0.0
+    rank_hint: str = ""
+
+
+@dataclass(frozen=True)
+class PhoneticEvent:
+    """Layer 1 output — a detected phonetic event."""
+
+    event_id: str
+    energy: float = 0.0
+    boundary_score: float = 0.0
+    position: int = 0
+    interception_type: str = ""
+
+
+@dataclass(frozen=True)
+class PhonemeCandidate:
+    """Layer 2 output — a phoneme candidate that passed MCI."""
+
+    candidate_id: str
+    mci_result: Optional[MCIResult] = None
+    phonetic_event_ref: str = ""
+    symbol: str = ""
+
+
+@dataclass(frozen=True)
+class HarakaUnit:
+    """Layer 2.5 output — an operational vowel-mark (حركة)."""
+
+    unit_id: str
+    sonority_score: float = 0.0
+    attachment_target: Optional[str] = None
+    mobility_score: float = 0.0
+    is_lengthened: bool = False
+    is_deleted: bool = False
+
+
+@dataclass(frozen=True)
+class SyllableUnit:
+    """Layer 3 output — a validated syllable unit."""
+
+    unit_id: str
+    pattern_shape: str = ""     # e.g. "CV", "CVC", "CVV", "CVVC", "CVCC"
+    weight_class: int = 0       # 1=light, 2=heavy, 3=super-heavy
+    nucleus_ref: str = ""
+    syllable_score: float = 0.0
+
+
+@dataclass(frozen=True)
+class RankScoreComponents:
+    """Components for the root-rank score formula."""
+
+    position_fit: float = 0.0           # P — Position Fit
+    constitutiveness: float = 0.0       # C — Constitutiveness
+    inflection_stability: float = 0.0   # I — Inflection Stability
+    syllable_compatibility: float = 0.0 # S — Syllable Compatibility
+    recoverability: float = 0.0         # R — Recoverability
+
+
+@dataclass(frozen=True)
+class RootSlot:
+    """Layer 4 output — a root position with rank score."""
+
+    slot_id: str
+    root_ref: str = ""
+    position: str = ""          # "fa", "ayn", or "lam"
+    rank_score: float = 0.0
+    components: Optional[RankScoreComponents] = None
+
+
+@dataclass(frozen=True)
+class TransformCandidate:
+    """Layer 5 output — a validated morphological transform."""
+
+    candidate_id: str
+    transform_type: str = ""    # matches TransformJudgment name
+    confidence: float = 0.0
+    source_root_ref: str = ""
+    recoverability_score: float = 0.0
+
+
+@dataclass(frozen=True)
+class FinalApprovalComponents:
+    """Components for the final-approval score formula."""
+
+    judgment_score: float = 0.0         # J
+    reality_match_score: float = 0.0    # R
+    recoverability_score: float = 0.0   # Rec
+    trace_clarity: float = 0.0          # T
+
+
+@dataclass(frozen=True)
+class ValidatedJudgment:
+    """Layer 6 output — a judgment that passed reality matching."""
+
+    judgment_id: str
+    final_approval: float = 0.0
+    reality_match_score: float = 0.0
+    components: Optional[FinalApprovalComponents] = None
+    is_approved: bool = False
+    evidence_refs: Tuple[str, ...] = ()
+
 
 # ── Signifier layer ─────────────────────────────────────────────────
 
@@ -171,6 +297,111 @@ class RootPattern:
     pattern: str  # e.g. 'فَعَلَ'
     root_id: int = 0
     pattern_id: int = 0
+
+
+# ── Enriched signifier models ──────────────────────────────────────
+
+
+@dataclass(frozen=True)
+class CombiningMarkDetail:
+    """Metadata for a single combining mark attached to a grapheme."""
+
+    char: str
+    codepoint: str          # e.g. "U+064E"
+    type: str               # haraka | sukun | shadda | tanween
+
+
+@dataclass(frozen=True)
+class EnrichedGrapheme:
+    """Extended grapheme cluster with phonetic metadata.
+
+    Wraps the basic :class:`Grapheme` concept with additional fields
+    loaded from ``arabic_letters.csv`` and ``unicode_marks.csv``.
+    The ``role`` field remains ``None`` until the pattern layer
+    resolves ambiguity for ا/و/ي.
+    """
+
+    id: str
+    layer: int                                  # always 1
+    surface: str
+    base_char: str
+    base_codepoint: str                         # e.g. "U+0628"
+    combining_marks: Tuple[CombiningMarkDetail, ...] = ()
+    phonetic_code: str = ""
+    place_code: int = 0
+    manner_code: int = 0
+    voicing_code: int = 0
+    stiffness_code: int = 0
+    entity_score: float = 0.0
+    role: Optional[str] = None                  # consonant | long_vowel | ambiguous
+
+
+@dataclass(frozen=True)
+class EnrichedSyllable:
+    """Syllable with shape and weight metadata from ``syllable_shapes.csv``."""
+
+    id: str
+    layer: int                                  # always 3
+    surface: str
+    chars: Tuple[str, ...] = ()                 # EnrichedGrapheme ids
+    vowels: Tuple[str, ...] = ()                # vowel ids
+    shape: str = ""                             # e.g. "CV"
+    shape_code: str = ""                        # e.g. "3.1.1.0.1"
+    nucleus_type: int = 0
+    closure_type: int = 0
+    weight_code: int = 0
+    completion_score: float = 0.0
+    weightability_score: float = 0.0
+
+
+@dataclass(frozen=True)
+class PatternCandidate:
+    """A candidate morphological pattern with confidence score."""
+
+    pattern_code: str
+    pattern_label: str = ""
+    pattern_type: str = ""
+    augment_count: int = 0
+    root_candidate: Tuple[str, ...] = ()
+    confidence: float = 0.0
+    reality_match_score: float = 0.0
+
+
+@dataclass(frozen=True)
+class CliticRecord:
+    """A clitic (proclitic/enclitic) stripped from a token."""
+
+    surface: str
+    type: str               # connector | relation_marker | definite_article
+    confidence: float = 0.0
+
+
+@dataclass(frozen=True)
+class RootCandidate:
+    """A candidate root with confidence score."""
+
+    root: Tuple[str, ...]
+    confidence: float = 0.0
+
+
+@dataclass(frozen=True)
+class TokenAnalysis:
+    """Full word-level analysis record (تحليل الكلمة الكاملة).
+
+    Produced by the 8-step diacritised-word analysis pipeline.
+    """
+
+    id: str
+    surface: str
+    normalized_form: str
+    unicode_form: str = "NFC"
+    graphemes: Tuple[EnrichedGrapheme, ...] = ()
+    clitics: Tuple[CliticRecord, ...] = ()
+    core_surface: str = ""
+    syllables: Tuple[EnrichedSyllable, ...] = ()
+    root_candidates: Tuple[RootCandidate, ...] = ()
+    pattern_candidates: Tuple[PatternCandidate, ...] = ()
+    final_status: str = "structural_analysis_only"
 
 
 # ── Lexical Closure ─────────────────────────────────────────────────
@@ -1163,573 +1394,223 @@ class RankDecision:
         return self.promotion_target is not None
 
 
-# ── Axiom & Theorem Records — السجلات البرهانية ──────────────────────
+# ── Symbolic Encoding — ترميز الحرف والحركة ─────────────────────────
+#
+# Implements the refined axiom:
+#
+#     Ess(x) = ⟨Slot(x), Value(x)⟩          — essence = position + value
+#     Cond(x) = Ω_x                          — constraint (external to essence)
+#     Valid(x) ⟺ Ess(x) ∧ Ω_x              — acceptance / activation
+#
+# The constraint is NOT an intrinsic part of the unit's essence.
+# It is an activation / acceptance / insertion / promotion condition.
 
 
 @dataclass(frozen=True)
-class AxiomRecord:
-    """سجل بديهية — a formally registered axiom of the system.
+class SymbolicRecord:
+    """السجل الرمزي العام — Generic Symbolic Record.
 
-    Each axiom is a foundational statement that is *assumed* true and
-    upon which theorems depend.  Recording axioms as typed objects
-    allows:
+    The universal record for any linguistic encoding unit (letter or vowel).
+    Separates *essence* (Core) from *constraint* (Condition)::
 
-    * lookup by identifier
-    * dependency tracking
-    * proof-coverage analysis
+        X := (ID, Type, Slot, Value, Condition, Layer, Status)
 
-    Implements the requirement::
+        Core(X)      = (Slot, Value)           — الجوهر
+        Condition(X)  = Ω_X                    — الشرط
+        Status(X)    = Representable | Valid | Promotable
 
-        ∀ axiom ∈ Foundation:
-            axiom.id ∈ Registry
-            axiom.formal_statement is well-formed
-            axiom.implemented_by ⊆ Codebase
+    Implements::
+
+        Ess(x)  = ⟨Slot, Value⟩
+        Valid(x) ⟺ Ess(x) ∧ Constraint
 
     Fields
     ------
-    axiom_id            unique identifier (e.g. ``"AX_001"``)
-    name                human-readable name (Arabic or English)
-    formal_statement    the symbolic / logical statement
-    natural_language    plain-language description
-    layer               the :class:`OntologicalLayer` this axiom governs
-    dependencies        IDs of prior axioms this one depends on
-    implemented_by      names of types/functions that embody this axiom
-    status              current :class:`ProofStatus`
+    record_id           unique identifier (e.g. ``"SR_001"``)
+    unit_type           LETTER or VOWEL
+    slot_position       positional encoding (scriptural / phonetic / chain)
+    slot_label          human-readable slot description
+    value_vector        numeric value tuple (identity, features, effects)
+    value_label         human-readable value description
+    constraints         frozenset of active constraint kinds
+    constraint_omega    constraint weight Ω ∈ [0, 1]; 0 = blocked, 1 = open
+    layer               ontological layer
+    status              current symbolic status
     notes               free-text annotation
-    """
-
-    axiom_id: str
-    name: str
-    formal_statement: str
-    natural_language: str
-    layer: OntologicalLayer
-    dependencies: Tuple[str, ...] = ()
-    implemented_by: Tuple[str, ...] = ()
-    status: ProofStatus = ProofStatus.ASSUMED
-    notes: str = ""
-
-
-@dataclass(frozen=True)
-class TheoremRecord:
-    """سجل مبرهنة — a formally registered theorem derived from axioms.
-
-    A theorem is a statement *derived* from one or more axioms (and
-    possibly other theorems).  Recording them as typed objects enables
-    traceability from any claim back to its foundational assumptions.
-
-    Implements the requirement::
-
-        ∀ thm ∈ Theorems:
-            thm.axiom_deps ⊆ Axioms
-            thm.theorem_deps ⊆ Theorems
-            thm.proof_sketch ≠ ""
-
-    Fields
-    ------
-    theorem_id          unique identifier (e.g. ``"TH_001"``)
-    name                human-readable name
-    formal_statement    the symbolic / logical statement
-    natural_language    plain-language description
-    axiom_dependencies  IDs of axioms this theorem depends on
-    theorem_dependencies IDs of prior theorems this theorem depends on
-    proof_sketch        concise proof outline
-    status              current :class:`ProofStatus`
-    test_reference      name of the test that verifies this theorem
-    notes               free-text annotation
-    """
-
-    theorem_id: str
-    name: str
-    formal_statement: str
-    natural_language: str
-    axiom_dependencies: Tuple[str, ...] = ()
-    theorem_dependencies: Tuple[str, ...] = ()
-    proof_sketch: str = ""
-    status: ProofStatus = ProofStatus.PENDING
-    test_reference: str = ""
-    notes: str = ""
-
-    @property
-    def all_dependencies(self) -> Tuple[str, ...]:
-        """Return all dependency IDs (axiom + theorem)."""
-        return self.axiom_dependencies + self.theorem_dependencies
-
-    @property
-    def is_proven(self) -> bool:
-        """True when the theorem has been formally proven."""
-        return self.status is ProofStatus.PROVEN
-
-
-@dataclass(frozen=True)
-class ProofDependencyGraph:
-    """رسم بياني للاعتماد البرهاني — the proof-dependency DAG.
-
-    Collects all :class:`AxiomRecord` and :class:`TheoremRecord` instances
-    and provides navigation / validation helpers.
-
-    Key invariants::
-
-        1. The graph must be acyclic (is_acyclic)
-        2. Every theorem dependency must reference existing axioms/theorems
-        3. proof_coverage ∈ [0, 1]
-
-    Fields
-    ------
-    axioms      all registered axioms
-    theorems    all registered theorems
-    """
-
-    axioms: Tuple[AxiomRecord, ...]
-    theorems: Tuple[TheoremRecord, ...]
-
-    # ── Lookup ─────────────────────────────────────────────────────
-
-    def get_axiom(self, axiom_id: str) -> Optional[AxiomRecord]:
-        """Return the axiom with the given ID, or ``None``."""
-        for ax in self.axioms:
-            if ax.axiom_id == axiom_id:
-                return ax
-        return None
-
-    def get_theorem(self, theorem_id: str) -> Optional[TheoremRecord]:
-        """Return the theorem with the given ID, or ``None``."""
-        for th in self.theorems:
-            if th.theorem_id == theorem_id:
-                return th
-        return None
-
-    # ── Dependency queries ─────────────────────────────────────────
-
-    def dependencies_of(self, theorem_id: str) -> Tuple[str, ...]:
-        """Return all dependency IDs for a theorem (axiom + theorem)."""
-        th = self.get_theorem(theorem_id)
-        if th is None:
-            return ()
-        return th.all_dependencies
-
-    def dependents_of(self, axiom_id: str) -> Tuple[str, ...]:
-        """Return IDs of all theorems that depend on the given axiom."""
-        return tuple(th.theorem_id for th in self.theorems if axiom_id in th.axiom_dependencies)
-
-    # ── Structural validation ──────────────────────────────────────
-
-    def _all_ids(self) -> "frozenset[str]":
-        """Return all axiom and theorem IDs."""
-        ax_ids = frozenset(ax.axiom_id for ax in self.axioms)
-        th_ids = frozenset(th.theorem_id for th in self.theorems)
-        return ax_ids | th_ids
-
-    def dangling_dependencies(self) -> Tuple[str, ...]:
-        """Return dependency IDs that don't match any axiom or theorem."""
-        known = self._all_ids()
-        dangling: "list[str]" = []
-        for th in self.theorems:
-            for dep in th.all_dependencies:
-                if dep not in known:
-                    dangling.append(dep)
-        return tuple(sorted(set(dangling)))
-
-    def is_acyclic(self) -> bool:
-        """Return ``True`` if the theorem dependency graph is a DAG.
-
-        Uses iterative topological-sort (Kahn's algorithm) restricted
-        to theorem-to-theorem edges.
-        """
-        th_ids = [th.theorem_id for th in self.theorems]
-        adj: "dict[str, list[str]]" = {tid: [] for tid in th_ids}
-        in_deg: "dict[str, int]" = {tid: 0 for tid in th_ids}
-        for th in self.theorems:
-            for dep in th.theorem_dependencies:
-                if dep in adj:
-                    adj[dep].append(th.theorem_id)
-                    in_deg[th.theorem_id] += 1
-
-        queue = [tid for tid, d in in_deg.items() if d == 0]
-        visited = 0
-        while queue:
-            node = queue.pop(0)
-            visited += 1
-            for child in adj[node]:
-                in_deg[child] -= 1
-                if in_deg[child] == 0:
-                    queue.append(child)
-        return visited == len(th_ids)
-
-    def proof_coverage(self) -> float:
-        """Fraction of theorems whose status is PROVEN.
-
-        Returns 0.0 when there are no theorems.
-        """
-        if not self.theorems:
-            return 0.0
-        proven = sum(1 for th in self.theorems if th.is_proven)
-        return proven / len(self.theorems)
-
-    def all_proven(self) -> bool:
-        """True when every theorem has been proven."""
-        return bool(self.theorems) and all(th.is_proven for th in self.theorems)
-
-
-# ── Essence / Condition — الجوهر والشرط ──────────────────────────────
-
-
-@dataclass(frozen=True)
-class EssenceConditionPair:
-    """ثنائية الجوهر والشرط — separates *what* an element is from the
-    constraint that gates its realisation.
-
-    Implements the principle::
-
-        Core(x) = (Slot, Value)
-        Cond(x) = Constraint      (شرط تحقق ≠ جزء من الماهية)
-
-    This allows treating the constraint as an *external guard* rather
-    than an intrinsic part of the element's essence.
-
-    Fields
-    ------
-    element_id      identifier of the linguistic element
-    slot            the structural position (موضع)
-    value           the content occupying the slot (قيمة)
-    constraint      optional :class:`ConditionToken` gating realisation
-    layer           ontological layer
-    notes           free-text annotation
-    """
-
-    element_id: str
-    slot: str
-    value: str
-    constraint: Optional[ConditionToken] = None
-    layer: OntologicalLayer = OntologicalLayer.CELL
-    notes: str = ""
-
-    @property
-    def core(self) -> Tuple[str, str]:
-        """Return ``(slot, value)`` — the essence, without constraint."""
-        return (self.slot, self.value)
-
-    @property
-    def has_constraint(self) -> bool:
-        """True when a realisation condition is attached."""
-        return self.constraint is not None
-
-
-# ── Ontology v1 — الجدول الأنطولوجي v1.0 ────────────────────────────
-
-
-@dataclass(frozen=True)
-class SignifierNode:
-    """عقدة الدال — a node representing a signifier in the Ontology v1 model.
-
-    Encodes the دال at any level (phonological, morphological, lexical,
-    syntactic, textual, pragmatic, rhetorical, or uttered).  When the node
-    represents a realised surface form (منطوق), ``signifier_class`` is
-    ``SignifierClass.UTTERED_FORM`` and ``uttered_form_class`` carries the
-    finer classification.
-
-    Axiom 1 (الدال أعمّ من المنطوق):
-        ``uttered_form_class`` is ``Optional`` — it is only set when
-        ``signifier_class is SignifierClass.UTTERED_FORM``.
-
-    Fields
-    ------
-    node_id             unique identifier (e.g. ``"SIG_001"``)
-    signifier_class     broad class of this signifier
-    uttered_form_class  finer classification when class is UTTERED_FORM
-    surface             the surface string (if available)
-    layer               ontological layer this signifier belongs to
-    notes               free-text annotation
-    """
-
-    node_id: str
-    signifier_class: SignifierClass
-    surface: str
-    layer: OntologicalLayer = OntologicalLayer.CELL
-    uttered_form_class: Optional[UtteredFormClass] = None
-    notes: str = ""
-
-    @property
-    def is_uttered(self) -> bool:
-        """True when this signifier is a realised surface form (منطوق)."""
-        return self.signifier_class is SignifierClass.UTTERED_FORM
-
-    @property
-    def uttered_form_is_set(self) -> bool:
-        """True when the finer uttered-form class has been assigned."""
-        return self.uttered_form_class is not None
-
-
-@dataclass(frozen=True)
-class SignifiedNode:
-    """عقدة المدلول — a node representing a signified in the Ontology v1 model.
-
-    Encodes the مدلول at any level.  When the node represents a conceptual
-    structure (مفهوم), ``signified_class`` is ``SignifiedClass.CONCEPTUAL``
-    and ``conceptual_class`` carries the finer classification.
-
-    Axiom 2 (المدلول أعمّ من المفهوم):
-        ``conceptual_class`` is ``Optional`` — it is only set when
-        ``signified_class is SignifiedClass.CONCEPTUAL``.
-
-    Fields
-    ------
-    node_id             unique identifier (e.g. ``"SFD_001"``)
-    signified_class     broad class of this signified
-    label               human-readable label for the signified
-    semantic_type       reuses the existing :class:`SemanticType` classification
-    conceptual_class    finer classification when class is CONCEPTUAL
-    properties          arbitrary key/value metadata
-    notes               free-text annotation
-    """
-
-    node_id: str
-    signified_class: SignifiedClass
-    label: str
-    semantic_type: SemanticType = SemanticType.ENTITY
-    conceptual_class: Optional[ConceptualSignifiedClass] = None
-    properties: dict = field(default_factory=dict)
-    notes: str = ""
-
-    @property
-    def is_conceptual(self) -> bool:
-        """True when this signified is a conceptual structure (مفهوم)."""
-        return self.signified_class is SignifiedClass.CONCEPTUAL
-
-    @property
-    def conceptual_class_is_set(self) -> bool:
-        """True when the finer conceptual class has been assigned."""
-        return self.conceptual_class is not None
-
-
-@dataclass(frozen=True)
-class CouplingRecord:
-    """سجل علاقة الاقتران — the directed link from a signifier to its signified.
-
-    Implements the coupling relation::
-
-        CouplingRelation: Signifier × Signified → Meaning
-
-    Axiom 3 (المنطوق لا ينتج المفهوم وحده بلا علاقة اقتران مفعّلة):
-        Every ``OntologyV1Record`` carries exactly one ``CouplingRecord``.
-
-    Fields
-    ------
-    coupling_id         unique identifier (e.g. ``"CRP_001"``)
-    coupling_type       the kind of coupling (direct, figurative, etc.)
-    signifier_id        ID of the source :class:`SignifierNode`
-    signified_id        ID of the target :class:`SignifiedNode`
-    confidence          coupling confidence ∈ [0, 1]
-    evidence            human-readable evidence description
-    active_constraints  IDs of constraints that govern this coupling
-    """
-
-    coupling_id: str
-    coupling_type: CouplingRelationType
-    signifier_id: str
-    signified_id: str
-    confidence: float = 1.0
-    evidence: str = ""
-    active_constraints: FrozenSet[str] = field(default_factory=frozenset)
-
-    @property
-    def is_direct(self) -> bool:
-        """True when the coupling is a direct / conventional link."""
-        return self.coupling_type is CouplingRelationType.DIRECT
-
-    @property
-    def is_figurative(self) -> bool:
-        """True when the coupling crosses a rhetorical / figurative boundary."""
-        return self.coupling_type is CouplingRelationType.FIGURATIVE
-
-
-@dataclass(frozen=True)
-class OntologicalConstraintRecord:
-    """سجل قيد أنطولوجي — a single constraint in the Ontology v1 model.
-
-    Axiom 5 (كل انتقال من منطوق إلى مفهوم يحتاج قيودًا تمنع الاحتمال الفاسد):
-        An ``OntologyV1Record`` is *valid* only when all its constraint
-        records have ``passes = True``.
-
-    Fields
-    ------
-    constraint_id           unique identifier (e.g. ``"CON_001"``)
-    constraint_type         the broad ontological constraint kind
-    utterance_constraint    the specific utterance→concept check (if any)
-    description_ar          Arabic description of this constraint
-    passes                  whether the constraint is satisfied
-    violated_by             description of the violation (empty when passing)
-    """
-
-    constraint_id: str
-    constraint_type: OntologicalConstraintType
-    description_ar: str
-    passes: bool = True
-    utterance_constraint: Optional[UtteranceToConceptConstraint] = None
-    violated_by: str = ""
-
-    @property
-    def is_violated(self) -> bool:
-        """True when the constraint is not satisfied."""
-        return not self.passes
-
-
-@dataclass(frozen=True)
-class OntologyV1Record:
-    """سجل الجدول الأنطولوجي v1.0 — the top-level unit of the ontology model.
-
-    Ties together the four chapters of the ontology:
-      1. الدال — :class:`SignifierNode`
-      2. المدلول — :class:`SignifiedNode`
-      3. علاقة الاقتران — :class:`CouplingRecord`
-      4. القيود — ``Tuple[OntologicalConstraintRecord, ...]``
-
-    Axiom 7 (التحليل الصحيح يبدأ بتعيين طبقة الدال…):
-        Build this record via :func:`~arabic_engine.signified.ontology_v1.build_ontology_record`
-        to guarantee the correct evaluation order.
-
-    Fields
-    ------
-    record_id       unique identifier (e.g. ``"ONT_001"``)
-    signifier       the دال node
-    signified       the مدلول node
-    coupling        the علاقة اقتران record
-    constraints     all قيود evaluated for this record
-    valid           True when all constraints pass
-    notes           free-text annotation
     """
 
     record_id: str
-    signifier: SignifierNode
-    signified: SignifiedNode
-    coupling: CouplingRecord
-    constraints: Tuple["OntologicalConstraintRecord", ...]
-    valid: bool
+    unit_type: UnitType
+    slot_position: int
+    slot_label: str
+    value_vector: Tuple[int, ...]
+    value_label: str
+    constraints: FrozenSet[ConstraintKind] = field(default_factory=frozenset)
+    constraint_omega: float = 1.0
+    layer: OntologicalLayer = OntologicalLayer.CELL
+    status: SymbolicStatus = SymbolicStatus.REPRESENTABLE
     notes: str = ""
 
+    # ── Core (الجوهر) ──────────────────────────────────────────────
+
     @property
-    def failed_constraints(self) -> Tuple["OntologicalConstraintRecord", ...]:
-        """Return all constraint records that did not pass."""
-        return tuple(c for c in self.constraints if c.is_violated)
+    def core(self) -> Tuple[int, Tuple[int, ...]]:
+        """Core(X) = (Slot, Value) — the essence of this unit.
 
+        Returns ``(slot_position, value_vector)`` — everything that
+        defines **what** the unit is, independent of contextual
+        constraints.
+        """
+        return (self.slot_position, self.value_vector)
 
-# ── Epistemic v1 — طبقة المعرفة العقلانية ──────────────────────────────
+    # ── Essence predicates ─────────────────────────────────────────
 
+    @property
+    def is_representable(self) -> bool:
+        """Representable ⟺ Core(X) is well-formed.
 
-@dataclass(frozen=True)
-class RealityAnchorRecord:
-    """مرساة الواقع — the grounding of a cognitive episode in reality.
+        A unit is representable when it has a valid slot position
+        (≥ 0) and a non-empty value vector.
+        """
+        return self.slot_position >= 0 and len(self.value_vector) > 0
 
-    Fields
-    ------
-    anchor_id    unique identifier
-    kind         ontological character of the reality (:class:`RealityKind`)
-    description  free-text description of the reality anchor
-    """
+    # ── Constraint predicate ───────────────────────────────────────
 
-    anchor_id: str
-    kind: RealityKind
-    description: str
+    @property
+    def constraint_satisfied(self) -> bool:
+        """Ω_X — the constraint is satisfied (non-zero weight)."""
+        return self.constraint_omega > 0.0
 
+    # ── Validation ─────────────────────────────────────────────────
 
-@dataclass(frozen=True)
-class SenseTraceRecord:
-    """الأثر الحسي — the sensory imprint that connects reality to cognition.
+    @property
+    def is_valid(self) -> bool:
+        """Valid(X) ⟺ Core(X) ∧ Ω_X.
 
-    Fields
-    ------
-    trace_id    unique identifier
-    modality    sensory channel (:class:`SenseModality`)
-    mode        direct / reported / inferred (:class:`TraceMode`)
-    description description of the sense trace
-    """
+        The unit is structurally valid when its essence is well-formed
+        **and** the external constraint is satisfied.
+        """
+        return self.is_representable and self.constraint_satisfied
 
-    trace_id: str
-    modality: SenseModality
-    mode: TraceMode
-    description: str
+    # ── Match / Containment / Usability ────────────────────────────
 
+    @property
+    def match(self) -> bool:
+        """M(x) = Match(S_x) — the unit occupies its proper slot."""
+        return self.is_representable
 
-@dataclass(frozen=True)
-class PriorInfoRecord:
-    """المعلومة السابقة — pre-existing knowledge used in the episode.
+    @property
+    def containment(self) -> bool:
+        """T(x) = Containment(V_x) — the value is embeddable in a
+        higher structure."""
+        return self.is_representable
 
-    Fields
-    ------
-    info_id      unique identifier
-    content      the prior knowledge content
-    source       origin of the prior info (e.g. axiom id, theorem id)
-    """
+    @property
+    def is_usable(self) -> bool:
+        """Usable(x) ⟺ M(x) ∧ T(x) ∧ Q(x).
 
-    info_id: str
-    content: str
-    source: str = ""
+        The unit can be *used* in a structural context only when match,
+        containment, **and** the constraint condition are all true.
+        """
+        return self.match and self.containment and self.constraint_satisfied
 
-
-@dataclass(frozen=True)
-class OpinionTraceRecord:
-    """أثر الرأي المسبق — trace of prior opinion (must be excluded from the method).
-
-    Fields
-    ------
-    opinion_id          unique identifier
-    description         description of the opinion
-    contamination_level degree of contamination (:class:`ContaminationLevel`)
-    """
-
-    opinion_id: str
-    description: str
-    contamination_level: ContaminationLevel
-
-
-@dataclass(frozen=True)
-class LinkingTraceRecord:
-    """أثر الربط — the linking step connecting reality, sense, and prior info.
-
-    Fields
-    ------
-    link_id      unique identifier
-    kind         type of link (:class:`LinkKind`)
-    description  description of the linking operation
-    """
-
-    link_id: str
-    kind: LinkKind
-    description: str
+    def to_row(self) -> dict:
+        """Serialise to a flat dictionary suitable for tabular display."""
+        return {
+            "Record_ID": self.record_id,
+            "Unit_Type": self.unit_type.name,
+            "Slot_Position": self.slot_position,
+            "Slot_Label": self.slot_label,
+            "Value_Vector": self.value_vector,
+            "Value_Label": self.value_label,
+            "Constraints": tuple(sorted(c.name for c in self.constraints)),
+            "Constraint_Omega": self.constraint_omega,
+            "Layer": self.layer.name,
+            "Status": self.status.name,
+            "Core": self.core,
+            "Is_Valid": self.is_valid,
+            "Is_Usable": self.is_usable,
+        }
 
 
 @dataclass(frozen=True)
-class JudgementRecord:
-    """سجل الحكم — the output judgement of a cognitive episode.
+class LetterRecord(SymbolicRecord):
+    """سجل ترميز الحرف — Letter Encoding Record.
 
-    Fields
-    ------
-    judgement_id  unique identifier
-    judgement_type  scope of the judgement (:class:`JudgementType`)
-    content         the content of the judgement
+    Specialisation of :class:`SymbolicRecord` for consonants / base letters.
+
+    The essence of a letter::
+
+        Ess(L) = ⟨S_L, V_L⟩
+
+    where:
+        S_L — scriptural position, phonetic place, chain index
+        V_L — consonantal identity, feature vector, syllabic potential,
+              prosodic weight
+
+    The constraint::
+
+        C_L = Ω_L  (positional + adjacency + layer constraints)
+
+    Validation::
+
+        Valid(L) ⟺ ⟨S_L, V_L⟩ ∧ Ω_L = 1
+
+    Additional fields
+    -----------------
+    phonetic_group      phonetic articulation group (e.g. ``PhonGroup``)
+    syllabic_weight     maqta'i weight contribution (1–3)
     """
 
-    judgement_id: str
-    judgement_type: JudgementType
-    content: str
+    phonetic_group: Optional[PhonGroup] = None
+    syllabic_weight: int = 1
+
+    def __post_init__(self) -> None:
+        """Ensure unit_type is LETTER."""
+        if self.unit_type is not UnitType.LETTER:
+            raise ValueError(
+                f"LetterRecord requires UnitType.LETTER, got {self.unit_type}"
+            )
 
 
 @dataclass(frozen=True)
-class MethodRecord:
-    """سجل الطريقة — the epistemological method applied in the episode.
+class VowelRecord(SymbolicRecord):
+    """سجل ترميز الحركة — Vowel Encoding Record.
 
-    Fields
-    ------
-    method_id     unique identifier
-    family        method family (:class:`MethodFamily`)
-    name          human-readable name
-    domain_fit    tuple of :class:`JudgementType` values the method can handle
+    Specialisation of :class:`SymbolicRecord` for short vowels / diacritics.
+
+    The essence of a vowel::
+
+        Ess(H) = ⟨S_H, V_H⟩
+
+    where:
+        S_H — dependent position (attached to a carrier / nucleus)
+        V_H — vocalic quality (fatha/damma/kasra), temporal effect,
+              syllabic effect, prosodic weight
+
+    The constraint::
+
+        C_H = Ω_H  (carrier + syllabic + layer constraints)
+
+    Validation::
+
+        Valid(H) ⟺ ⟨S_H, V_H⟩ ∧ Ω_H = 1
+
+    Additional fields
+    -----------------
+    carrier_id          identifier of the host consonant
+    is_long             whether the vowel is a long (madd) variant
     """
 
-    method_id: str
-    family: MethodFamily
-    name: str
-    domain_fit: Tuple[JudgementType, ...]
+    carrier_id: Optional[str] = None
+    is_long: bool = False
 
+    def __post_init__(self) -> None:
+        """Ensure unit_type is VOWEL."""
+        if self.unit_type is not UnitType.VOWEL:
+            raise ValueError(
+                f"VowelRecord requires UnitType.VOWEL, got {self.unit_type}"
+            )
 
 @dataclass(frozen=True)
 class UtteranceRecord:
@@ -1799,320 +1680,422 @@ class ProofPathRecord:
     method_fit: MethodFamily
 
 
+    @property
+    def has_constraint(self) -> bool:
+        """True when a realisation condition is attached."""
+        return self.constraint is not None
+
+
+# ── Signified Ontology v1.0 — المدلول ────────────────────────────────
+
 @dataclass(frozen=True)
-class ConflictRuleRecord:
-    """قاعدة التعارض — rule for resolving utterance/concept conflicts.
+class SignifiedRecord:
+    """سجل المدلول — the central record of the Arabic Signified Ontology.
+
+    Every signified in the language is represented as a 17-field frozen
+    record covering its type, subtype, and seven cross-cutting descriptive
+    axes.
+
+    Mirrors the JSON representation defined in §6 of the ontology spec.
+    """
+
+    id: str                                        # e.g. "SIG-000124"
+    label_ar: str                                  # التسمية بالعربية
+    label_en: str                                  # English label
+    definition: str                                # التعريف
+    primary_type: PrimarySignifiedType
+    secondary_type: str                            # dotted path, e.g. "EntityMeaning.GenericEntity"
+    dependency_degree: DependencyDegree
+    existence_mode: ExistenceMode
+    specificity_degree: SpecificityDegree
+    composition_degree: CompositionDegree
+    context_requirement: ContextRequirement
+    logical_status: LogicalStatus
+    rhetorical_status: RhetoricalStatus
+    temporal_status: SignifiedTemporalStatus
+    referential_status: Optional[ReferentialSubtype] = None
+    examples: Tuple[str, ...] = ()
+    constraints: Tuple[str, ...] = ()
+
+
+@dataclass(frozen=True)
+class OntologicalSignified(SignifiedRecord):
+    """سجل المدلول الوجودي — signified with ontological-subtype detail.
+
+    Extends :class:`SignifiedRecord` for EntityMeaning, PropertyMeaning,
+    and EventMeaning branches.
+    """
+
+    ontological_subtype: Optional[OntologicalSubtype] = None
+    # Entity branch
+    is_countable: bool = True
+    is_individuated: bool = True
+    is_named: bool = False
+    # Property branch
+    requires_bearer: bool = False
+    property_persistence: str = ""      # "stable" | "transient"
+    # Event branch
+    event_time: str = ""                # free-form temporal note
+    transitivity: str = ""              # "transitive" | "intransitive"
+    agency: str = ""                    # "agentive" | "non-agentive"
+    intentionality: str = ""            # "intentional" | "non-intentional"
+
+
+@dataclass(frozen=True)
+class RelationalSignified(SignifiedRecord):
+    """سجل المدلول العلائقي — signified with relational detail."""
+
+    arity: int = 2
+    relation_direction: str = ""        # e.g. "source→target"
+    symmetry: bool = False
+
+
+@dataclass(frozen=True)
+class PropositionalSignified(SignifiedRecord):
+    """سجل المدلول القضوي — signified with propositional detail."""
+
+    truth_evaluable: bool = False
+    polarity: Polarity = Polarity.NEUTRAL_POL
+    modality: Modality = Modality.CERTAIN_MOD
+
+    @property
+    def failed_constraints(self) -> Tuple["OntologicalConstraintRecord", ...]:
+        """Return all constraint records that did not pass."""
+        return tuple(c for c in self.constraints if c.is_violated)
+
+
+# ── Epistemic v1 — Knowledge Episode Validator types ─────────────────
+
+
+@dataclass(frozen=True)
+class Self_:
+    """ذات — the epistemic agent undergoing a knowledge episode.
+
+    Renamed from ``Self`` to avoid clashing with the Python keyword.
 
     Fields
     ------
-    rule_id           unique identifier
-    prefer_concept    True → concept wins on conflict; False → utterance wins
-    rationale         explanation of the rule
+    id          unique identifier (e.g. ``"self:researcher_1"``)
+    self_kind   kind of agent (``"individual"``, ``"collective"``, etc.)
     """
 
-    rule_id: str
-    prefer_concept: bool
-    rationale: str
+    id: str
+    self_kind: str
 
 
 @dataclass(frozen=True)
-class GapRecord:
-    """سجل الفجوة — a detected gap in the cognitive episode.
+class RealityAnchorRecord:
+    """مرساة الواقع — anchors a knowledge episode to external reality.
 
     Fields
     ------
-    gap_id      unique identifier
-    code        the :class:`DecisionCode` that triggered this gap
-    severity    how serious the gap is (:class:`GapSeverity`)
-    description human-readable description
+    id                  unique identifier
+    reality_kind        kind of reality referent
+    source_mode         how the reality was accessed
+    anchoring_strength  strength of the anchor (1–5)
     """
 
-    gap_id: str
-    code: DecisionCode
-    severity: GapSeverity
+    id: str
+    reality_kind: RealityKind
+    source_mode: TraceMode
+    anchoring_strength: int
+
+
+@dataclass(frozen=True)
+class SenseTraceRecord:
+    """أثر الحس — the sensory trace supporting the episode.
+
+    Fields
+    ------
+    id               unique identifier
+    sense_modality   the sensory channel used
+    trace_mode       how the trace was obtained
+    trace_quality    quality descriptor (e.g. ``"strong"``, ``"weak"``)
+    """
+
+    id: str
+    sense_modality: SenseModality
+    trace_mode: TraceMode
+    trace_quality: str
+
+
+@dataclass(frozen=True)
+class PriorInfoRecord:
+    """معلومة سابقة — a piece of prior information used in the episode.
+
+    Fields
+    ------
+    id           unique identifier
+    info_kind    category of prior information (e.g. ``"lexical"``)
+    source       where the information comes from (e.g. ``"lexicon"``)
+    is_verified  whether this piece has been verified
+    """
+
+    id: str
+    info_kind: str
+    source: str
+    is_verified: bool
+
+
+@dataclass(frozen=True)
+class OpinionTraceRecord:
+    """أثر رأي — tracks potential prior-opinion contamination.
+
+    Fields
+    ------
+    id                    unique identifier
+    contamination_level   degree of contamination
+    description           free-text description
+    """
+
+    id: str
+    contamination_level: ContaminationLevel
     description: str
 
 
 @dataclass(frozen=True)
-class KnowledgeEpisode:
-    """خبرة معرفية — a complete cognitive episode for validation.
-
-    This is the *internal* fully-typed representation.  Client code usually
-    builds a :class:`KnowledgeEpisodeInput` first, then passes it to
-    :func:`~arabic_engine.cognition.epistemic_v1.validate_episode`.
+class LinkingTraceRecord:
+    """أثر الربط — documents how the linking / inference was performed.
 
     Fields
     ------
-    episode_id       unique identifier
-    reality_anchor   the grounding in reality (required)
-    sense_trace      the sensory imprint (required)
-    prior_infos      at least one prior information record (required)
-    opinion_traces   any detected prior-opinion traces (may be empty)
-    linking_trace    the linking step (required)
-    judgement        the output judgement (required)
-    method           the epistemological method (required)
-    carrier          the linguistic carrier (required)
-    proof_path       the proof path (required)
-    conflict_rule    the conflict resolution rule (required)
+    id           unique identifier
+    link_kind    the kind of linking used
+    step_count   number of inferential steps
+    is_explicit  whether the link was explicit
     """
 
-    episode_id: str
-    reality_anchor: RealityAnchorRecord
-    sense_trace: SenseTraceRecord
-    prior_infos: Tuple[PriorInfoRecord, ...]
-    opinion_traces: Tuple[OpinionTraceRecord, ...]
-    linking_trace: LinkingTraceRecord
-    judgement: JudgementRecord
-    method: MethodRecord
-    carrier: LinguisticCarrierRecord
-    proof_path: ProofPathRecord
-    conflict_rule: ConflictRuleRecord
+    id: str
+    link_kind: LinkKind
+    step_count: int
+    is_explicit: bool
+
+
+@dataclass(frozen=True)
+class JudgementRecord:
+    """حكم — the judgement issued by the knowledge episode.
+
+    Fields
+    ------
+    id              unique identifier
+    judgement_type   the category of judgement
+    judgement_text   free-text statement of the judgement
+    """
+
+    id: str
+    judgement_type: JudgementType
+    judgement_text: str
+
+
+@dataclass(frozen=True)
+class MethodRecord:
+    """منهج — a registered methodological family.
+
+    Fields
+    ------
+    id                        unique identifier (e.g. ``"method:rational"``)
+    method_family             the family category
+    requires_experiment       whether this method requires experiments
+    requires_formal_proof     whether this method requires formal proofs
+    requires_linguistic_anchor whether this method requires a linguistic anchor
+    """
+
+    id: str
+    method_family: MethodFamily
+    requires_experiment: bool
+    requires_formal_proof: bool
+    requires_linguistic_anchor: bool
+
+
+@dataclass(frozen=True)
+class UtteranceRecord:
+    """منطوق — the uttered / surface linguistic form.
+
+    Fields
+    ------
+    id              unique identifier
+    text_shakled    the vowelised (tashkīl) text
+    utterance_mode  mode of the utterance (e.g. ``"nass"``)
+    literal_scope   scope of the literal meaning (e.g. ``"direct"``)
+    """
+
+    id: str
+    text_shakled: str
+    utterance_mode: str
+    literal_scope: str
+
+
+@dataclass(frozen=True)
+class ConceptRecord:
+    """مفهوم (سجل) — a concept record in the epistemic episode.
+
+    Separate from the existing :class:`Concept` dataclass to avoid
+    conflation with the NLP pipeline's concept representation.
+
+    Fields
+    ------
+    id              unique identifier
+    concept_name    the name of the concept
+    dalaala_type    signification type (مطابقة / تضمن / …)
+    concept_scope   scope descriptor (e.g. ``"restricted"``)
+    """
+
+    id: str
+    concept_name: str
+    dalaala_type: DalalaType
+    concept_scope: str
+
+
+@dataclass(frozen=True)
+class LinguisticCarrierRecord:
+    """حامل لغوي — the linguistic carrier for a knowledge episode.
+
+    Fields
+    ------
+    id              unique identifier
+    carrier_class   which carrier type(s) are present
+    utterance       optional utterance record
+    concept         optional concept record
+    """
+
+    id: str
+    carrier_class: CarrierType
+    utterance: Optional[UtteranceRecord] = None
+    concept: Optional[ConceptRecord] = None
+
+
+@dataclass(frozen=True)
+class ProofPathRecord:
+    """مسار إثبات — the proof path justifying the episode.
+
+    Fields
+    ------
+    id           unique identifier
+    path_kind    kind of proof path used
+    is_complete  whether the proof path is complete
+    step_count   number of proof steps
+    """
+
+    id: str
+    path_kind: ProofPathKind
+    is_complete: bool
+    step_count: int
+
+
+@dataclass(frozen=True)
+class ConflictRuleRecord:
+    """قاعدة تعارض — the conflict resolution rule applied.
+
+    Fields
+    ------
+    id                  unique identifier
+    rule_name           name of the rule
+    priority_order      the priority order string
+    action_on_conflict  what action to take on conflict
+    """
+
+    id: str
+    rule_name: str
+    priority_order: str
+    action_on_conflict: str
+
+
+@dataclass(frozen=True)
+class GapRecord:
+    """فجوة — a validation gap found during episode validation.
+
+    Fields
+    ------
+    id        unique identifier
+    gap_type  the error key
+    message   human-readable message
+    severity  how severe the gap is
+    """
+
+    id: str
+    gap_type: str
+    message: str
+    severity: GapSeverity
+
+
+@dataclass(frozen=True)
+class KnowledgeEpisode:
+    """خبرة معرفية — a knowledge episode node.
+
+    Fields
+    ------
+    id                unique identifier
+    domain_profile    domain of the episode (e.g. ``"linguistic"``)
+    judgement_type    the type of judgement
+    method_family     methodological family
+    method_ref        reference ID of the method node
+    carrier_type      which carriers are present
+    validation_state  current validation state
+    epistemic_rank    assigned rank (``None`` before validation)
+    """
+
+    id: str
+    domain_profile: str
+    judgement_type: JudgementType
+    method_family: MethodFamily
+    method_ref: str
+    carrier_type: CarrierType
+    validation_state: ValidationState
+    epistemic_rank: Optional[EpistemicRank] = None
 
 
 @dataclass(frozen=True)
 class KnowledgeEpisodeInput:
-    """مدخل الخبرة المعرفية — the input to the validator (all fields optional).
+    """مُدخَل خبرة معرفية — composite input for episode validation.
 
-    Use this type to build up an episode incrementally.  Fields left as
-    ``None`` will trigger the appropriate :class:`DecisionCode` failures.
-
-    Fields mirror :class:`KnowledgeEpisode` but every field is ``Optional``.
-    """
-
-    episode_id: str
-    reality_anchor: Optional[RealityAnchorRecord] = None
-    sense_trace: Optional[SenseTraceRecord] = None
-    prior_infos: Tuple[PriorInfoRecord, ...] = ()
-    opinion_traces: Tuple[OpinionTraceRecord, ...] = ()
-    linking_trace: Optional[LinkingTraceRecord] = None
-    judgement: Optional[JudgementRecord] = None
-    method: Optional[MethodRecord] = None
-    carrier: Optional[LinguisticCarrierRecord] = None
-    proof_path: Optional[ProofPathRecord] = None
-    conflict_rule: Optional[ConflictRuleRecord] = None
-
-
-@dataclass(frozen=True)
-class ConflictResolutionResult:
-    """نتيجة حل التعارض — result of resolving an utterance/concept conflict.
+    Bundles all sub-records needed to validate a single episode.
 
     Fields
     ------
-    winner        ``"utterance"`` or ``"concept"``
-    rule_applied  the :class:`ConflictRuleRecord` applied
-    rationale     explanation of the resolution
+    self_           the epistemic agent
+    episode         the episode record
+    reality         reality anchor record
+    sense           sense trace record
+    prior_infos     tuple of prior information records
+    linking         linking trace record
+    judgement       judgement record
+    method          method record
+    carrier         linguistic carrier record
+    proof           proof path record
+    conflict        conflict rule record
+    opinions        tuple of opinion trace records (may be empty)
     """
 
-    winner: str
-    rule_applied: ConflictRuleRecord
-    rationale: str
+    self_: Self_
+    episode: KnowledgeEpisode
+    reality: Optional[RealityAnchorRecord]
+    sense: Optional[SenseTraceRecord]
+    prior_infos: Tuple[PriorInfoRecord, ...]
+    linking: Optional[LinkingTraceRecord]
+    judgement: Optional[JudgementRecord]
+    method: Optional[MethodRecord]
+    carrier: Optional[LinguisticCarrierRecord]
+    proof: Optional[ProofPathRecord]
+    conflict: Optional[ConflictRuleRecord]
+    opinions: Tuple[OpinionTraceRecord, ...] = ()
 
 
 @dataclass(frozen=True)
 class ValidationResult:
-    """نتيجة التحقق — the complete output of :func:`validate_episode`.
+    """نتيجة التصديق — the output of episode validation.
 
     Fields
     ------
-    episode_id        mirrors the input episode id
-    outcome           overall validity (:class:`ValidationOutcome`)
-    codes             tuple of :class:`DecisionCode` failures (empty if valid)
-    rank              assigned epistemic rank, or ``None`` if rejected/invalid
-    insertion_policy  storage policy (:class:`InsertionPolicy`)
-    gaps              detected gaps as :class:`GapRecord` tuples
-    messages          human-readable messages (one per code)
+    episode_id        the episode ID
+    validation_state  ``VALID`` or ``INVALID``
+    epistemic_rank    the assigned epistemic rank
+    errors            tuple of error strings
+    gaps              tuple of gap records
     """
 
     episode_id: str
-    outcome: ValidationOutcome
-    codes: Tuple[DecisionCode, ...]
-    rank: Optional[EpistemicRank]
-    insertion_policy: InsertionPolicy
-    gaps: Tuple[GapRecord, ...]
-    messages: Tuple[str, ...]
-
-
-# ── Backward-compatible Node types (restored for episode_validator) ───────────
-
-
-@dataclass(frozen=True)
-class SelfNode:
-    """الذات — the knowing subject that undergoes a knowledge episode."""
-
-    node_id: str
-    self_kind: str = "individual"
-    label: str = ""
-
-
-@dataclass(frozen=True)
-class RealityAnchorNode:
-    """مرساة الواقع — the external reality that grounds a knowledge episode."""
-
-    node_id: str
-    reality_kind: RealityKind
-    source_mode: str = "direct"
-    anchoring_strength: int = 3
-    label: str = ""
-
-
-@dataclass(frozen=True)
-class SenseTraceNode:
-    """أثر الحس — the sensory evidence that attests the reality anchor."""
-
-    node_id: str
-    sense_modality: SenseModality
-    trace_mode: TraceMode = TraceMode.DIRECT
-    trace_quality: TraceQuality = TraceQuality.STRONG
-    label: str = ""
-
-
-@dataclass(frozen=True)
-class PriorInfoNode:
-    """معلومة سابقة — prior information used to interpret the reality anchor."""
-
-    node_id: str
-    info_kind: InfoKind
-    source: str = ""
-    is_verified: bool = True
-    label: str = ""
-
-
-@dataclass(frozen=True)
-class OpinionTraceNode:
-    """أثر الرأي السابق — a prior opinion that risks contaminating interpretation."""
-
-    node_id: str
-    contamination_level: ContaminationLevel = ContaminationLevel.NONE
-    description: str = ""
-
-
-@dataclass(frozen=True)
-class LinkingTraceNode:
-    """مسار الربط — the inferential chain from prior info to the judgement."""
-
-    node_id: str
-    link_kind: LinkKind
-    step_count: int = 1
-    is_explicit: bool = True
-    label: str = ""
-
-
-@dataclass(frozen=True)
-class JudgementNode:
-    """الحكم — the judgement issued by the knowledge episode."""
-
-    node_id: str
-    judgement_type: JudgementType
-    judgement_text: str = ""
-    label: str = ""
-
-
-@dataclass(frozen=True)
-class MethodNode:
-    """المنهج — the epistemological method used in a knowledge episode."""
-
-    node_id: str
-    method_family: MethodFamily
-    scope: str = ""
-    requires_experiment: bool = False
-    requires_formal_proof: bool = False
-    requires_linguistic_anchor: bool = False
-
-
-@dataclass(frozen=True)
-class LinguisticCarrierNode:
-    """الحامل اللغوي — the linguistic vehicle of a knowledge episode."""
-
-    node_id: str
-    carrier_class: CarrierClass
-    label: str = ""
-
-
-@dataclass(frozen=True)
-class UtteranceNode:
-    """المنطوق — a fully-vowelled utterance node."""
-
-    node_id: str
-    text_shakled: str
-    utterance_mode: str = "nass"
-    literal_scope: str = "direct"
-    label: str = ""
-
-
-@dataclass(frozen=True)
-class ProofPathNode:
-    """مسار الإثبات — the documented proof path supporting a knowledge episode."""
-
-    node_id: str
-    path_kind: PathKind
-    is_complete: bool = True
-    step_count: int = 1
-    label: str = ""
-
-
-@dataclass(frozen=True)
-class ConflictRuleNode:
-    """قاعدة التعارض — the conflict-resolution rule applied to a knowledge episode."""
-
-    node_id: str
-    rule_name: str
-    priority_order: str = "Reality > Valid Proof > Concept specialization > Utterance > Suspend"
-    action_on_conflict: str = "downgrade_or_reject"
-
-
-@dataclass(frozen=True)
-class GapNode:
-    """فجوة معرفية — a detected gap in the knowledge episode."""
-
-    node_id: str
-    gap_type: str
-    message: str = ""
-    severity: GapSeverity = GapSeverity.MODERATE
-
-
-@dataclass(frozen=True)
-class EpistemicConceptNode:
-    """المفهوم الإبستيمي — the conceptual meaning node within a knowledge episode."""
-
-    node_id: str
-    concept_name: str
-    dalaala_type: str = "mutabaqa"
-    concept_scope: str = "general"
-    label: str = ""
-
-
-@dataclass(frozen=True)
-class EvidenceNode:
-    """دليل — an individual piece of evidence supporting a proof path."""
-
-    node_id: str
-    description: str = ""
-    strength: float = 1.0
-    source: str = ""
-
-
-@dataclass
-class KnowledgeEpisodeNode:
-    """خبرة معرفية — the central unit of epistemic analysis (mutable node)."""
-
-    node_id: str
-    domain_profile: str
-    judgement_type: str
-    method_family: str
-    carrier_type: str
-    method_ref: str = ""
-    validation_state: ValidationState = ValidationState.PENDING
-    epistemic_rank: Optional[EpistemicRank] = None
-    label: str = ""
-
-
-@dataclass(frozen=True)
-class EpisodeValidationResult:
-    """نتيجة فحص الخبرة المعرفية — the output of the EpisodeValidator."""
-
-    episode_id: str
     validation_state: ValidationState
-    epistemic_rank: Optional[EpistemicRank]
+    epistemic_rank: EpistemicRank
     errors: Tuple[str, ...]
     gaps: Tuple[GapNode, ...]
 
