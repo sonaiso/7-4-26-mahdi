@@ -113,6 +113,11 @@ _INDIVIDUAL_PREFIXES: tuple[str, ...] = (
     "هذا ", "هذه ", "ذلك ", "تلك ",
 )
 
+# Maximum label length (in characters) for an individual heuristic.
+# Labels longer than this without spaces are treated as descriptive
+# phrases rather than proper-noun individuals.
+_MAX_INDIVIDUAL_LABEL_LENGTH = 10
+
 
 def _is_genus(concept: Concept) -> bool:
     """Return True if *concept* looks like a genus (جنس)."""
@@ -140,7 +145,7 @@ def _is_individual(concept: Concept) -> bool:
     # relatively short token, treat it as an individual.
     if label not in _GENUS_LABELS and label not in _SPECIES_LABELS:
         # Single-word labels that don't match patterns → individual
-        if " " not in label and len(label) <= 10:
+        if " " not in label and len(label) <= _MAX_INDIVIDUAL_LABEL_LENGTH:
             return True
     return False
 
@@ -530,7 +535,10 @@ def build_constitution_result(
             btype = BoundaryType.SPECIES_INDIVIDUAL
             boundaries.append(evaluate_boundary(tgt, src, btype))
 
-    # Cross-domain boundaries (entity ↔ attribute)
+    # Cross-domain boundaries (entity ↔ attribute).
+    # We only sample one representative pair because the entity↔attribute
+    # boundary is domain-level (not concept-level): if one entity and one
+    # attribute exist in different domains, the boundary holds for all.
     entity_concepts = [
         c for c in concepts
         if rec_by_id[c.concept_id].domain is UniversalParticularDomain.ENTITY
@@ -539,7 +547,7 @@ def build_constitution_result(
         c for c in concepts
         if rec_by_id[c.concept_id].domain is UniversalParticularDomain.ATTRIBUTE
     ]
-    for ec in entity_concepts[:1]:  # representative sample
+    for ec in entity_concepts[:1]:
         for ac in attr_concepts[:1]:
             boundaries.append(
                 evaluate_boundary(ec, ac, BoundaryType.ENTITY_ATTRIBUTE)

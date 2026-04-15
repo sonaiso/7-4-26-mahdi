@@ -17,10 +17,14 @@ from __future__ import annotations
 
 from typing import List
 
-from arabic_engine.core.enums import ActivationStage, HypothesisStatus, SemanticType
+from arabic_engine.core.enums import (
+    ActivationStage,
+    HypothesisStatus,
+    SemanticType,
+    UniversalityScope,
+)
 from arabic_engine.core.types import Concept, HypothesisNode
 from arabic_engine.signified.universal_particular_v1 import (
-    UniversalityScope,
     classify_universality,
 )
 
