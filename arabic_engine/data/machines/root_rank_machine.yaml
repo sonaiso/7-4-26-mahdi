@@ -1,0 +1,68 @@
+# Root Rank Machine — Layer 4
+name: RootRankMachine
+initial_state: R0_UNRANKED
+accept_states: [R5_RANK_VALIDATED]
+reject_states: [R6_RANK_DEFERRED]
+
+rank_score_formula:
+  position_fit: 0.30
+  constitutiveness: 0.25
+  inflection_stability: 0.20
+  syllable_compatibility: 0.15
+  recoverability: 0.10
+
+transitions:
+  - source: R0_UNRANKED
+    event: EV_ROOT_CONTEXT_FOUND
+    target: R1_RANK_CANDIDATE
+    guard: g_context
+    priority: 1
+
+  - source: R1_RANK_CANDIDATE
+    event: EV_FA_SCORE_MAX
+    target: R2_FA_CANDIDATE
+    guard: g_fa
+    threshold: 0.60
+    priority: 1
+
+  - source: R1_RANK_CANDIDATE
+    event: EV_AYN_SCORE_MAX
+    target: R3_AYN_CANDIDATE
+    guard: g_ayn
+    threshold: 0.60
+    priority: 1
+
+  - source: R1_RANK_CANDIDATE
+    event: EV_LAM_SCORE_MAX
+    target: R4_LAM_CANDIDATE
+    guard: g_lam
+    threshold: 0.60
+    priority: 1
+
+  - source: R2_FA_CANDIDATE
+    event: EV_RANK_CONFIRMED
+    target: R5_RANK_VALIDATED
+    guard: g_rank
+    threshold: 0.65
+    priority: 1
+
+  - source: R3_AYN_CANDIDATE
+    event: EV_RANK_CONFIRMED
+    target: R5_RANK_VALIDATED
+    guard: g_rank
+    threshold: 0.65
+    priority: 1
+
+  - source: R4_LAM_CANDIDATE
+    event: EV_RANK_CONFIRMED
+    target: R5_RANK_VALIDATED
+    guard: g_rank
+    threshold: 0.65
+    priority: 1
+
+  - source: ANY
+    event: EV_RANK_AMBIGUOUS
+    target: R6_RANK_DEFERRED
+    guard: g_ambiguous
+    threshold: 0.05
+    priority: 0

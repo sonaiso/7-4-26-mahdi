@@ -1,612 +1,393 @@
-"""epistemic_v1 — المنهج العقلي: التحقق من الخبرة المعرفية
+"""Epistemic v1 — Knowledge Episode Validator.
 
-Python is the *source of truth* for all validation logic.  The Cypher files
-in ``db/`` mirror these checks but do not re-define them independently.
-
-Core methodological rule (النبهاني):
-    A valid cognitive episode must be grounded in:
-    1. RealityAnchor  — مرساة الواقع
-    2. SenseTrace     — الأثر الحسي
-    3. PriorInfo      — المعلومات السابقة (at least one)
-    4. LinkingTrace   — أثر الربط
-
-    Prior *opinion* must be excluded (ContaminationLevel < HIGH).
-
-    Judgement on *existence* (EXISTENCE) with a grounded proof → CERTAIN.
-    Judgement on *essence / attribute / relation / interpretive* → TRUE_NON_CERTAIN.
-    Methodological rejection is modelled as :class:`ValidationOutcome`,
-    NOT as a member of :class:`EpistemicRank`.
-
-    Scientific method is only valid for empirical material inquiry and must
-    never be treated as the universal basis of knowledge.
+Pure-function module that validates knowledge episodes against the
+ten-point epistemological framework.  No database dependency — all
+logic mirrors the Cypher validators in ``db/validate_episode.cypher``
+but operates on in-memory dataclass records.
 
 Public API
 ----------
-* :func:`validate_episode`
-* :func:`assign_epistemic_rank`
-* :func:`derive_insertion_policy`
-* :func:`validate_linguistic_carrier`
-* :func:`resolve_utterance_concept_conflict`
-* :func:`validate_batch`
+validate_episode(inp)                → ValidationResult
+validate_linguistic_carrier(...)     → str
+conflict_resolution_hint(...)        → str
+validate_batch(inputs)               → List[ValidationResult]
+
+Constants
+---------
+SEED_METHODS            → Tuple[MethodRecord, ...]
+DEFAULT_CONFLICT_RULE   → ConflictRuleRecord
 """
 
 from __future__ import annotations
 
-from typing import List, Optional, Sequence, Tuple
+from typing import List, Optional, Tuple
 
 from arabic_engine.core.enums import (
     CarrierType,
     ContaminationLevel,
-    DecisionCode,
     EpistemicRank,
     GapSeverity,
-    InsertionPolicy,
     JudgementType,
     MethodFamily,
-    RealityKind,
-    ValidationOutcome,
+    ProofPathKind,
+    ValidationState,
 )
 from arabic_engine.core.types import (
-    ConflictResolutionResult,
     ConflictRuleRecord,
     GapRecord,
-    JudgementRecord,
     KnowledgeEpisodeInput,
     LinguisticCarrierRecord,
     MethodRecord,
     ProofPathRecord,
+    RealityAnchorRecord,
+    UtteranceRecord,
     ValidationResult,
 )
 
-# ── Internal helpers ────────────────────────────────────────────────────────
+# ── Seed constants ──────────────────────────────────────────────────
 
-_OPINION_REJECT_THRESHOLD = ContaminationLevel.HIGH
+SEED_METHODS: Tuple[MethodRecord, ...] = (
+    MethodRecord(
+        id="method:rational",
+        method_family=MethodFamily.RATIONAL,
+        requires_experiment=False,
+        requires_formal_proof=False,
+        requires_linguistic_anchor=False,
+    ),
+    MethodRecord(
+        id="method:scientific",
+        method_family=MethodFamily.SCIENTIFIC,
+        requires_experiment=True,
+        requires_formal_proof=False,
+        requires_linguistic_anchor=False,
+    ),
+    MethodRecord(
+        id="method:linguistic",
+        method_family=MethodFamily.LINGUISTIC,
+        requires_experiment=False,
+        requires_formal_proof=False,
+        requires_linguistic_anchor=True,
+    ),
+    MethodRecord(
+        id="method:mathematical",
+        method_family=MethodFamily.MATHEMATICAL,
+        requires_experiment=False,
+        requires_formal_proof=True,
+        requires_linguistic_anchor=False,
+    ),
+    MethodRecord(
+        id="method:physical",
+        method_family=MethodFamily.PHYSICAL,
+        requires_experiment=True,
+        requires_formal_proof=True,
+        requires_linguistic_anchor=False,
+    ),
+)
 
-# Methods that are only valid for EXISTENCE judgements on MATERIAL reality
-_EMPIRICAL_ONLY_METHODS = {MethodFamily.SCIENTIFIC}
+DEFAULT_CONFLICT_RULE = ConflictRuleRecord(
+    id="conflict:default",
+    rule_name="default_conflict_v1",
+    priority_order=(
+        "Reality > Valid Proof > Concept specialization"
+        " > Utterance > Suspend"
+    ),
+    action_on_conflict="downgrade_or_reject",
+)
 
-# JudgementTypes where CERTAIN rank is reachable
-_EXISTENCE_TYPES = {JudgementType.EXISTENCE}
 
-# JudgementTypes where TRUE_NON_CERTAIN is the ceiling
-_NON_CERTAIN_TYPES = {
+# ── Internal helpers ────────────────────────────────────────────────
+
+_FATAL_ERRORS = frozenset({
+    "Missing RealityAnchor",
+    "Missing SenseTrace",
+    "Missing PriorInfo",
+    "Invalid LinguisticCarrier",
+})
+
+_CONTAMINATION_BLOCKING = frozenset({
+    ContaminationLevel.MEDIUM,
+    ContaminationLevel.HIGH,
+})
+
+_METHOD_FIT_BLOCKED_JUDGEMENTS = frozenset({
+    JudgementType.NORMATIVE,
+    JudgementType.PURE_LINGUISTIC,
+    JudgementType.METAPHYSICAL,
+})
+
+_CERTAIN_PROOF_KINDS = frozenset({
+    ProofPathKind.HISSI,
+    ProofPathKind.AQLI,
+    ProofPathKind.FORMAL,
+})
+
+_TRUE_NON_CERTAIN_JUDGEMENTS = frozenset({
     JudgementType.ESSENCE,
     JudgementType.ATTRIBUTE,
     JudgementType.RELATION,
+    JudgementType.CAUSAL,
     JudgementType.INTERPRETIVE,
-}
+    JudgementType.FORMAL,
+})
 
 
-def _make_gap(
-    code: DecisionCode,
-    severity: GapSeverity,
-    description: str,
-    episode_id: Optional[str] = None,
-) -> GapRecord:
-    prefix = f"{episode_id}::" if episode_id else ""
-    return GapRecord(
-        gap_id=f"{prefix}GAP_{code.name}",
-        code=code,
-        severity=severity,
-        description=description,
-    )
+def _gap_severity(error: str) -> GapSeverity:
+    """Return the severity level for a given error string."""
+    if error in _FATAL_ERRORS:
+        return GapSeverity.FATAL
+    if error == "Opinion contamination":
+        return GapSeverity.HIGH
+    return GapSeverity.MEDIUM
 
 
-# ── validate_linguistic_carrier ─────────────────────────────────────────────
+def _collect_errors(inp: KnowledgeEpisodeInput) -> List[str]:
+    """Run the ten-point check and return a list of error strings."""
+    errors: List[str] = []
 
-def validate_linguistic_carrier(
-    carrier: LinguisticCarrierRecord,
-) -> Tuple[bool, List[DecisionCode], List[GapRecord]]:
-    """التحقق من الحامل اللغوي — validate the linguistic transport record.
+    # 1. Reality anchor
+    if inp.reality is None:
+        errors.append("Missing RealityAnchor")
 
-    Rules:
-    * UTTERANCE type → ``utterance`` must not be None.
-    * CONCEPT type → ``concept`` must not be None.
-    * BOTH type → both ``utterance`` and ``concept`` must not be None.
+    # 2. Sense trace
+    if inp.sense is None:
+        errors.append("Missing SenseTrace")
 
-    Parameters
-    ----------
-    carrier:
-        The :class:`~arabic_engine.core.types.LinguisticCarrierRecord` to
-        validate.
+    # 3. Prior info
+    if len(inp.prior_infos) == 0:
+        errors.append("Missing PriorInfo")
 
-    Returns
-    -------
-    tuple[bool, list[DecisionCode], list[GapRecord]]
-        A 3-tuple ``(valid, codes, gaps)`` where ``valid`` is ``True`` only
-        when all rules pass, ``codes`` is the list of triggered
-        :class:`DecisionCode` values, and ``gaps`` is the corresponding list
-        of :class:`GapRecord` instances.
-    """
-    codes: List[DecisionCode] = []
-    gaps: List[GapRecord] = []
+    # 4. Opinion contamination
+    if any(
+        o.contamination_level in _CONTAMINATION_BLOCKING
+        for o in inp.opinions
+    ):
+        errors.append("Opinion contamination")
 
-    if carrier.carrier_type == CarrierType.UTTERANCE:
-        if carrier.utterance is None:
-            codes.append(DecisionCode.EPI009_CARRIER_INVALID)
-            gaps.append(_make_gap(
-                DecisionCode.EPI009_CARRIER_INVALID,
-                GapSeverity.CRITICAL,
-                "CarrierType.UTTERANCE requires utterance to be present",
-            ))
-    elif carrier.carrier_type == CarrierType.CONCEPT:
-        if carrier.concept is None:
-            codes.append(DecisionCode.EPI009_CARRIER_INVALID)
-            gaps.append(_make_gap(
-                DecisionCode.EPI009_CARRIER_INVALID,
-                GapSeverity.CRITICAL,
-                "CarrierType.CONCEPT requires concept to be present",
-            ))
-    else:  # BOTH
-        missing: List[str] = []
-        if carrier.utterance is None:
-            missing.append("utterance")
-        if carrier.concept is None:
-            missing.append("concept")
-        if missing:
-            codes.append(DecisionCode.EPI012_CARRIER_BOTH_MISSING)
-            gaps.append(_make_gap(
-                DecisionCode.EPI012_CARRIER_BOTH_MISSING,
-                GapSeverity.FATAL,
-                f"CarrierType.BOTH requires both carriers; missing: {', '.join(missing)}",
-            ))
+    # 5. Linking trace
+    if inp.linking is None:
+        errors.append("Missing LinkingTrace")
 
-    return (len(codes) == 0, codes, gaps)
+    # 6. Judgement type
+    if inp.judgement is None or inp.episode.judgement_type is None:
+        errors.append("Missing JudgementType")
 
+    # 7. Method + method-fit
+    if inp.method is None:
+        errors.append("Missing MethodFit")
+    elif (
+        inp.method.method_family is MethodFamily.SCIENTIFIC
+        and inp.episode.judgement_type in _METHOD_FIT_BLOCKED_JUDGEMENTS
+    ):
+        errors.append(
+            "MethodFit failed: scientific method not suitable"
+        )
 
-# ── resolve_utterance_concept_conflict ──────────────────────────────────────
+    # 8. Linguistic carrier
+    carrier = inp.carrier
+    if carrier is None:
+        errors.append("Invalid LinguisticCarrier")
+    elif inp.episode.carrier_type not in (
+        CarrierType.UTTERANCE,
+        CarrierType.CONCEPT,
+        CarrierType.BOTH,
+    ):
+        errors.append("Invalid LinguisticCarrier")
+    else:
+        lc_status = validate_linguistic_carrier(
+            inp.episode.id,
+            carrier,
+            carrier.utterance,
+            carrier.concept,
+        )
+        if lc_status != "ok":
+            errors.append("Invalid LinguisticCarrier")
 
-def resolve_utterance_concept_conflict(
-    carrier: LinguisticCarrierRecord,
-    conflict_rule: ConflictRuleRecord,
-) -> ConflictResolutionResult:
-    """حل التعارض بين المنطوق والمفهوم — resolve an utterance/concept conflict.
+    # 9. Proof path
+    if inp.proof is None:
+        errors.append("Missing ProofPath")
 
-    If ``conflict_rule.prefer_concept`` is True the concept wins; otherwise
-    the utterance wins.
+    # 10. Conflict rule
+    if inp.conflict is None:
+        errors.append("Missing ConflictRule")
 
-    Parameters
-    ----------
-    carrier:
-        A linguistic carrier with ``carrier_type == CarrierType.BOTH``.
-    conflict_rule:
-        The rule dictating which carrier has precedence.
-
-    Returns
-    -------
-    :class:`ConflictResolutionResult`
-        A record with ``winner`` set to ``"concept"`` or ``"utterance"``,
-        ``rule_applied`` set to ``conflict_rule``, and a human-readable
-        ``rationale`` string.
-    """
-    winner = "concept" if conflict_rule.prefer_concept else "utterance"
-    return ConflictResolutionResult(
-        winner=winner,
-        rule_applied=conflict_rule,
-        rationale=(
-            f"Rule '{conflict_rule.rule_id}' applied: "
-            f"{'concept' if conflict_rule.prefer_concept else 'utterance'} "
-            f"takes precedence. {conflict_rule.rationale}"
-        ),
-    )
+    return errors
 
 
-# ── assign_epistemic_rank ───────────────────────────────────────────────────
-
-def assign_epistemic_rank(
-    judgement: JudgementRecord,
-    method: MethodRecord,
-    proof_path: ProofPathRecord,
-    has_hard_conflict: bool = False,
+def _assign_rank(
+    errors: List[str],
+    judgement_type: Optional[JudgementType],
+    proof: Optional[ProofPathRecord],
 ) -> EpistemicRank:
-    """تحديد الرتبة الإبستيمية — assign the epistemic rank to a valid episode.
+    """Assign the epistemic rank based on collected errors."""
+    # REJECTED_METHODOLOGICALLY
+    if any(e in _FATAL_ERRORS or e == "Opinion contamination" for e in errors):
+        return EpistemicRank.REJECTED_METHODOLOGICALLY
 
-    Ranking rules:
-    * ``FORMAL_CONTRADICTION`` → :attr:`EpistemicRank.IMPOSSIBLE`
-    * ``EXISTENCE`` + valid proof path + no hard conflict → :attr:`EpistemicRank.CERTAIN`
-      (unless method is SCIENTIFIC, which caps at TRUE_NON_CERTAIN even for existence)
-    * Essence / attribute / relation / interpretive → :attr:`EpistemicRank.TRUE_NON_CERTAIN`
-    * Incomplete proof or unresolved conflict → :attr:`EpistemicRank.PROBABILISTIC_DOUBT`
-
-    Parameters
-    ----------
-    judgement:
-        The output judgement of the episode.
-    method:
-        The epistemological method applied.
-    proof_path:
-        The proof path for the judgement.
-    has_hard_conflict:
-        True if a hard (unresolved) conflict was detected.
-
-    Returns
-    -------
-    :class:`EpistemicRank`
-        The assigned rank — one of :attr:`EpistemicRank.CERTAIN`,
-        :attr:`EpistemicRank.TRUE_NON_CERTAIN`,
-        :attr:`EpistemicRank.PROBABILISTIC_DOUBT`, or
-        :attr:`EpistemicRank.IMPOSSIBLE`.
-    """
-    jtype = judgement.judgement_type
-
-    if jtype == JudgementType.FORMAL_CONTRADICTION:
+    # IMPOSSIBLE
+    if any("Conflict" in e or "not suitable" in e for e in errors):
         return EpistemicRank.IMPOSSIBLE
 
-    if has_hard_conflict or not proof_path.steps:
-        return EpistemicRank.PROBABILISTIC_DOUBT
-
-    if jtype in _EXISTENCE_TYPES:
-        # Scientific method is only valid for empirical material inquiry;
-        # it cannot ground a CERTAIN judgement on its own.
-        if method.family in _EMPIRICAL_ONLY_METHODS:
-            return EpistemicRank.TRUE_NON_CERTAIN
+    # CERTAIN
+    if (
+        len(errors) == 0
+        and judgement_type is JudgementType.EXISTENCE
+        and proof is not None
+        and proof.path_kind in _CERTAIN_PROOF_KINDS
+    ):
         return EpistemicRank.CERTAIN
 
-    if jtype in _NON_CERTAIN_TYPES:
+    # TRUE_NON_CERTAIN
+    if (
+        len(errors) == 0
+        and judgement_type in _TRUE_NON_CERTAIN_JUDGEMENTS
+    ):
         return EpistemicRank.TRUE_NON_CERTAIN
 
     return EpistemicRank.PROBABILISTIC_DOUBT
 
 
-# ── derive_insertion_policy ─────────────────────────────────────────────────
+# ── Public API ──────────────────────────────────────────────────────
 
-def derive_insertion_policy(
-    outcome: ValidationOutcome,
-    rank: EpistemicRank | None,
-) -> InsertionPolicy:
-    """اشتقاق سياسة الإدخال — derive the insertion policy from outcome and rank.
-
-    Rules:
-    * REJECTED_METHODOLOGICALLY or INVALID → BLOCKED
-    * PENDING → GUARDED
-    * VALID + CERTAIN → FOUNDATIONAL
-    * VALID + TRUE_NON_CERTAIN → ADMISSIBLE
-    * VALID + PROBABILISTIC_DOUBT → GUARDED
-    * VALID + IMPOSSIBLE → BLOCKED
-
-    Parameters
-    ----------
-    outcome:
-        The validation outcome.
-    rank:
-        The epistemic rank (may be None if episode was rejected).
-
-    Returns
-    -------
-    :class:`InsertionPolicy`
-        The policy — :attr:`InsertionPolicy.FOUNDATIONAL` for certain
-        knowledge, :attr:`InsertionPolicy.ADMISSIBLE` for non-certain,
-        :attr:`InsertionPolicy.GUARDED` for doubtful or pending, and
-        :attr:`InsertionPolicy.BLOCKED` for invalid or impossible.
-    """
-    if outcome in (ValidationOutcome.REJECTED_METHODOLOGICALLY, ValidationOutcome.INVALID):
-        return InsertionPolicy.BLOCKED
-    if outcome == ValidationOutcome.PENDING:
-        return InsertionPolicy.GUARDED
-    # VALID
-    if rank is None:
-        return InsertionPolicy.BLOCKED
-    if rank == EpistemicRank.CERTAIN:
-        return InsertionPolicy.FOUNDATIONAL
-    if rank == EpistemicRank.TRUE_NON_CERTAIN:
-        return InsertionPolicy.ADMISSIBLE
-    if rank == EpistemicRank.PROBABILISTIC_DOUBT:
-        return InsertionPolicy.GUARDED
-    # IMPOSSIBLE
-    return InsertionPolicy.BLOCKED
-
-
-# ── _check_method_fit ───────────────────────────────────────────────────────
-
-def _check_method_fit(
-    method: MethodRecord,
-    judgement: JudgementRecord,
-    proof_path: ProofPathRecord,
-) -> Tuple[List[DecisionCode], List[GapRecord]]:
-    """Check method-fit and proof-path compatibility."""
-    codes: List[DecisionCode] = []
-    gaps: List[GapRecord] = []
-
-    if judgement.judgement_type not in method.domain_fit:
-        codes.append(DecisionCode.EPI008_METHOD_FIT_FAILURE)
-        gaps.append(_make_gap(
-            DecisionCode.EPI008_METHOD_FIT_FAILURE,
-            GapSeverity.CRITICAL,
-            f"Method '{method.method_id}' (family={method.family.name}) "
-            f"does not fit judgement type {judgement.judgement_type.name}",
-        ))
-
-    if proof_path.method_fit != method.family:
-        codes.append(DecisionCode.EPI013_PROOF_METHOD_MISMATCH)
-        gaps.append(_make_gap(
-            DecisionCode.EPI013_PROOF_METHOD_MISMATCH,
-            GapSeverity.CRITICAL,
-            f"ProofPath '{proof_path.path_id}' expects method family "
-            f"{proof_path.method_fit.name} but got {method.family.name}",
-        ))
-
-    return codes, gaps
-
-
-# ── validate_episode ────────────────────────────────────────────────────────
 
 def validate_episode(inp: KnowledgeEpisodeInput) -> ValidationResult:
-    """التحقق من الخبرة المعرفية — validate a knowledge episode.
+    """Validate a single knowledge episode.
 
-    This is the *central function* of the rational method layer.  It checks
-    all twelve conditions in order and returns a :class:`ValidationResult`.
+    Runs the full ten-point check:
 
-    Validation order
-    ----------------
-    1.  Reality anchor present
-    2.  Sense trace present
-    3.  At least one prior info present
-    4.  No high-level opinion contamination
-    5.  Linking trace present
-    6.  Judgement present
-    7.  Method present
-    8.  Method-fit and proof-path compatibility
-    9.  Linguistic carrier valid
-    10. Proof path present
-    11. Conflict rule present
-    12. (If BOTH carrier) check for utterance/concept conflict
+    1. Reality anchor present
+    2. Sense trace present
+    3. At least one prior info present
+    4. No medium/high contamination opinion
+    5. Linking trace present
+    6. Judgement type set
+    7. Method present and method-fit check
+    8. Linguistic carrier valid
+    9. Proof path present
+    10. Conflict rule present
 
-    Parameters
-    ----------
-    inp:
-        The :class:`KnowledgeEpisodeInput` to validate.
-
-    Returns
-    -------
-    :class:`ValidationResult`
-        A result record containing the ``outcome``, ``rank``,
-        ``insertion_policy``, ``gaps``, and ``messages`` collected
-        across all twelve validation checks.
+    Returns a :class:`ValidationResult` with the validation state,
+    epistemic rank, list of errors, and gap records.
     """
-    codes: List[DecisionCode] = []
-    gaps: List[GapRecord] = []
-    messages: List[str] = []
+    errors = _collect_errors(inp)
 
-    def _add(code: DecisionCode, severity: GapSeverity, msg: str) -> None:
-        codes.append(code)
-        gaps.append(_make_gap(code, severity, msg, episode_id=inp.episode_id))
-        messages.append(msg)
-
-    # 1. Reality anchor
-    if inp.reality_anchor is None:
-        _add(
-            DecisionCode.EPI001_MISSING_REALITY,
-            GapSeverity.FATAL,
-            "Missing RealityAnchor — الخبرة تفتقر إلى مرساة الواقع",
-        )
-
-    # 2. Sense trace
-    if inp.sense_trace is None:
-        _add(
-            DecisionCode.EPI002_MISSING_SENSE,
-            GapSeverity.FATAL,
-            "Missing SenseTrace — الخبرة تفتقر إلى أثر حسي",
-        )
-
-    # 3. Prior info (at least one)
-    if not inp.prior_infos:
-        _add(
-            DecisionCode.EPI003_MISSING_PRIOR_INFO,
-            GapSeverity.FATAL,
-            "Missing PriorInfo — الخبرة تفتقر إلى معلومة سابقة",
-        )
-
-    # 4. Opinion contamination
-    for op in inp.opinion_traces:
-        if op.contamination_level == _OPINION_REJECT_THRESHOLD:
-            _add(
-                DecisionCode.EPI004_OPINION_CONTAMINATION,
-                GapSeverity.FATAL,
-                f"Opinion contamination HIGH in '{op.opinion_id}' — "
-                "تلوث الرأي المسبق يتجاوز العتبة المقبولة",
-            )
-            break  # one FATAL per episode is sufficient
-
-    # 5. Linking trace
-    if inp.linking_trace is None:
-        _add(
-            DecisionCode.EPI005_MISSING_LINKING,
-            GapSeverity.FATAL,
-            "Missing LinkingTrace — الخبرة تفتقر إلى أثر الربط",
-        )
-
-    # 6. Judgement
-    if inp.judgement is None:
-        _add(
-            DecisionCode.EPI006_MISSING_JUDGEMENT,
-            GapSeverity.FATAL,
-            "Missing JudgementRecord — الخبرة تفتقر إلى حكم",
-        )
-
-    # 7. Method
-    if inp.method is None:
-        _add(
-            DecisionCode.EPI007_MISSING_METHOD,
-            GapSeverity.FATAL,
-            "Missing MethodRecord — الخبرة تفتقر إلى طريقة",
-        )
-
-    # 8. Method-fit and proof-path compatibility (only when both present)
-    if inp.method is not None and inp.judgement is not None and inp.proof_path is not None:
-        fit_codes, fit_gaps = _check_method_fit(inp.method, inp.judgement, inp.proof_path)
-        # Stamp fit gaps with episode_id
-        fit_gaps = [
-            GapRecord(
-                gap_id=f"{inp.episode_id}::{g.gap_id}",
-                code=g.code,
-                severity=g.severity,
-                description=g.description,
-            )
-            for g in fit_gaps
-        ]
-        codes.extend(fit_codes)
-        gaps.extend(fit_gaps)
-        messages.extend(g.description for g in fit_gaps)
-
-    # 8b. Scientific method requires a MATERIAL reality anchor
-    if (
-        inp.method is not None
-        and inp.method.family in _EMPIRICAL_ONLY_METHODS
-        and inp.reality_anchor is not None
-        and inp.reality_anchor.kind != RealityKind.MATERIAL
-    ):
-        _add(
-            DecisionCode.EPI008_METHOD_FIT_FAILURE,
-            GapSeverity.CRITICAL,
-            f"SCIENTIFIC method requires a MATERIAL reality anchor; "
-            f"got {inp.reality_anchor.kind.name}",
-        )
-
-    # 9. Linguistic carrier
-    carrier_valid = True
-    if inp.carrier is None:
-        _add(
-            DecisionCode.EPI009_CARRIER_INVALID,
-            GapSeverity.FATAL,
-            "Missing LinguisticCarrier — الخبرة تفتقر إلى حامل لغوي",
-        )
-        carrier_valid = False
-    else:
-        cv, carrier_codes, carrier_gaps = validate_linguistic_carrier(inp.carrier)
-        if not cv:
-            carrier_valid = False
-            # Re-stamp carrier gaps with episode_id
-            carrier_gaps = [
-                GapRecord(
-                    gap_id=f"{inp.episode_id}::{g.gap_id}",
-                    code=g.code,
-                    severity=g.severity,
-                    description=g.description,
-                )
-                for g in carrier_gaps
-            ]
-            codes.extend(carrier_codes)
-            gaps.extend(carrier_gaps)
-            messages.extend(g.description for g in carrier_gaps)
-
-    # 10. Proof path
-    if inp.proof_path is None:
-        _add(
-            DecisionCode.EPI010_MISSING_PROOF_PATH,
-            GapSeverity.FATAL,
-            "Missing ProofPath — الخبرة تفتقر إلى مسار إثبات",
-        )
-
-    # 11. Conflict rule
-    if inp.conflict_rule is None:
-        _add(
-            DecisionCode.EPI011_MISSING_CONFLICT_RULE,
-            GapSeverity.FATAL,
-            "Missing ConflictRule — الخبرة تفتقر إلى قاعدة حل التعارض",
-        )
-
-    # 12. BOTH carrier conflict check
-    has_hard_conflict = False
-    if (
-        carrier_valid
-        and inp.carrier is not None
-        and inp.carrier.carrier_type == CarrierType.BOTH
-        and inp.carrier.utterance is not None
-        and inp.carrier.concept is not None
-    ):
-        utt_text = inp.carrier.utterance.text
-        con_label = inp.carrier.concept.label
-        if utt_text != con_label:
-            if inp.conflict_rule is not None:
-                # Soft conflict — apply rule
-                resolution = resolve_utterance_concept_conflict(inp.carrier, inp.conflict_rule)
-                messages.append(
-                    f"Utterance/concept conflict resolved: winner='{resolution.winner}' "
-                    f"via rule '{resolution.rule_applied.rule_id}'"
-                )
-                has_hard_conflict = False
-            else:
-                # Hard conflict — no rule to resolve (EPI011 fires above; EPI014 here)
-                _add(
-                    DecisionCode.EPI014_UTTERANCE_CONCEPT_CONFLICT,
-                    GapSeverity.FATAL,
-                    "CarrierType.BOTH has utterance/concept mismatch with no ConflictRule — "
-                    "لا توجد قاعدة لحل التعارض بين المنطوق والمفهوم",
-                )
-                has_hard_conflict = True
-
-    # Determine outcome
-    fatal_codes = {
-        DecisionCode.EPI001_MISSING_REALITY,
-        DecisionCode.EPI002_MISSING_SENSE,
-        DecisionCode.EPI003_MISSING_PRIOR_INFO,
-        DecisionCode.EPI004_OPINION_CONTAMINATION,
-        DecisionCode.EPI005_MISSING_LINKING,
-        DecisionCode.EPI006_MISSING_JUDGEMENT,
-        DecisionCode.EPI007_MISSING_METHOD,
-        DecisionCode.EPI009_CARRIER_INVALID,
-        DecisionCode.EPI010_MISSING_PROOF_PATH,
-        DecisionCode.EPI011_MISSING_CONFLICT_RULE,
-        DecisionCode.EPI012_CARRIER_BOTH_MISSING,
-        DecisionCode.EPI014_UTTERANCE_CONCEPT_CONFLICT,
-    }
-    has_fatal = any(c in fatal_codes for c in codes)
-    has_method_errors = any(
-        c in (DecisionCode.EPI008_METHOD_FIT_FAILURE, DecisionCode.EPI013_PROOF_METHOD_MISMATCH)
-        for c in codes
+    validation_state = (
+        ValidationState.VALID if len(errors) == 0 else ValidationState.INVALID
     )
 
-    if has_fatal:
-        outcome = ValidationOutcome.REJECTED_METHODOLOGICALLY
-        rank = None
-    elif has_method_errors:
-        outcome = ValidationOutcome.INVALID
-        rank = None
-    else:
-        outcome = ValidationOutcome.VALID
-        # All required fields present — assign rank
-        assert inp.judgement is not None  # noqa: S101 (guaranteed above)
-        assert inp.method is not None     # noqa: S101
-        assert inp.proof_path is not None # noqa: S101
-        rank = assign_epistemic_rank(
-            inp.judgement,
-            inp.method,
-            inp.proof_path,
-            has_hard_conflict=has_hard_conflict,
-        )
-        # IMPOSSIBLE rank from formal contradiction → outcome stays VALID
-        # (the rank itself encodes the impossibility)
+    epistemic_rank = _assign_rank(
+        errors,
+        inp.episode.judgement_type,
+        inp.proof,
+    )
 
-    insertion_policy = derive_insertion_policy(outcome, rank)
+    gaps = tuple(
+        GapRecord(
+            id=f"{inp.episode.id}::{e.replace(' ', '_')}",
+            gap_type=e,
+            message=e,
+            severity=_gap_severity(e),
+        )
+        for e in errors
+    )
 
     return ValidationResult(
-        episode_id=inp.episode_id,
-        outcome=outcome,
-        codes=tuple(codes),
-        rank=rank,
-        insertion_policy=insertion_policy,
-        gaps=tuple(gaps),
-        messages=tuple(messages),
+        episode_id=inp.episode.id,
+        validation_state=validation_state,
+        epistemic_rank=epistemic_rank,
+        errors=tuple(errors),
+        gaps=gaps,
     )
 
 
-# ── validate_batch ──────────────────────────────────────────────────────────
+def validate_linguistic_carrier(
+    episode_id: str,
+    carrier: Optional[LinguisticCarrierRecord],
+    utterance: Optional[UtteranceRecord],
+    concept: Optional["ConceptRecord"],  # noqa: F821 — forward ref
+) -> str:
+    """Validate the linguistic carrier configuration.
+
+    Returns ``"ok"`` when the carrier class matches the realised
+    sub-records, or ``"invalid"`` otherwise.
+
+    Rules:
+    * ``UTTERANCE`` → utterance must be present
+    * ``CONCEPT``   → concept must be present
+    * ``BOTH``      → both must be present
+    """
+    if carrier is None:
+        return "invalid"
+
+    cc = carrier.carrier_class
+    if cc is CarrierType.UTTERANCE and utterance is not None:
+        return "ok"
+    if cc is CarrierType.CONCEPT and concept is not None:
+        return "ok"
+    if (
+        cc is CarrierType.BOTH
+        and utterance is not None
+        and concept is not None
+    ):
+        return "ok"
+
+    return "invalid"
+
+
+def conflict_resolution_hint(
+    episode_id: str,
+    utterance: Optional[UtteranceRecord],
+    concept: Optional["ConceptRecord"],  # noqa: F821
+    reality: Optional[RealityAnchorRecord],
+    proof: Optional[ProofPathRecord],
+) -> str:
+    """Return a conflict-resolution hint for utterance/concept tension.
+
+    Returns one of:
+    * ``"no_internal_conflict_check"`` — no conflict possible (one is absent)
+    * ``"prefer_grounded_reading"`` — grounded in reality + strong proof
+    * ``"review_needed"`` — manual review required
+    """
+    if utterance is None or concept is None:
+        return "no_internal_conflict_check"
+
+    if (
+        proof is not None
+        and proof.path_kind in _CERTAIN_PROOF_KINDS
+        and reality is not None
+    ):
+        return "prefer_grounded_reading"
+
+    return "review_needed"
+
 
 def validate_batch(
-    inputs: Sequence[KnowledgeEpisodeInput],
-) -> Tuple[ValidationResult, ...]:
-    """التحقق الجماعي — validate a sequence of episodes in order.
+    inputs: List[KnowledgeEpisodeInput],
+) -> List[ValidationResult]:
+    """Validate a list of knowledge episodes.
 
-    Episodes are validated in the order given.  Results are returned in the
-    same order.
-
-    Parameters
-    ----------
-    inputs:
-        An ordered sequence of :class:`KnowledgeEpisodeInput` objects.
-
-    Returns
-    -------
-    Tuple of :class:`ValidationResult` in the same order as ``inputs``.
+    Returns results sorted by validation_state, then epistemic_rank,
+    then episode_id — matching the Cypher batch query ordering.
     """
-    return tuple(validate_episode(inp) for inp in inputs)
+    results = [validate_episode(inp) for inp in inputs]
+
+    _state_order = {
+        ValidationState.INVALID: 0,
+        ValidationState.PENDING: 1,
+        ValidationState.VALID: 2,
+    }
+    _rank_order = {
+        EpistemicRank.CERTAIN: 0,
+        EpistemicRank.TRUE_NON_CERTAIN: 1,
+        EpistemicRank.PROBABILISTIC_DOUBT: 2,
+        EpistemicRank.IMPOSSIBLE: 3,
+        EpistemicRank.REJECTED_METHODOLOGICALLY: 4,
+    }
+
+    results.sort(
+        key=lambda r: (
+            _state_order.get(r.validation_state, 99),
+            _rank_order.get(r.epistemic_rank, 99),
+            r.episode_id,
+        )
+    )
+    return results

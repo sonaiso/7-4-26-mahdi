@@ -1,49 +1,46 @@
-// seed.cypher — بذور Neo4j للمنهج العقلي
-//
-// Bootstraps the default MethodRecord and ConflictRule nodes that the
-// epistemic_v1 validator uses as default values.
-//
-// Run AFTER schema.cypher.
+// ============================================================
+// Knowledge Episode Graph — Bootstrap / Seed Data
+// Run once after schema.cypher to populate reference nodes.
+// ============================================================
 
-// ── Default Methods ───────────────────────────────────────────────────────
+// ---------- Methods ----------
+MERGE (m1:Method {id: 'method:rational'})
+SET m1.method_family = 'rational',
+    m1.scope = 'general cognition',
+    m1.requires_experiment = false,
+    m1.requires_formal_proof = false,
+    m1.requires_linguistic_anchor = false;
 
-MERGE (m1:MethodRecord {method_id: "METHOD_RATIONAL"})
-ON CREATE SET
-  m1.family       = "RATIONAL",
-  m1.name         = "الطريقة العقلية — the universal rational method",
-  m1.domain_fit   = ["EXISTENCE", "ESSENCE", "ATTRIBUTE", "RELATION",
-                     "INTERPRETIVE", "FORMAL_CONTRADICTION"];
+MERGE (m2:Method {id: 'method:scientific'})
+SET m2.method_family = 'scientific',
+    m2.scope = 'empirical material inquiry',
+    m2.requires_experiment = true,
+    m2.requires_formal_proof = false,
+    m2.requires_linguistic_anchor = false;
 
-MERGE (m2:MethodRecord {method_id: "METHOD_SCIENTIFIC"})
-ON CREATE SET
-  m2.family       = "SCIENTIFIC",
-  m2.name         = "الطريقة العلمية — empirical material inquiry only",
-  m2.domain_fit   = ["EXISTENCE"];
+MERGE (m3:Method {id: 'method:linguistic'})
+SET m3.method_family = 'linguistic',
+    m3.scope = 'utterance/concept analysis',
+    m3.requires_experiment = false,
+    m3.requires_formal_proof = false,
+    m3.requires_linguistic_anchor = true;
 
-MERGE (m3:MethodRecord {method_id: "METHOD_TEXTUAL"})
-ON CREATE SET
-  m3.family       = "TEXTUAL",
-  m3.name         = "الطريقة النقلية — transmission-based",
-  m3.domain_fit   = ["EXISTENCE", "ESSENCE", "ATTRIBUTE", "RELATION",
-                     "INTERPRETIVE"];
+MERGE (m4:Method {id: 'method:mathematical'})
+SET m4.method_family = 'mathematical',
+    m4.scope = 'formal symbolic proof',
+    m4.requires_experiment = false,
+    m4.requires_formal_proof = true,
+    m4.requires_linguistic_anchor = false;
 
-MERGE (m4:MethodRecord {method_id: "METHOD_DEDUCTIVE"})
-ON CREATE SET
-  m4.family       = "DEDUCTIVE",
-  m4.name         = "الطريقة الاستنباطية — formal deduction",
-  m4.domain_fit   = ["EXISTENCE", "ESSENCE", "ATTRIBUTE", "RELATION",
-                     "INTERPRETIVE", "FORMAL_CONTRADICTION"];
+MERGE (m5:Method {id: 'method:physical'})
+SET m5.method_family = 'physical',
+    m5.scope = 'physical law and measurement',
+    m5.requires_experiment = true,
+    m5.requires_formal_proof = true,
+    m5.requires_linguistic_anchor = false;
 
-MERGE (m5:MethodRecord {method_id: "METHOD_INDUCTIVE"})
-ON CREATE SET
-  m5.family       = "INDUCTIVE",
-  m5.name         = "الطريقة الاستقرائية — induction from instances",
-  m5.domain_fit   = ["EXISTENCE", "ATTRIBUTE", "RELATION"];
-
-// ── Default Conflict Rule ─────────────────────────────────────────────────
-
-MERGE (cr:ConflictRule {rule_id: "CR_DEFAULT_CONCEPT_WINS"})
-ON CREATE SET
-  cr.prefer_concept = true,
-  cr.rationale      = "المفهوم مقدّم على المنطوق عند التعارض — "
-                      "concept takes precedence over utterance by default";
+// ---------- Default Conflict Rule ----------
+MERGE (c1:ConflictRule {id: 'conflict:default'})
+SET c1.rule_name = 'default_conflict_v1',
+    c1.priority_order = 'Reality > Valid Proof > Concept specialization > Utterance > Suspend',
+    c1.action_on_conflict = 'downgrade_or_reject';
