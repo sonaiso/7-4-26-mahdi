@@ -363,13 +363,13 @@ def classify_origin(
     Returns:
         :class:`ReferenceOrigin`.
     """
+    # Dependent and explicative references are subordinate regardless of semantic type
+    if ref_type in (ReferenceType.DEPENDENT, ReferenceType.EXPLICATIVE):
+        return ReferenceOrigin.SUBORDINATE
+
     # Entities are primary referents
     if concept.semantic_type is SemanticType.ENTITY:
         return ReferenceOrigin.PRIMARY
-
-    # Dependent and explicative references are subordinate
-    if ref_type in (ReferenceType.DEPENDENT, ReferenceType.EXPLICATIVE):
-        return ReferenceOrigin.SUBORDINATE
 
     # Attributes, events, etc. that function as references are derived
     if concept.semantic_type in (
