@@ -25,12 +25,25 @@ from .enums import (
     AffectiveDimension as AffectiveDimension,
 )
 
+# ── Composition / Syntax Constitution v1 enum re-exports ────────────
+from .enums import (
+    AmbiguityResolution as AmbiguityResolution,
+)
+from .enums import (
+    AmbiguityType as AmbiguityType,
+)
+
 # ── Strict 7-Layer System enum re-exports ─────────────────────────
 from .enums import (
     AuditoryNode as AuditoryNode,
 )
 from .enums import (
     AuthorityLevel as AuthorityLevel,
+)
+
+# ── Universal / Particular Constitution v1 enum re-exports ──────────
+from .enums import (
+    BoundaryType as BoundaryType,
 )
 from .enums import (
     CarrierClass as CarrierClass,
@@ -51,6 +64,18 @@ from .enums import (
     CombinationType as CombinationType,
 )
 from .enums import (
+    CompositionGate as CompositionGate,
+)
+from .enums import (
+    CompositionRelation as CompositionRelation,
+)
+from .enums import (
+    CompositionRole as CompositionRole,
+)
+from .enums import (
+    CompositionVerdict as CompositionVerdict,
+)
+from .enums import (
     ConceptFormationMode as ConceptFormationMode,
 )
 from .enums import (
@@ -63,7 +88,13 @@ from .enums import (
     ConditionToken as ConditionToken,
 )
 from .enums import (
+    ConflictResolutionMethod as ConflictResolutionMethod,
+)
+from .enums import (
     ConflictState as ConflictState,
+)
+from .enums import (
+    ConflictType as ConflictType,
 )
 from .enums import (
     ConstraintStrength as ConstraintStrength,
@@ -88,6 +119,9 @@ from .enums import (
 )
 from .enums import (
     DecisionCode as DecisionCode,
+)
+from .enums import (
+    DependencyType as DependencyType,
 )
 from .enums import (
     DiachronicStatus as DiachronicStatus,
@@ -153,6 +187,9 @@ from .enums import (
     GuidanceState as GuidanceState,
 )
 from .enums import (
+    HarakaState as HarakaState,
+)
+from .enums import (
     HypothesisStatus as HypothesisStatus,
 )
 from .enums import (
@@ -171,6 +208,9 @@ from .enums import (
     InterpretiveStability as InterpretiveStability,
 )
 from .enums import (
+    InterPropositionLink as InterPropositionLink,
+)
+from .enums import (
     IrabCase as IrabCase,
 )
 from .enums import (
@@ -180,10 +220,10 @@ from .enums import (
     JudgementType as JudgementType,
 )
 from .enums import (
-    JudgmentCategory as JudgmentCategory,
+    JudgmentState as JudgmentState,
 )
 from .enums import (
-    LayerEdgeType as LayerEdgeType,
+    LayerEvent as LayerEvent,
 )
 from .enums import (
     LinkKind as LinkKind,
@@ -192,7 +232,7 @@ from .enums import (
     MafhumType as MafhumType,
 )
 from .enums import (
-    MentalEdgeType as MentalEdgeType,
+    MCIDecision as MCIDecision,
 )
 from .enums import (
     MentalIntentionalType as MentalIntentionalType,
@@ -240,10 +280,16 @@ from .enums import (
     PhonTransform as PhonTransform,
 )
 from .enums import (
+    PredicationType as PredicationType,
+)
+from .enums import (
     ProofPathKind as ProofPathKind,
 )
 from .enums import (
     ProofStatus as ProofStatus,
+)
+from .enums import (
+    PropositionType as PropositionType,
 )
 from .enums import (
     PurposeType as PurposeType,
@@ -276,10 +322,16 @@ from .enums import (
     RepresentationNode as RepresentationNode,
 )
 from .enums import (
+    RestrictionType as RestrictionType,
+)
+from .enums import (
     ReversibleValue as ReversibleValue,
 )
 from .enums import (
     RevisionType as RevisionType,
+)
+from .enums import (
+    RootRankState as RootRankState,
 )
 from .enums import (
     SalienceLevel as SalienceLevel,
@@ -312,6 +364,9 @@ from .enums import (
     SlotState as SlotState,
 )
 from .enums import (
+    SoundState as SoundState,
+)
+from .enums import (
     SpaceRef as SpaceRef,
 )
 from .enums import (
@@ -327,6 +382,9 @@ from .enums import (
     SyllablePosition as SyllablePosition,
 )
 from .enums import (
+    SyllableState as SyllableState,
+)
+from .enums import (
     TimeRef as TimeRef,
 )
 from .enums import (
@@ -336,7 +394,10 @@ from .enums import (
     TraceQuality as TraceQuality,
 )
 from .enums import (
-    TransformationNode as TransformationNode,
+    TransformJudgment as TransformJudgment,
+)
+from .enums import (
+    TransformState as TransformState,
 )
 from .enums import (
     TransitionCondition as TransitionCondition,
@@ -360,10 +421,22 @@ from .enums import (
     TrustLevel as TrustLevel,
 )
 from .enums import (
+    TruthCategory as TruthCategory,
+)
+from .enums import (
     TruthState as TruthState,
 )
 from .enums import (
     UnicodeProfileType as UnicodeProfileType,
+)
+from .enums import (
+    UniversalityScope as UniversalityScope,
+)
+from .enums import (
+    UniversalParticularDomain as UniversalParticularDomain,
+)
+from .enums import (
+    UPConstitutionOutcome as UPConstitutionOutcome,
 )
 from .enums import (
     UtteranceMode as UtteranceMode,
@@ -440,6 +513,20 @@ from .kernel import (
     validate_kernel_graph as validate_kernel_graph,
 )
 
+# ── State-machine engine re-exports ────────────────────────────────
+from .state_machine import (
+    MachineSnapshot as MachineSnapshot,
+)
+from .state_machine import (
+    StateMachine as StateMachine,
+)
+from .state_machine import (
+    StateMachineConfig as StateMachineConfig,
+)
+from .state_machine import (
+    StateTransition as StateTransition,
+)
+
 # ── Trace module re-exports ─────────────────────────────────────────
 from .trace import (
     DecisionState as DecisionState,
@@ -464,6 +551,11 @@ from .types import (
     ActivationRecord as ActivationRecord,
 )
 
+# ── Composition / Syntax Constitution v1 type re-exports ────────────
+from .types import (
+    AmbiguityRecord as AmbiguityRecord,
+)
+
 # ── Strict 7-Layer System type re-exports ─────────────────────────
 from .types import (
     AuditoryMinimumRecord as AuditoryMinimumRecord,
@@ -486,10 +578,19 @@ from .types import (
     ConceptRelation as ConceptRelation,
 )
 from .types import (
+    ConceptSeed as ConceptSeed,
+)
+from .types import (
     ConflictEdge as ConflictEdge,
 )
 from .types import (
+    ConflictRecord as ConflictRecord,
+)
+from .types import (
     ConflictRuleNode as ConflictRuleNode,
+)
+from .types import (
+    ConflictRuleRecord as ConflictRuleRecord,
 )
 from .types import (
     ConstraintEdge as ConstraintEdge,
@@ -502,6 +603,12 @@ from .types import (
 )
 from .types import (
     DecisionTrace as DecisionTrace,
+)
+from .types import (
+    DependencyRecord as DependencyRecord,
+)
+from .types import (
+    DisambiguationResult as DisambiguationResult,
 )
 from .types import (
     DiscourseCarrierRecord as DiscourseCarrierRecord,
@@ -552,16 +659,25 @@ from .types import (
     ExchangeStyleRecord as ExchangeStyleRecord,
 )
 from .types import (
+    FinalApprovalComponents as FinalApprovalComponents,
+)
+from .types import (
     GapNode as GapNode,
 )
 from .types import (
     GapRecord as GapRecord,
 )
 from .types import (
+    GateResult as GateResult,
+)
+from .types import (
     GenerativeProfileRecord as GenerativeProfileRecord,
 )
 from .types import (
     Grapheme as Grapheme,
+)
+from .types import (
+    HarakaUnit as HarakaUnit,
 )
 from .types import (
     HypothesisNode as HypothesisNode,
@@ -612,7 +728,10 @@ from .types import (
     LinkingTraceRecord as LinkingTraceRecord,
 )
 from .types import (
-    MentalFoundationRecord as MentalFoundationRecord,
+    MCIResult as MCIResult,
+)
+from .types import (
+    MCIScores as MCIScores,
 )
 from .types import (
     MethodNode as MethodNode,
@@ -654,6 +773,9 @@ from .types import (
     Proposition as Proposition,
 )
 from .types import (
+    RankScoreComponents as RankScoreComponents,
+)
+from .types import (
     RationalSelfRecord as RationalSelfRecord,
 )
 from .types import (
@@ -679,6 +801,9 @@ from .types import (
 )
 from .types import (
     RootPattern as RootPattern,
+)
+from .types import (
+    RootSlot as RootSlot,
 )
 from .types import (
     SelfNode as SelfNode,
@@ -711,6 +836,9 @@ from .types import (
     Syllable as Syllable,
 )
 from .types import (
+    SyllableUnit as SyllableUnit,
+)
+from .types import (
     SyntaxNode as SyntaxNode,
 )
 from .types import (
@@ -735,13 +863,25 @@ from .types import (
     TrustProfileRecord as TrustProfileRecord,
 )
 from .types import (
+    TruthRecord as TruthRecord,
+)
+from .types import (
     UnicodeAtom as UnicodeAtom,
+)
+from .types import (
+    UniversalParticularRecord as UniversalParticularRecord,
+)
+from .types import (
+    UPConstitutionResult as UPConstitutionResult,
 )
 from .types import (
     UtteranceNode as UtteranceNode,
 )
 from .types import (
     UtteranceRecord as UtteranceRecord,
+)
+from .types import (
+    ValidatedJudgment as ValidatedJudgment,
 )
 from .types import (
     ValidationResult as ValidationResult,
@@ -795,6 +935,7 @@ __all__ = [
     "FunctionRole",
     "GapSeverity",
     "GuidanceState",
+    "HarakaState",
     "InfoKind",
     "InsertionPolicy",
     "InstitutionalCategory",
@@ -803,7 +944,10 @@ __all__ = [
     "IrabCase",
     "IrabRole",
     "JudgementType",
+    "JudgmentState",
     "LinkKind",
+    "LayerEvent",
+    "MCIDecision",
     "MafhumType",
     "MentalIntentionalType",
     "MetaConceptualLevel",
@@ -849,6 +993,8 @@ __all__ = [
     "TransitionCondition",
     "TransitionLaw",
     "TransitionType",
+    "TransformJudgment",
+    "TransformState",
     "TriadType",
     "TrustBasis",
     "TrustLevel",
@@ -865,7 +1011,10 @@ __all__ = [
     "ConstraintStrength",
     "HypothesisStatus",
     "RevisionType",
+    "RootRankState",
     "SignalType",
+    "SoundState",
+    "SyllableState",
     # ── kernel ──────────────────────────────────────────────────────
     "KERNEL_RELATION_PAIRS",
     "KERNEL_REQUIRED_FIELDS",
@@ -892,6 +1041,7 @@ __all__ = [
     "Concept",
     "ConceptRelation",
     "ConflictRuleNode",
+    "ConceptSeed",
     "CouplingRecord",
     "DalalaLink",
     "DiscourseCarrierRecord",
@@ -905,12 +1055,14 @@ __all__ = [
     "EpistemicConceptNode",
     "EssenceConditionPair",
     "EvalResult",
+    "FinalApprovalComponents",
     "EvidenceNode",
     "ExchangePurposeRecord",
     "ExchangeStyleRecord",
     "GapNode",
     "GapRecord",
     "Grapheme",
+    "HarakaUnit",
     "InferenceResult",
     "InterpretiveOutcomeRecord",
     "JudgementNode",
@@ -920,6 +1072,8 @@ __all__ = [
     "KnowledgeEpisodeNode",
     "LayerPromotionRule",
     "LexicalClosure",
+    "MCIResult",
+    "MCIScores",
     "LinguisticCarrierNode",
     "LinguisticCarrierRecord",
     "LinkingTraceNode",
@@ -936,6 +1090,8 @@ __all__ = [
     "ProofPathNode",
     "ProofPathRecord",
     "Proposition",
+    "PhonemeCandidate",
+    "PhoneticEvent",
     "RationalSelfRecord",
     "RealityAnchorNode",
     "RealityAnchorRecord",
@@ -943,6 +1099,8 @@ __all__ = [
     "ReceptionRecord",
     "ReceptionStateRecord",
     "RootPattern",
+    "RankScoreComponents",
+    "RootSlot",
     "SelfNode",
     "SenderRoleRecord",
     "SenseTraceNode",
@@ -950,14 +1108,17 @@ __all__ = [
     "SignifiedNode",
     "SignifierNode",
     "Syllable",
+    "SyllableUnit",
     "SyntaxNode",
     "TheoremRecord",
+    "TransformCandidate",
     "TimeSpaceTag",
     "TriadicBlockRecord",
     "TrustProfileRecord",
     "UtteranceNode",
     "UtteranceRecord",
     "ValidationResult",
+    "ValidatedJudgment",
     "WorldFact",
     "ZeroSlotRecord",
     # ── Fractal Kernel types ───────────────────────────────────────

@@ -1,0 +1,53 @@
+# Judgment Machine — Layer 6
+name: JudgmentMachine
+initial_state: J0_NONE
+accept_states: [J4_APPROVED]
+reject_states: [J5_REJECTED, J6_DEFERRED]
+
+final_approval_formula:
+  judgment_score: 0.40
+  reality_match_score: 0.35
+  recoverability_score: 0.15
+  trace_clarity: 0.10
+  threshold: 0.75
+
+transitions:
+  - source: J0_NONE
+    event: EV_JUDGMENT_NOMINATED
+    target: J1_NOMINATED
+    guard: "—"
+    priority: 1
+
+  - source: J1_NOMINATED
+    event: EV_SCORE_COMPUTED
+    target: J2_SCORED
+    guard: g_score
+    threshold: 0.70
+    priority: 1
+
+  - source: J2_SCORED
+    event: EV_REALITY_EVIDENCE_FOUND
+    target: J3_REALITY_CHECKED
+    guard: g_evidence
+    threshold: 0.60
+    priority: 1
+
+  - source: J3_REALITY_CHECKED
+    event: EV_REALITY_MATCH_PASSED
+    target: J4_APPROVED
+    guard: g_validation
+    threshold: 0.75
+    priority: 1
+
+  - source: J3_REALITY_CHECKED
+    event: EV_REALITY_MATCH_FAILED
+    target: J5_REJECTED
+    guard: "—"
+    threshold: 0.75
+    priority: 0
+
+  - source: ANY
+    event: EV_INSUFFICIENT_EVIDENCE
+    target: J6_DEFERRED
+    guard: "—"
+    priority: 0

@@ -191,3 +191,28 @@ def _stabilize(state: KernelRuntimeState, hypotheses: List[HypothesisNode]) -> N
             state.hypotheses.add_hypothesis(final)
         else:
             state.hypotheses.add_hypothesis(h)
+
+
+# ── layer-machine mode (alternative) ──────────────────────────────
+
+
+def run_with_layers(ctx: dict) -> "LayerPipelineResult":  # noqa: F821
+    """Run the layer-machine pipeline instead of the hypothesis graph.
+
+    Parameters
+    ----------
+    ctx : dict
+        Context dictionary with all numeric scores and flags
+        required by the six layer machines.
+
+    Returns
+    -------
+    LayerPipelineResult
+        Aggregated result from all layers.
+    """
+    from arabic_engine.runtime.layer_orchestrator import (
+        LayerOrchestrator,
+    )
+
+    orchestrator = LayerOrchestrator()
+    return orchestrator.run(ctx)

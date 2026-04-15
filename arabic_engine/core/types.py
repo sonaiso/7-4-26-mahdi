@@ -14,18 +14,27 @@ from .enums import (
     POS,
     ActivationStage,
     AffectiveDimension,
+    AmbiguityResolution,
+    AmbiguityType,
     AuthorityLevel,
+    BoundaryType,
     CarrierClass,
     CarrierType,
     CategorizationMode,
     CausalRole,
     CellType,
     CombinationType,
+    CompositionGate,
+    CompositionRelation,
+    CompositionRole,
+    CompositionVerdict,
     ConceptFormationMode,
     ConceptRelationType,
     ConceptualSignifiedClass,
     ConditionToken,
+    ConflictResolutionMethod,
     ConflictState,
+    ConflictType,
     ConstraintStrength,
     ConstraintType,
     ContaminationLevel,
@@ -34,6 +43,7 @@ from .enums import (
     DalaalaKind,
     DalalaType,
     DecisionCode,
+    DependencyType,
     DiachronicStatus,
     DiscourseGapType,
     DiscourseValidationOutcome,
@@ -58,6 +68,7 @@ from .enums import (
     InstitutionalCategory,
     InterpretiveOutcomeType,
     InterpretiveStability,
+    InterPropositionLink,
     IrabCase,
     IrabRole,
     JudgementType,
@@ -78,8 +89,10 @@ from .enums import (
     PhonFeature,
     PhonGroup,
     PhonTransform,
+    PredicationType,
     ProofPathKind,
     ProofStatus,
+    PropositionType,
     PurposeType,
     RankType,
     RationalSelfKind,
@@ -89,8 +102,10 @@ from .enums import (
     ReceiverState,
     ReceptionMode,
     ReceptionStateType,
+    RestrictionType,
     ReversibleValue,
     RevisionType,
+    RoleStatus,
     SalienceLevel,
     ScriptPhase,
     SelfModelAspect,
@@ -108,6 +123,7 @@ from .enums import (
     TimeRef,
     TraceMode,
     TraceQuality,
+    TransferType,
     TransitionCondition,
     TransitionGateStatus,
     TransitionLaw,
@@ -115,14 +131,154 @@ from .enums import (
     TriadType,
     TrustBasis,
     TrustLevel,
+    TruthCategory,
     TruthState,
     UnicodeProfileType,
+    UniversalityScope,
+    UniversalParticularDomain,
+    UPConstitutionOutcome,
     UtteranceMode,
     UtteranceToConceptConstraint,
     UtteredFormClass,
     ValidationOutcome,
     ValidationState,
 )
+
+# ── State-machine layer types ──────────────────────────────────────
+
+
+@dataclass(frozen=True)
+class MCIScores:
+    """Component scores for the Minimum-Completeness Index.
+
+    Each score is a float in [0, 1].
+    """
+
+    boundary: float = 0.0       # B — Boundary Score
+    unity: float = 0.0          # U — Unity Score
+    cohesion: float = 0.0       # C — Cohesion Score
+    extension: float = 0.0      # E — Extension Score
+    phase_order: float = 0.0    # P — Phase Order Score
+    orderliness: float = 0.0    # O — Orderliness Score
+
+
+@dataclass(frozen=True)
+class MCIResult:
+    """Result of MCI (Minimum-Completeness Index) evaluation."""
+
+    scores: MCIScores
+    mci_value: float
+    decision: str               # human-readable decision label
+
+
+@dataclass(frozen=True)
+class ConceptSeed:
+    """Layer 0 output — initial concept seed from the foundational machine."""
+
+    seed_id: str
+    unit_label: str = ""
+    identity_score: float = 0.0
+    rank_hint: str = ""
+
+
+@dataclass(frozen=True)
+class PhoneticEvent:
+    """Layer 1 output — a detected phonetic event."""
+
+    event_id: str
+    energy: float = 0.0
+    boundary_score: float = 0.0
+    position: int = 0
+    interception_type: str = ""
+
+
+@dataclass(frozen=True)
+class PhonemeCandidate:
+    """Layer 2 output — a phoneme candidate that passed MCI."""
+
+    candidate_id: str
+    mci_result: Optional[MCIResult] = None
+    phonetic_event_ref: str = ""
+    symbol: str = ""
+
+
+@dataclass(frozen=True)
+class HarakaUnit:
+    """Layer 2.5 output — an operational vowel-mark (حركة)."""
+
+    unit_id: str
+    sonority_score: float = 0.0
+    attachment_target: Optional[str] = None
+    mobility_score: float = 0.0
+    is_lengthened: bool = False
+    is_deleted: bool = False
+
+
+@dataclass(frozen=True)
+class SyllableUnit:
+    """Layer 3 output — a validated syllable unit."""
+
+    unit_id: str
+    pattern_shape: str = ""     # e.g. "CV", "CVC", "CVV", "CVVC", "CVCC"
+    weight_class: int = 0       # 1=light, 2=heavy, 3=super-heavy
+    nucleus_ref: str = ""
+    syllable_score: float = 0.0
+
+
+@dataclass(frozen=True)
+class RankScoreComponents:
+    """Components for the root-rank score formula."""
+
+    position_fit: float = 0.0           # P — Position Fit
+    constitutiveness: float = 0.0       # C — Constitutiveness
+    inflection_stability: float = 0.0   # I — Inflection Stability
+    syllable_compatibility: float = 0.0 # S — Syllable Compatibility
+    recoverability: float = 0.0         # R — Recoverability
+
+
+@dataclass(frozen=True)
+class RootSlot:
+    """Layer 4 output — a root position with rank score."""
+
+    slot_id: str
+    root_ref: str = ""
+    position: str = ""          # "fa", "ayn", or "lam"
+    rank_score: float = 0.0
+    components: Optional[RankScoreComponents] = None
+
+
+@dataclass(frozen=True)
+class TransformCandidate:
+    """Layer 5 output — a validated morphological transform."""
+
+    candidate_id: str
+    transform_type: str = ""    # matches TransformJudgment name
+    confidence: float = 0.0
+    source_root_ref: str = ""
+    recoverability_score: float = 0.0
+
+
+@dataclass(frozen=True)
+class FinalApprovalComponents:
+    """Components for the final-approval score formula."""
+
+    judgment_score: float = 0.0         # J
+    reality_match_score: float = 0.0    # R
+    recoverability_score: float = 0.0   # Rec
+    trace_clarity: float = 0.0          # T
+
+
+@dataclass(frozen=True)
+class ValidatedJudgment:
+    """Layer 6 output — a judgment that passed reality matching."""
+
+    judgment_id: str
+    final_approval: float = 0.0
+    reality_match_score: float = 0.0
+    components: Optional[FinalApprovalComponents] = None
+    is_approved: bool = False
+    evidence_refs: Tuple[str, ...] = ()
+
 
 # ── Signifier layer ─────────────────────────────────────────────────
 
@@ -2690,3 +2846,71 @@ class LayerTraceRecord:
     layer_6: Optional[RepresentationRecord] = None
     gates: Tuple[TransitionGate, ...] = ()
     final_gate_status: TransitionGateStatus = TransitionGateStatus.INSUFFICIENT_DATA
+
+
+# ── Universal / Particular Constitution v1 ──────────────────────────
+
+
+@dataclass(frozen=True)
+class UniversalParticularRecord:
+    """سجل الكلي والجزئي — constitutional record for a single concept.
+
+    Captures the universality classification of a concept within
+    either the entity (ذات) or attribute (صفة) domain, together
+    with its position in the genus → species → individual hierarchy
+    and its fractal depth in the conceptual tree.
+
+    Mathematical formulation::
+
+        U(x) = 1  iff  scope ∈ {GENUS, SPECIES}
+        P(x) = 1  iff  scope = INDIVIDUAL
+    """
+
+    record_id: str
+    concept_id: int
+    label: str
+    domain: UniversalParticularDomain
+    scope: UniversalityScope
+    is_universal: bool
+    boundary_markers: Tuple[BoundaryType, ...] = ()
+    genus_id: Optional[int] = None
+    species_id: Optional[int] = None
+    fractal_depth: int = 0
+    notes: str = ""
+
+
+@dataclass(frozen=True)
+class BoundaryRecord:
+    """سجل الفاصل الحدّي — formal boundary assertion between two concepts.
+
+    A boundary is valid when the pair of concepts respects the
+    constitutional separation encoded by *boundary_type*.  If invalid,
+    *violation_reason* carries a human-readable explanation.
+    """
+
+    boundary_id: str
+    boundary_type: BoundaryType
+    left_concept_id: int
+    right_concept_id: int
+    is_valid: bool
+    violation_reason: Optional[str] = None
+
+
+@dataclass(frozen=True)
+class UPConstitutionResult:
+    """نتيجة دستور الكلي والجزئي — overall constitutional verdict.
+
+    Aggregates all :class:`UniversalParticularRecord` entries and
+    :class:`BoundaryRecord` checks, then derives the final
+    :class:`UPConstitutionOutcome`.
+
+    *fractal_depth_max* is the maximum depth observed across all
+    records (0 = only genera, 1 = genera + species, 2+ = full tree).
+    """
+
+    result_id: str
+    records: Tuple[UniversalParticularRecord, ...]
+    boundaries: Tuple[BoundaryRecord, ...]
+    outcome: UPConstitutionOutcome
+    fractal_depth_max: int = 0
+    errors: Tuple[str, ...] = ()

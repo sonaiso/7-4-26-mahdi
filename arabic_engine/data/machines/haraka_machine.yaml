@@ -1,0 +1,46 @@
+# Haraka Machine — Layer 2.5
+name: HarakaMachine
+initial_state: H0_UNKNOWN
+accept_states: [H3_OPERATIONAL, H4_LENGTHENED]
+reject_states: [H5_DELETED, H6_REJECTED]
+
+transitions:
+  - source: H0_UNKNOWN
+    event: EV_VOCALIC_TRACE_FOUND
+    target: H1_CANDIDATE
+    guard: g_vocalic
+    threshold: 0.50
+    priority: 1
+
+  - source: H1_CANDIDATE
+    event: EV_ATTACHED_TO_PHONEME
+    target: H2_ATTACHED
+    guard: g_attach
+    threshold: 0.0
+    priority: 1
+
+  - source: H2_ATTACHED
+    event: EV_SYLLABLE_ROLE_CONFIRMED
+    target: H3_OPERATIONAL
+    guard: g_operational
+    threshold: 0.55
+    priority: 1
+
+  - source: H3_OPERATIONAL
+    event: EV_LENGTHENING_DETECTED
+    target: H4_LENGTHENED
+    guard: g_length
+    threshold: 0.0
+    priority: 2
+
+  - source: ANY
+    event: EV_HARAKA_DELETED
+    target: H5_DELETED
+    guard: g_deleted
+    priority: 1
+
+  - source: ANY
+    event: EV_HARAKA_INVALID
+    target: H6_REJECTED
+    guard: g_invalid
+    priority: 0
