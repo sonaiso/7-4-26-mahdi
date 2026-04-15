@@ -1,0 +1,63 @@
+# Transform Machine — Layer 5
+name: TransformMachine
+initial_state: T0_NONE
+accept_states: [T7_VALIDATED]
+reject_states: []
+
+# Priority order: lower number = preferred verdict
+priority_order:
+  - { type: ASSIMILATED, priority: 1 }
+  - { type: WEAKENED, priority: 2 }
+  - { type: SUBSTITUTED, priority: 3 }
+  - { type: DELETED, priority: 4 }
+  - { type: AUGMENTED, priority: 5 }
+  - { type: ORIGINAL, priority: 6 }
+
+transitions:
+  - source: T0_NONE
+    event: EV_ASSIMILATION_DETECTED
+    target: T6_IDGHAM
+    guard: g_idgham
+    threshold: 0.65
+    priority: 1
+
+  - source: T0_NONE
+    event: EV_WEAKNESS_PATTERN_DETECTED
+    target: T5_ILLAL
+    guard: g_illal
+    threshold: 0.65
+    priority: 2
+
+  - source: T0_NONE
+    event: EV_MATERIAL_CHANGED
+    target: T3_SUBSTITUTION
+    guard: g_substitution
+    threshold: 0.60
+    priority: 3
+
+  - source: T0_NONE
+    event: EV_SURFACE_ABSENT
+    target: T4_DELETION
+    guard: g_deletion
+    priority: 4
+
+  - source: T0_NONE
+    event: EV_DEPENDENT_FUNCTIONAL
+    target: T2_AUGMENT
+    guard: g_augmented
+    threshold: 0.60
+    priority: 5
+
+  - source: T0_NONE
+    event: EV_CONSTITUTIVE_STABLE
+    target: T1_ORIGINAL
+    guard: g_original
+    threshold: 0.70
+    priority: 6
+
+  - source: ANY_CANDIDATE
+    event: EV_TRANSFORM_VALIDATED
+    target: T7_VALIDATED
+    guard: g_transform_score
+    threshold: 0.70
+    priority: 1

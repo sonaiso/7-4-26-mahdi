@@ -16,21 +16,36 @@ from .enums import (
     CarrierType,
     CellType,
     CombinationType,
-    ConceptualSignifiedClass,
+    CompositionDegree,
     ConditionToken,
+    ConfirmationRank,
+    ConflictResolutionMethod,
+    ConflictState,
+    ConflictType,
+    ConstraintStrength,
     ConstraintType,
     ContaminationLevel,
     CouplingRelationType,
     DalalaType,
+    DependencyDegree,
     ElementClass,
     ElementFunction,
     ElementLayer,
     EpistemicRank,
     EvidenceType,
+    ExistenceMode,
     FunctionRole,
     FuncTransitionClass,
     GapSeverity,
     GuidanceState,
+    HypothesisStatus,
+    InfoKind,
+    InsertionPolicy,
+    InstitutionalCategory,
+    InternalConflictType,
+    InterpretiveOutcomeType,
+    InterpretiveStability,
+    InterPropositionLink,
     IrabCase,
     IrabRole,
     JudgementType,
@@ -40,28 +55,39 @@ from .enums import (
     OntologicalConstraintType,
     OntologicalLayer,
     OntologicalMode,
+    OntologicalSubtype,
     PhonCategory,
     PhonFeature,
     PhonGroup,
     PhonTransform,
     ProofPathKind,
     ProofStatus,
+    PropositionType,
+    PurposeType,
     RankType,
     RealityKind,
     ReversibleValue,
+    RhetoricalStatus,
     SemanticType,
     SenseModality,
     SignifiedClass,
     SignifierClass,
     SlotState,
+    SourceType,
     SpaceRef,
+    SpecificityDegree,
     SyllablePosition,
+    SymbolicStatus,
     TimeRef,
     TraceMode,
     TransitionCondition,
+    TransitionGateStatus,
     TransitionLaw,
     TransitionType,
     TriadType,
+    TrustBasis,
+    TrustLevel,
+    TruthCategory,
     TruthState,
     UnicodeProfileType,
     UtteranceToConceptConstraint,
@@ -69,12 +95,150 @@ from .enums import (
     ValidationState,
 )
 
+# ── State-machine layer types ──────────────────────────────────────
+
+
+@dataclass(frozen=True)
+class MCIScores:
+    """Component scores for the Minimum-Completeness Index.
+
+    Each score is a float in [0, 1].
+    """
+
+    boundary: float = 0.0       # B — Boundary Score
+    unity: float = 0.0          # U — Unity Score
+    cohesion: float = 0.0       # C — Cohesion Score
+    extension: float = 0.0      # E — Extension Score
+    phase_order: float = 0.0    # P — Phase Order Score
+    orderliness: float = 0.0    # O — Orderliness Score
+
+
+@dataclass(frozen=True)
+class MCIResult:
+    """Result of MCI (Minimum-Completeness Index) evaluation."""
+
+    scores: MCIScores
+    mci_value: float
+    decision: str               # human-readable decision label
+
+
+@dataclass(frozen=True)
+class ConceptSeed:
+    """Layer 0 output — initial concept seed from the foundational machine."""
+
+    seed_id: str
+    unit_label: str = ""
+    identity_score: float = 0.0
+    rank_hint: str = ""
+
+
+@dataclass(frozen=True)
+class PhoneticEvent:
+    """Layer 1 output — a detected phonetic event."""
+
+    event_id: str
+    energy: float = 0.0
+    boundary_score: float = 0.0
+    position: int = 0
+    interception_type: str = ""
+
+
+@dataclass(frozen=True)
+class PhonemeCandidate:
+    """Layer 2 output — a phoneme candidate that passed MCI."""
+
+    candidate_id: str
+    mci_result: Optional[MCIResult] = None
+    phonetic_event_ref: str = ""
+    symbol: str = ""
+
+
+@dataclass(frozen=True)
+class HarakaUnit:
+    """Layer 2.5 output — an operational vowel-mark (حركة)."""
+
+    unit_id: str
+    sonority_score: float = 0.0
+    attachment_target: Optional[str] = None
+    mobility_score: float = 0.0
+    is_lengthened: bool = False
+    is_deleted: bool = False
+
+
+@dataclass(frozen=True)
+class SyllableUnit:
+    """Layer 3 output — a validated syllable unit."""
+
+    unit_id: str
+    pattern_shape: str = ""     # e.g. "CV", "CVC", "CVV", "CVVC", "CVCC"
+    weight_class: int = 0       # 1=light, 2=heavy, 3=super-heavy
+    nucleus_ref: str = ""
+    syllable_score: float = 0.0
+
+
+@dataclass(frozen=True)
+class RankScoreComponents:
+    """Components for the root-rank score formula."""
+
+    position_fit: float = 0.0           # P — Position Fit
+    constitutiveness: float = 0.0       # C — Constitutiveness
+    inflection_stability: float = 0.0   # I — Inflection Stability
+    syllable_compatibility: float = 0.0 # S — Syllable Compatibility
+    recoverability: float = 0.0         # R — Recoverability
+
+
+@dataclass(frozen=True)
+class RootSlot:
+    """Layer 4 output — a root position with rank score."""
+
+    slot_id: str
+    root_ref: str = ""
+    position: str = ""          # "fa", "ayn", or "lam"
+    rank_score: float = 0.0
+    components: Optional[RankScoreComponents] = None
+
+
+@dataclass(frozen=True)
+class TransformCandidate:
+    """Layer 5 output — a validated morphological transform."""
+
+    candidate_id: str
+    transform_type: str = ""    # matches TransformJudgment name
+    confidence: float = 0.0
+    source_root_ref: str = ""
+    recoverability_score: float = 0.0
+
+
+@dataclass(frozen=True)
+class FinalApprovalComponents:
+    """Components for the final-approval score formula."""
+
+    judgment_score: float = 0.0         # J
+    reality_match_score: float = 0.0    # R
+    recoverability_score: float = 0.0   # Rec
+    trace_clarity: float = 0.0          # T
+
+
+@dataclass(frozen=True)
+class ValidatedJudgment:
+    """Layer 6 output — a judgment that passed reality matching."""
+
+    judgment_id: str
+    final_approval: float = 0.0
+    reality_match_score: float = 0.0
+    components: Optional[FinalApprovalComponents] = None
+    is_approved: bool = False
+    evidence_refs: Tuple[str, ...] = ()
+
+
 # ── Signifier layer ─────────────────────────────────────────────────
+
 
 @dataclass(frozen=True)
 class Grapheme:
     """A single grapheme cluster: base code-point + diacritics."""
-    base: int               # Unicode code-point of the consonant/vowel letter
+
+    base: int  # Unicode code-point of the consonant/vowel letter
     marks: Tuple[int, ...]  # code-points of combining marks (tashkīl)
 
     @property
@@ -85,6 +249,7 @@ class Grapheme:
 @dataclass(frozen=True)
 class Syllable:
     """Phonological syllable: onset, nucleus, coda, weight."""
+
     onset: Tuple[int, ...]
     nucleus: Tuple[int, ...]
     coda: Tuple[int, ...]
@@ -94,17 +259,125 @@ class Syllable:
 @dataclass(frozen=True)
 class RootPattern:
     """Extracted root and morphological pattern."""
-    root: Tuple[str, ...]        # e.g. ('ك','ت','ب')
-    pattern: str                 # e.g. 'فَعَلَ'
+
+    root: Tuple[str, ...]  # e.g. ('ك','ت','ب')
+    pattern: str  # e.g. 'فَعَلَ'
     root_id: int = 0
     pattern_id: int = 0
 
 
+# ── Enriched signifier models ──────────────────────────────────────
+
+
+@dataclass(frozen=True)
+class CombiningMarkDetail:
+    """Metadata for a single combining mark attached to a grapheme."""
+
+    char: str
+    codepoint: str          # e.g. "U+064E"
+    type: str               # haraka | sukun | shadda | tanween
+
+
+@dataclass(frozen=True)
+class EnrichedGrapheme:
+    """Extended grapheme cluster with phonetic metadata.
+
+    Wraps the basic :class:`Grapheme` concept with additional fields
+    loaded from ``arabic_letters.csv`` and ``unicode_marks.csv``.
+    The ``role`` field remains ``None`` until the pattern layer
+    resolves ambiguity for ا/و/ي.
+    """
+
+    id: str
+    layer: int                                  # always 1
+    surface: str
+    base_char: str
+    base_codepoint: str                         # e.g. "U+0628"
+    combining_marks: Tuple[CombiningMarkDetail, ...] = ()
+    phonetic_code: str = ""
+    place_code: int = 0
+    manner_code: int = 0
+    voicing_code: int = 0
+    stiffness_code: int = 0
+    entity_score: float = 0.0
+    role: Optional[str] = None                  # consonant | long_vowel | ambiguous
+
+
+@dataclass(frozen=True)
+class EnrichedSyllable:
+    """Syllable with shape and weight metadata from ``syllable_shapes.csv``."""
+
+    id: str
+    layer: int                                  # always 3
+    surface: str
+    chars: Tuple[str, ...] = ()                 # EnrichedGrapheme ids
+    vowels: Tuple[str, ...] = ()                # vowel ids
+    shape: str = ""                             # e.g. "CV"
+    shape_code: str = ""                        # e.g. "3.1.1.0.1"
+    nucleus_type: int = 0
+    closure_type: int = 0
+    weight_code: int = 0
+    completion_score: float = 0.0
+    weightability_score: float = 0.0
+
+
+@dataclass(frozen=True)
+class PatternCandidate:
+    """A candidate morphological pattern with confidence score."""
+
+    pattern_code: str
+    pattern_label: str = ""
+    pattern_type: str = ""
+    augment_count: int = 0
+    root_candidate: Tuple[str, ...] = ()
+    confidence: float = 0.0
+    reality_match_score: float = 0.0
+
+
+@dataclass(frozen=True)
+class CliticRecord:
+    """A clitic (proclitic/enclitic) stripped from a token."""
+
+    surface: str
+    type: str               # connector | relation_marker | definite_article
+    confidence: float = 0.0
+
+
+@dataclass(frozen=True)
+class RootCandidate:
+    """A candidate root with confidence score."""
+
+    root: Tuple[str, ...]
+    confidence: float = 0.0
+
+
+@dataclass(frozen=True)
+class TokenAnalysis:
+    """Full word-level analysis record (تحليل الكلمة الكاملة).
+
+    Produced by the 8-step diacritised-word analysis pipeline.
+    """
+
+    id: str
+    surface: str
+    normalized_form: str
+    unicode_form: str = "NFC"
+    graphemes: Tuple[EnrichedGrapheme, ...] = ()
+    clitics: Tuple[CliticRecord, ...] = ()
+    core_surface: str = ""
+    syllables: Tuple[EnrichedSyllable, ...] = ()
+    root_candidates: Tuple[RootCandidate, ...] = ()
+    pattern_candidates: Tuple[PatternCandidate, ...] = ()
+    final_status: str = "structural_analysis_only"
+
+
 # ── Lexical Closure ─────────────────────────────────────────────────
+
 
 @dataclass
 class LexicalClosure:
     """Full morphological + lexical record for a token (التعريف 4)."""
+
     surface: str
     lemma: str
     root: Tuple[str, ...]
@@ -125,20 +398,103 @@ class LexicalClosure:
 
 # ── Signified layer ─────────────────────────────────────────────────
 
+
 @dataclass
 class Concept:
-    """An ontological node — the *signified* (التعريف 5)."""
+    """An ontological node — the *signified* (التعريف 5).
+
+    The v2 expansion adds nineteen optional axes that together cover
+    the full range of human conceptual knowledge.  All new fields
+    default to ``None`` so that existing callers require no changes.
+
+    Core fields (v1)
+    ----------------
+    concept_id      unique integer identifier
+    label           human-readable Arabic label
+    semantic_type   primary ontological type (entity / event / …)
+    properties      free-form property dict for ad-hoc extensions
+
+    Descriptive axes (v2)
+    ---------------------
+    epistemic_status       how knowledge of the concept is held
+    normative_category     intrinsic normative / deontic value
+    affective_dimension    affective / emotional charge
+    mental_intentional_type intentional mental state category
+    modal_category         alethic modal standing
+    frame_type             encyclopaedic frame membership
+    script_phase           phase within a cognitive script
+    causal_role            role in a causal-explanatory chain
+    institutional_category social / institutional fact category
+    categorization_mode    crisp / prototype / fuzzy membership
+    cultural_scope         cultural / civilisational reach
+    diachronic_status      semantic shift / historical status
+    formation_mode         how the concept was formed
+    meta_level             meta-conceptual order (1st / 2nd / 3rd)
+    interpretive_stability single reading vs. polysemy / contested
+    salience               cognitive salience / prominence
+    embodied_domain        embodied sensorimotor grounding domain
+    self_model_aspect      aspect of the self-model (if any)
+    operational_capacity   performative / operational capacity
+    """
+
+    # ── v1 core fields ───────────────────────────────────────────────
     concept_id: int
     label: str
     semantic_type: SemanticType
     properties: dict = field(default_factory=dict)
 
+    # ── v2 descriptive axes ──────────────────────────────────────────
+    epistemic_status: Optional[EpistemicStatus] = None
+    normative_category: Optional[NormativeCategory] = None
+    affective_dimension: Optional[AffectiveDimension] = None
+    mental_intentional_type: Optional[MentalIntentionalType] = None
+    modal_category: Optional[ModalCategory] = None
+    frame_type: Optional[FrameType] = None
+    script_phase: Optional[ScriptPhase] = None
+    causal_role: Optional[CausalRole] = None
+    institutional_category: Optional[InstitutionalCategory] = None
+    categorization_mode: Optional[CategorizationMode] = None
+    cultural_scope: Optional[CulturalScope] = None
+    diachronic_status: Optional[DiachronicStatus] = None
+    formation_mode: Optional[ConceptFormationMode] = None
+    meta_level: Optional[MetaConceptualLevel] = None
+    interpretive_stability: Optional[InterpretiveStability] = None
+    salience: Optional[SalienceLevel] = None
+    embodied_domain: Optional[EmbodiedDomain] = None
+    self_model_aspect: Optional[SelfModelAspect] = None
+    operational_capacity: Optional[OperationalCapacity] = None
+
+
+@dataclass
+class ConceptRelation:
+    """A directed relation between two concept nodes (شبكة المفاهيم).
+
+    Used to wire :class:`Concept` nodes into a knowledge graph via
+    :class:`~arabic_engine.signified.signified_v2.ConceptNetwork`.
+
+    Fields
+    ------
+    source_id       ``concept_id`` of the origin node
+    target_id       ``concept_id`` of the destination node
+    relation_type   the semantic relation linking source → target
+    weight          relation strength ∈ (0, 1] (default 1.0)
+    notes           optional free-text annotation
+    """
+
+    source_id: int
+    target_id: int
+    relation_type: ConceptRelationType
+    weight: float = 1.0
+    notes: str = ""
+
 
 # ── Linkage layer ───────────────────────────────────────────────────
+
 
 @dataclass
 class DalalaLink:
     """A validated signification link (التعريف 6)."""
+
     source_lemma: str
     target_concept_id: int
     dalala_type: DalalaType
@@ -148,9 +504,11 @@ class DalalaLink:
 
 # ── Cognition layer ─────────────────────────────────────────────────
 
+
 @dataclass
 class Proposition:
     """A structured judgment / proposition (التعريف 7)."""
+
     subject: str
     predicate: str
     obj: str
@@ -162,17 +520,73 @@ class Proposition:
 @dataclass
 class EvalResult:
     """Final evaluation vector (التعريف 8)."""
+
     proposition: Proposition
     truth_state: TruthState
     guidance_state: GuidanceState
     confidence: float
 
 
+@dataclass(frozen=True)
+class PerceptTrace:
+    """Perception trace for a sentence-level episode."""
+
+    raw_text: str
+    normalized_text: str
+    tokens: Tuple[str, ...]
+    trace_quality: float = 1.0
+
+
+@dataclass(frozen=True)
+class PriorKnowledgeUnit:
+    """Prior knowledge unit used during linking and judgement."""
+
+    unit_id: str
+    content: str
+    source: str = "pipeline"
+    weight: float = 0.5
+
+
+@dataclass(frozen=True)
+class LinkOperation:
+    """A single linking operation between signifier-side and concept-side data."""
+
+    operation_id: str
+    operation_type: DalalaType
+    source: str
+    target: str
+    accepted: bool
+    confidence: float
+
+
+@dataclass(frozen=True)
+class ConceptNode:
+    """Explicit concept node for v3 explainable episode payloads."""
+
+    concept_id: str
+    label: str
+    semantic_type: SemanticType
+    properties: dict = field(default_factory=dict)
+
+
+@dataclass(frozen=True)
+class EvaluationResult:
+    """v3 evaluation payload: truth, rank, confidence, and validity."""
+
+    truth_state: TruthState
+    epistemic_rank: Optional[EpistemicRank]
+    confidence: float
+    validation_state: ValidationState
+    consistency: str = ""
+
+
 # ── Syntax layer (v2) ───────────────────────────────────────────────
+
 
 @dataclass
 class SyntaxNode:
     """A node in the i'rāb (syntactic) tree."""
+
     token: str
     lemma: str
     pos: POS
@@ -184,20 +598,24 @@ class SyntaxNode:
 
 # ── Time / Space tag (v2) ───────────────────────────────────────────
 
+
 @dataclass
 class TimeSpaceTag:
     """Temporal and spatial anchoring for a proposition."""
+
     time_ref: TimeRef
     space_ref: SpaceRef
-    time_detail: str = ""   # e.g. "أمس", "غدًا"
+    time_detail: str = ""  # e.g. "أمس", "غدًا"
     space_detail: str = ""  # e.g. "المدينة"
 
 
 # ── World model fact (v2) ───────────────────────────────────────────
 
+
 @dataclass
 class WorldFact:
     """A fact held in the world-model knowledge base."""
+
     fact_id: int
     subject: str
     predicate: str
@@ -208,17 +626,25 @@ class WorldFact:
 
 # ── Inference result (v2) ───────────────────────────────────────────
 
+
 @dataclass
 class InferenceResult:
     """Result of applying an inference rule."""
+
     rule_name: str
     premises: List[Proposition]
     conclusion: Proposition
     confidence: float
     valid: bool
+    rule_category: str = ""
+    conditions: Tuple[str, ...] = ()
+    outcome: str = ""
+    strength: float = 0.0
+    explanation: str = ""
 
 
 # ── Mafhūm layer (Ch. 21) ──────────────────────────────────────────
+
 
 @dataclass
 class MafhumPillar:
@@ -230,6 +656,7 @@ class MafhumPillar:
       3. mental_counterpart — a mental counterpart can be formed (مقابل ذهني)
       4. transition_rule — a transition rule applies (قاعدة انتقال)
     """
+
     closed_mantuq: bool
     constraint_type: ConstraintType
     mental_counterpart: str
@@ -243,18 +670,20 @@ class MafhumResult:
     Captures the derivation of an implied concept from the explicit
     text (Manṭūq) via one of the five minimal Mafhūm types.
     """
+
     mafhum_type: MafhumType
     constraint_type: ConstraintType
     pillars: MafhumPillar
-    source_text: str           # the original Manṭūq fragment
-    constraint_value: str      # the specific constraint detected
-    counterpart: str           # the mental counterpart (المقابل الذهني)
-    derived_meaning: str       # the derived implied meaning
-    valid: bool                # whether all four pillars hold
-    confidence: float          # confidence in [0, 1]
+    source_text: str  # the original Manṭūq fragment
+    constraint_value: str  # the specific constraint detected
+    counterpart: str  # the mental counterpart (المقابل الذهني)
+    derived_meaning: str  # the derived implied meaning
+    valid: bool  # whether all four pillars hold
+    confidence: float  # confidence in [0, 1]
 
 
 # ── D_min — Minimal Complete Phonological Representation ────────────
+
 
 @dataclass(frozen=True)
 class DMin:
@@ -338,6 +767,7 @@ class DMin:
 
 # ── Transition Engine — قانون الانتقال بين الخانات ──────────────────
 
+
 @dataclass(frozen=True)
 class TransitionContext:
     """السياق الذي يحكم الانتقال — contextual inputs to the transition function.
@@ -361,11 +791,11 @@ class TransitionContext:
 
     position: SyllablePosition
     function_role: FunctionRole
-    left_neighbor: Optional["DMin"] = None   # type: ignore[name-defined]
+    left_neighbor: Optional["DMin"] = None  # type: ignore[name-defined]
     right_neighbor: Optional["DMin"] = None  # type: ignore[name-defined]
-    pattern: str = ""                        # e.g. "فَعَلَ", "اسْتَفْعَلَ"
-    economy_pressure: float = 0.0            # 0 = none, 1 = maximum
-    architecture: str = ""                   # e.g. "مجرد", "مزيد", "مشتق"
+    pattern: str = ""  # e.g. "فَعَلَ", "اسْتَفْعَلَ"
+    economy_pressure: float = 0.0  # 0 = none, 1 = maximum
+    architecture: str = ""  # e.g. "مجرد", "مزيد", "مشتق"
 
 
 @dataclass(frozen=True)
@@ -385,14 +815,14 @@ class TransitionRule:
 
     law: TransitionLaw
     transition_type: TransitionType
-    from_category: Optional[PhonCategory]                # None = any category
-    required_features: FrozenSet[PhonFeature]            # features element must have
-    to_category: PhonCategory                            # target cell category
-    resulting_transform: PhonTransform                   # transform that fires
+    from_category: Optional[PhonCategory]  # None = any category
+    required_features: FrozenSet[PhonFeature]  # features element must have
+    to_category: PhonCategory  # target cell category
+    resulting_transform: PhonTransform  # transform that fires
     conditions: FrozenSet[TransitionCondition]
-    priority: int                                        # lower = higher precedence
-    description_ar: str                                  # Arabic description
-    example: str                                         # canonical Arabic example
+    priority: int  # lower = higher precedence
+    description_ar: str  # Arabic description
+    example: str  # canonical Arabic example
 
 
 @dataclass
@@ -405,20 +835,21 @@ class TransitionResult:
         subject to: E_new ∈ Nearest_Valid_Functional_Cell
     """
 
-    source_unicode: int               # codepoint of the original element
+    source_unicode: int  # codepoint of the original element
     applied_rule: Optional[TransitionRule]  # the winning rule (None = stable)
-    stable: bool                      # True if no transition occurred
+    stable: bool  # True if no transition occurred
     target_category: Optional[PhonCategory]  # new cell category (None = deleted)
-    surface_form: str                 # resulting surface character(s)
-    loss_root: float                  # cost: root integrity loss ∈ [0, 1]
-    loss_pattern: float               # cost: pattern integrity loss ∈ [0, 1]
-    phonetic_burden: float            # cost: articulatory burden ∈ [0, 1]
-    total_cost: float                 # = loss_root + loss_pattern + phonetic_burden
+    surface_form: str  # resulting surface character(s)
+    loss_root: float  # cost: root integrity loss ∈ [0, 1]
+    loss_pattern: float  # cost: pattern integrity loss ∈ [0, 1]
+    phonetic_burden: float  # cost: articulatory burden ∈ [0, 1]
+    total_cost: float  # = loss_root + loss_pattern + phonetic_burden
     conditions_met: FrozenSet[TransitionCondition]
-    notes: str = ""                   # optional diagnostic string
+    notes: str = ""  # optional diagnostic string
 
 
 # ── Functional Transition Schema types ──────────────────────────────
+
 
 @dataclass(frozen=True)
 class FunctionalTransitionRecord:
@@ -454,7 +885,7 @@ class FunctionalTransitionRecord:
     transition_class: FuncTransitionClass
     preconditions: FrozenSet[ConditionToken]
     blocking_conditions: FrozenSet[ConditionToken]
-    priority: int                        # 1 = critical … 5 = fallback
+    priority: int  # 1 = critical … 5 = fallback
     reversible: ReversibleValue
     surface_form: str
     deep_form: str
@@ -463,6 +894,7 @@ class FunctionalTransitionRecord:
 
 
 # ── AEU — Alphabetic Encoding Unit ─────────────────────────────────
+
 
 @dataclass(frozen=True)
 class AEU:
@@ -478,17 +910,17 @@ class AEU:
     The ``math_form`` is an 8-position binary vector ``{0,1}⁸``.
     """
 
-    element_id: str                            # e.g. "AE_001"
-    element_name: str                          # e.g. "Hamza"
+    element_id: str  # e.g. "AE_001"
+    element_name: str  # e.g. "Hamza"
     element_class: ElementClass
     element_function: ElementFunction
-    referent: str                              # الدلالة الوظيفية
-    boundary: str                              # الحد الفاصل
-    necessity: str                             # الضرورة
-    governing_role: str                        # الدور الحاكم
+    referent: str  # الدلالة الوظيفية
+    boundary: str  # الحد الفاصل
+    necessity: str  # الضرورة
+    governing_role: str  # الدور الحاكم
     layer: ElementLayer
     combination_type: CombinationType
-    math_form: Tuple[int, ...]                 # 8-bit binary vector
+    math_form: Tuple[int, ...]  # 8-bit binary vector
     unicode_codepoint: int
     unicode_profile: UnicodeProfileType
     depends_on: Tuple[str, ...] = ()
@@ -542,6 +974,7 @@ class AEU:
 # ── Axiom Types — الأصول الخمسة ─────────────────────────────────────
 
 # A1/A2 — أصل الموضع الصفري والتحقق الموجب الأول
+
 
 @dataclass(frozen=True)
 class ZeroSlotRecord:
@@ -601,6 +1034,7 @@ class ZeroSlotRecord:
 
 # A3 — أصل التمييز الثلاثي
 
+
 @dataclass(frozen=True)
 class TriadicBlockRecord:
     """كتلة ثلاثية — a triadic distinction block (A3).
@@ -656,6 +1090,7 @@ class TriadicBlockRecord:
 
 # A4 — أصل الترقية الطبقية
 
+
 @dataclass(frozen=True)
 class LayerPromotionRule:
     """قاعدة الترقية الطبقية — a layer-promotion rule (A4).
@@ -707,6 +1142,7 @@ class LayerPromotionRule:
 
 
 # ── Structural Slot — الموضع البنيوي الحقيقي ────────────────────────
+
 
 @dataclass(frozen=True)
 class StructuralSlot:
@@ -760,6 +1196,7 @@ class StructuralSlot:
 
 # ── Vocalic Zero — الصفر الحركي المخصوص ─────────────────────────────
 
+
 @dataclass(frozen=True)
 class VocalicZero:
     """الصفر الحركي المخصوص — sukun as a specific vocalic-zero mark.
@@ -803,6 +1240,7 @@ class VocalicZero:
 
 
 # ── Triad Record — سجل الثلاثية ──────────────────────────────────────
+
 
 @dataclass(frozen=True)
 class TriadRecord:
@@ -859,6 +1297,7 @@ class TriadRecord:
 
 
 # ── Rank Decision — قرار الرتبة ──────────────────────────────────────
+
 
 @dataclass(frozen=True)
 class RankDecision:
@@ -922,254 +1361,291 @@ class RankDecision:
         return self.promotion_target is not None
 
 
-# ── Axiom & Theorem Records — السجلات البرهانية ──────────────────────
+# ── Symbolic Encoding — ترميز الحرف والحركة ─────────────────────────
+#
+# Implements the refined axiom:
+#
+#     Ess(x) = ⟨Slot(x), Value(x)⟩          — essence = position + value
+#     Cond(x) = Ω_x                          — constraint (external to essence)
+#     Valid(x) ⟺ Ess(x) ∧ Ω_x              — acceptance / activation
+#
+# The constraint is NOT an intrinsic part of the unit's essence.
+# It is an activation / acceptance / insertion / promotion condition.
+
 
 @dataclass(frozen=True)
-class AxiomRecord:
-    """سجل بديهية — a formally registered axiom of the system.
+class SymbolicRecord:
+    """السجل الرمزي العام — Generic Symbolic Record.
 
-    Each axiom is a foundational statement that is *assumed* true and
-    upon which theorems depend.  Recording axioms as typed objects
-    allows:
+    The universal record for any linguistic encoding unit (letter or vowel).
+    Separates *essence* (Core) from *constraint* (Condition)::
 
-    * lookup by identifier
-    * dependency tracking
-    * proof-coverage analysis
+        X := (ID, Type, Slot, Value, Condition, Layer, Status)
 
-    Implements the requirement::
+        Core(X)      = (Slot, Value)           — الجوهر
+        Condition(X)  = Ω_X                    — الشرط
+        Status(X)    = Representable | Valid | Promotable
 
-        ∀ axiom ∈ Foundation:
-            axiom.id ∈ Registry
-            axiom.formal_statement is well-formed
-            axiom.implemented_by ⊆ Codebase
+    Implements::
+
+        Ess(x)  = ⟨Slot, Value⟩
+        Valid(x) ⟺ Ess(x) ∧ Constraint
 
     Fields
     ------
-    axiom_id            unique identifier (e.g. ``"AX_001"``)
-    name                human-readable name (Arabic or English)
-    formal_statement    the symbolic / logical statement
-    natural_language    plain-language description
-    layer               the :class:`OntologicalLayer` this axiom governs
-    dependencies        IDs of prior axioms this one depends on
-    implemented_by      names of types/functions that embody this axiom
-    status              current :class:`ProofStatus`
+    record_id           unique identifier (e.g. ``"SR_001"``)
+    unit_type           LETTER or VOWEL
+    slot_position       positional encoding (scriptural / phonetic / chain)
+    slot_label          human-readable slot description
+    value_vector        numeric value tuple (identity, features, effects)
+    value_label         human-readable value description
+    constraints         frozenset of active constraint kinds
+    constraint_omega    constraint weight Ω ∈ [0, 1]; 0 = blocked, 1 = open
+    layer               ontological layer
+    status              current symbolic status
     notes               free-text annotation
     """
 
-    axiom_id: str
-    name: str
-    formal_statement: str
-    natural_language: str
-    layer: OntologicalLayer
-    dependencies: Tuple[str, ...] = ()
-    implemented_by: Tuple[str, ...] = ()
-    status: ProofStatus = ProofStatus.ASSUMED
-    notes: str = ""
-
-
-@dataclass(frozen=True)
-class TheoremRecord:
-    """سجل مبرهنة — a formally registered theorem derived from axioms.
-
-    A theorem is a statement *derived* from one or more axioms (and
-    possibly other theorems).  Recording them as typed objects enables
-    traceability from any claim back to its foundational assumptions.
-
-    Implements the requirement::
-
-        ∀ thm ∈ Theorems:
-            thm.axiom_deps ⊆ Axioms
-            thm.theorem_deps ⊆ Theorems
-            thm.proof_sketch ≠ ""
-
-    Fields
-    ------
-    theorem_id          unique identifier (e.g. ``"TH_001"``)
-    name                human-readable name
-    formal_statement    the symbolic / logical statement
-    natural_language    plain-language description
-    axiom_dependencies  IDs of axioms this theorem depends on
-    theorem_dependencies IDs of prior theorems this theorem depends on
-    proof_sketch        concise proof outline
-    status              current :class:`ProofStatus`
-    test_reference      name of the test that verifies this theorem
-    notes               free-text annotation
-    """
-
-    theorem_id: str
-    name: str
-    formal_statement: str
-    natural_language: str
-    axiom_dependencies: Tuple[str, ...] = ()
-    theorem_dependencies: Tuple[str, ...] = ()
-    proof_sketch: str = ""
-    status: ProofStatus = ProofStatus.PENDING
-    test_reference: str = ""
-    notes: str = ""
-
-    @property
-    def all_dependencies(self) -> Tuple[str, ...]:
-        """Return all dependency IDs (axiom + theorem)."""
-        return self.axiom_dependencies + self.theorem_dependencies
-
-    @property
-    def is_proven(self) -> bool:
-        """True when the theorem has been formally proven."""
-        return self.status is ProofStatus.PROVEN
-
-
-@dataclass(frozen=True)
-class ProofDependencyGraph:
-    """رسم بياني للاعتماد البرهاني — the proof-dependency DAG.
-
-    Collects all :class:`AxiomRecord` and :class:`TheoremRecord` instances
-    and provides navigation / validation helpers.
-
-    Key invariants::
-
-        1. The graph must be acyclic (is_acyclic)
-        2. Every theorem dependency must reference existing axioms/theorems
-        3. proof_coverage ∈ [0, 1]
-
-    Fields
-    ------
-    axioms      all registered axioms
-    theorems    all registered theorems
-    """
-
-    axioms: Tuple[AxiomRecord, ...]
-    theorems: Tuple[TheoremRecord, ...]
-
-    # ── Lookup ─────────────────────────────────────────────────────
-
-    def get_axiom(self, axiom_id: str) -> Optional[AxiomRecord]:
-        """Return the axiom with the given ID, or ``None``."""
-        for ax in self.axioms:
-            if ax.axiom_id == axiom_id:
-                return ax
-        return None
-
-    def get_theorem(self, theorem_id: str) -> Optional[TheoremRecord]:
-        """Return the theorem with the given ID, or ``None``."""
-        for th in self.theorems:
-            if th.theorem_id == theorem_id:
-                return th
-        return None
-
-    # ── Dependency queries ─────────────────────────────────────────
-
-    def dependencies_of(self, theorem_id: str) -> Tuple[str, ...]:
-        """Return all dependency IDs for a theorem (axiom + theorem)."""
-        th = self.get_theorem(theorem_id)
-        if th is None:
-            return ()
-        return th.all_dependencies
-
-    def dependents_of(self, axiom_id: str) -> Tuple[str, ...]:
-        """Return IDs of all theorems that depend on the given axiom."""
-        return tuple(
-            th.theorem_id
-            for th in self.theorems
-            if axiom_id in th.axiom_dependencies
-        )
-
-    # ── Structural validation ──────────────────────────────────────
-
-    def _all_ids(self) -> "frozenset[str]":
-        """Return all axiom and theorem IDs."""
-        ax_ids = frozenset(ax.axiom_id for ax in self.axioms)
-        th_ids = frozenset(th.theorem_id for th in self.theorems)
-        return ax_ids | th_ids
-
-    def dangling_dependencies(self) -> Tuple[str, ...]:
-        """Return dependency IDs that don't match any axiom or theorem."""
-        known = self._all_ids()
-        dangling: "list[str]" = []
-        for th in self.theorems:
-            for dep in th.all_dependencies:
-                if dep not in known:
-                    dangling.append(dep)
-        return tuple(sorted(set(dangling)))
-
-    def is_acyclic(self) -> bool:
-        """Return ``True`` if the theorem dependency graph is a DAG.
-
-        Uses iterative topological-sort (Kahn's algorithm) restricted
-        to theorem-to-theorem edges.
-        """
-        th_ids = [th.theorem_id for th in self.theorems]
-        adj: "dict[str, list[str]]" = {tid: [] for tid in th_ids}
-        in_deg: "dict[str, int]" = {tid: 0 for tid in th_ids}
-        for th in self.theorems:
-            for dep in th.theorem_dependencies:
-                if dep in adj:
-                    adj[dep].append(th.theorem_id)
-                    in_deg[th.theorem_id] += 1
-
-        queue = [tid for tid, d in in_deg.items() if d == 0]
-        visited = 0
-        while queue:
-            node = queue.pop(0)
-            visited += 1
-            for child in adj[node]:
-                in_deg[child] -= 1
-                if in_deg[child] == 0:
-                    queue.append(child)
-        return visited == len(th_ids)
-
-    def proof_coverage(self) -> float:
-        """Fraction of theorems whose status is PROVEN.
-
-        Returns 0.0 when there are no theorems.
-        """
-        if not self.theorems:
-            return 0.0
-        proven = sum(1 for th in self.theorems if th.is_proven)
-        return proven / len(self.theorems)
-
-    def all_proven(self) -> bool:
-        """True when every theorem has been proven."""
-        return bool(self.theorems) and all(
-            th.is_proven for th in self.theorems
-        )
-
-
-# ── Essence / Condition — الجوهر والشرط ──────────────────────────────
-
-@dataclass(frozen=True)
-class EssenceConditionPair:
-    """ثنائية الجوهر والشرط — separates *what* an element is from the
-    constraint that gates its realisation.
-
-    Implements the principle::
-
-        Core(x) = (Slot, Value)
-        Cond(x) = Constraint      (شرط تحقق ≠ جزء من الماهية)
-
-    This allows treating the constraint as an *external guard* rather
-    than an intrinsic part of the element's essence.
-
-    Fields
-    ------
-    element_id      identifier of the linguistic element
-    slot            the structural position (موضع)
-    value           the content occupying the slot (قيمة)
-    constraint      optional :class:`ConditionToken` gating realisation
-    layer           ontological layer
-    notes           free-text annotation
-    """
-
-    element_id: str
-    slot: str
-    value: str
-    constraint: Optional[ConditionToken] = None
+    record_id: str
+    unit_type: UnitType
+    slot_position: int
+    slot_label: str
+    value_vector: Tuple[int, ...]
+    value_label: str
+    constraints: FrozenSet[ConstraintKind] = field(default_factory=frozenset)
+    constraint_omega: float = 1.0
     layer: OntologicalLayer = OntologicalLayer.CELL
+    status: SymbolicStatus = SymbolicStatus.REPRESENTABLE
     notes: str = ""
 
+    # ── Core (الجوهر) ──────────────────────────────────────────────
+
     @property
-    def core(self) -> Tuple[str, str]:
-        """Return ``(slot, value)`` — the essence, without constraint."""
-        return (self.slot, self.value)
+    def core(self) -> Tuple[int, Tuple[int, ...]]:
+        """Core(X) = (Slot, Value) — the essence of this unit.
+
+        Returns ``(slot_position, value_vector)`` — everything that
+        defines **what** the unit is, independent of contextual
+        constraints.
+        """
+        return (self.slot_position, self.value_vector)
+
+    # ── Essence predicates ─────────────────────────────────────────
+
+    @property
+    def is_representable(self) -> bool:
+        """Representable ⟺ Core(X) is well-formed.
+
+        A unit is representable when it has a valid slot position
+        (≥ 0) and a non-empty value vector.
+        """
+        return self.slot_position >= 0 and len(self.value_vector) > 0
+
+    # ── Constraint predicate ───────────────────────────────────────
+
+    @property
+    def constraint_satisfied(self) -> bool:
+        """Ω_X — the constraint is satisfied (non-zero weight)."""
+        return self.constraint_omega > 0.0
+
+    # ── Validation ─────────────────────────────────────────────────
+
+    @property
+    def is_valid(self) -> bool:
+        """Valid(X) ⟺ Core(X) ∧ Ω_X.
+
+        The unit is structurally valid when its essence is well-formed
+        **and** the external constraint is satisfied.
+        """
+        return self.is_representable and self.constraint_satisfied
+
+    # ── Match / Containment / Usability ────────────────────────────
+
+    @property
+    def match(self) -> bool:
+        """M(x) = Match(S_x) — the unit occupies its proper slot."""
+        return self.is_representable
+
+    @property
+    def containment(self) -> bool:
+        """T(x) = Containment(V_x) — the value is embeddable in a
+        higher structure."""
+        return self.is_representable
+
+    @property
+    def is_usable(self) -> bool:
+        """Usable(x) ⟺ M(x) ∧ T(x) ∧ Q(x).
+
+        The unit can be *used* in a structural context only when match,
+        containment, **and** the constraint condition are all true.
+        """
+        return self.match and self.containment and self.constraint_satisfied
+
+    def to_row(self) -> dict:
+        """Serialise to a flat dictionary suitable for tabular display."""
+        return {
+            "Record_ID": self.record_id,
+            "Unit_Type": self.unit_type.name,
+            "Slot_Position": self.slot_position,
+            "Slot_Label": self.slot_label,
+            "Value_Vector": self.value_vector,
+            "Value_Label": self.value_label,
+            "Constraints": tuple(sorted(c.name for c in self.constraints)),
+            "Constraint_Omega": self.constraint_omega,
+            "Layer": self.layer.name,
+            "Status": self.status.name,
+            "Core": self.core,
+            "Is_Valid": self.is_valid,
+            "Is_Usable": self.is_usable,
+        }
+
+
+@dataclass(frozen=True)
+class LetterRecord(SymbolicRecord):
+    """سجل ترميز الحرف — Letter Encoding Record.
+
+    Specialisation of :class:`SymbolicRecord` for consonants / base letters.
+
+    The essence of a letter::
+
+        Ess(L) = ⟨S_L, V_L⟩
+
+    where:
+        S_L — scriptural position, phonetic place, chain index
+        V_L — consonantal identity, feature vector, syllabic potential,
+              prosodic weight
+
+    The constraint::
+
+        C_L = Ω_L  (positional + adjacency + layer constraints)
+
+    Validation::
+
+        Valid(L) ⟺ ⟨S_L, V_L⟩ ∧ Ω_L = 1
+
+    Additional fields
+    -----------------
+    phonetic_group      phonetic articulation group (e.g. ``PhonGroup``)
+    syllabic_weight     maqta'i weight contribution (1–3)
+    """
+
+    phonetic_group: Optional[PhonGroup] = None
+    syllabic_weight: int = 1
+
+    def __post_init__(self) -> None:
+        """Ensure unit_type is LETTER."""
+        if self.unit_type is not UnitType.LETTER:
+            raise ValueError(
+                f"LetterRecord requires UnitType.LETTER, got {self.unit_type}"
+            )
+
+
+@dataclass(frozen=True)
+class VowelRecord(SymbolicRecord):
+    """سجل ترميز الحركة — Vowel Encoding Record.
+
+    Specialisation of :class:`SymbolicRecord` for short vowels / diacritics.
+
+    The essence of a vowel::
+
+        Ess(H) = ⟨S_H, V_H⟩
+
+    where:
+        S_H — dependent position (attached to a carrier / nucleus)
+        V_H — vocalic quality (fatha/damma/kasra), temporal effect,
+              syllabic effect, prosodic weight
+
+    The constraint::
+
+        C_H = Ω_H  (carrier + syllabic + layer constraints)
+
+    Validation::
+
+        Valid(H) ⟺ ⟨S_H, V_H⟩ ∧ Ω_H = 1
+
+    Additional fields
+    -----------------
+    carrier_id          identifier of the host consonant
+    is_long             whether the vowel is a long (madd) variant
+    """
+
+    carrier_id: Optional[str] = None
+    is_long: bool = False
+
+    def __post_init__(self) -> None:
+        """Ensure unit_type is VOWEL."""
+        if self.unit_type is not UnitType.VOWEL:
+            raise ValueError(
+                f"VowelRecord requires UnitType.VOWEL, got {self.unit_type}"
+            )
+
+@dataclass(frozen=True)
+class UtteranceRecord:
+    """سجل المنطوق — the utterance (linguistic surface form) carrier.
+
+    Fields
+    ------
+    utterance_id  unique identifier
+    text          the surface text
+    """
+
+    utterance_id: str
+    text: str
+
+
+@dataclass(frozen=True)
+class ConceptRecord:
+    """سجل المفهوم — the concept (mental/semantic) carrier.
+
+    Fields
+    ------
+    concept_record_id  unique identifier
+    label              the concept label
+    """
+
+    concept_record_id: str
+    label: str
+
+
+@dataclass(frozen=True)
+class LinguisticCarrierRecord:
+    """سجل الحامل اللغوي — the linguistic transport for a cognitive episode.
+
+    The linguistic transport has exactly two carriers: Utterance and Concept.
+    ``carrier_type`` specifies which is present; when ``BOTH``, both
+    ``utterance`` and ``concept`` must be non-None.
+
+    Fields
+    ------
+    carrier_id    unique identifier
+    carrier_type  which carriers are present (:class:`CarrierType`)
+    utterance     the utterance carrier (required if type is UTTERANCE or BOTH)
+    concept       the concept carrier (required if type is CONCEPT or BOTH)
+    """
+
+    carrier_id: str
+    carrier_type: CarrierType
+    utterance: Optional[UtteranceRecord]
+    concept: Optional[ConceptRecord]
+
+
+@dataclass(frozen=True)
+class ProofPathRecord:
+    """مسار الإثبات — the path of proof supporting a judgement.
+
+    Fields
+    ------
+    path_id     unique identifier
+    kind        proof path kind (:class:`ProofPathKind`)
+    steps       ordered proof steps (as text)
+    method_fit  the method family this path is compatible with
+    """
+
+    path_id: str
+    kind: ProofPathKind
+    steps: Tuple[str, ...]
+    method_fit: MethodFamily
+
 
     @property
     def has_constraint(self) -> bool:
@@ -1177,196 +1653,77 @@ class EssenceConditionPair:
         return self.constraint is not None
 
 
-# ── Ontology v1 — الجدول الأنطولوجي v1.0 ────────────────────────────
+# ── Signified Ontology v1.0 — المدلول ────────────────────────────────
 
 @dataclass(frozen=True)
-class SignifierNode:
-    """عقدة الدال — a node representing a signifier in the Ontology v1 model.
+class SignifiedRecord:
+    """سجل المدلول — the central record of the Arabic Signified Ontology.
 
-    Encodes the دال at any level (phonological, morphological, lexical,
-    syntactic, textual, pragmatic, rhetorical, or uttered).  When the node
-    represents a realised surface form (منطوق), ``signifier_class`` is
-    ``SignifierClass.UTTERED_FORM`` and ``uttered_form_class`` carries the
-    finer classification.
+    Every signified in the language is represented as a 17-field frozen
+    record covering its type, subtype, and seven cross-cutting descriptive
+    axes.
 
-    Axiom 1 (الدال أعمّ من المنطوق):
-        ``uttered_form_class`` is ``Optional`` — it is only set when
-        ``signifier_class is SignifierClass.UTTERED_FORM``.
-
-    Fields
-    ------
-    node_id             unique identifier (e.g. ``"SIG_001"``)
-    signifier_class     broad class of this signifier
-    uttered_form_class  finer classification when class is UTTERED_FORM
-    surface             the surface string (if available)
-    layer               ontological layer this signifier belongs to
-    notes               free-text annotation
+    Mirrors the JSON representation defined in §6 of the ontology spec.
     """
 
-    node_id: str
-    signifier_class: SignifierClass
-    surface: str
-    layer: OntologicalLayer = OntologicalLayer.CELL
-    uttered_form_class: Optional[UtteredFormClass] = None
-    notes: str = ""
-
-    @property
-    def is_uttered(self) -> bool:
-        """True when this signifier is a realised surface form (منطوق)."""
-        return self.signifier_class is SignifierClass.UTTERED_FORM
-
-    @property
-    def uttered_form_is_set(self) -> bool:
-        """True when the finer uttered-form class has been assigned."""
-        return self.uttered_form_class is not None
+    id: str                                        # e.g. "SIG-000124"
+    label_ar: str                                  # التسمية بالعربية
+    label_en: str                                  # English label
+    definition: str                                # التعريف
+    primary_type: PrimarySignifiedType
+    secondary_type: str                            # dotted path, e.g. "EntityMeaning.GenericEntity"
+    dependency_degree: DependencyDegree
+    existence_mode: ExistenceMode
+    specificity_degree: SpecificityDegree
+    composition_degree: CompositionDegree
+    context_requirement: ContextRequirement
+    logical_status: LogicalStatus
+    rhetorical_status: RhetoricalStatus
+    temporal_status: SignifiedTemporalStatus
+    referential_status: Optional[ReferentialSubtype] = None
+    examples: Tuple[str, ...] = ()
+    constraints: Tuple[str, ...] = ()
 
 
 @dataclass(frozen=True)
-class SignifiedNode:
-    """عقدة المدلول — a node representing a signified in the Ontology v1 model.
+class OntologicalSignified(SignifiedRecord):
+    """سجل المدلول الوجودي — signified with ontological-subtype detail.
 
-    Encodes the مدلول at any level.  When the node represents a conceptual
-    structure (مفهوم), ``signified_class`` is ``SignifiedClass.CONCEPTUAL``
-    and ``conceptual_class`` carries the finer classification.
-
-    Axiom 2 (المدلول أعمّ من المفهوم):
-        ``conceptual_class`` is ``Optional`` — it is only set when
-        ``signified_class is SignifiedClass.CONCEPTUAL``.
-
-    Fields
-    ------
-    node_id             unique identifier (e.g. ``"SFD_001"``)
-    signified_class     broad class of this signified
-    label               human-readable label for the signified
-    semantic_type       reuses the existing :class:`SemanticType` classification
-    conceptual_class    finer classification when class is CONCEPTUAL
-    properties          arbitrary key/value metadata
-    notes               free-text annotation
+    Extends :class:`SignifiedRecord` for EntityMeaning, PropertyMeaning,
+    and EventMeaning branches.
     """
 
-    node_id: str
-    signified_class: SignifiedClass
-    label: str
-    semantic_type: SemanticType = SemanticType.ENTITY
-    conceptual_class: Optional[ConceptualSignifiedClass] = None
-    properties: dict = field(default_factory=dict)
-    notes: str = ""
-
-    @property
-    def is_conceptual(self) -> bool:
-        """True when this signified is a conceptual structure (مفهوم)."""
-        return self.signified_class is SignifiedClass.CONCEPTUAL
-
-    @property
-    def conceptual_class_is_set(self) -> bool:
-        """True when the finer conceptual class has been assigned."""
-        return self.conceptual_class is not None
+    ontological_subtype: Optional[OntologicalSubtype] = None
+    # Entity branch
+    is_countable: bool = True
+    is_individuated: bool = True
+    is_named: bool = False
+    # Property branch
+    requires_bearer: bool = False
+    property_persistence: str = ""      # "stable" | "transient"
+    # Event branch
+    event_time: str = ""                # free-form temporal note
+    transitivity: str = ""              # "transitive" | "intransitive"
+    agency: str = ""                    # "agentive" | "non-agentive"
+    intentionality: str = ""            # "intentional" | "non-intentional"
 
 
 @dataclass(frozen=True)
-class CouplingRecord:
-    """سجل علاقة الاقتران — the directed link from a signifier to its signified.
+class RelationalSignified(SignifiedRecord):
+    """سجل المدلول العلائقي — signified with relational detail."""
 
-    Implements the coupling relation::
-
-        CouplingRelation: Signifier × Signified → Meaning
-
-    Axiom 3 (المنطوق لا ينتج المفهوم وحده بلا علاقة اقتران مفعّلة):
-        Every ``OntologyV1Record`` carries exactly one ``CouplingRecord``.
-
-    Fields
-    ------
-    coupling_id         unique identifier (e.g. ``"CRP_001"``)
-    coupling_type       the kind of coupling (direct, figurative, etc.)
-    signifier_id        ID of the source :class:`SignifierNode`
-    signified_id        ID of the target :class:`SignifiedNode`
-    confidence          coupling confidence ∈ [0, 1]
-    evidence            human-readable evidence description
-    active_constraints  IDs of constraints that govern this coupling
-    """
-
-    coupling_id: str
-    coupling_type: CouplingRelationType
-    signifier_id: str
-    signified_id: str
-    confidence: float = 1.0
-    evidence: str = ""
-    active_constraints: FrozenSet[str] = field(default_factory=frozenset)
-
-    @property
-    def is_direct(self) -> bool:
-        """True when the coupling is a direct / conventional link."""
-        return self.coupling_type is CouplingRelationType.DIRECT
-
-    @property
-    def is_figurative(self) -> bool:
-        """True when the coupling crosses a rhetorical / figurative boundary."""
-        return self.coupling_type is CouplingRelationType.FIGURATIVE
+    arity: int = 2
+    relation_direction: str = ""        # e.g. "source→target"
+    symmetry: bool = False
 
 
 @dataclass(frozen=True)
-class OntologicalConstraintRecord:
-    """سجل قيد أنطولوجي — a single constraint in the Ontology v1 model.
+class PropositionalSignified(SignifiedRecord):
+    """سجل المدلول القضوي — signified with propositional detail."""
 
-    Axiom 5 (كل انتقال من منطوق إلى مفهوم يحتاج قيودًا تمنع الاحتمال الفاسد):
-        An ``OntologyV1Record`` is *valid* only when all its constraint
-        records have ``passes = True``.
-
-    Fields
-    ------
-    constraint_id           unique identifier (e.g. ``"CON_001"``)
-    constraint_type         the broad ontological constraint kind
-    utterance_constraint    the specific utterance→concept check (if any)
-    description_ar          Arabic description of this constraint
-    passes                  whether the constraint is satisfied
-    violated_by             description of the violation (empty when passing)
-    """
-
-    constraint_id: str
-    constraint_type: OntologicalConstraintType
-    description_ar: str
-    passes: bool = True
-    utterance_constraint: Optional[UtteranceToConceptConstraint] = None
-    violated_by: str = ""
-
-    @property
-    def is_violated(self) -> bool:
-        """True when the constraint is not satisfied."""
-        return not self.passes
-
-
-@dataclass(frozen=True)
-class OntologyV1Record:
-    """سجل الجدول الأنطولوجي v1.0 — the top-level unit of the ontology model.
-
-    Ties together the four chapters of the ontology:
-      1. الدال — :class:`SignifierNode`
-      2. المدلول — :class:`SignifiedNode`
-      3. علاقة الاقتران — :class:`CouplingRecord`
-      4. القيود — ``Tuple[OntologicalConstraintRecord, ...]``
-
-    Axiom 7 (التحليل الصحيح يبدأ بتعيين طبقة الدال…):
-        Build this record via :func:`~arabic_engine.signified.ontology_v1.build_ontology_record`
-        to guarantee the correct evaluation order.
-
-    Fields
-    ------
-    record_id       unique identifier (e.g. ``"ONT_001"``)
-    signifier       the دال node
-    signified       the مدلول node
-    coupling        the علاقة اقتران record
-    constraints     all قيود evaluated for this record
-    valid           True when all constraints pass
-    notes           free-text annotation
-    """
-
-    record_id: str
-    signifier: SignifierNode
-    signified: SignifiedNode
-    coupling: CouplingRecord
-    constraints: Tuple["OntologicalConstraintRecord", ...]
-    valid: bool
-    notes: str = ""
+    truth_evaluable: bool = False
+    polarity: Polarity = Polarity.NEUTRAL_POL
+    modality: Modality = Modality.CERTAIN_MOD
 
     @property
     def failed_constraints(self) -> Tuple["OntologicalConstraintRecord", ...]:

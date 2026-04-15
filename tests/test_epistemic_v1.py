@@ -34,7 +34,6 @@ from arabic_engine.core.types import (
     ConceptRecord,
     ConflictRuleRecord,
     JudgementRecord,
-    KnowledgeEpisode,
     KnowledgeEpisodeInput,
     LinguisticCarrierRecord,
     LinkingTraceRecord,

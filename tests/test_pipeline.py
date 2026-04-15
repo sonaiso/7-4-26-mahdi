@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from arabic_engine.cognition.inference_rules import InferenceEngine
 from arabic_engine.cognition.world_model import WorldModel
-from arabic_engine.core.enums import TruthState
+from arabic_engine.core.enums import TruthState, ValidationState
 from arabic_engine.pipeline import run, verify_contracts
 
 
@@ -70,6 +70,28 @@ class TestPipeline:
     def test_inferences_present(self):
         result = _make_pipeline_result()
         assert len(result.inferences) >= 1
+
+    def test_semantic_roles_present(self):
+        result = _make_pipeline_result()
+        assert result.semantic_roles["event"] == "كَتَبَ"
+        assert result.semantic_roles["agent"] == "زَيْد"
+        assert result.semantic_roles["patient"] == "رِسَالَة"
+
+    def test_knowledge_episode_and_evaluation_result(self):
+        result = _make_pipeline_result()
+        assert result.knowledge_episode.episode_id
+        assert result.evaluation_result.validation_state == ValidationState.VALID
+
+    def test_world_update_is_validation_gated(self):
+        result = _make_pipeline_result()
+        assert result.world_update["applied"] is True
+        assert isinstance(result.world_update["fact_id"], int)
+
+    def test_explanation_contains_reasoning_keys(self):
+        result = _make_pipeline_result()
+        assert "why_agent" in result.explanation
+        assert "why_judgement" in result.explanation
+        assert "why_rank" in result.explanation
 
 
 class TestGeneralClosure:

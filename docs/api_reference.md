@@ -13,7 +13,7 @@ For full details, see the module docstrings.
 from arabic_engine.pipeline import run, PipelineResult, verify_contracts
 ```
 
-#### `run(text, *, world=None, inference_engine=None) → PipelineResult`
+#### `run(text, *, world=None, inference_engine=None, analyze_layers=False, analyze_reference=False) → PipelineResult`
 
 Execute the full 11-layer pipeline on raw Arabic *text*.
 
@@ -22,6 +22,8 @@ Execute the full 11-layer pipeline on raw Arabic *text*.
 | `text` | `str` | — | Raw Arabic input (may include tashkīl) |
 | `world` | `WorldModel \| None` | `None` | World model for confidence adjustment |
 | `inference_engine` | `InferenceEngine \| None` | `None` | Rule engine for inference |
+| `analyze_layers` | `bool` | `False` | Enable strict 7-layer element analysis |
+| `analyze_reference` | `bool` | `False` | Enable Reference Constitution v1 analysis |
 
 Returns a [`PipelineResult`](#pipelineresult) containing all layer outputs.
 
@@ -41,6 +43,7 @@ Returns a [`PipelineResult`](#pipelineresult) containing all layer outputs.
 | `eval_result` | `EvalResult` | Truth/guidance/confidence (L8) |
 | `inferences` | `List[InferenceResult]` | Derived propositions (L9) |
 | `world_adjustment` | `float` | World-model confidence multiplier (L10) |
+| `reference_records` | `List[ReferenceRecord]` | Reference analysis records (optional, requires `analyze_reference=True`) |
 
 #### `verify_contracts() → bool`
 
@@ -245,6 +248,30 @@ from arabic_engine.closure import verify_general_closure, format_closure_report
 
 ## Core Types — `arabic_engine.core`
 
+### `arabic_engine.core.kernel` (Kernel-14)
+
+```python
+from arabic_engine.core.kernel import (
+    KernelLabel, KernelRelation,
+    KernelNode, KernelEdge, KernelGraph,
+    KernelValidationResult, validate_kernel_graph,
+    derive_utterance_from_carrier, derive_linguistic_profile,
+    derive_knowledge_episode, derive_discourse_exchange, derive_reusable_model,
+)
+```
+
+| Symbol | Description |
+|--------|-------------|
+| `KernelLabel` | Canonical 14 node labels only |
+| `KernelRelation` | Minimal core kernel relationships |
+| `KernelNode` / `KernelEdge` / `KernelGraph` | Minimal graph payload for kernel validation |
+| `validate_kernel_graph(graph)` | Checks required fields + relation label compatibility |
+| `derive_utterance_from_carrier` | Derives `Utterance` from `Carrier` |
+| `derive_linguistic_profile` | Derives profile from `Method + Carrier + Concept` |
+| `derive_knowledge_episode` | Derives episode from `Reality + Sense + PriorInfo + Link + Judgement` |
+| `derive_discourse_exchange` | Derives exchange artifact from `Exchange + Carrier + Self + State` |
+| `derive_reusable_model` | Derives reusable model from `Model + State + repeated validated patterns` |
+
 ### Enumerations (`arabic_engine.core.enums`)
 
 | Enum | Values |
@@ -284,3 +311,78 @@ from arabic_engine.closure import verify_general_closure, format_closure_report
 | `InferenceResult` | — | `rule_name`, `premises`, `conclusion`, `confidence`, `valid` |
 | `MafhumPillar` | — | `closed_mantuq`, `constraint_type`, `mental_counterpart`, `transition_rule` |
 | `MafhumResult` | — | `mafhum_type`, `constraint_type`, `pillars`, `source_text`, `valid`, `confidence` |
+
+---
+
+## Repository Integrity — `arabic_engine.core.integrity`
+
+```python
+from arabic_engine.core.integrity import (
+    scan_repository_integrity,
+    format_integrity_report,
+)
+```
+
+| Function | Signature | Description |
+|----------|-----------|-------------|
+| `scan_repository_integrity` | `(project_root, *, required_modules=..., scan_dirs=...) → IntegrityReport` | Validates critical architecture imports and duplicate-content policy |
+| `format_integrity_report` | `(report) → str` | Formats a human-readable integrity summary |
+
+---
+
+## Reference Constitution v1 — `arabic_engine.signified.reference_v1`
+
+Implements the Reference (إحالة) system as a pre-compositional
+conceptual structure (دستور الإحالة).
+
+```python
+from arabic_engine.signified.reference_v1 import (
+    classify_reference_type,
+    classify_reference_degree,
+    classify_tool_kind,
+    classify_predication_basis,
+    classify_origin,
+    evaluate_predication_readiness,
+    detect_attribute_transition,
+    build_reference_record,
+    batch_build,
+    validate_reference,
+    get_fractal_stages,
+)
+```
+
+### Public Functions
+
+| Function | Signature | Description |
+|----------|-----------|-------------|
+| `classify_reference_type` | `(closure, concept, *, context=None) → ReferenceType` | Determine reference type from POS/lemma (المادة 15) |
+| `classify_reference_degree` | `(ref_type, closure, concept, *, definiteness=None) → ReferenceDegree` | Determine referential closure degree (المادة 38) |
+| `classify_tool_kind` | `(closure, ref_type) → Optional[ReferenceToolKind]` | Map to reference tool kind (المادة 26) |
+| `classify_predication_basis` | `(concept, ref_type) → PredicationBasis` | Predication vs reference basis (المواد 7–12) |
+| `classify_origin` | `(concept, ref_type) → ReferenceOrigin` | PRIMARY / DERIVED / SUBORDINATE (المواد 12–13) |
+| `evaluate_predication_readiness` | `(ref_record, *, threshold=0.6) → PredicationReadinessScore` | 5-component readiness score (المادة 87) |
+| `detect_attribute_transition` | `(concept, closure, ref_type, ref_degree) → Optional[ReferenceTransition]` | Attribute→reference transition (المواد 44–47) |
+| `build_reference_record` | `(closure, concept, **opts) → ReferenceRecord` | Top-level factory following fractal law (المادة 78) |
+| `batch_build` | `(closures, concepts, **opts) → List[ReferenceRecord]` | Batch processing wrapper |
+| `validate_reference` | `(ref_record) → bool` | Acceptance criteria check (المواد 86–89) |
+| `get_fractal_stages` | `() → Tuple[str, ...]` | Returns 6 fractal stages (المادة 78) |
+
+### New Enums
+
+| Enum | Members | Constitution Article |
+|------|---------|---------------------|
+| `ReferenceType` | SELF_REFERENCE, DESCRIPTIVE, PRONOMINAL, DEMONSTRATIVE, RELATIVE, TEMPORAL, SPATIAL, NUMERICAL, DEPENDENT, EXPLICATIVE | المادة 15 |
+| `ReferenceDegree` | CLOSED, SEMI_CLOSED, OPEN, DEPENDENT | المادة 38 |
+| `ReferenceToolKind` | PROPER_NAME, PRONOUN, DEMONSTRATIVE, RELATIVE_NOUN, GENITIVE_CONSTRUCT, RESTRICTIVE_ADJUNCT, APPOSITION, EMPHASIS, NUMERAL, TIME_PLACE, STATE_SPECIFICATION | المادة 26 |
+| `PredicationBasis` | PREDICATION, REFERENCE | المواد 7–9 |
+| `ReferenceOrigin` | PRIMARY, DERIVED, SUBORDINATE | المواد 12–13 |
+| `DefinitenessRole` | DEFINITE, INDEFINITE | المواد 52–55 |
+| `UniversalParticular` | UNIVERSAL, PARTICULAR | المواد 48–51 |
+
+### New Dataclasses
+
+| Class | Frozen | Key Fields |
+|-------|--------|------------|
+| `ReferenceRecord` | ✓ | `record_id`, `subject_type`, `reference_type`, `reference_degree`, `tool_kind`, `predication_relation`, `referent`, `ready_for_predication`, `origin`, `definiteness`, `universality`, `confidence`, `notes` |
+| `PredicationReadinessScore` | ✓ | `type_score`, `degree_score`, `anchor_score`, `tool_score`, `recover_score`, `total`, `ready` |
+| `ReferenceTransition` | ✓ | `source_concept_id`, `from_basis`, `to_basis`, `reason`, `resulting_degree` |

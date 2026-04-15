@@ -11,7 +11,7 @@ from __future__ import annotations
 from typing import Dict, List
 
 from arabic_engine.core.enums import POS, SemanticType
-from arabic_engine.core.types import Concept, LexicalClosure
+from arabic_engine.core.types import Concept, LexicalClosure, SignifiedRecord
 
 # ── Concept registry (demo) ─────────────────────────────────────────
 
@@ -102,3 +102,22 @@ def batch_map(closures: List[LexicalClosure]) -> List[Concept]:
         one per input closure, preserving order.
     """
     return [map_concept(c) for c in closures]
+
+
+# ── Signified Ontology v1.0 bridge ─────────────────────────────────
+
+def map_signified(closure: LexicalClosure) -> "SignifiedRecord":
+    """Map a closure to a :class:`SignifiedRecord` (Ontology v1.0).
+
+    Delegates to :func:`arabic_engine.signified.signified_record.make_signified`.
+    Keeps :func:`map_concept` intact for backward compatibility.
+
+    Args:
+        closure: The lexical closure to map.
+
+    Returns:
+        A :class:`~arabic_engine.core.types.SignifiedRecord` instance.
+    """
+    from arabic_engine.signified.signified_record import make_signified
+
+    return make_signified(closure)
