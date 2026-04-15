@@ -210,6 +210,9 @@ from .enums import (
     ModalCategory as ModalCategory,
 )
 from .enums import (
+    NasikhType as NasikhType,
+)
+from .enums import (
     NormativeCategory as NormativeCategory,
 )
 from .enums import (
@@ -379,6 +382,42 @@ from .enums import (
 )
 from .enums import (
     ValidationState as ValidationState,
+)
+from .enums import (
+    VerbAugmentation as VerbAugmentation,
+)
+from .enums import (
+    VerbBab as VerbBab,
+)
+from .enums import (
+    VerbDerivativeType as VerbDerivativeType,
+)
+from .enums import (
+    VerbEventType as VerbEventType,
+)
+from .enums import (
+    VerbGender as VerbGender,
+)
+from .enums import (
+    VerbMode as VerbMode,
+)
+from .enums import (
+    VerbNumber as VerbNumber,
+)
+from .enums import (
+    VerbPerson as VerbPerson,
+)
+from .enums import (
+    VerbReadiness as VerbReadiness,
+)
+from .enums import (
+    VerbTense as VerbTense,
+)
+from .enums import (
+    VerbTransitivity as VerbTransitivity,
+)
+from .enums import (
+    VerbVoice as VerbVoice,
 )
 
 # ── Kernel re-exports ───────────────────────────────────────────────
@@ -724,6 +763,24 @@ from .types import (
     ValidationResult as ValidationResult,
 )
 from .types import (
+    VerbConstitutionRecord as VerbConstitutionRecord,
+)
+from .types import (
+    VerbDerivativeRecord as VerbDerivativeRecord,
+)
+from .types import (
+    VerbEventRecord as VerbEventRecord,
+)
+from .types import (
+    VerbInflection as VerbInflection,
+)
+from .types import (
+    VerbMasdarRecord as VerbMasdarRecord,
+)
+from .types import (
+    VerbReadinessScore as VerbReadinessScore,
+)
+from .types import (
     WorldFact as WorldFact,
 )
 from .types import (
@@ -836,6 +893,20 @@ __all__ = [
     "UtteredFormClass",
     "ValidationOutcome",
     "ValidationState",
+    # ── Verb Fractal Constitution v1 enums ────────────────────────
+    "NasikhType",
+    "VerbAugmentation",
+    "VerbBab",
+    "VerbDerivativeType",
+    "VerbEventType",
+    "VerbGender",
+    "VerbMode",
+    "VerbNumber",
+    "VerbPerson",
+    "VerbReadiness",
+    "VerbTense",
+    "VerbTransitivity",
+    "VerbVoice",
     # ── Fractal Kernel enums ───────────────────────────────────────
     "ActivationStage",
     "ConflictState",
@@ -935,6 +1006,13 @@ __all__ = [
     "UtteranceNode",
     "UtteranceRecord",
     "ValidationResult",
+    # ── Verb Fractal Constitution v1 types ────────────────────────
+    "VerbConstitutionRecord",
+    "VerbDerivativeRecord",
+    "VerbEventRecord",
+    "VerbInflection",
+    "VerbMasdarRecord",
+    "VerbReadinessScore",
     "WorldFact",
     "ZeroSlotRecord",
     # ── Fractal Kernel types ───────────────────────────────────────

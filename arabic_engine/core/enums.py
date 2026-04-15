@@ -1854,6 +1854,131 @@ class RepresentationNode(Enum):
     DISCOURSE = auto()
 
 
+# ── Verb Fractal Constitution v1 enums ──────────────────────────────
+
+
+class VerbTense(Enum):
+    """الزمن في الفعل — verb tense (Art. 25–28)."""
+
+    MADI = auto()       # ماضٍ
+    MUDARI = auto()     # مضارع
+    AMR = auto()        # أمر
+
+
+class VerbVoice(Enum):
+    """المبني للمعلوم / المجهول — verb voice."""
+
+    ACTIVE = auto()     # معلوم
+    PASSIVE = auto()    # مجهول
+
+
+class VerbPerson(Enum):
+    """الشخص في الفعل — verb person (Art. 29–31)."""
+
+    FIRST = auto()      # متكلم
+    SECOND = auto()     # مخاطب
+    THIRD = auto()      # غائب
+
+
+class VerbNumber(Enum):
+    """العدد في الفعل — verb number."""
+
+    SINGULAR = auto()   # مفرد
+    DUAL = auto()       # مثنى
+    PLURAL = auto()     # جمع
+
+
+class VerbGender(Enum):
+    """الجنس في الفعل — verb gender."""
+
+    MASCULINE = auto()  # مذكر
+    FEMININE = auto()   # مؤنث
+
+
+class VerbTransitivity(Enum):
+    """اللزوم والتعدي — verb transitivity (Art. 22)."""
+
+    LAZIM = auto()                  # لازم
+    MUTA3ADDI = auto()              # متعدٍّ
+    MUTA3ADDI_LI_ITHNAYN = auto()   # متعدٍّ لاثنين
+    MUTA3ADDI_LI_THALATHA = auto()  # متعدٍّ لثلاثة
+
+
+class VerbBab(Enum):
+    """الباب الصرفي — triliteral verb paradigm (Art. 32–35)."""
+
+    FA3ALA_YAF3ULU = auto()   # فَعَلَ يَفْعُلُ
+    FA3ALA_YAF3ILU = auto()   # فَعَلَ يَفْعِلُ
+    FA3ALA_YAF3ALU = auto()   # فَعَلَ يَفْعَلُ
+    FA3ILA_YAF3ALU = auto()   # فَعِلَ يَفْعَلُ
+    FA3ULA_YAF3ULU = auto()   # فَعُلَ يَفْعُلُ
+    FA3ILA_YAF3ILU = auto()   # فَعِلَ يَفْعِلُ
+    OTHER = auto()             # غير ذلك
+
+
+class VerbMode(Enum):
+    """المجرد / المزيد / الناسخ — verb mode (Art. 36–50)."""
+
+    MUJARRAD = auto()   # مجرد
+    MAZID = auto()      # مزيد
+    NASIKH = auto()     # ناسخ
+
+
+class VerbAugmentation(Enum):
+    """أبواب المزيد — augmentation patterns (Art. 36–39)."""
+
+    IF3AL = auto()       # إفعال
+    FA33ALA = auto()     # فعّل
+    FA3ALA_III = auto()  # فاعَل
+    INFA3ALA = auto()    # انفعل
+    IFTA3ALA = auto()    # افتعل
+    TAFA33ALA = auto()   # تفعّل
+    TAFA3ALA = auto()    # تفاعل
+    IF3ALLA = auto()     # افعلّ
+    ISTAF3ALA = auto()   # استفعل
+    NONE = auto()        # لا زيادة
+
+
+class NasikhType(Enum):
+    """نوع الناسخ — copular verb type (Art. 46–50)."""
+
+    KANA = auto()    # كان وأخواتها
+    KADA = auto()    # كاد وأخواتها
+    ZANNA = auto()   # ظن وأخواتها
+
+
+class VerbEventType(Enum):
+    """نوع الحدث في الفعل — verb event type (Art. 20–24)."""
+
+    SIMPLE_OCCURRENCE = auto()   # وقوع بسيط
+    BECOMING = auto()            # صيرورة
+    TRANSFORMATION = auto()      # تحول
+    CAUSATION = auto()           # إحداث
+    BEING_AFFECTED = auto()      # تأثر
+    LINKING = auto()             # ربط فعلي
+
+
+class VerbDerivativeType(Enum):
+    """المشتقات الفعلية — verb derivative types (Art. 43)."""
+
+    ISM_FA3IL = auto()    # اسم الفاعل
+    ISM_MAF3UL = auto()   # اسم المفعول
+    ISM_ZAMAN = auto()    # اسم الزمان
+    ISM_MAKAN = auto()    # اسم المكان
+    ISM_HAY2A = auto()    # اسم الهيئة
+    ISM_ALA = auto()      # اسم الآلة
+    MUBALAQA = auto()     # صيغة مبالغة
+    MASDAR = auto()        # مصدر
+
+
+class VerbReadiness(Enum):
+    """جاهزية الفعل للتركيب — verb readiness for composition (Art. 62–64)."""
+
+    READY = auto()       # جاهز
+    NOT_READY = auto()   # غير جاهز
+    PARTIAL = auto()     # جزئي
+
+
 class TransitionGateStatus(Enum):
     """حالة بوابة الانتقال — status of a transition gate."""
 

@@ -68,6 +68,7 @@ from .enums import (
     MetaConceptualLevel,
     MethodFamily,
     ModalCategory,
+    NasikhType,
     NormativeCategory,
     OntologicalConstraintType,
     OntologicalLayer,
@@ -122,6 +123,18 @@ from .enums import (
     UtteredFormClass,
     ValidationOutcome,
     ValidationState,
+    VerbAugmentation,
+    VerbBab,
+    VerbDerivativeType,
+    VerbEventType,
+    VerbGender,
+    VerbMode,
+    VerbNumber,
+    VerbPerson,
+    VerbReadiness,
+    VerbTense,
+    VerbTransitivity,
+    VerbVoice,
 )
 
 # ── Signifier layer ─────────────────────────────────────────────────
@@ -2585,3 +2598,81 @@ class LayerTraceRecord:
     layer_6: Optional[RepresentationRecord] = None
     gates: Tuple[TransitionGate, ...] = ()
     final_gate_status: TransitionGateStatus = TransitionGateStatus.INSUFFICIENT_DATA
+
+
+# ── Verb Fractal Constitution v1 types ──────────────────────────────
+
+
+@dataclass(frozen=True)
+class VerbInflection:
+    """البنية التصريفية الكاملة للفعل — full inflectional state (Art. 11–19)."""
+
+    surface: str                            # الصيغة السطحية
+    root: Tuple[str, ...]                   # الجذر
+    bab: VerbBab                            # الباب
+    tense: VerbTense                        # الزمن
+    person: VerbPerson                      # الشخص
+    number: VerbNumber                      # العدد
+    gender: VerbGender                      # الجنس
+    voice: VerbVoice                        # المبني
+    transitivity: VerbTransitivity          # اللزوم/التعدي
+    mode: VerbMode                          # المجرد/المزيد/الناسخ
+    augmentation: VerbAugmentation          # باب المزيد
+    nasikh_type: Optional[NasikhType] = None  # نوع الناسخ
+
+
+@dataclass(frozen=True)
+class VerbEventRecord:
+    """سجل الحدث في الفعل — verb event record (Art. 20–24)."""
+
+    event_type: VerbEventType       # نوع الحدث
+    has_causality: bool = False     # سببية
+    has_musha_raka: bool = False    # مشاركة
+    has_mutawa3a: bool = False      # مطاوعة
+
+
+@dataclass(frozen=True)
+class VerbDerivativeRecord:
+    """سجل مشتق فعلي — verb derivative entry (Art. 43–45)."""
+
+    derivative_type: VerbDerivativeType   # نوع المشتق
+    form: str                              # الصيغة المشتقة
+    notes: str = ""
+
+
+@dataclass(frozen=True)
+class VerbMasdarRecord:
+    """سجل المصدر — masdar record (Art. 40–42)."""
+
+    masdar_form: str        # صيغة المصدر
+    is_qiyasi: bool = True  # قياسي أم سماعي
+    notes: str = ""
+
+
+@dataclass(frozen=True)
+class VerbReadinessScore:
+    """درجة جاهزية الفعل للتركيب — readiness score (Art. 62–67)."""
+
+    direction_score: float      # جهة الحدث
+    time_score: float           # الزمن
+    person_score: float         # الشخص
+    valence_score: float        # اللزوم/التعدي
+    mode_score: float           # المجرد/المزيد/الناسخ
+    recover_score: float        # قابلية الرد
+    total: float                # المتوسط
+    status: VerbReadiness       # الحالة
+
+
+@dataclass(frozen=True)
+class VerbConstitutionRecord:
+    """السجل الفراكتالي الكامل للفعل — complete verb fractal record (Art. 65–67)."""
+
+    record_id: str                                  # المعرّف
+    inflection: VerbInflection                      # البنية التصريفية
+    event: VerbEventRecord                          # سجل الحدث
+    masdar: Optional[VerbMasdarRecord]              # المصدر
+    derivatives: Tuple[VerbDerivativeRecord, ...]   # المشتقات
+    readiness: VerbReadinessScore                   # الجاهزية
+    fractal_cycle: str                              # الدورة الفراكتالية
+    valid: bool                                     # صحة الفعل
+    notes: str = ""
