@@ -567,6 +567,9 @@ from .types import (
     ConflictRuleNode as ConflictRuleNode,
 )
 from .types import (
+    ConflictRuleRecord as ConflictRuleRecord,
+)
+from .types import (
     ConstraintEdge as ConstraintEdge,
 )
 from .types import (
