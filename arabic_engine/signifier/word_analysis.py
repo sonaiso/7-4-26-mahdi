@@ -182,11 +182,9 @@ def _classify_syllable_shape(
         return "VC"
 
     label = "C" * c_count
-    if v_count == 0:
-        pass  # no vowel
-    elif v_count == 1:
+    if v_count == 1:
         label += "V"
-    else:
+    elif v_count >= 2:
         label += "VV"
     label += "C" * coda_count
     return label
