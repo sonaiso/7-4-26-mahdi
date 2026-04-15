@@ -889,3 +889,242 @@ class UtteranceToConceptConstraint(Enum):
     FIGURATIVE_DISAMBIGUATION = auto()  # وجود قرينة مجازية
     REFERENTIAL_RESOLUTION = auto()     # توفر المرجع الإحالي
     LOGICAL_COHERENCE = auto()          # تسق التفسير مع البنية
+
+
+# ── Epistemic v1 — Knowledge Episode Validator enums ─────────────────
+
+
+class EpistemicRank(Enum):
+    """الرتبة الإبستيمية — epistemic certainty tier of a validated episode.
+
+    ==========================  =============================================
+    Member                       Meaning
+    ==========================  =============================================
+    CERTAIN                      قطعي — existence + complete proof
+    TRUE_NON_CERTAIN             صحيح غير قطعي — valid but revisable
+    PROBABILISTIC_DOUBT          ظني — probable / uncertain
+    IMPOSSIBLE                   ممتنع — method-fit failure or conflict
+    REJECTED_METHODOLOGICALLY    ساقط منهجيًا — foundational condition missing
+    ==========================  =============================================
+    """
+    CERTAIN = auto()
+    TRUE_NON_CERTAIN = auto()
+    PROBABILISTIC_DOUBT = auto()
+    IMPOSSIBLE = auto()
+    REJECTED_METHODOLOGICALLY = auto()
+
+
+class ValidationState(Enum):
+    """حالة التصديق — validation outcome of a knowledge episode.
+
+    ==========  =============================
+    Member       Meaning
+    ==========  =============================
+    VALID        صالح — all checks passed
+    INVALID      غير صالح — one or more checks failed
+    PENDING      قيد الفحص — not yet validated
+    ==========  =============================
+    """
+    VALID = auto()
+    INVALID = auto()
+    PENDING = auto()
+
+
+class JudgementType(Enum):
+    """نوع الحكم — the type of judgement issued by a knowledge episode.
+
+    ================  ==========================================
+    Member             Meaning
+    ================  ==========================================
+    EXISTENCE          حكم وجودي — existence claim (قطعي عند تمامه)
+    ESSENCE            حكم ماهوي — what-is-it claim
+    ATTRIBUTE          حكم وصفي — attribute / quality claim
+    RELATION           حكم علائقي — relational claim
+    CAUSAL             حكم سببي — cause-effect claim
+    INTERPRETIVE       حكم تفسيري — interpretation / hermeneutic
+    FORMAL             حكم شكلي — formal / logical claim
+    NORMATIVE          حكم معياري — obligation / value / rule
+    PURE_LINGUISTIC    حكم لغوي صرف — purely linguistic claim
+    METAPHYSICAL       حكم ما ورائي — metaphysical claim
+    ================  ==========================================
+    """
+    EXISTENCE = auto()
+    ESSENCE = auto()
+    ATTRIBUTE = auto()
+    RELATION = auto()
+    CAUSAL = auto()
+    INTERPRETIVE = auto()
+    FORMAL = auto()
+    NORMATIVE = auto()
+    PURE_LINGUISTIC = auto()
+    METAPHYSICAL = auto()
+
+
+class MethodFamily(Enum):
+    """عائلة المنهج — the methodological family used in an episode.
+
+    ==============  ===========================================
+    Member           Meaning
+    ==============  ===========================================
+    RATIONAL         عقلي — general rational cognition
+    SCIENTIFIC       علمي تجريبي — empirical / experimental
+    LINGUISTIC       لغوي — utterance / concept analysis
+    MATHEMATICAL     رياضي — formal symbolic proof
+    PHYSICAL         فيزيائي — physical law and measurement
+    ==============  ===========================================
+    """
+    RATIONAL = auto()
+    SCIENTIFIC = auto()
+    LINGUISTIC = auto()
+    MATHEMATICAL = auto()
+    PHYSICAL = auto()
+
+
+class CarrierType(Enum):
+    """نوع الحامل اللغوي — which linguistic carrier(s) are present.
+
+    ===========  ====================================
+    Member        Meaning
+    ===========  ====================================
+    UTTERANCE     منطوق فقط — utterance only
+    CONCEPT       مفهوم فقط — concept only
+    BOTH          كلاهما — both utterance and concept
+    ===========  ====================================
+    """
+    UTTERANCE = auto()
+    CONCEPT = auto()
+    BOTH = auto()
+
+
+class RealityKind(Enum):
+    """نوع الواقع — the kind of reality an anchor refers to.
+
+    =================  =====================================
+    Member              Meaning
+    =================  =====================================
+    MATERIAL_OBJECT     شيء مادي — tangible physical object
+    TEXT_OBJECT          نص — written / spoken text
+    EVENT                حدث — observable event
+    ABSTRACT             مجرد — abstract entity
+    FORMAL_STRUCTURE     بنية شكلية — formal / mathematical
+    =================  =====================================
+    """
+    MATERIAL_OBJECT = auto()
+    TEXT_OBJECT = auto()
+    EVENT = auto()
+    ABSTRACT = auto()
+    FORMAL_STRUCTURE = auto()
+
+
+class SenseModality(Enum):
+    """الحاسة — the sensory modality of a trace.
+
+    ================  ================================
+    Member             Meaning
+    ================  ================================
+    VISION             بصر — sight
+    HEARING            سمع — hearing
+    TOUCH              لمس — touch
+    PROPRIOCEPTION     حس داخلي — body awareness
+    INTERNAL           إدراك ذهني — internal cognition
+    ================  ================================
+    """
+    VISION = auto()
+    HEARING = auto()
+    TOUCH = auto()
+    PROPRIOCEPTION = auto()
+    INTERNAL = auto()
+
+
+class TraceMode(Enum):
+    """نمط الأثر — how the sensory trace was obtained.
+
+    ===================  =====================================
+    Member                Meaning
+    ===================  =====================================
+    DIRECT_PERCEPTION     إدراك مباشر — first-hand perception
+    MEDIATED              بواسطة — mediated observation
+    REPORTED              منقول — reported by another
+    INFERRED              مستنبط — inferred, not observed
+    ===================  =====================================
+    """
+    DIRECT_PERCEPTION = auto()
+    MEDIATED = auto()
+    REPORTED = auto()
+    INFERRED = auto()
+
+
+class LinkKind(Enum):
+    """نوع الربط — the linking method used in the knowledge episode.
+
+    ==================  =========================================
+    Member               Meaning
+    ==================  =========================================
+    TEXTUAL_INFERENCE    استدلال نصي — inference from text
+    CAUSAL               ربط سببي — causal link
+    ANALOGY              قياس — analogical reasoning
+    DEDUCTION            استنباط — deductive reasoning
+    INDUCTION            استقراء — inductive reasoning
+    ABDUCTION            استنتاج تفسيري — abductive reasoning
+    ==================  =========================================
+    """
+    TEXTUAL_INFERENCE = auto()
+    CAUSAL = auto()
+    ANALOGY = auto()
+    DEDUCTION = auto()
+    INDUCTION = auto()
+    ABDUCTION = auto()
+
+
+class ProofPathKind(Enum):
+    """نوع مسار الإثبات — the kind of proof path used.
+
+    ===========  ==========================================
+    Member        Meaning
+    ===========  ==========================================
+    HISSI         حسي — sense-based proof
+    AQLI          عقلي — rational proof
+    FORMAL        برهاني شكلي — formal / symbolic proof
+    LINGUISTIC    لغوي — linguistic proof
+    COMPOSITE     مركب — composite / multi-path proof
+    ===========  ==========================================
+    """
+    HISSI = auto()
+    AQLI = auto()
+    FORMAL = auto()
+    LINGUISTIC = auto()
+    COMPOSITE = auto()
+
+
+class GapSeverity(Enum):
+    """خطورة الفجوة — severity level of a validation gap.
+
+    ========  ===================================
+    Member     Meaning
+    ========  ===================================
+    FATAL      قاتل — blocks validation entirely
+    HIGH       عالٍ — serious but not blocking
+    MEDIUM     متوسط — informational
+    ========  ===================================
+    """
+    FATAL = auto()
+    HIGH = auto()
+    MEDIUM = auto()
+
+
+class ContaminationLevel(Enum):
+    """مستوى التلوث — degree of prior-opinion contamination.
+
+    ========  =========================================
+    Member     Meaning
+    ========  =========================================
+    NONE       لا تلوث — no contamination
+    LOW        منخفض — minor influence, acceptable
+    MEDIUM     متوسط — noticeable, causes rejection
+    HIGH       عالٍ — severe contamination, rejection
+    ========  =========================================
+    """
+    NONE = auto()
+    LOW = auto()
+    MEDIUM = auto()
+    HIGH = auto()

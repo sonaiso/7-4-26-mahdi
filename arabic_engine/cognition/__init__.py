@@ -20,4 +20,5 @@ __all__ = [
     "world_model",
     "inference_rules",
     "mafhum",
+    "epistemic_v1",
 ]
