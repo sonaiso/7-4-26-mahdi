@@ -40,6 +40,11 @@ from .enums import (
 from .enums import (
     AuthorityLevel as AuthorityLevel,
 )
+
+# ── Universal / Particular Constitution v1 enum re-exports ──────────
+from .enums import (
+    BoundaryType as BoundaryType,
+)
 from .enums import (
     CarrierClass as CarrierClass,
 )
@@ -416,6 +421,15 @@ from .enums import (
     UnicodeProfileType as UnicodeProfileType,
 )
 from .enums import (
+    UniversalityScope as UniversalityScope,
+)
+from .enums import (
+    UniversalParticularDomain as UniversalParticularDomain,
+)
+from .enums import (
+    UPConstitutionOutcome as UPConstitutionOutcome,
+)
+from .enums import (
     UtteranceMode as UtteranceMode,
 )
 from .enums import (
@@ -525,6 +539,11 @@ from .types import (
 )
 from .types import (
     AxiomRecord as AxiomRecord,
+)
+
+# ── Universal / Particular Constitution v1 type re-exports ──────────
+from .types import (
+    BoundaryRecord as BoundaryRecord,
 )
 from .types import (
     CompositionRecord as CompositionRecord,
@@ -803,6 +822,12 @@ from .types import (
     UnicodeAtom as UnicodeAtom,
 )
 from .types import (
+    UniversalParticularRecord as UniversalParticularRecord,
+)
+from .types import (
+    UPConstitutionResult as UPConstitutionResult,
+)
+from .types import (
     UtteranceNode as UtteranceNode,
 )
 from .types import (
@@ -1061,34 +1086,13 @@ __all__ = [
     "StructuralProfileRecord",
     "TransformationProfileRecord",
     "TransitionGate",
-    # ── Composition / Syntax Constitution v1 enums ─────────────────
-    "AmbiguityResolution",
-    "AmbiguityType",
-    "CompositionGate",
-    "CompositionRelation",
-    "CompositionRole",
-    "CompositionVerdict",
-    "ConflictResolutionMethod",
-    "ConflictType",
-    "DependencyType",
-    "InterPropositionLink",
-    "PredicationType",
-    "PropositionType",
-    "RestrictionType",
-    "RoleStatus",
-    "TransferType",
-    "TruthCategory",
-    # ── Composition / Syntax Constitution v1 types ─────────────────
-    "AmbiguityRecord",
-    "CompositionRecord",
-    "CompositionRoleRecord",
-    "ConflictRecord",
-    "DependencyRecord",
-    "DisambiguationResult",
-    "GateResult",
-    "PredicationRecord",
-    "PropositionRecord",
-    "RestrictionRecord",
-    "TransferRecord",
-    "TruthRecord",
+    # ── Universal / Particular Constitution v1 enums ───────────────
+    "BoundaryType",
+    "UPConstitutionOutcome",
+    "UniversalParticularDomain",
+    "UniversalityScope",
+    # ── Universal / Particular Constitution v1 types ───────────────
+    "BoundaryRecord",
+    "UPConstitutionResult",
+    "UniversalParticularRecord",
 ]

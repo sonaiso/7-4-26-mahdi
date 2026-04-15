@@ -17,6 +17,7 @@ from .enums import (
     AmbiguityResolution,
     AmbiguityType,
     AuthorityLevel,
+    BoundaryType,
     CarrierClass,
     CarrierType,
     CategorizationMode,
@@ -133,6 +134,9 @@ from .enums import (
     TruthCategory,
     TruthState,
     UnicodeProfileType,
+    UniversalityScope,
+    UniversalParticularDomain,
+    UPConstitutionOutcome,
     UtteranceMode,
     UtteranceToConceptConstraint,
     UtteredFormClass,
@@ -2603,141 +2607,69 @@ class LayerTraceRecord:
     final_gate_status: TransitionGateStatus = TransitionGateStatus.INSUFFICIENT_DATA
 
 
-# ── Composition / Syntax Constitution v1 ────────────────────────────
+# ── Universal / Particular Constitution v1 ──────────────────────────
 
 
 @dataclass(frozen=True)
-class AmbiguityRecord:
-    """سجل الاشتراك — record of a semantic ambiguity (Art. 6-9)."""
+class UniversalParticularRecord:
+    """سجل الكلي والجزئي — constitutional record for a single concept.
 
-    ambiguity_id: str                                   # معرّف الاشتراك
-    unit_id: str                                        # معرّف الوحدة
-    ambiguity_type: AmbiguityType                       # نوع الاشتراك
-    resolution: Optional[AmbiguityResolution] = None    # طريقة الفضّ
-    resolved: bool = False                              # هل فُضّ؟
-    details: str = ""                                   # تفاصيل
+    Captures the universality classification of a concept within
+    either the entity (ذات) or attribute (صفة) domain, together
+    with its position in the genus → species → individual hierarchy
+    and its fractal depth in the conceptual tree.
 
+    Mathematical formulation::
 
-@dataclass(frozen=True)
-class ConflictRecord:
-    """سجل التعارض — record of a pre-composition conflict (Art. 10-13)."""
+        U(x) = 1  iff  scope ∈ {GENUS, SPECIES}
+        P(x) = 1  iff  scope = INDIVIDUAL
+    """
 
-    conflict_id: str                                            # معرّف التعارض
-    unit_id: str                                                # معرّف الوحدة
-    conflict_type: ConflictType                                 # نوع التعارض
-    resolution_method: Optional[ConflictResolutionMethod] = None  # طريقة الفضّ
-    resolved: bool = False                                      # هل فُضّ؟
-    details: str = ""                                           # تفاصيل
-
-
-@dataclass(frozen=True)
-class TransferRecord:
-    """سجل النقل — record of a semantic transfer (Art. 14-17)."""
-
-    transfer_id: str                 # معرّف النقل
-    unit_id: str                     # معرّف الوحدة
-    transfer_type: TransferType      # نوع النقل
-    stable: bool = False             # مستقر؟
-    original_direction: str = ""     # الجهة الأصلية
-    transferred_direction: str = ""  # الجهة المنقولة
+    record_id: str
+    concept_id: int
+    label: str
+    domain: UniversalParticularDomain
+    scope: UniversalityScope
+    is_universal: bool
+    boundary_markers: Tuple[BoundaryType, ...] = ()
+    genus_id: Optional[int] = None
+    species_id: Optional[int] = None
+    fractal_depth: int = 0
+    notes: str = ""
 
 
 @dataclass(frozen=True)
-class TruthRecord:
-    """سجل الحقيقة — truth-category assignment (Art. 18-22)."""
+class BoundaryRecord:
+    """سجل الفاصل الحدّي — formal boundary assertion between two concepts.
 
-    truth_id: str               # معرّف الحقيقة
-    unit_id: str                # معرّف الوحدة
-    category: TruthCategory     # التصنيف
-    confidence: float = 1.0     # درجة الثقة
+    A boundary is valid when the pair of concepts respects the
+    constitutional separation encoded by *boundary_type*.  If invalid,
+    *violation_reason* carries a human-readable explanation.
+    """
 
-
-@dataclass(frozen=True)
-class DisambiguationResult:
-    """نتيجة فضّ الاضطراب — aggregate disambiguation result (Art. 4-22)."""
-
-    ambiguities: Tuple[AmbiguityRecord, ...] = ()
-    conflicts: Tuple[ConflictRecord, ...] = ()
-    transfers: Tuple[TransferRecord, ...] = ()
-    truth_assignments: Tuple[TruthRecord, ...] = ()
-    all_resolved: bool = False
+    boundary_id: str
+    boundary_type: BoundaryType
+    left_concept_id: int
+    right_concept_id: int
+    is_valid: bool
+    violation_reason: Optional[str] = None
 
 
 @dataclass(frozen=True)
-class PredicationRecord:
-    """سجل الإسناد — predication record (Art. 26-29)."""
+class UPConstitutionResult:
+    """نتيجة دستور الكلي والجزئي — overall constitutional verdict.
 
-    predication_id: str                # معرّف الإسناد
-    musnad_ilayh: str                  # المسند إليه
-    musnad: str                        # المسند
-    predication_type: PredicationType  # نوع الإسناد
-    valid: bool = True                 # صحيح؟
+    Aggregates all :class:`UniversalParticularRecord` entries and
+    :class:`BoundaryRecord` checks, then derives the final
+    :class:`UPConstitutionOutcome`.
 
+    *fractal_depth_max* is the maximum depth observed across all
+    records (0 = only genera, 1 = genera + species, 2+ = full tree).
+    """
 
-@dataclass(frozen=True)
-class RestrictionRecord:
-    """سجل التقييد — restriction record (Art. 30-32)."""
-
-    restriction_id: str                  # معرّف التقييد
-    base_unit: str                       # الوحدة الأساسية
-    restrictor: str                      # القيد
-    restriction_type: RestrictionType    # نوع التقييد
-    valid: bool = True                   # صحيح؟
-
-
-@dataclass(frozen=True)
-class DependencyRecord:
-    """سجل التبعية — dependency record (Art. 33-35)."""
-
-    dependency_id: str               # معرّف التبعية
-    followed: str                    # المتبوع
-    follower: str                    # التابع
-    dependency_type: DependencyType  # نوع التبعية
-    aspect: str = ""                 # وجه التبعية
-
-
-@dataclass(frozen=True)
-class CompositionRoleRecord:
-    """سجل الدور التركيبي — composition role record (Art. 39-41)."""
-
-    role_id: str                  # معرّف الدور
-    unit_id: str                  # معرّف الوحدة
-    role: CompositionRole         # الدور
-    status: RoleStatus = RoleStatus.CANDIDATE  # الحالة
-
-
-@dataclass(frozen=True)
-class GateResult:
-    """نتيجة بوابة — gate evaluation result (Art. 64-72)."""
-
-    gate: CompositionGate  # البوابة
-    passed: bool           # هل اجتازت؟
-    reason: str = ""       # السبب
-
-
-@dataclass(frozen=True)
-class PropositionRecord:
-    """سجل القضية — proposition record (Art. 42-44)."""
-
-    proposition_id: str                              # معرّف القضية
-    predication: PredicationRecord                   # الإسناد
-    restrictions: Tuple[RestrictionRecord, ...] = ()  # التقييدات
-    dependencies: Tuple[DependencyRecord, ...] = ()   # التبعيات
-    roles: Tuple[CompositionRoleRecord, ...] = ()     # الأدوار
-    proposition_type: PropositionType = PropositionType.NOMINAL
-    closed: bool = False                              # منغلقة؟
-
-
-@dataclass(frozen=True)
-class CompositionRecord:
-    """سجل التركيب — full composition record (Art. 73-78)."""
-
-    composition_id: str                                  # معرّف التركيب
-    units: Tuple[str, ...] = ()                          # الوحدات الداخلة
-    gates: Tuple[GateResult, ...] = ()                   # البوابات
-    relations: Tuple[CompositionRelation, ...] = ()      # العلاقات
-    roles: Tuple[CompositionRoleRecord, ...] = ()        # الأدوار
-    propositions: Tuple[PropositionRecord, ...] = ()     # القضايا
-    links: Tuple[InterPropositionLink, ...] = ()         # الروابط
-    verdict: CompositionVerdict = CompositionVerdict.PENDING
-    readiness: float = 0.0                               # الجاهزية
+    result_id: str
+    records: Tuple[UniversalParticularRecord, ...]
+    boundaries: Tuple[BoundaryRecord, ...]
+    outcome: UPConstitutionOutcome
+    fractal_depth_max: int = 0
+    errors: Tuple[str, ...] = ()

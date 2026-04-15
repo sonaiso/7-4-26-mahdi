@@ -1862,161 +1862,59 @@ class TransitionGateStatus(Enum):
     INSUFFICIENT_DATA = auto()
 
 
-# ── Composition / Syntax Constitution v1 ────────────────────────────
+# ── Universal / Particular Constitution v1 ──────────────────────────
 
 
-class AmbiguityType(Enum):
-    """نوع الاشتراك — type of semantic ambiguity (Art. 8)."""
+class UniversalityScope(Enum):
+    """نطاق الكلية والجزئية — scope/level of universality or particularity.
 
-    LEXICAL_PURE = auto()                # اشتراك لفظي صرف
-    SEMANTIC_DUAL_BEARING = auto()       # اشتراك دلالي بين جهتين
-    TRUTH_VS_TRANSFER = auto()           # اشتراك بين حقيقة ونقل
-    LINGUISTIC_VS_CONVENTIONAL = auto()  # اشتراك بين معنى لغوي وعرفي
+    Encodes the classical Arabic logical hierarchy:
+      جنس (genus) → نوع (species) → فرد (individual)
+    """
 
-
-class AmbiguityResolution(Enum):
-    """طريقة فضّ الاشتراك — method of disambiguation (Art. 9)."""
-
-    SEMANTIC_CLUE = auto()         # قرينة دلالية داخلية
-    REFERENTIAL_CLUE = auto()      # قرينة إحالية
-    SYNTACTIC_CLUE = auto()        # قرينة تركيبية متوقعة
-    WEIGHT_PRIORITY = auto()       # ترجيح وزني/بابي
-    CONVENTIONAL_PRIORITY = auto() # ترجيح عرفي مضبوط
-    OPEN_PENDING = auto()          # إبقاء الاحتمال مفتوحًا
+    GENUS = auto()       # جنس  — highest universal: "animal", "body"
+    SPECIES = auto()     # نوع  — intermediate: "human", "horse"
+    INDIVIDUAL = auto()  # فرد  — particular: "Zayd", "this horse"
+    UNRESOLVED = auto()  # غير محدد — not yet classified
 
 
-class ConflictType(Enum):
-    """نوع التعارض — type of pre-composition conflict (Art. 12)."""
+class UniversalParticularDomain(Enum):
+    """مجال الكلي والجزئي — whether the UP analysis applies to entity or attribute.
 
-    ESSENTIAL_VS_DESCRIPTIVE = auto()    # ذاتي/وصفي
-    UNIVERSAL_VS_PARTICULAR = auto()     # كلي/جزئي
-    REFERENTIAL_VS_PREDICATIVE = auto()  # إحالي/حملي
-    DUAL_ROLE = auto()                   # دوران مرشحان
-    TRUTH_VS_TRANSFER = auto()           # حقيقة أصلية / معنى منقول
+    Every concept is analysed for universality in one of two domains:
+      ذات (entity / substance) or صفة (quality / attribute).
+    """
 
-
-class ConflictResolutionMethod(Enum):
-    """طريقة فضّ التعارض — conflict resolution method (Art. 13)."""
-
-    RANK_DISTINCTION = auto()       # تمييز الرتبة
-    CONTEXT_DISTINCTION = auto()    # تمييز المقام
-    ORIGIN_VS_FOLLOWER = auto()     # تمييز الأصل من التابع
-    FIGURATIVE_RECLASSIFY = auto()  # ردّ إلى المجاز أو النقل
-    BLOCK_TRANSITION = auto()       # منع الانتقال التركيبي
+    ENTITY = auto()     # ذات — substance / entity domain
+    ATTRIBUTE = auto()  # صفة — quality / attribute domain
 
 
-class TransferType(Enum):
-    """نوع النقل — type of semantic transfer (Art. 15)."""
+class BoundaryType(Enum):
+    """نوع الفاصل الحدّي — type of conceptual boundary.
 
-    INTERNAL_LINGUISTIC = auto()       # نقل لغوي داخلي
-    CONVENTIONAL = auto()              # نقل عرفي
-    TERMINOLOGICAL = auto()            # نقل اصطلاحي
-    DESCRIPTIVE_TO_REFERENTIAL = auto() # وصفي إلى مرجعي
-    EVENT_TO_NOMINAL = auto()          # حدثي إلى اسمي
-    ESSENTIAL_TO_RELATIONAL = auto()   # ذاتي إلى علائقي
+    Five critical boundaries that the constitution enforces:
+      1. ذات ↔ صفة           (entity vs attribute)
+      2. كلي ↔ جزئي          (universal vs particular)
+      3. جنس ↔ نوع           (genus vs species)
+      4. نوع ↔ فرد           (species vs individual)
+      5. الوصف العام ↔ الهيئة الخاصة (general description vs specific form)
+    """
 
-
-class TruthCategory(Enum):
-    """تصنيف الحقيقة — truth category for composition entry (Art. 21)."""
-
-    LINGUISTIC_TRUTH = auto()      # الحقيقة اللغوية
-    CONVENTIONAL_TRUTH = auto()    # الحقيقة العرفية
-    CONTROLLED_TRANSFER = auto()   # نقل مضبوط
-
-
-class PredicationType(Enum):
-    """نوع الإسناد — type of predication (Art. 28)."""
-
-    ESSENTIAL_DESCRIPTIVE = auto()       # إسناد ذاتي/وصفي
-    ESSENTIAL_EVENT = auto()             # إسناد ذاتي/حدثي
-    ESSENTIAL_EXISTENTIAL_COPULA = auto() # إسناد ذاتي/وجودي رابط
+    ENTITY_ATTRIBUTE = auto()                  # ذات ↔ صفة
+    UNIVERSAL_PARTICULAR = auto()              # كلي ↔ جزئي
+    GENUS_SPECIES = auto()                     # جنس ↔ نوع
+    SPECIES_INDIVIDUAL = auto()                # نوع ↔ فرد
+    GENERAL_DESCRIPTION_SPECIFIC_FORM = auto()  # الوصف العام ↔ الهيئة الخاصة
 
 
-class RestrictionType(Enum):
-    """نوع التقييد — type of syntactic restriction (Art. 31)."""
+class UPConstitutionOutcome(Enum):
+    """نتيجة الدستور — verdict of the constitutional check.
 
-    DESCRIPTION = auto()    # الوصف
-    ADVERBIAL = auto()      # الظرف
-    STATE = auto()          # الحال
-    SPECIFICATION = auto()  # التمييز
-    ANNEXATION = auto()     # الإضافة
-    NUMERAL = auto()        # العدد
+    ACCEPTED   — meets minimum completeness, no boundary violations
+    REJECTED   — violates a boundary or missing required structure
+    INCOMPLETE — structurally valid but not yet fully resolved
+    """
 
-
-class DependencyType(Enum):
-    """نوع التبعية — type of syntactic dependency (Art. 34)."""
-
-    ADJECTIVE = auto()              # النعت
-    SUBSTITUTION = auto()           # البدل
-    EMPHASIS = auto()               # التوكيد
-    CONJUNCTIVE_FOLLOWING = auto()  # العطف التابعي
-
-
-class CompositionRelation(Enum):
-    """علاقة تركيبية — structural relation in composition (Art. 37)."""
-
-    PREDICATION = auto()     # علاقة إسناد
-    RESTRICTION = auto()     # علاقة تقييد
-    DEPENDENCY = auto()      # علاقة تبعية
-    LINKING = auto()         # علاقة ربط
-    TRANSFORMATION = auto()  # علاقة تحويل
-    EXPLANATION = auto()     # علاقة تفسير
-
-
-class CompositionRole(Enum):
-    """دور تركيبي — compositional role of a unit (Art. 40)."""
-
-    MUSNAD_ILAYH = auto()  # مسند إليه
-    MUSNAD = auto()        # مسند
-    QAYD = auto()          # قيد
-    TABI = auto()          # تابع
-    RABIT = auto()         # رابط
-    MUFASSIR = auto()      # مفسّر/مميّز
-
-
-class RoleStatus(Enum):
-    """حالة الدور — role realisation status (Art. 41)."""
-
-    CANDIDATE = auto()  # مرشح
-    REALIZED = auto()   # محقق
-
-
-class PropositionType(Enum):
-    """نوع القضية — proposition type (Art. 44)."""
-
-    NOMINAL = auto()      # قضية اسمية
-    VERBAL = auto()       # قضية فعلية
-    COPULAR = auto()      # قضية رابطية/ناسخة
-    CONDITIONAL = auto()  # قضية شرطية
-
-
-class InterPropositionLink(Enum):
-    """رابط بين القضايا — inter-proposition link type (Art. 45)."""
-
-    CONJUNCTION = auto()   # عطف
-    CONDITION = auto()     # شرط
-    CAUSATION = auto()     # تعليل
-    ADVERSATIVE = auto()   # استدراك
-    TEMPORAL = auto()      # زمن
-    OTHER = auto()         # غير ذلك
-
-
-class CompositionGate(Enum):
-    """بوابة تركيبية — composition gate (Art. 64)."""
-
-    DISAMBIGUATION = auto()          # Gate_Disambiguation
-    REFERENCE_STABILITY = auto()     # Gate_Reference_Stability
-    PREDICATE_READINESS = auto()     # Gate_Predicate_Readiness
-    ROLE_ASSIGNMENT = auto()         # Gate_Role_Assignment
-    RELATION_VALIDITY = auto()       # Gate_Relation_Validity
-    CONFLICT_RESOLUTION = auto()     # Gate_Conflict_Resolution
-    PROPOSITION_CLOSURE = auto()     # Gate_Proposition_Closure
-    INTERPROPOSITION_LINK = auto()   # Gate_InterProposition_Link
-
-
-class CompositionVerdict(Enum):
-    """حكم التركيب — composition acceptance verdict (Art. 76-77)."""
-
-    ACCEPTED = auto()  # مقبول
-    REJECTED = auto()  # مرفوض
-    PENDING = auto()   # معلّق
+    ACCEPTED = auto()    # مقبول     — meets minimum completeness
+    REJECTED = auto()    # مرفوض     — violates a boundary
+    INCOMPLETE = auto()  # غير مكتمل — structurally valid but unresolved
