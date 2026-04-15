@@ -73,6 +73,11 @@ from .enums import (
     OntologicalLayer,
     OntologicalMode,
     OperationalCapacity,
+    ParticleDirection,
+    ParticleEffect,
+    ParticleKind,
+    ParticleReadiness,
+    ParticleScope,
     PathKind,
     PhonCategory,
     PhonFeature,
@@ -2585,3 +2590,67 @@ class LayerTraceRecord:
     layer_6: Optional[RepresentationRecord] = None
     gates: Tuple[TransitionGate, ...] = ()
     final_gate_status: TransitionGateStatus = TransitionGateStatus.INSUFFICIENT_DATA
+
+
+# ── Particle Fractal Constitution v1 ────────────────────────────────
+
+
+@dataclass(frozen=True)
+class ParticleRecord:
+    """سجل الحرف — core particle record P = (M, D, K, Sc, Ef, Ready).
+
+    Represents a fully classified particle with its relational direction,
+    kind, operational scope, expected syntactic effect, and readiness for
+    composition (المادة 52).
+    """
+
+    particle_id: str                    # معرّف الحرف
+    material: str                       # M — المادة أو الصورة اللفظية
+    direction: ParticleDirection        # D — الجهة العلائقية/التحويلية
+    kind: ParticleKind                  # K — الباب الحرفي
+    scope: ParticleScope                # Sc — مجال العمل
+    effect: ParticleEffect              # Ef — الأثر التركيبي المتوقع
+    readiness: ParticleReadiness        # Ready — الجاهزية للتركيب
+    readiness_score: float = 0.0        # Ready_P score (0.0–1.0)
+
+
+@dataclass(frozen=True)
+class ParticleMinimum:
+    """الحد الأدنى المكتمل للحرف — 8 minimum-completeness checks (المادة 11)."""
+
+    thuboot: bool = False            # 1. الثبوت
+    hadd: bool = False               # 2. الحد
+    imtidad: bool = False            # 3. الامتداد
+    muqawwim: bool = False           # 4. المقوِّم
+    alaqa_binyawiyya: bool = False   # 5. العلاقة البنائية
+    intizam: bool = False            # 6. الانتظام
+    wahda: bool = False              # 7. الوحدة
+    qabiliyyat_ta3yin: bool = False  # 8. قابلية التعيين
+
+
+@dataclass(frozen=True)
+class ParticleValidation:
+    """نتيجة قبول أو رفض الحرف — acceptance/rejection result (المادة 53-56)."""
+
+    particle_id: str
+    is_valid: bool                             # ParticleValid(P) = 1 or 0
+    minimum: ParticleMinimum                   # الحد الأدنى المكتمل
+    acceptance_score: float = 0.0              # p(M,D,K,Sc,Ef,Ready)
+    rejection_reasons: Tuple[str, ...] = ()    # أسباب الرفض
+
+
+@dataclass(frozen=True)
+class ParticleFractalTrace:
+    """أثر القانون الفراكتالي — fractal law trace (المادة 42-48).
+
+    Records whether each of the six fractal-law steps is satisfied:
+    تعيين → حفظ → ربط → حكم → انتقال → رد
+    """
+
+    particle_id: str
+    ta3yin: bool = False    # تعيين — assigned type/kind/scope/effect
+    hifz: bool = False      # حفظ — identity preserved
+    rabt: bool = False      # ربط — linking function established
+    hukm: bool = False      # حكم — judgeable as particle
+    intiqal: bool = False   # انتقال — ready for syntactic transition
+    radd: bool = False      # رد — reducible to origin type/kind

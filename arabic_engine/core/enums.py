@@ -1860,3 +1860,72 @@ class TransitionGateStatus(Enum):
     PASSED = auto()
     BLOCKED = auto()
     INSUFFICIENT_DATA = auto()
+
+
+# ── Particle Fractal Constitution v1 ────────────────────────────────
+
+
+class ParticleKind(Enum):
+    """الباب الحرفي — major particle door (المادة 20)."""
+
+    NISBA = auto()       # نسبة
+    RABT = auto()        # ربط
+    TAQYID = auto()      # تقييد
+    TAHWIL = auto()      # تحويل
+    SHART = auto()       # شرط
+    NAFY = auto()        # نفي
+    ATF = auto()         # عطف
+    ISTIFHAM = auto()    # استفهام
+    TAWKID = auto()      # توكيد
+    GHAYA = auto()       # غاية
+    ISTITHNAA = auto()   # استثناء
+    IBTIDAA = auto()     # ابتداء والجهة
+
+
+class ParticleDirection(Enum):
+    """الجهة العلائقية/التحويلية — relational direction (المادة 24)."""
+
+    ZARFIYYA = auto()      # ظرفية
+    IBTIDAAIYYA = auto()   # ابتدائية
+    INTIHAAIYYA = auto()   # انتهائية
+    SABABIYYA = auto()     # سببية
+    MUSAHABA = auto()      # مصاحبة
+    MULABASA = auto()      # ملابسة
+    RABT_HUKM = auto()     # ربط حكم
+
+
+class ParticleScope(Enum):
+    """مجال العمل — operational scope of a particle (المادة 52)."""
+
+    MUFRAD = auto()     # مفرد — operates on single word
+    JUMLA = auto()      # جملة — operates on clause
+    QADIYYA = auto()    # قضية — operates on proposition
+    JIHA = auto()       # جهة — operates on modality
+    MURAKKAB = auto()   # مركب — operates on compound structure
+
+
+class ParticleEffect(Enum):
+    """الأثر التركيبي المتوقع — expected syntactic effect (المادة 52)."""
+
+    JARR = auto()          # جر — genitive case
+    NASB = auto()          # نصب — accusative
+    JAZM = auto()          # جزم — jussive
+    RABT_WASL = auto()     # ربط وصل — linking
+    TAHWIL_JIHA = auto()   # تحويل جهة — modality change
+    FATH_MAWDI = auto()    # فتح موضع — opening syntactic slot
+
+
+class ParticleReadiness(Enum):
+    """حالة الجاهزية — particle readiness for composition (المادة 49-51)."""
+
+    READY = auto()       # جاهز
+    INCOMPLETE = auto()  # ناقص
+    INVALID = auto()     # مرفوض
+
+
+class ParticleDalala(Enum):
+    """دلالة الحرف — particle signification type (المادة 38-40)."""
+
+    MUTABAQA = auto()   # مطابقة
+    TADAMMUN = auto()   # تضمن
+    ILTIZAM = auto()    # التزام
