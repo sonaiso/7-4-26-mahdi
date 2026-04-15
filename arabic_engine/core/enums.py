@@ -1592,68 +1592,86 @@ class TransitionGateStatus(Enum):
     INSUFFICIENT_DATA = auto()
 
 
-# ── Single Concept Constitution v1 enums ────────────────────────────
+# ── Reference Constitution v1 enums ─────────────────────────────────
 
 
-class SingleConceptType(Enum):
-    """التصنيف الأعلى للمفهوم المفرد — top-level concept genus (المادة 28–32)."""
+class ReferenceType(Enum):
+    """نوع الإحالة — the ten major reference types (المادة 15).
 
-    EXISTENTIAL = auto()   # وجودي — entity / kind / individual / reference
-    DESCRIPTIVE = auto()   # وصفي — quality / attribute / state
-    EVENTIVE = auto()      # حدثي — occurrence / process / source
-    RELATIONAL = auto()    # علائقي — relation / link / restriction
+    Maps to الباب الخامس of the Reference Constitution.
+    """
 
-
-class ConceptUniversalParticular(Enum):
-    """الكلي والجزئي — universal vs. particular concept (المادة 33)."""
-
-    UNIVERSAL = auto()     # كلي — shareable across instances
-    PARTICULAR = auto()    # جزئي — unique to one instance
-
-
-class ConceptEntityAttribute(Enum):
-    """الذات والصفة — entity vs. attribute concept (المادة 34)."""
-
-    ENTITY = auto()        # ذاتي — establishes a thing
-    ATTRIBUTE = auto()     # وصفي — establishes a quality of a thing
+    SELF_REFERENCE = auto()   # إحالة ذاتية — proper name / entity
+    DESCRIPTIVE = auto()      # إحالة وصفية — attribute-turned-reference
+    PRONOMINAL = auto()       # إحالة ضميرية — pronoun reference
+    DEMONSTRATIVE = auto()    # إحالة إشارية — demonstrative reference
+    RELATIVE = auto()         # إحالة موصولية — relative pronoun reference
+    TEMPORAL = auto()         # إحالة زمانية — time-bound reference
+    SPATIAL = auto()          # إحالة مكانية — place-bound reference
+    NUMERICAL = auto()        # إحالة عددية — number-bound reference
+    DEPENDENT = auto()        # إحالة تبعية — adjunct/follower (نعت/بدل/توكيد)
+    EXPLICATIVE = auto()      # إحالة تفسيرية/تمييزية — disambiguating (حال/تمييز)
 
 
-class ConceptClosureStatus(Enum):
-    """حالة الانغلاق — closure status of the concept (المادة 37)."""
+class ReferenceDegree(Enum):
+    """درجة الإحالة — referential closure degree (المادة 38).
 
-    CLOSED = auto()        # مغلق
-    SEMI_CLOSED = auto()   # شبه مغلق
-    OPEN = auto()          # مفتوح
-    DEPENDENT = auto()     # تابع
+    Four degrees from الباب السابع.
+    """
 
-
-class ConceptIndependence(Enum):
-    """درجة الاستقلال — independence level of the concept (المادة 36)."""
-
-    ORIGINAL = auto()          # أصيل
-    SUBORDINATE = auto()       # تابع
-    TRANSFORMATIONAL = auto()  # تحويلي
+    CLOSED = auto()           # مغلقة — fully closed referent
+    SEMI_CLOSED = auto()      # شبه مغلقة — nearly closed, needs qualifier
+    OPEN = auto()             # مفتوحة — open/diffuse referent
+    DEPENDENT = auto()        # تابعة — follows another referent
 
 
-class CandidateRole(Enum):
-    """الأدوار المرشحة — candidate syntactic roles before composition (المادة 47–53)."""
+class ReferenceToolKind(Enum):
+    """أداة الإحالة — reference tool kind (المادة 26).
 
-    MUSNAD_ILAYH = auto()  # مرشح للمسند إليه — subject candidate
-    MUSNAD = auto()        # مرشح للمسند — predicate candidate
-    QAYD = auto()          # مرشح للقيد — modifier / adjunct candidate
-    TABI = auto()          # مرشح للتابع — subordinate candidate
-    RABIT = auto()         # مرشح للرابط — linker candidate
-    MUFASSIR = auto()      # مرشح للمفسر / المميز — specifier candidate
+    The eleven reference tools from الباب السادس.
+    """
+
+    PROPER_NAME = auto()          # علم
+    PRONOUN = auto()              # ضمير
+    DEMONSTRATIVE = auto()        # اسم إشارة
+    RELATIVE_NOUN = auto()        # اسم موصول
+    GENITIVE_CONSTRUCT = auto()   # إضافة معرفة
+    RESTRICTIVE_ADJUNCT = auto()  # نعت مقيد
+    APPOSITION = auto()           # بدل
+    EMPHASIS = auto()             # توكيد
+    NUMERAL = auto()              # عدد
+    TIME_PLACE = auto()           # ظرف زمان/مكان
+    STATE_SPECIFICATION = auto()  # حال/تمييز
 
 
-class ConceptGateID(Enum):
-    """معرّفات البوابات الدنيا — programmable gate identifiers (المادة 59–67)."""
+class PredicationBasis(Enum):
+    """أساس الحمل أو الإحالة — predication vs reference (المواد 7–9).
 
-    GATE_TYPE = auto()                  # النوع الأعلى
-    GATE_DIRECTION = auto()             # الجهة المركزية
-    GATE_UNIVERSAL_PARTICULAR = auto()  # الكلي / الجزئي
-    GATE_ENTITY_ATTRIBUTE = auto()      # الذات / الصفة
-    GATE_REFERENCE_LOAD = auto()        # الحمل الإحالي
-    GATE_PREDICATIVE_LOAD = auto()      # الحمل المسندي
-    GATE_ROLE_READINESS = auto()        # جاهزية الدور
-    GATE_RECOVERABILITY = auto()        # قابلية الرد
+    Distinguishes whether a concept is fundamentally predication (حمل) or
+    referent-binding (إحالة).
+    """
+
+    PREDICATION = auto()  # حمل — attribution / description
+    REFERENCE = auto()    # إحالة — referent binding
+
+
+class ReferenceOrigin(Enum):
+    """أصل الإحالة — whether the concept is originally referential (المواد 12–13)."""
+
+    PRIMARY = auto()      # أصيل — originally referential (entities)
+    DERIVED = auto()      # تحويلي — transitioned from predication to reference
+    SUBORDINATE = auto()  # تابع — dependent reference
+
+
+class DefinitenessRole(Enum):
+    """دور المعرفة والنكرة — definiteness role in reference (المواد 52–55)."""
+
+    DEFINITE = auto()    # معرفة — tends toward closed / semi-closed reference
+    INDEFINITE = auto()  # نكرة — tends toward open reference
+
+
+class UniversalParticular(Enum):
+    """كلي وجزئي — universal vs particular scope (المواد 48–51)."""
+
+    UNIVERSAL = auto()    # كلي — tends to open reference
+    PARTICULAR = auto()   # جزئي — tends to closed / semi-closed reference

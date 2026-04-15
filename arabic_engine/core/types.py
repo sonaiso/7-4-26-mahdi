@@ -41,7 +41,7 @@ from .enums import (
     DalaalaKind,
     DalalaType,
     DecisionCode,
-    DependencyType,
+    DefinitenessRole,
     DiachronicStatus,
     DiscourseGapType,
     DiscourseValidationOutcome,
@@ -92,7 +92,7 @@ from .enums import (
     PhonFeature,
     PhonGroup,
     PhonTransform,
-    PredicationType,
+    PredicationBasis,
     ProofPathKind,
     ProofStatus,
     PropositionType,
@@ -105,7 +105,10 @@ from .enums import (
     ReceiverState,
     ReceptionMode,
     ReceptionStateType,
-    RestrictionType,
+    ReferenceDegree,
+    ReferenceOrigin,
+    ReferenceToolKind,
+    ReferenceType,
     ReversibleValue,
     RevisionType,
     RoleStatus,
@@ -139,7 +142,12 @@ from .enums import (
     TruthCategory,
     TruthState,
     UnicodeProfileType,
-    UnitType,
+    UniversalParticular,
+    UtteranceMode,
+    UtteranceToConceptConstraint,
+    UtteredFormClass,
+    ValidationOutcome,
+    ValidationState,
 )
 
 # ── State-machine layer types ──────────────────────────────────────
@@ -2496,118 +2504,56 @@ class LayerTraceRecord:
     final_gate_status: TransitionGateStatus = TransitionGateStatus.INSUFFICIENT_DATA
 
 
-# ── Single Concept Constitution v1 types ────────────────────────────
+# ── Reference Constitution v1 types ─────────────────────────────────
 
 
 @dataclass(frozen=True)
-class SingleConceptGateResult:
-    """نتيجة بوابة المفهوم المفرد — individual gate check result (المادة 58–67).
+class ReferenceRecord:
+    """سجل الإحالة — Reference record (المادة 85).
 
-    Fields
-    ------
-    gate_id   which gate was checked (:class:`ConceptGateID`)
-    status    outcome of the check (:class:`TransitionGateStatus`)
-    detail    human-readable explanation (Arabic or English)
+    The core referential tuple: Ref = (O, T, G, D, A, Rf, Ready).
     """
 
-    gate_id: ConceptGateID
-    status: TransitionGateStatus
-    detail: str = ""
+    record_id: str                                     # معرّف السجل
+    subject_type: str                                  # O — ذات/صفة/تابع/أداة
+    reference_type: ReferenceType                      # T — نوع الإحالة
+    reference_degree: ReferenceDegree                  # G — درجة الإحالة
+    tool_kind: Optional[ReferenceToolKind]              # D — الأداة الإحالية
+    predication_relation: PredicationBasis             # A — العلاقة مع الحمل
+    referent: str                                      # Rf — المرجع أو الدائرة المرجعية
+    ready_for_predication: bool                        # Ready — الجاهزية للإسناد
+    origin: ReferenceOrigin                            # أصالة أو تبعية
+    definiteness: Optional[DefinitenessRole] = None    # معرفة/نكرة
+    universality: Optional[UniversalParticular] = None  # كلي/جزئي
+    confidence: float = 1.0                            # ثقة
+    notes: str = ""                                    # ملاحظات
 
 
 @dataclass(frozen=True)
-class SingleConceptIsomorphism:
-    """تشاكل اللفظ والمفهوم — isomorphism record between lexeme and concept (المادة 12–17).
+class PredicationReadinessScore:
+    """درجة الجاهزية للإسناد — Predication readiness score (المادة 87).
 
-    Five axes that verify structural correspondence between the
-    single lexeme and the single concept it carries.
-
-    Fields
-    ------
-    direction_match   التشاكل في الجهة
-    type_match        التشاكل في النوع
-    boundary_match    التشاكل في الحدود
-    function_match    التشاكل في الوظيفة
-    transition_match  التشاكل في الانتقال
+    Ready_Ref = (Type + Degree + Anchor + Tool + Recover) / 5
     """
 
-    direction_match: bool    # التشاكل في الجهة
-    type_match: bool         # التشاكل في النوع
-    boundary_match: bool     # التشاكل في الحدود
-    function_match: bool     # التشاكل في الوظيفة
-    transition_match: bool   # التشاكل في الانتقال
-
-    @property
-    def all_match(self) -> bool:
-        """Return ``True`` iff all five isomorphism axes hold."""
-        return (
-            self.direction_match
-            and self.type_match
-            and self.boundary_match
-            and self.function_match
-            and self.transition_match
-        )
+    type_score: float       # Type — نوع الإحالة مضبوط
+    degree_score: float     # Degree — درجة الإحالة مضبوطة
+    anchor_score: float     # Anchor — المرجع مضبوط
+    tool_score: float       # Tool — الأداة مضبوطة
+    recover_score: float    # Recover — قابلية الرد
+    total: float            # المتوسط
+    ready: bool             # بلغ العتبة أم لا
 
 
 @dataclass(frozen=True)
-class SingleConceptDalala:
-    """دلالة المفهوم المفرد — three-level signification (المادة 54–57).
+class ReferenceTransition:
+    """انتقال الصفة من الحمل إلى الإحالة — Attribute transition (المواد 44–47).
 
-    Fields
-    ------
-    mutabaqa  المطابقة — direct correspondence
-    tadammun  التضمن  — internal inclusion
-    iltizam   الالتزام — external implication
+    Tracks when an attribute transitions from predication to reference.
     """
 
-    mutabaqa: str   # المطابقة — direct correspondence
-    tadammun: str   # التضمن  — internal inclusion
-    iltizam: str    # الالتزام — external implication
-
-
-@dataclass(frozen=True)
-class SingleConceptRecord:
-    """سجل المفهوم المفرد — the main constitutional record (المادة 78–82).
-
-    Mathematical representation::
-
-        C = (Lx, Ty, Dir, UP, EA, Ref, Pred, Role, Ready)
-
-    Fields
-    ------
-    record_id             unique identifier (auto-generated ``SC_nnn``)
-    lexeme_ref            Lx — اللفظ المقابل (surface form of the lexeme)
-    concept_type          Ty — النوع الأعلى (existential / descriptive / eventive / relational)
-    direction             Dir — الجهة المركزية (dalāla type)
-    universal_particular  UP — الكلي / الجزئي
-    entity_attribute      EA — الذات / الصفة
-    reference_load        Ref — الحمل الإحالي ∈ [0, 1]
-    predicative_load      Pred — الحمل المسندي ∈ [0, 1]
-    candidate_role        Role — الدور المرشح
-    closure_status        حالة الانغلاق
-    independence          درجة الاستقلال
-    isomorphism           التشاكل بين اللفظ والمفهوم
-    dalala                المطابقة / التضمن / الالتزام
-    gates                 8 بوابات دنيا (gate results)
-    readiness_score       Ready_C ∈ [0, 1] (المادة 80)
-    valid                 ConceptValid(C) (المادة 79)
-    notes                 free-text annotation
-    """
-
-    record_id: str
-    lexeme_ref: str
-    concept_type: SingleConceptType
-    direction: DalalaType
-    universal_particular: ConceptUniversalParticular
-    entity_attribute: ConceptEntityAttribute
-    reference_load: float
-    predicative_load: float
-    candidate_role: CandidateRole
-    closure_status: ConceptClosureStatus
-    independence: ConceptIndependence
-    isomorphism: SingleConceptIsomorphism
-    dalala: SingleConceptDalala
-    gates: Tuple[SingleConceptGateResult, ...]
-    readiness_score: float
-    valid: bool
-    notes: str = ""
+    source_concept_id: int               # معرّف المفهوم المصدر
+    from_basis: PredicationBasis         # PREDICATION
+    to_basis: PredicationBasis           # REFERENCE
+    reason: str                          # سبب الانتقال
+    resulting_degree: ReferenceDegree    # الدرجة الناتجة

@@ -48,6 +48,7 @@ from arabic_engine.core.types import (
     ProofPathRecord,
     Proposition,
     RealityAnchorRecord,
+    ReferenceRecord,
     SenseTraceRecord,
     SyntaxNode,
     TimeSpaceTag,
@@ -88,6 +89,7 @@ class PipelineResult:
     world_update: Dict[str, object] = field(default_factory=dict)
     explanation: Dict[str, object] = field(default_factory=dict)
     layer_traces: List[LayerTraceRecord] = field(default_factory=list)
+    reference_records: List["ReferenceRecord"] = field(default_factory=list)
 
 
 def _to_validation_state(outcome: ValidationOutcome) -> ValidationState:
@@ -192,6 +194,7 @@ def run(
     world: Optional[WorldModel] = None,
     inference_engine: Optional[InferenceEngine] = None,
     analyze_layers: bool = False,
+    analyze_reference: bool = False,
 ) -> PipelineResult:
     """Execute the full v3 pipeline on *text*."""
     # L0 — Normalise
@@ -219,6 +222,13 @@ def run(
 
     # L4 — Ontological Mapping
     concepts = batch_map(closures)
+
+    # L4b — Optional reference analysis
+    reference_records: List[ReferenceRecord] = []
+    if analyze_reference:
+        from arabic_engine.signified.reference_v1 import batch_build as _ref_batch_build
+
+        reference_records = _ref_batch_build(closures, concepts)
 
     # L5 — Dalāla Validation
     links = full_validation(closures, concepts)
@@ -358,4 +368,5 @@ def run(
         world_update=world_update,
         explanation=explanation,
         layer_traces=layer_traces,
+        reference_records=reference_records,
     )

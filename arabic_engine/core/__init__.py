@@ -124,7 +124,7 @@ from .enums import (
     DecisionCode as DecisionCode,
 )
 from .enums import (
-    DependencyType as DependencyType,
+    DefinitenessRole as DefinitenessRole,
 )
 from .enums import (
     DiachronicStatus as DiachronicStatus,
@@ -303,7 +303,7 @@ from .enums import (
     PhonTransform as PhonTransform,
 )
 from .enums import (
-    PredicationType as PredicationType,
+    PredicationBasis as PredicationBasis,
 )
 from .enums import (
     ProofPathKind as ProofPathKind,
@@ -340,6 +340,18 @@ from .enums import (
 )
 from .enums import (
     ReceptionStateType as ReceptionStateType,
+)
+from .enums import (
+    ReferenceDegree as ReferenceDegree,
+)
+from .enums import (
+    ReferenceOrigin as ReferenceOrigin,
+)
+from .enums import (
+    ReferenceToolKind as ReferenceToolKind,
+)
+from .enums import (
+    ReferenceType as ReferenceType,
 )
 from .enums import (
     RepresentationNode as RepresentationNode,
@@ -456,13 +468,7 @@ from .enums import (
     UnicodeProfileType as UnicodeProfileType,
 )
 from .enums import (
-    UniversalityScope as UniversalityScope,
-)
-from .enums import (
-    UniversalParticularDomain as UniversalParticularDomain,
-)
-from .enums import (
-    UPConstitutionOutcome as UPConstitutionOutcome,
+    UniversalParticular as UniversalParticular,
 )
 from .enums import (
     UtteranceMode as UtteranceMode,
@@ -795,6 +801,9 @@ from .types import (
     PatternCandidate as PatternCandidate,
 )
 from .types import (
+    PredicationReadinessScore as PredicationReadinessScore,
+)
+from .types import (
     PriorInfoNode as PriorInfoNode,
 )
 from .types import (
@@ -832,6 +841,12 @@ from .types import (
 )
 from .types import (
     ReceptionStateRecord as ReceptionStateRecord,
+)
+from .types import (
+    ReferenceRecord as ReferenceRecord,
+)
+from .types import (
+    ReferenceTransition as ReferenceTransition,
 )
 from .types import (
     RepresentationRecord as RepresentationRecord,
@@ -1059,6 +1074,14 @@ __all__ = [
     "UtteredFormClass",
     "ValidationOutcome",
     "ValidationState",
+    # ── Reference Constitution v1 enums ───────────────────────────
+    "DefinitenessRole",
+    "PredicationBasis",
+    "ReferenceDegree",
+    "ReferenceOrigin",
+    "ReferenceToolKind",
+    "ReferenceType",
+    "UniversalParticular",
     # ── Fractal Kernel enums ───────────────────────────────────────
     "ActivationStage",
     "ConflictState",
@@ -1218,17 +1241,8 @@ __all__ = [
     "StructuralProfileRecord",
     "TransformationProfileRecord",
     "TransitionGate",
-    # ── Single Concept Constitution v1 enums ──────────────────────
-    "CandidateRole",
-    "ConceptClosureStatus",
-    "ConceptEntityAttribute",
-    "ConceptGateID",
-    "ConceptIndependence",
-    "ConceptUniversalParticular",
-    "SingleConceptType",
-    # ── Single Concept Constitution v1 types ──────────────────────
-    "SingleConceptDalala",
-    "SingleConceptGateResult",
-    "SingleConceptIsomorphism",
-    "SingleConceptRecord",
+    # ── Reference Constitution v1 types ───────────────────────────
+    "PredicationReadinessScore",
+    "ReferenceRecord",
+    "ReferenceTransition",
 ]
