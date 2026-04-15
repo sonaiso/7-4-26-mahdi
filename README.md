@@ -274,6 +274,46 @@ pytest -v
 ruff check .
 ```
 
+## Data Files & Word Analysis Pipeline
+
+The engine ships with structured reference data and a dedicated
+diacritised-word analysis pipeline.
+
+### Reference data (`arabic_engine/data/`)
+
+| Directory    | File                    | Description                       |
+| ------------ | ----------------------- | --------------------------------- |
+| `unicode/`   | `unicode_marks.csv`     | Arabic combining marks            |
+| `unicode/`   | `unicode_policy.json`   | NFC normalisation policy          |
+| `phonology/` | `arabic_letters.csv`    | Letter phonetic codes             |
+| `phonology/` | `arabic_vowels.csv`     | Vowel/haraka codes                |
+| `phonology/` | `syllable_shapes.csv`   | CV/CVC/… syllable shapes          |
+| `morphology/`| `pattern_codes.csv`     | Morphological pattern codes       |
+| `morphology/`| `closed_connectors.csv` | Clitics (وَ بِ فَ لِ ال)         |
+| `morphology/`| `closed_built_forms.csv`| Built forms (هذا الذي …)          |
+
+### JSON schemas (`arabic_engine/schemas/`)
+
+`grapheme.schema.json`, `syllable.schema.json`, `pattern.schema.json`,
+`token.schema.json` — JSON Schema definitions for the enriched analysis
+models.
+
+### Word analysis pipeline
+
+```python
+from arabic_engine.signifier.word_analysis import analyze_word, analyze_text
+
+# Single word
+result = analyze_word("كَتَبَ")
+print(result.graphemes)        # 3 enriched graphemes
+print(result.syllables)        # 3 CV syllables
+print(result.root_candidates)  # [RootCandidate(root=('ك','ت','ب'), …)]
+print(result.pattern_candidates)  # [PatternCandidate(pattern_code='4.3.111.0.2', …)]
+
+# Multi-word
+results = analyze_text("كَتَبَ زَيْدٌ")
+```
+
 ## Repository Maintenance: Branch PR Merge Automation
 
 The script `scripts/branch_pr_merge.sh` automates:
