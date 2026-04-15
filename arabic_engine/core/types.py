@@ -14,6 +14,8 @@ from .enums import (
     POS,
     ActivationStage,
     AffectiveDimension,
+    AmbiguityResolution,
+    AmbiguityType,
     AuthorityLevel,
     CarrierClass,
     CarrierType,
@@ -21,11 +23,17 @@ from .enums import (
     CausalRole,
     CellType,
     CombinationType,
+    CompositionGate,
+    CompositionRelation,
+    CompositionRole,
+    CompositionVerdict,
     ConceptFormationMode,
     ConceptRelationType,
     ConceptualSignifiedClass,
     ConditionToken,
+    ConflictResolutionMethod,
     ConflictState,
+    ConflictType,
     ConstraintStrength,
     ConstraintType,
     ContaminationLevel,
@@ -34,6 +42,7 @@ from .enums import (
     DalaalaKind,
     DalalaType,
     DecisionCode,
+    DependencyType,
     DiachronicStatus,
     DiscourseGapType,
     DiscourseValidationOutcome,
@@ -58,6 +67,7 @@ from .enums import (
     InstitutionalCategory,
     InterpretiveOutcomeType,
     InterpretiveStability,
+    InterPropositionLink,
     IrabCase,
     IrabRole,
     JudgementType,
@@ -78,8 +88,10 @@ from .enums import (
     PhonFeature,
     PhonGroup,
     PhonTransform,
+    PredicationType,
     ProofPathKind,
     ProofStatus,
+    PropositionType,
     PurposeType,
     RankType,
     RationalSelfKind,
@@ -89,8 +101,10 @@ from .enums import (
     ReceiverState,
     ReceptionMode,
     ReceptionStateType,
+    RestrictionType,
     ReversibleValue,
     RevisionType,
+    RoleStatus,
     SalienceLevel,
     ScriptPhase,
     SelfModelAspect,
@@ -108,6 +122,7 @@ from .enums import (
     TimeRef,
     TraceMode,
     TraceQuality,
+    TransferType,
     TransitionCondition,
     TransitionGateStatus,
     TransitionLaw,
@@ -115,6 +130,7 @@ from .enums import (
     TriadType,
     TrustBasis,
     TrustLevel,
+    TruthCategory,
     TruthState,
     UnicodeProfileType,
     UtteranceMode,
@@ -2585,3 +2601,143 @@ class LayerTraceRecord:
     layer_6: Optional[RepresentationRecord] = None
     gates: Tuple[TransitionGate, ...] = ()
     final_gate_status: TransitionGateStatus = TransitionGateStatus.INSUFFICIENT_DATA
+
+
+# ── Composition / Syntax Constitution v1 ────────────────────────────
+
+
+@dataclass(frozen=True)
+class AmbiguityRecord:
+    """سجل الاشتراك — record of a semantic ambiguity (Art. 6-9)."""
+
+    ambiguity_id: str                                   # معرّف الاشتراك
+    unit_id: str                                        # معرّف الوحدة
+    ambiguity_type: AmbiguityType                       # نوع الاشتراك
+    resolution: Optional[AmbiguityResolution] = None    # طريقة الفضّ
+    resolved: bool = False                              # هل فُضّ؟
+    details: str = ""                                   # تفاصيل
+
+
+@dataclass(frozen=True)
+class ConflictRecord:
+    """سجل التعارض — record of a pre-composition conflict (Art. 10-13)."""
+
+    conflict_id: str                                            # معرّف التعارض
+    unit_id: str                                                # معرّف الوحدة
+    conflict_type: ConflictType                                 # نوع التعارض
+    resolution_method: Optional[ConflictResolutionMethod] = None  # طريقة الفضّ
+    resolved: bool = False                                      # هل فُضّ؟
+    details: str = ""                                           # تفاصيل
+
+
+@dataclass(frozen=True)
+class TransferRecord:
+    """سجل النقل — record of a semantic transfer (Art. 14-17)."""
+
+    transfer_id: str                 # معرّف النقل
+    unit_id: str                     # معرّف الوحدة
+    transfer_type: TransferType      # نوع النقل
+    stable: bool = False             # مستقر؟
+    original_direction: str = ""     # الجهة الأصلية
+    transferred_direction: str = ""  # الجهة المنقولة
+
+
+@dataclass(frozen=True)
+class TruthRecord:
+    """سجل الحقيقة — truth-category assignment (Art. 18-22)."""
+
+    truth_id: str               # معرّف الحقيقة
+    unit_id: str                # معرّف الوحدة
+    category: TruthCategory     # التصنيف
+    confidence: float = 1.0     # درجة الثقة
+
+
+@dataclass(frozen=True)
+class DisambiguationResult:
+    """نتيجة فضّ الاضطراب — aggregate disambiguation result (Art. 4-22)."""
+
+    ambiguities: Tuple[AmbiguityRecord, ...] = ()
+    conflicts: Tuple[ConflictRecord, ...] = ()
+    transfers: Tuple[TransferRecord, ...] = ()
+    truth_assignments: Tuple[TruthRecord, ...] = ()
+    all_resolved: bool = False
+
+
+@dataclass(frozen=True)
+class PredicationRecord:
+    """سجل الإسناد — predication record (Art. 26-29)."""
+
+    predication_id: str                # معرّف الإسناد
+    musnad_ilayh: str                  # المسند إليه
+    musnad: str                        # المسند
+    predication_type: PredicationType  # نوع الإسناد
+    valid: bool = True                 # صحيح؟
+
+
+@dataclass(frozen=True)
+class RestrictionRecord:
+    """سجل التقييد — restriction record (Art. 30-32)."""
+
+    restriction_id: str                  # معرّف التقييد
+    base_unit: str                       # الوحدة الأساسية
+    restrictor: str                      # القيد
+    restriction_type: RestrictionType    # نوع التقييد
+    valid: bool = True                   # صحيح؟
+
+
+@dataclass(frozen=True)
+class DependencyRecord:
+    """سجل التبعية — dependency record (Art. 33-35)."""
+
+    dependency_id: str               # معرّف التبعية
+    followed: str                    # المتبوع
+    follower: str                    # التابع
+    dependency_type: DependencyType  # نوع التبعية
+    aspect: str = ""                 # وجه التبعية
+
+
+@dataclass(frozen=True)
+class CompositionRoleRecord:
+    """سجل الدور التركيبي — composition role record (Art. 39-41)."""
+
+    role_id: str                  # معرّف الدور
+    unit_id: str                  # معرّف الوحدة
+    role: CompositionRole         # الدور
+    status: RoleStatus = RoleStatus.CANDIDATE  # الحالة
+
+
+@dataclass(frozen=True)
+class GateResult:
+    """نتيجة بوابة — gate evaluation result (Art. 64-72)."""
+
+    gate: CompositionGate  # البوابة
+    passed: bool           # هل اجتازت؟
+    reason: str = ""       # السبب
+
+
+@dataclass(frozen=True)
+class PropositionRecord:
+    """سجل القضية — proposition record (Art. 42-44)."""
+
+    proposition_id: str                              # معرّف القضية
+    predication: PredicationRecord                   # الإسناد
+    restrictions: Tuple[RestrictionRecord, ...] = ()  # التقييدات
+    dependencies: Tuple[DependencyRecord, ...] = ()   # التبعيات
+    roles: Tuple[CompositionRoleRecord, ...] = ()     # الأدوار
+    proposition_type: PropositionType = PropositionType.NOMINAL
+    closed: bool = False                              # منغلقة؟
+
+
+@dataclass(frozen=True)
+class CompositionRecord:
+    """سجل التركيب — full composition record (Art. 73-78)."""
+
+    composition_id: str                                  # معرّف التركيب
+    units: Tuple[str, ...] = ()                          # الوحدات الداخلة
+    gates: Tuple[GateResult, ...] = ()                   # البوابات
+    relations: Tuple[CompositionRelation, ...] = ()      # العلاقات
+    roles: Tuple[CompositionRoleRecord, ...] = ()        # الأدوار
+    propositions: Tuple[PropositionRecord, ...] = ()     # القضايا
+    links: Tuple[InterPropositionLink, ...] = ()         # الروابط
+    verdict: CompositionVerdict = CompositionVerdict.PENDING
+    readiness: float = 0.0                               # الجاهزية
