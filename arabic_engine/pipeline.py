@@ -9,17 +9,23 @@ from arabic_engine.cognition.epistemic_v1 import validate_episode
 from arabic_engine.cognition.evaluation import build_proposition, evaluate
 from arabic_engine.cognition.explanation import build_explanation
 from arabic_engine.cognition.inference_rules import InferenceEngine
+from arabic_engine.cognition.isg_v1 import govern as isg_govern
+from arabic_engine.cognition.isg_v1 import identify_atom as _isg_identify
 from arabic_engine.cognition.time_space import tag as time_space_tag
 from arabic_engine.cognition.world_model import WorldModel
 from arabic_engine.core.contracts import verify_contracts  # noqa: F401 — re-export
 from arabic_engine.core.enums import (
     CarrierType,
+    ConfirmationRank,
+    EpistemicEntryKind,
     JudgementType,
+    KnowledgeAtomType,
     LinkKind,
     MethodFamily,
     ProofPathKind,
     RealityKind,
     SenseModality,
+    SourceType,
     TraceMode,
     ValidationOutcome,
     ValidationState,
@@ -33,6 +39,7 @@ from arabic_engine.core.types import (
     EvalResult,
     EvaluationResult,
     InferenceResult,
+    ISGValidationResult,
     JudgementRecord,
     KnowledgeEpisode,
     KnowledgeEpisodeInput,
@@ -47,15 +54,15 @@ from arabic_engine.core.types import (
     PriorKnowledgeUnit,
     ProofPathRecord,
     Proposition,
-    RealityAnchorRecord,
-    SenseTraceRecord,
+    SignifiedRecord,
     SyntaxNode,
     TimeSpaceTag,
-    UtteranceRecord,
+    WordZeroCoverageReport,
 )
 from arabic_engine.linkage.dalala import full_validation
 from arabic_engine.linkage.semantic_roles import derive_semantic_roles
 from arabic_engine.signified.ontology import batch_map
+from arabic_engine.signified.zero_coverage import analyze_word_zero_coverage
 from arabic_engine.signifier.root_pattern import batch_closure
 from arabic_engine.signifier.unicode_norm import normalize, tokenize
 from arabic_engine.syntax.syntax import analyse as syntax_analyse
@@ -64,7 +71,29 @@ from arabic_engine.syntax.syntax import analyse as syntax_analyse
 
 @dataclass
 class PipelineResult:
-    """Container for the full analysis of a single sentence."""
+    """Container for the full analysis of a single sentence.
+
+    Every field maps directly to the output of a named pipeline layer,
+    so the object forms a complete audit trail of the computation.
+
+    Attributes:
+        raw: The original, unmodified input string.
+        normalised: The string after Unicode normalisation (L0).
+        tokens: Whitespace-delimited tokens (L1).
+        closures: Lexical closures for each token (L2).
+        syntax_nodes: I'rāb-annotated syntax nodes (L3).
+        concepts: Ontological concept nodes for each closure (L4).
+        dalala_links: Signification (dalāla) validation links (L5).
+        proposition: The structured judgment built from the sentence (L6).
+        time_space: Temporal and spatial anchoring tag (L7).
+        eval_result: Truth/guidance/confidence evaluation vector (L8).
+        inferences: Derived propositions from the rule engine (L9).
+            Empty list when no inference engine was provided.
+        world_adjustment: Confidence multiplier from the world model (L10).
+            Defaults to ``0.5`` when no world model was provided.
+        signified_records: Rich signified ontology records (L4b).
+            Populated only when ``analyze_signified=True``.
+    """
 
     raw: str
     normalised: str
@@ -88,6 +117,7 @@ class PipelineResult:
     world_update: Dict[str, object] = field(default_factory=dict)
     explanation: Dict[str, object] = field(default_factory=dict)
     layer_traces: List[LayerTraceRecord] = field(default_factory=list)
+    noun_fractals: list = field(default_factory=list)
 
 
 def _to_validation_state(outcome: ValidationOutcome) -> ValidationState:
@@ -192,8 +222,41 @@ def run(
     world: Optional[WorldModel] = None,
     inference_engine: Optional[InferenceEngine] = None,
     analyze_layers: bool = False,
+    analyze_nouns: bool = False,
 ) -> PipelineResult:
-    """Execute the full v3 pipeline on *text*."""
+    """Execute the full v2 pipeline on *text*.
+
+    The pipeline runs eleven sequential layers (L0–L10), with an optional
+    L4b signified ontology analysis:
+
+    * L0  — Unicode normalisation
+    * L1  — Tokenisation
+    * L2  — Lexical closure (root/pattern extraction)
+    * L3  — Syntax (i'rāb assignment and dependency linking)
+    * L4  — Ontological mapping (signifier → signified)
+    * L4b — Signified ontology analysis (optional)
+    * L5  — Dalāla validation (signification links)
+    * L6  — Judgment / proposition construction
+    * L7  — Time/space anchoring
+    * L8  — Truth and guidance evaluation
+    * L9  — Inference rule application (optional)
+    * L10 — World-model confidence adjustment (optional)
+    * L11 — Linguistic-zero coverage analysis (optional)
+
+    Args:
+        text: Raw Arabic input (may include tashkīl).
+        world: An external world model for confidence adjustment.
+            When ``None``, the world-adjustment factor defaults to 0.5.
+        inference_engine: A rule engine for deriving new propositions.
+            When ``None``, the ``inferences`` list in the result is empty.
+        analyze_signified: When ``True``, populates
+            :attr:`PipelineResult.signified_records` with rich
+            :class:`SignifiedRecord` instances for each closure.
+
+    Returns:
+        A :class:`PipelineResult` containing the outputs of all pipeline
+        layers.
+    """
     # L0 — Normalise
     normalised = normalize(text)
 
@@ -219,6 +282,13 @@ def run(
 
     # L4 — Ontological Mapping
     concepts = batch_map(closures)
+
+    # L4b — Optional noun fractal analysis
+    noun_fractals: list = []
+    if analyze_nouns:
+        from arabic_engine.noun.constitution_v1 import batch_build as _noun_batch
+
+        noun_fractals = _noun_batch(closures, concepts)
 
     # L5 — Dalāla Validation
     links = full_validation(closures, concepts)
@@ -335,6 +405,38 @@ def run(
         trace_quality=1.0 if tokens else 0.0,
     )
 
+    # L-ISG — Informational Stock Governance (ISG Constitution v1)
+    isg_atoms = []
+    for pk in prior_knowledge:
+        try:
+            atom = _isg_identify(
+                label=pk.content,
+                atom_type=KnowledgeAtomType.LEXICAL,
+                knowledge_level="token",
+                domain="linguistic",
+                source=pk.source,
+                source_type=SourceType.PRIMARY,
+                confirmation_rank=ConfirmationRank.ESTABLISHED,
+                context=normalised,
+                entry_kind=EpistemicEntryKind.INFORMATION,
+            )
+            isg_atoms.append(atom)
+        except ValueError:
+            pass
+    isg_result: Optional[ISGValidationResult] = None
+    if isg_atoms:
+        isg_result = isg_govern(
+            isg_atoms,
+            input_id=f"pipeline:{normalised[:40]}",
+            input_level="token",
+            input_domain="linguistic",
+        )
+
+    # L11 — Linguistic-zero coverage (optional)
+    zero_coverage: List[WordZeroCoverageReport] = []
+    if analyze_zeros:
+        zero_coverage = [analyze_word_zero_coverage(tok) for tok in tokens]
+
     return PipelineResult(
         raw=text,
         normalised=normalised,
@@ -358,4 +460,5 @@ def run(
         world_update=world_update,
         explanation=explanation,
         layer_traces=layer_traces,
+        noun_fractals=noun_fractals,
     )
