@@ -1,0 +1,9 @@
+char,codepoint,name,type
+َ,U+064E,ARABIC FATHA,haraka
+ُ,U+064F,ARABIC DAMMA,haraka
+ِ,U+0650,ARABIC KASRA,haraka
+ْ,U+0652,ARABIC SUKUN,sukun
+ّ,U+0651,ARABIC SHADDA,shadda
+ً,U+064B,ARABIC FATHATAN,tanween
+ٌ,U+064C,ARABIC DAMMATAN,tanween
+ٍ,U+064D,ARABIC KASRATAN,tanween

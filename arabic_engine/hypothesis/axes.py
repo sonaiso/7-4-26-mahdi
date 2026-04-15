@@ -17,8 +17,16 @@ from __future__ import annotations
 
 from typing import List
 
-from arabic_engine.core.enums import ActivationStage, HypothesisStatus
-from arabic_engine.core.types import HypothesisNode
+from arabic_engine.core.enums import (
+    ActivationStage,
+    HypothesisStatus,
+    SemanticType,
+    UniversalityScope,
+)
+from arabic_engine.core.types import Concept, HypothesisNode
+from arabic_engine.signified.universal_particular_v1 import (
+    classify_universality,
+)
 
 _AXIS_NAMES = (
     "جامد/مشتق",
@@ -209,15 +217,26 @@ def _resolve_declension(stype: str, label: str) -> str:
 def _resolve_universality(determination: str, label: str) -> str:
     """Resolve كلي/جزئي axis — universal vs particular.
 
-    Universal: definite with generic 'ال' or universal quantifiers.
-    Particular: indefinite or proper nouns.
+    Uses the Universal / Particular Constitution v1 for a principled
+    classification (genus/species → كلي, individual → جزئي).
+    Falls back to the constitutional heuristic which considers semantic
+    type, label lists, and demonstrative prefixes.
     """
-    if label in _UNIVERSAL_QUANTIFIERS:
-        return "كلي"
-    if determination == "definite":
-        # Generic definite article → universal
-        return "كلي"
-    return "جزئي"
+    # Build a lightweight Concept for the constitutional classifier
+    concept = Concept(
+        concept_id=0,
+        label=label,
+        semantic_type=SemanticType.ENTITY,
+    )
+    rec = classify_universality(concept)
+    if rec.scope is UniversalityScope.UNRESOLVED:
+        # Fallback: universal quantifiers and definite article
+        if label in _UNIVERSAL_QUANTIFIERS:
+            return "كلي"
+        if determination == "definite":
+            return "كلي"
+        return "جزئي"
+    return "كلي" if rec.is_universal else "جزئي"
 
 
 def _resolve_constancy(stype: str, label: str) -> str:

@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "grapheme.schema.json",
+  "title": "Enriched Grapheme",
+  "description": "Schema for an enriched Arabic grapheme with phonetic metadata.",
+  "type": "object",
+  "properties": {
+    "id": { "type": "string", "pattern": "^char_\\d+$" },
+    "layer": { "type": "integer", "const": 1 },
+    "surface": { "type": "string", "minLength": 1 },
+    "base_char": { "type": "string", "minLength": 1, "maxLength": 1 },
+    "base_codepoint": { "type": "string", "pattern": "^U\\+[0-9A-Fa-f]{4,6}$" },
+    "combining_marks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "char": { "type": "string" },
+          "codepoint": { "type": "string", "pattern": "^U\\+[0-9A-Fa-f]{4,6}$" },
+          "type": { "type": "string", "enum": ["haraka", "sukun", "shadda", "tanween"] }
+        },
+        "required": ["char", "codepoint", "type"]
+      }
+    },
+    "phonetic_code": { "type": "string" },
+    "place_code": { "type": "integer" },
+    "manner_code": { "type": "integer" },
+    "voicing_code": { "type": "integer" },
+    "stiffness_code": { "type": "integer" },
+    "entity_score": { "type": "number", "minimum": 0, "maximum": 1 }
+  },
+  "required": ["id", "layer", "surface", "base_char", "base_codepoint"]
+}
