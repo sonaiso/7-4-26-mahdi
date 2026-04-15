@@ -1854,3 +1854,238 @@ class MCIDecision(Enum):
     SUSPENDED = auto()          # تعليق / إعادة فحص (0.45–0.65)
     ANALYTICALLY_ACCEPTED = auto()  # قبول تحليلي (0.65–0.80)
     DIRECTLY_ACCEPTED = auto()  # قبول مباشر (≥ 0.80)
+
+
+# ════════════════════════════════════════════════════════════════════════
+# §  Strict 7-Layer System enums
+# ════════════════════════════════════════════════════════════════════════
+
+class StrictLayerID(Enum):
+    """معرّف الطبقة في النظام السباعي الصارم."""
+    LAYER_1 = auto()
+    LAYER_2 = auto()
+    LAYER_3 = auto()
+    LAYER_4 = auto()
+    LAYER_5 = auto()
+    LAYER_6 = auto()
+    LAYER_7 = auto()
+
+
+class AuditoryNode(Enum):
+    """عقدة سمعية في الطبقة الصوتية."""
+    PLACEHOLDER = auto()
+
+
+class GenerativeNode(Enum):
+    """عقدة توليدية في الطبقة التوليدية."""
+    PLACEHOLDER = auto()
+
+
+class StructuralNode(Enum):
+    """عقدة بنائية في الطبقة البنائية."""
+    PLACEHOLDER = auto()
+
+
+class RepresentationNode(Enum):
+    """عقدة تمثيلية في الطبقة التمثيلية."""
+    PLACEHOLDER = auto()
+
+
+class TransitionGateStatus(Enum):
+    """حالة بوابة الانتقال بين الطبقات."""
+    OPEN = auto()
+    CLOSED = auto()
+    CONDITIONAL = auto()
+    INSUFFICIENT_DATA = auto()
+
+
+# ════════════════════════════════════════════════════════════════════════
+# §  Composition / Syntax Constitution enums
+# ════════════════════════════════════════════════════════════════════════
+
+class CompositionGate(Enum):
+    """بوابة تركيب نحوي."""
+    PLACEHOLDER = auto()
+
+
+class CompositionRelation(Enum):
+    """علاقة تركيبية بين مكوّنين."""
+    PLACEHOLDER = auto()
+
+
+class CompositionRole(Enum):
+    """دور المكوّن داخل التركيب."""
+    PLACEHOLDER = auto()
+
+
+class CompositionVerdict(Enum):
+    """حكم قبول / رفض التركيب."""
+    ACCEPTED = auto()
+    REJECTED = auto()
+    PENDING = auto()
+
+
+class BoundaryType(Enum):
+    """نوع الحدّ التركيبي."""
+    PLACEHOLDER = auto()
+
+
+class DependencyType(Enum):
+    """نوع التبعية النحوية."""
+    PLACEHOLDER = auto()
+
+
+class RestrictionType(Enum):
+    """نوع القيد البنائي."""
+    PLACEHOLDER = auto()
+
+
+# ════════════════════════════════════════════════════════════════════════
+# §  Proposition & Predication enums
+# ════════════════════════════════════════════════════════════════════════
+
+class PropositionType(Enum):
+    """نوع القضية المنطقية."""
+    PLACEHOLDER = auto()
+
+
+class PredicationType(Enum):
+    """نوع الإسناد."""
+    PLACEHOLDER = auto()
+
+
+class InterPropositionLink(Enum):
+    """رابط بين قضيتين."""
+    PLACEHOLDER = auto()
+
+
+class TruthCategory(Enum):
+    """تصنيف الصدق المنطقي."""
+    TRUE = auto()
+    FALSE = auto()
+    INDETERMINATE = auto()
+
+
+# ════════════════════════════════════════════════════════════════════════
+# §  Ambiguity & Conflict Resolution enums
+# ════════════════════════════════════════════════════════════════════════
+
+class AmbiguityType(Enum):
+    """نوع الالتباس."""
+    LEXICAL = auto()
+    STRUCTURAL = auto()
+    SEMANTIC = auto()
+
+
+class AmbiguityResolution(Enum):
+    """أسلوب حلّ الالتباس."""
+    PLACEHOLDER = auto()
+
+
+class ConflictType(Enum):
+    """نوع التعارض."""
+    PLACEHOLDER = auto()
+
+
+class ConflictResolutionMethod(Enum):
+    """طريقة حلّ التعارض."""
+    PLACEHOLDER = auto()
+
+
+# ════════════════════════════════════════════════════════════════════════
+# §  Universal / Particular Constitution enums
+# ════════════════════════════════════════════════════════════════════════
+
+class UniversalParticularDomain(Enum):
+    """مجال الكلّي والجزئي."""
+    UNIVERSAL = auto()
+    PARTICULAR = auto()
+
+
+class UniversalityScope(Enum):
+    """نطاق الكلّية."""
+    PLACEHOLDER = auto()
+
+
+class UPConstitutionOutcome(Enum):
+    """نتيجة تأسيس الكلّي / الجزئي."""
+    PLACEHOLDER = auto()
+
+
+# ════════════════════════════════════════════════════════════════════════
+# §  Mental / Cognitive Primitive enums
+# ════════════════════════════════════════════════════════════════════════
+
+class MentalPrimitive(Enum):
+    """بدائيات ذهنية أولية."""
+    PLACEHOLDER = auto()
+
+
+# ════════════════════════════════════════════════════════════════════════
+# §  Lexeme Admission enums
+# ════════════════════════════════════════════════════════════════════════
+
+class AdmissionGate(Enum):
+    """بوابات القبول المفردي الثمانية."""
+    INPUT = "input"
+    ISOMORPHISM = "isomorphism"
+    NORMALIZATION = "normalization"
+    DESIGNATION = "designation"
+    RECOGNITION = "recognition"
+    RECALL = "recall"
+    INTERPRETATION = "interpretation"
+    ADMISSION = "admission"
+
+
+class AdmissionVerdict(Enum):
+    """قرار البوابة النهائية."""
+    ADMITTED = "admitted"
+    REJECTED = "rejected"
+    SUSPENDED = "suspended"
+    COMPLETABLE = "completable"
+
+
+class InputKind(Enum):
+    """نوع المدخل الأولي."""
+    ARABIC_PURE = "arabic_pure"
+    ARABIC_MIXED = "arabic_mixed"
+    NON_LINGUISTIC = "non_linguistic"
+    UNKNOWN = "unknown"
+
+
+class AtomOperationalType(Enum):
+    """نوع الذرة التشغيلي بعد التشاكل."""
+    PROCESSABLE_LETTER = "processable_letter"
+    PROCESSABLE_MARK = "processable_mark"
+    PROCESSABLE_SEPARATOR = "processable_separator"
+    PROCESSABLE_SPECIAL = "processable_special"
+    UNPROCESSABLE = "unprocessable"
+
+
+class RejectionReason(Enum):
+    """أسباب الرد."""
+    ENCODING_CORRUPTION = "encoding_corruption"
+    NO_TYPE_DESIGNATION = "no_type_designation"
+    NORMALIZATION_FAILURE = "normalization_failure"
+    INTERPRETATION_IMPOSSIBLE = "interpretation_impossible"
+    BLOCKING_MARK = "blocking_mark"
+    MINIMUM_INCOMPLETE = "minimum_incomplete"
+
+
+# ════════════════════════════════════════════════════════════════════════
+# §  Judgment / Role / Transfer enums (required by types.py)
+# ════════════════════════════════════════════════════════════════════════
+
+class JudgmentCategory(Enum):
+    """تصنيف الحكم."""
+    PLACEHOLDER = auto()
+
+
+class RoleStatus(Enum):
+    """حالة الدور الوظيفي."""
+    PLACEHOLDER = auto()
+
+
+class TransferType(Enum):
+    """نوع النقل الدلالي."""
+    PLACEHOLDER = auto()
