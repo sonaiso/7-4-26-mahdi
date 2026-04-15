@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [0.3.0] — 2026-04-15
+
+### Added
+
+- **Noun Fractal Constitution v1** (`arabic_engine/noun/constitution_v1.py`):
+  15 new enums, 9 new frozen dataclasses, 14 public API functions.
+  Formalises the noun (الاسم) as a self-contained fractal structure for
+  designation, classification, reference, and compositional readiness.
+- Pipeline integration: `analyze_nouns=True` parameter in `pipeline.run()`.
+- 102 new tests in `tests/test_noun_constitution_v1.py`.
+
 ## [0.2.0] — 2026-04-07
 
 ### Added

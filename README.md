@@ -41,6 +41,7 @@
 * `arabic_engine/signifier/phonology.py`
 * `arabic_engine/signifier/root_pattern.py`
 * `arabic_engine/signified/ontology.py`
+* `arabic_engine/noun/constitution_v1.py`
 * `arabic_engine/linkage/dalala.py`
 * `arabic_engine/syntax/syntax.py`
 * `arabic_engine/cognition/evaluation.py`
