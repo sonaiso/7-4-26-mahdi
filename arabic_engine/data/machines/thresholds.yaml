@@ -1,0 +1,79 @@
+# Global thresholds and weights
+# Referenced by all layer machines
+
+layer_thresholds:
+  energy: 0.30
+  boundary: 0.55
+  cohesion: 0.60
+  unity: 0.65
+  sonority: 0.50
+  mobility: 0.55
+  syllable_score: 0.65
+  root_fitness: 0.60
+  rank_score: 0.65
+  rank_ambiguity: 0.05
+  transform_confidence: 0.65
+  transform_validation: 0.70
+  judgment_score: 0.70
+  evidence_strength: 0.60
+  validation_score: 0.75
+  final_approval: 0.75
+
+# Six transform judgments — minimum thresholds
+transform_judgments:
+  original:
+    constitutiveness: 0.70
+    inflection_stability: 0.70
+  augmented:
+    dependency: 0.60
+    augmentation: 0.60
+  substituted:
+    recoverability: 0.60
+  deleted:
+    confidence: 0.60
+  weakened:  # illal
+    confidence: 0.65
+  assimilated:  # idgham
+    confidence: 0.65
+
+# MCI weights
+mci:
+  weights:
+    B: 1.2  # Boundary
+    U: 1.5  # Unity
+    C: 1.3  # Cohesion
+    E: 0.8  # Extension
+    P: 1.0  # Phase Order
+    O: 1.2  # Orderliness
+  total: 7.0
+  thresholds:
+    reject: 0.45
+    suspend: 0.65
+    accept: 0.80
+
+# Rank score formula weights
+rank_score:
+  position_fit: 0.30
+  constitutiveness: 0.25
+  inflection_stability: 0.20
+  syllable_compatibility: 0.15
+  recoverability: 0.10
+
+# Final approval formula weights
+final_approval:
+  judgment_score: 0.40
+  reality_match_score: 0.35
+  recoverability_score: 0.15
+  trace_clarity: 0.10
+  threshold: 0.75
+
+# Unified pipeline threshold summary (§9)
+pipeline_stages:
+  - { stage: "phonetic_capture", indicator: "energy", min: 0.30, output: "phonetic_event" }
+  - { stage: "auditory_completion", indicator: "MCI", min: 0.65, output: "phoneme_candidate" }
+  - { stage: "haraka_activation", indicator: "mobility_score", min: 0.55, output: "haraka_unit" }
+  - { stage: "syllable_validation", indicator: "syllable_score", min: 0.65, output: "syllable_unit" }
+  - { stage: "root_rank", indicator: "rank_score", min: 0.65, output: "root_slot" }
+  - { stage: "recoverability", indicator: "recoverability_score", min: 0.60, output: "transform_candidate" }
+  - { stage: "internal_judgment", indicator: "judgment_score", min: 0.70, output: "judgment_candidate" }
+  - { stage: "reality_match", indicator: "validation_score", min: 0.75, output: "validated_judgment" }

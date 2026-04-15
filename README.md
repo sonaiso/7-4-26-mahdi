@@ -6,7 +6,7 @@
 
 بنيت لك النواة التنفيذية الأولى كحزمة قابلة للتشغيل، وربطت تصميمها بالمبدأين اللذين ظهرَا في المرفقات.
 
-> **الوثيقة الأساسية**: انظر [`docs/atomic_beginning_law.md`](docs/atomic_beginning_law.md) — إعادة بناء الوثيقة وفق قانون البداية الذرية والإغلاق الصاعد، بصيغة مرقمة صارمة (X.1 المجال — X.5 حدود الصلاحية).
+> **الوثيقة الأساسية**: انظر [`docs/atomic_beginning_law.md`](docs/atomic_beginning_law.md) — الوثيقة الصورية المحكمة: قانون البداية الذرية، والإغلاق الصاعد، والأدنى المكتمل. ثلاثة عشر فصلًا بصيغة مرقمة صارمة (X.1 المجال — X.5 حدود الصلاحية)، تشمل برهان قفل اللفظ المفرد وبرهان الأدنى المكتمل رياضيًا في الاسم والفعل والحرف.
 
 
 الأول أن الإدراك العقلي لا يتم إلا بـ **واقع + حس + معلومات سابقة + ربط + حكم**، لا بمجرد الحس الخام. والثاني أن الألفاظ ليست موضوعة للحقيقة الخارجية مباشرة، بل للتعبير عما في الذهن، وإفادة النسب الإسنادية والتقييدية والإضافية؛ ولذلك فصلتُ في الحزمة بين **signifier** و**signified** و**linkage** و**evaluation**. كما جعلت التقييم منفصلًا عن التحليل؛ لأن الملف يفرّق بين الحكم على وجود الشيء بوصفه قطعيًا، والحكم على حقيقته أو صفته بوصفه قابلًا للخطأ.
@@ -273,6 +273,117 @@ pytest -v
 # Lint the code
 ruff check .
 ```
+
+## Data Files & Word Analysis Pipeline
+
+The engine ships with structured reference data and a dedicated
+diacritised-word analysis pipeline.
+
+### Reference data (`arabic_engine/data/`)
+
+| Directory    | File                    | Description                       |
+| ------------ | ----------------------- | --------------------------------- |
+| `unicode/`   | `unicode_marks.csv`     | Arabic combining marks            |
+| `unicode/`   | `unicode_policy.json`   | NFC normalisation policy          |
+| `phonology/` | `arabic_letters.csv`    | Letter phonetic codes             |
+| `phonology/` | `arabic_vowels.csv`     | Vowel/haraka codes                |
+| `phonology/` | `syllable_shapes.csv`   | CV/CVC/… syllable shapes          |
+| `morphology/`| `pattern_codes.csv`     | Morphological pattern codes       |
+| `morphology/`| `closed_connectors.csv` | Clitics (وَ بِ فَ لِ ال)         |
+| `morphology/`| `closed_built_forms.csv`| Built forms (هذا الذي …)          |
+
+### JSON schemas (`arabic_engine/schemas/`)
+
+`grapheme.schema.json`, `syllable.schema.json`, `pattern.schema.json`,
+`token.schema.json` — JSON Schema definitions for the enriched analysis
+models.
+
+### Word analysis pipeline
+
+```python
+from arabic_engine.signifier.word_analysis import analyze_word, analyze_text
+
+# Single word
+result = analyze_word("كَتَبَ")
+print(result.graphemes)        # 3 enriched graphemes
+print(result.syllables)        # 3 CV syllables
+print(result.root_candidates)  # [RootCandidate(root=('ك','ت','ب'), …)]
+print(result.pattern_candidates)  # [PatternCandidate(pattern_code='4.3.111.0.2', …)]
+
+# Multi-word
+results = analyze_text("كَتَبَ زَيْدٌ")
+```
+
+## Repository Maintenance: Branch PR Merge Automation
+
+The script `scripts/branch_pr_merge.sh` automates:
+
+- syncing feature branches from `origin`
+- creating/opening PRs to a base branch
+- merging PRs with a selected strategy
+
+This is a repository-maintenance utility and is not part of the `arabic_engine` runtime package.
+
+### Requirements
+
+- `git` installed
+- `gh` (GitHub CLI) installed and authenticated (`gh auth login`)
+- repository write permissions for PR creation/merge
+- clean working tree before execution
+
+### Recommended safe workflow
+
+Always run a dry run first:
+
+```bash
+./scripts/branch_pr_merge.sh \
+  --base-branch main \
+  --branches feature/branch-1,feature/branch-2 \
+  --merge-method rebase \
+  --auto-merge false \
+  --delete-branch false \
+  --dry-run
+```
+
+Then execute for real:
+
+```bash
+./scripts/branch_pr_merge.sh \
+  --base-branch main \
+  --branch feature/branch-1 \
+  --branch feature/branch-2 \
+  --merge-method rebase \
+  --auto-merge false \
+  --delete-branch false
+```
+
+### Key safety controls
+
+- `--merge-method` only allows `merge|rebase|squash`
+- branch list is required (`--branch`/`--branches` or `BRANCHES` env)
+- boolean flags are validated case-insensitively (`true/false/yes/no/1/0/on/off`)
+- script continues branch-by-branch on failures and exits non-zero if any branch fails
+- prints a machine-readable JSON summary at the end
+
+### Warning
+
+`--delete-branch true` deletes merged branches on remote. Keep it `false` unless deletion is explicitly intended.
+
+## System Integrity Verification
+
+To keep the engine integrated and prevent duplicated repository content:
+
+```bash
+# Full validation suite (includes architecture + integrity tests)
+pytest -v
+
+# Focused repository integrity checks
+pytest -v tests/test_repository_integrity.py
+```
+
+The integrity checks validate that critical engine modules are importable and
+that there are no duplicated file contents inside `arabic_engine/`, `tests/`,
+`docs/`, and `db/`.
 
 ## Contributing
 

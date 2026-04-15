@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "syllable.schema.json",
+  "title": "Enriched Syllable",
+  "description": "Schema for an Arabic syllable with shape and weight metadata.",
+  "type": "object",
+  "properties": {
+    "id": { "type": "string", "pattern": "^syll_\\d+$" },
+    "layer": { "type": "integer", "const": 3 },
+    "surface": { "type": "string" },
+    "chars": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "vowels": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "shape": { "type": "string" },
+    "shape_code": { "type": "string" },
+    "nucleus_type": { "type": "integer" },
+    "closure_type": { "type": "integer" },
+    "weight_code": { "type": "integer" },
+    "completion_score": { "type": "number", "minimum": 0, "maximum": 1 },
+    "weightability_score": { "type": "number", "minimum": 0, "maximum": 1 }
+  },
+  "required": ["id", "layer", "surface", "shape", "shape_code", "weight_code"]
+}

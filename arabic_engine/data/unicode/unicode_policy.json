@@ -1,0 +1,13 @@
+{
+  "unicode_policy": {
+    "normalization_form": "NFC",
+    "store_base_and_marks_separately": true,
+    "preserve_diacritics": true,
+    "preserve_shadda_order": true,
+    "treat_tatweel_as_non_structural": true,
+    "hamza_policy": {
+      "preserve_surface_form": true,
+      "store_abstract_hamza": true
+    }
+  }
+}
