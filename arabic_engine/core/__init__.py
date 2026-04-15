@@ -32,6 +32,11 @@ from .enums import (
 from .enums import (
     AuthorityLevel as AuthorityLevel,
 )
+
+# ── Single Concept Constitution v1 enum re-exports ──────────────────
+from .enums import (
+    CandidateRole as CandidateRole,
+)
 from .enums import (
     CarrierClass as CarrierClass,
 )
@@ -51,13 +56,28 @@ from .enums import (
     CombinationType as CombinationType,
 )
 from .enums import (
+    ConceptClosureStatus as ConceptClosureStatus,
+)
+from .enums import (
+    ConceptEntityAttribute as ConceptEntityAttribute,
+)
+from .enums import (
     ConceptFormationMode as ConceptFormationMode,
+)
+from .enums import (
+    ConceptGateID as ConceptGateID,
+)
+from .enums import (
+    ConceptIndependence as ConceptIndependence,
 )
 from .enums import (
     ConceptRelationType as ConceptRelationType,
 )
 from .enums import (
     ConceptualSignifiedClass as ConceptualSignifiedClass,
+)
+from .enums import (
+    ConceptUniversalParticular as ConceptUniversalParticular,
 )
 from .enums import (
     ConditionToken as ConditionToken,
@@ -307,6 +327,9 @@ from .enums import (
 )
 from .enums import (
     SignifierClass as SignifierClass,
+)
+from .enums import (
+    SingleConceptType as SingleConceptType,
 )
 from .enums import (
     SlotState as SlotState,
@@ -681,6 +704,20 @@ from .types import (
 from .types import (
     SignifierNode as SignifierNode,
 )
+
+# ── Single Concept Constitution v1 type re-exports ──────────────────
+from .types import (
+    SingleConceptDalala as SingleConceptDalala,
+)
+from .types import (
+    SingleConceptGateResult as SingleConceptGateResult,
+)
+from .types import (
+    SingleConceptIsomorphism as SingleConceptIsomorphism,
+)
+from .types import (
+    SingleConceptRecord as SingleConceptRecord,
+)
 from .types import (
     StructuralProfileRecord as StructuralProfileRecord,
 )
@@ -973,4 +1010,17 @@ __all__ = [
     "StructuralProfileRecord",
     "TransformationProfileRecord",
     "TransitionGate",
+    # ── Single Concept Constitution v1 enums ──────────────────────
+    "CandidateRole",
+    "ConceptClosureStatus",
+    "ConceptEntityAttribute",
+    "ConceptGateID",
+    "ConceptIndependence",
+    "ConceptUniversalParticular",
+    "SingleConceptType",
+    # ── Single Concept Constitution v1 types ──────────────────────
+    "SingleConceptDalala",
+    "SingleConceptGateResult",
+    "SingleConceptIsomorphism",
+    "SingleConceptRecord",
 ]

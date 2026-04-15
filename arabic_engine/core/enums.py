@@ -1860,3 +1860,70 @@ class TransitionGateStatus(Enum):
     PASSED = auto()
     BLOCKED = auto()
     INSUFFICIENT_DATA = auto()
+
+
+# ── Single Concept Constitution v1 enums ────────────────────────────
+
+
+class SingleConceptType(Enum):
+    """التصنيف الأعلى للمفهوم المفرد — top-level concept genus (المادة 28–32)."""
+
+    EXISTENTIAL = auto()   # وجودي — entity / kind / individual / reference
+    DESCRIPTIVE = auto()   # وصفي — quality / attribute / state
+    EVENTIVE = auto()      # حدثي — occurrence / process / source
+    RELATIONAL = auto()    # علائقي — relation / link / restriction
+
+
+class ConceptUniversalParticular(Enum):
+    """الكلي والجزئي — universal vs. particular concept (المادة 33)."""
+
+    UNIVERSAL = auto()     # كلي — shareable across instances
+    PARTICULAR = auto()    # جزئي — unique to one instance
+
+
+class ConceptEntityAttribute(Enum):
+    """الذات والصفة — entity vs. attribute concept (المادة 34)."""
+
+    ENTITY = auto()        # ذاتي — establishes a thing
+    ATTRIBUTE = auto()     # وصفي — establishes a quality of a thing
+
+
+class ConceptClosureStatus(Enum):
+    """حالة الانغلاق — closure status of the concept (المادة 37)."""
+
+    CLOSED = auto()        # مغلق
+    SEMI_CLOSED = auto()   # شبه مغلق
+    OPEN = auto()          # مفتوح
+    DEPENDENT = auto()     # تابع
+
+
+class ConceptIndependence(Enum):
+    """درجة الاستقلال — independence level of the concept (المادة 36)."""
+
+    ORIGINAL = auto()          # أصيل
+    SUBORDINATE = auto()       # تابع
+    TRANSFORMATIONAL = auto()  # تحويلي
+
+
+class CandidateRole(Enum):
+    """الأدوار المرشحة — candidate syntactic roles before composition (المادة 47–53)."""
+
+    MUSNAD_ILAYH = auto()  # مرشح للمسند إليه — subject candidate
+    MUSNAD = auto()        # مرشح للمسند — predicate candidate
+    QAYD = auto()          # مرشح للقيد — modifier / adjunct candidate
+    TABI = auto()          # مرشح للتابع — subordinate candidate
+    RABIT = auto()         # مرشح للرابط — linker candidate
+    MUFASSIR = auto()      # مرشح للمفسر / المميز — specifier candidate
+
+
+class ConceptGateID(Enum):
+    """معرّفات البوابات الدنيا — programmable gate identifiers (المادة 59–67)."""
+
+    GATE_TYPE = auto()                  # النوع الأعلى
+    GATE_DIRECTION = auto()             # الجهة المركزية
+    GATE_UNIVERSAL_PARTICULAR = auto()  # الكلي / الجزئي
+    GATE_ENTITY_ATTRIBUTE = auto()      # الذات / الصفة
+    GATE_REFERENCE_LOAD = auto()        # الحمل الإحالي
+    GATE_PREDICATIVE_LOAD = auto()      # الحمل المسندي
+    GATE_ROLE_READINESS = auto()        # جاهزية الدور
+    GATE_RECOVERABILITY = auto()        # قابلية الرد
