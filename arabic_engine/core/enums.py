@@ -1035,12 +1035,22 @@ class ConceptRelationType(Enum):
 
 
 class DalaalaKind(Enum):
-    """نوع الدلالة — kind of signification (extended dalāla vocabulary)."""
+    """نوع الدلالة — coarse-grained/classical signification categories.
 
-    MUTABAQA = auto()   # مطابقة — exact denotation
-    TADHAMMUN = auto()  # تضمن   — inclusion / containment
-    ILTIZAM = auto()    # التزام — necessary implication
-    ISHARA = auto()     # إشارة  — indicative / symbolic reference
+    This enum intentionally overlaps with :class:`DalalaType`, but serves a
+    different purpose: ``DalaalaKind`` captures the broad semantic family of
+    signification in the classical sense, while ``DalalaType`` is the more
+    specific operational/relational taxonomy used to model concrete links
+    such as predication, restriction, genitive construction, and reference.
+    Keep both enums so callers can choose between high-level classification
+    and fine-grained relation typing without conflating the two.
+    """
+
+    MUTABAQA = auto()    # مطابقة  — full correspondence / exact match
+    TADHAMMUN = auto()   # تضمن    — containment / partial inclusion
+    TADAMMUN = TADHAMMUN  # Backward-compatible alias matching DalalaType
+    ILTIZAM = auto()     # التزام  — implication / connotation
+    ISHARA = auto()      # إشارة   — indication / indexical signification
 
 
 # ── Judgement / method / proof ──────────────────────────────────────

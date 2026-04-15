@@ -14,18 +14,27 @@ from .enums import (
     POS,
     ActivationStage,
     AffectiveDimension,
+    AmbiguityResolution,
+    AmbiguityType,
     AuthorityLevel,
+    BoundaryType,
     CarrierClass,
     CarrierType,
     CategorizationMode,
     CausalRole,
     CellType,
     CombinationType,
+    CompositionGate,
+    CompositionRelation,
+    CompositionRole,
+    CompositionVerdict,
     ConceptFormationMode,
     ConceptRelationType,
     ConceptualSignifiedClass,
     ConditionToken,
+    ConflictResolutionMethod,
     ConflictState,
+    ConflictType,
     ConstraintStrength,
     ConstraintType,
     ContaminationLevel,
@@ -34,6 +43,7 @@ from .enums import (
     DalaalaKind,
     DalalaType,
     DecisionCode,
+    DependencyType,
     DiachronicStatus,
     DiscourseGapType,
     DiscourseValidationOutcome,
@@ -58,6 +68,7 @@ from .enums import (
     InstitutionalCategory,
     InterpretiveOutcomeType,
     InterpretiveStability,
+    InterPropositionLink,
     IrabCase,
     IrabRole,
     JudgementType,
@@ -83,8 +94,10 @@ from .enums import (
     PhonFeature,
     PhonGroup,
     PhonTransform,
+    PredicationType,
     ProofPathKind,
     ProofStatus,
+    PropositionType,
     PurposeType,
     RankType,
     RationalSelfKind,
@@ -94,8 +107,10 @@ from .enums import (
     ReceiverState,
     ReceptionMode,
     ReceptionStateType,
+    RestrictionType,
     ReversibleValue,
     RevisionType,
+    RoleStatus,
     SalienceLevel,
     ScriptPhase,
     SelfModelAspect,
@@ -113,6 +128,7 @@ from .enums import (
     TimeRef,
     TraceMode,
     TraceQuality,
+    TransferType,
     TransitionCondition,
     TransitionGateStatus,
     TransitionLaw,
@@ -120,14 +136,154 @@ from .enums import (
     TriadType,
     TrustBasis,
     TrustLevel,
+    TruthCategory,
     TruthState,
     UnicodeProfileType,
+    UniversalityScope,
+    UniversalParticularDomain,
+    UPConstitutionOutcome,
     UtteranceMode,
     UtteranceToConceptConstraint,
     UtteredFormClass,
     ValidationOutcome,
     ValidationState,
 )
+
+# ── State-machine layer types ──────────────────────────────────────
+
+
+@dataclass(frozen=True)
+class MCIScores:
+    """Component scores for the Minimum-Completeness Index.
+
+    Each score is a float in [0, 1].
+    """
+
+    boundary: float = 0.0       # B — Boundary Score
+    unity: float = 0.0          # U — Unity Score
+    cohesion: float = 0.0       # C — Cohesion Score
+    extension: float = 0.0      # E — Extension Score
+    phase_order: float = 0.0    # P — Phase Order Score
+    orderliness: float = 0.0    # O — Orderliness Score
+
+
+@dataclass(frozen=True)
+class MCIResult:
+    """Result of MCI (Minimum-Completeness Index) evaluation."""
+
+    scores: MCIScores
+    mci_value: float
+    decision: str               # human-readable decision label
+
+
+@dataclass(frozen=True)
+class ConceptSeed:
+    """Layer 0 output — initial concept seed from the foundational machine."""
+
+    seed_id: str
+    unit_label: str = ""
+    identity_score: float = 0.0
+    rank_hint: str = ""
+
+
+@dataclass(frozen=True)
+class PhoneticEvent:
+    """Layer 1 output — a detected phonetic event."""
+
+    event_id: str
+    energy: float = 0.0
+    boundary_score: float = 0.0
+    position: int = 0
+    interception_type: str = ""
+
+
+@dataclass(frozen=True)
+class PhonemeCandidate:
+    """Layer 2 output — a phoneme candidate that passed MCI."""
+
+    candidate_id: str
+    mci_result: Optional[MCIResult] = None
+    phonetic_event_ref: str = ""
+    symbol: str = ""
+
+
+@dataclass(frozen=True)
+class HarakaUnit:
+    """Layer 2.5 output — an operational vowel-mark (حركة)."""
+
+    unit_id: str
+    sonority_score: float = 0.0
+    attachment_target: Optional[str] = None
+    mobility_score: float = 0.0
+    is_lengthened: bool = False
+    is_deleted: bool = False
+
+
+@dataclass(frozen=True)
+class SyllableUnit:
+    """Layer 3 output — a validated syllable unit."""
+
+    unit_id: str
+    pattern_shape: str = ""     # e.g. "CV", "CVC", "CVV", "CVVC", "CVCC"
+    weight_class: int = 0       # 1=light, 2=heavy, 3=super-heavy
+    nucleus_ref: str = ""
+    syllable_score: float = 0.0
+
+
+@dataclass(frozen=True)
+class RankScoreComponents:
+    """Components for the root-rank score formula."""
+
+    position_fit: float = 0.0           # P — Position Fit
+    constitutiveness: float = 0.0       # C — Constitutiveness
+    inflection_stability: float = 0.0   # I — Inflection Stability
+    syllable_compatibility: float = 0.0 # S — Syllable Compatibility
+    recoverability: float = 0.0         # R — Recoverability
+
+
+@dataclass(frozen=True)
+class RootSlot:
+    """Layer 4 output — a root position with rank score."""
+
+    slot_id: str
+    root_ref: str = ""
+    position: str = ""          # "fa", "ayn", or "lam"
+    rank_score: float = 0.0
+    components: Optional[RankScoreComponents] = None
+
+
+@dataclass(frozen=True)
+class TransformCandidate:
+    """Layer 5 output — a validated morphological transform."""
+
+    candidate_id: str
+    transform_type: str = ""    # matches TransformJudgment name
+    confidence: float = 0.0
+    source_root_ref: str = ""
+    recoverability_score: float = 0.0
+
+
+@dataclass(frozen=True)
+class FinalApprovalComponents:
+    """Components for the final-approval score formula."""
+
+    judgment_score: float = 0.0         # J
+    reality_match_score: float = 0.0    # R
+    recoverability_score: float = 0.0   # Rec
+    trace_clarity: float = 0.0          # T
+
+
+@dataclass(frozen=True)
+class ValidatedJudgment:
+    """Layer 6 output — a judgment that passed reality matching."""
+
+    judgment_id: str
+    final_approval: float = 0.0
+    reality_match_score: float = 0.0
+    components: Optional[FinalApprovalComponents] = None
+    is_approved: bool = False
+    evidence_refs: Tuple[str, ...] = ()
+
 
 # ── Signifier layer ─────────────────────────────────────────────────
 
@@ -162,6 +318,111 @@ class RootPattern:
     pattern: str  # e.g. 'فَعَلَ'
     root_id: int = 0
     pattern_id: int = 0
+
+
+# ── Enriched signifier models ──────────────────────────────────────
+
+
+@dataclass(frozen=True)
+class CombiningMarkDetail:
+    """Metadata for a single combining mark attached to a grapheme."""
+
+    char: str
+    codepoint: str          # e.g. "U+064E"
+    type: str               # haraka | sukun | shadda | tanween
+
+
+@dataclass(frozen=True)
+class EnrichedGrapheme:
+    """Extended grapheme cluster with phonetic metadata.
+
+    Wraps the basic :class:`Grapheme` concept with additional fields
+    loaded from ``arabic_letters.csv`` and ``unicode_marks.csv``.
+    The ``role`` field remains ``None`` until the pattern layer
+    resolves ambiguity for ا/و/ي.
+    """
+
+    id: str
+    layer: int                                  # always 1
+    surface: str
+    base_char: str
+    base_codepoint: str                         # e.g. "U+0628"
+    combining_marks: Tuple[CombiningMarkDetail, ...] = ()
+    phonetic_code: str = ""
+    place_code: int = 0
+    manner_code: int = 0
+    voicing_code: int = 0
+    stiffness_code: int = 0
+    entity_score: float = 0.0
+    role: Optional[str] = None                  # consonant | long_vowel | ambiguous
+
+
+@dataclass(frozen=True)
+class EnrichedSyllable:
+    """Syllable with shape and weight metadata from ``syllable_shapes.csv``."""
+
+    id: str
+    layer: int                                  # always 3
+    surface: str
+    chars: Tuple[str, ...] = ()                 # EnrichedGrapheme ids
+    vowels: Tuple[str, ...] = ()                # vowel ids
+    shape: str = ""                             # e.g. "CV"
+    shape_code: str = ""                        # e.g. "3.1.1.0.1"
+    nucleus_type: int = 0
+    closure_type: int = 0
+    weight_code: int = 0
+    completion_score: float = 0.0
+    weightability_score: float = 0.0
+
+
+@dataclass(frozen=True)
+class PatternCandidate:
+    """A candidate morphological pattern with confidence score."""
+
+    pattern_code: str
+    pattern_label: str = ""
+    pattern_type: str = ""
+    augment_count: int = 0
+    root_candidate: Tuple[str, ...] = ()
+    confidence: float = 0.0
+    reality_match_score: float = 0.0
+
+
+@dataclass(frozen=True)
+class CliticRecord:
+    """A clitic (proclitic/enclitic) stripped from a token."""
+
+    surface: str
+    type: str               # connector | relation_marker | definite_article
+    confidence: float = 0.0
+
+
+@dataclass(frozen=True)
+class RootCandidate:
+    """A candidate root with confidence score."""
+
+    root: Tuple[str, ...]
+    confidence: float = 0.0
+
+
+@dataclass(frozen=True)
+class TokenAnalysis:
+    """Full word-level analysis record (تحليل الكلمة الكاملة).
+
+    Produced by the 8-step diacritised-word analysis pipeline.
+    """
+
+    id: str
+    surface: str
+    normalized_form: str
+    unicode_form: str = "NFC"
+    graphemes: Tuple[EnrichedGrapheme, ...] = ()
+    clitics: Tuple[CliticRecord, ...] = ()
+    core_surface: str = ""
+    syllables: Tuple[EnrichedSyllable, ...] = ()
+    root_candidates: Tuple[RootCandidate, ...] = ()
+    pattern_candidates: Tuple[PatternCandidate, ...] = ()
+    final_status: str = "structural_analysis_only"
 
 
 # ── Lexical Closure ─────────────────────────────────────────────────
