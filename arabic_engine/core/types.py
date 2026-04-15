@@ -122,6 +122,20 @@ from .enums import (
     UtteredFormClass,
     ValidationOutcome,
     ValidationState,
+    # ── Composition / Syntax Constitution v1 enums ──────────────────
+    AmbiguityResolution,
+    AmbiguityType,
+    CompositionGate,
+    CompositionGateStatus,
+    CompositionRelationType,
+    CompositionRoleType,
+    ConflictResolutionMethod,
+    ConflictType,
+    InterPropositionLinkType,
+    PropositionType,
+    RoleStatus,
+    TransferType,
+    TruthType,
 )
 
 # ── Signifier layer ─────────────────────────────────────────────────
@@ -2585,3 +2599,223 @@ class LayerTraceRecord:
     layer_6: Optional[RepresentationRecord] = None
     gates: Tuple[TransitionGate, ...] = ()
     final_gate_status: TransitionGateStatus = TransitionGateStatus.INSUFFICIENT_DATA
+
+
+# ── Composition / Syntax Constitution v1 types ─────────────────────
+
+
+@dataclass(frozen=True)
+class DisambiguationRecord:
+    """سجل فضّ الاشتراك — ambiguity analysis record (Articles 6–9).
+
+    Captures the ambiguity state of a lexeme/concept before it enters
+    the composition community.
+    """
+
+    unit_id: str
+    ambiguity_type: Optional[AmbiguityType] = None
+    candidates: Tuple[str, ...] = ()
+    resolution: AmbiguityResolution = AmbiguityResolution.OPEN_PENDING
+    resolved_direction: str = ""
+    confidence: float = 0.0
+
+
+@dataclass(frozen=True)
+class SemanticConflictRecord:
+    """سجل التعارض الدلالي — semantic conflict record (Articles 10–13).
+
+    Captures a pre-composition conflict between competing predicates,
+    roles, or semantic directions.
+    """
+
+    unit_id: str
+    conflict_type: ConflictType = ConflictType.ESSENTIAL_VS_DESCRIPTIVE
+    conflicting_pair: Tuple[str, str] = ("", "")
+    resolution: ConflictResolutionMethod = ConflictResolutionMethod.BLOCK_COMPOSITION
+    resolved: bool = False
+    notes: str = ""
+
+
+@dataclass(frozen=True)
+class TransferRecord:
+    """سجل النقل — semantic transfer record (Articles 14–17).
+
+    Tracks whether a lexeme/concept has shifted from its original
+    semantic direction to a transferred one.
+    """
+
+    unit_id: str
+    transfer_type: TransferType = TransferType.INTERNAL_LINGUISTIC
+    original_direction: str = ""
+    transferred_direction: str = ""
+    stability: float = 0.0
+    accepted: bool = False
+
+
+@dataclass(frozen=True)
+class TruthRecord:
+    """سجل الحقيقة — truth-type record (Articles 18–22).
+
+    Determines whether the unit is used in its linguistic-original,
+    conventional, or controlled-transfer sense.
+    """
+
+    unit_id: str
+    truth_type: TruthType = TruthType.LINGUISTIC_ORIGINAL
+    justification: str = ""
+    confidence: float = 0.0
+
+
+@dataclass(frozen=True)
+class CompositionUnit:
+    """وحدة تركيبية — a unit ready for the composition community (Articles 23–24).
+
+    Bundles the lexeme/concept with its pre-composition analysis
+    records.  ``admitted`` is True only if all pre-composition gates
+    passed.
+    """
+
+    unit_id: str
+    label: str = ""
+    semantic_type: SemanticType = SemanticType.ENTITY
+    pos: POS = POS.UNKNOWN
+    disambiguation: Optional[DisambiguationRecord] = None
+    conflict: Optional[SemanticConflictRecord] = None
+    transfer: Optional[TransferRecord] = None
+    truth: Optional[TruthRecord] = None
+    admitted: bool = False
+
+
+@dataclass(frozen=True)
+class PredicationRecord:
+    """سجل الإسناد — predication record (Articles 26–29).
+
+    Represents the basic predicative relation between musnad_ilayh
+    (subject/topic) and musnad (predicate/comment).
+    """
+
+    musnad_ilayh_id: str
+    musnad_id: str
+    predication_type: str = ""
+    valid: bool = False
+    confidence: float = 0.0
+
+
+@dataclass(frozen=True)
+class RestrictionRecord:
+    """سجل التقييد — restriction record (Articles 30–32).
+
+    Represents a qualifying/narrowing relation on a base unit.
+    """
+
+    base_id: str
+    qualifier_id: str
+    restriction_kind: str = ""
+    valid: bool = False
+
+
+@dataclass(frozen=True)
+class DependencyRecord:
+    """سجل التبعية — dependency record (Articles 33–35).
+
+    Represents a follower–principal dependency relation.
+    """
+
+    principal_id: str
+    follower_id: str
+    dependency_kind: str = ""
+    dependency_face: str = ""
+    valid: bool = False
+
+
+@dataclass(frozen=True)
+class CompositionRelation:
+    """علاقة تركيبية — composition relation (Articles 36–38).
+
+    A typed, directed relation between two composition units.
+    """
+
+    relation_id: str
+    source_id: str
+    target_id: str
+    relation_type: CompositionRelationType = CompositionRelationType.PREDICATION
+    sub_type: str = ""
+    confidence: float = 0.0
+
+
+@dataclass(frozen=True)
+class CompositionRole:
+    """دور تركيبي — composition role (Articles 39–41).
+
+    The functional position a unit occupies inside the composition
+    structure.  Starts as CANDIDATE and transitions to REALIZED.
+    """
+
+    unit_id: str
+    role_type: CompositionRoleType = CompositionRoleType.MUSNAD_ILAYH
+    status: RoleStatus = RoleStatus.CANDIDATE
+    confidence: float = 0.0
+
+
+@dataclass(frozen=True)
+class CompositionProposition:
+    """قضية تركيبية — composition proposition (Articles 42–44).
+
+    The first unit where predication closes into a judgeable
+    proposition.
+    """
+
+    proposition_id: str
+    proposition_type: PropositionType = PropositionType.NOMINAL
+    predication: Optional[PredicationRecord] = None
+    roles: Tuple[CompositionRole, ...] = ()
+    restrictions: Tuple[RestrictionRecord, ...] = ()
+    dependencies: Tuple[DependencyRecord, ...] = ()
+    relations: Tuple[CompositionRelation, ...] = ()
+    closed: bool = False
+    confidence: float = 0.0
+
+
+@dataclass(frozen=True)
+class InterPropositionLink:
+    """رابط بين القضايا — inter-proposition link (Articles 45–47).
+
+    Connects two propositions via a linking particle or relation.
+    """
+
+    source_prop_id: str
+    target_prop_id: str
+    link_type: InterPropositionLinkType = InterPropositionLinkType.CONJUNCTION
+    particle: str = ""
+    valid: bool = False
+
+
+@dataclass(frozen=True)
+class CompositionGateResult:
+    """نتيجة بوابة التركيب — composition gate result (Articles 64–72).
+
+    The outcome of checking a single composition gate.
+    """
+
+    gate: CompositionGate = CompositionGate.DISAMBIGUATION
+    status: CompositionGateStatus = CompositionGateStatus.INSUFFICIENT_DATA
+    details: str = ""
+    failure_reasons: Tuple[str, ...] = ()
+
+
+@dataclass(frozen=True)
+class CompositionStructure:
+    """بنية تركيبية — full composition structure (Articles 48–56, 73–75).
+
+    Top-level record: S = (U, B, R, Roles, P, Links, Ready).
+    ``valid`` is True when ``readiness ≥ θ_RS``.
+    """
+
+    units: Tuple[CompositionUnit, ...] = ()
+    gates: Tuple[CompositionGateResult, ...] = ()
+    relations: Tuple[CompositionRelation, ...] = ()
+    roles: Tuple[CompositionRole, ...] = ()
+    propositions: Tuple[CompositionProposition, ...] = ()
+    inter_links: Tuple[InterPropositionLink, ...] = ()
+    readiness: float = 0.0
+    valid: bool = False

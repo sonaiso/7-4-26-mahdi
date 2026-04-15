@@ -381,6 +381,47 @@ from .enums import (
     ValidationState as ValidationState,
 )
 
+# ── Composition / Syntax Constitution v1 enum re-exports ────────────
+from .enums import (
+    AmbiguityResolution as AmbiguityResolution,
+)
+from .enums import (
+    AmbiguityType as AmbiguityType,
+)
+from .enums import (
+    CompositionGate as CompositionGate,
+)
+from .enums import (
+    CompositionGateStatus as CompositionGateStatus,
+)
+from .enums import (
+    CompositionRelationType as CompositionRelationType,
+)
+from .enums import (
+    CompositionRoleType as CompositionRoleType,
+)
+from .enums import (
+    ConflictResolutionMethod as ConflictResolutionMethod,
+)
+from .enums import (
+    ConflictType as ConflictType,
+)
+from .enums import (
+    InterPropositionLinkType as InterPropositionLinkType,
+)
+from .enums import (
+    PropositionType as PropositionType,
+)
+from .enums import (
+    RoleStatus as RoleStatus,
+)
+from .enums import (
+    TransferType as TransferType,
+)
+from .enums import (
+    TruthType as TruthType,
+)
+
 # ── Kernel re-exports ───────────────────────────────────────────────
 from .kernel import (
     KERNEL_RELATION_PAIRS as KERNEL_RELATION_PAIRS,
@@ -730,6 +771,50 @@ from .types import (
     ZeroSlotRecord as ZeroSlotRecord,
 )
 
+# ── Composition / Syntax Constitution v1 type re-exports ────────────
+from .types import (
+    CompositionGateResult as CompositionGateResult,
+)
+from .types import (
+    CompositionProposition as CompositionProposition,
+)
+from .types import (
+    CompositionRelation as CompositionRelation,
+)
+from .types import (
+    CompositionRole as CompositionRole,
+)
+from .types import (
+    CompositionStructure as CompositionStructure,
+)
+from .types import (
+    CompositionUnit as CompositionUnit,
+)
+from .types import (
+    DependencyRecord as DependencyRecord,
+)
+from .types import (
+    DisambiguationRecord as DisambiguationRecord,
+)
+from .types import (
+    InterPropositionLink as InterPropositionLink,
+)
+from .types import (
+    PredicationRecord as PredicationRecord,
+)
+from .types import (
+    RestrictionRecord as RestrictionRecord,
+)
+from .types import (
+    SemanticConflictRecord as SemanticConflictRecord,
+)
+from .types import (
+    TransferRecord as TransferRecord,
+)
+from .types import (
+    TruthRecord as TruthRecord,
+)
+
 __all__ = [
     # ── enums ───────────────────────────────────────────────────────
     "POS",
@@ -973,4 +1058,33 @@ __all__ = [
     "StructuralProfileRecord",
     "TransformationProfileRecord",
     "TransitionGate",
+    # ── Composition / Syntax Constitution v1 enums ─────────────────
+    "AmbiguityResolution",
+    "AmbiguityType",
+    "CompositionGate",
+    "CompositionGateStatus",
+    "CompositionRelationType",
+    "CompositionRoleType",
+    "ConflictResolutionMethod",
+    "ConflictType",
+    "InterPropositionLinkType",
+    "PropositionType",
+    "RoleStatus",
+    "TransferType",
+    "TruthType",
+    # ── Composition / Syntax Constitution v1 types ─────────────────
+    "CompositionGateResult",
+    "CompositionProposition",
+    "CompositionRelation",
+    "CompositionRole",
+    "CompositionStructure",
+    "CompositionUnit",
+    "DependencyRecord",
+    "DisambiguationRecord",
+    "InterPropositionLink",
+    "PredicationRecord",
+    "RestrictionRecord",
+    "SemanticConflictRecord",
+    "TransferRecord",
+    "TruthRecord",
 ]

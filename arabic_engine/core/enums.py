@@ -1860,3 +1860,135 @@ class TransitionGateStatus(Enum):
     PASSED = auto()
     BLOCKED = auto()
     INSUFFICIENT_DATA = auto()
+
+
+# ── Composition / Syntax Constitution v1 ────────────────────────────
+
+
+class AmbiguityType(Enum):
+    """أنواع الاشتراك — types of lexical/semantic ambiguity (Article 8)."""
+
+    LEXICAL_PURE = auto()            # اشتراك لفظي صرف
+    SEMANTIC_DUAL = auto()           # اشتراك دلالي بين جهتين
+    TRUTH_VS_TRANSFER = auto()       # اشتراك بين حقيقة ونقل
+    LINGUISTIC_VS_CONVENTIONAL = auto()  # اشتراك بين معنى لغوي وعرفي
+
+
+class AmbiguityResolution(Enum):
+    """قاعدة فضّ الاشتراك — resolution strategy (Article 9)."""
+
+    INTERNAL_SEMANTIC_CUE = auto()   # قرينة دلالية داخلية
+    REFERENTIAL_CUE = auto()         # قرينة إحالية
+    SYNTACTIC_CUE = auto()           # قرينة تركيبية متوقعة
+    WEIGHT_PRIORITY = auto()         # ترجيح وزني/بابي
+    CONVENTIONAL_PRIORITY = auto()   # ترجيح عرفي مضبوط
+    OPEN_PENDING = auto()            # إبقاء الاحتمال مفتوحًا
+
+
+class ConflictType(Enum):
+    """صور التعارض — forms of semantic conflict (Article 12)."""
+
+    ESSENTIAL_VS_DESCRIPTIVE = auto()   # تعارض ذاتي/وصفي
+    UNIVERSAL_VS_PARTICULAR = auto()    # تعارض كلي/جزئي
+    REFERENTIAL_VS_PREDICATIVE = auto() # تعارض إحالي/حملي
+    COMPETING_ROLES = auto()            # تعارض بين دورين مرشحين
+    ORIGINAL_VS_TRANSFERRED = auto()    # تعارض بين حقيقة أصلية ومعنى منقول
+
+
+class ConflictResolutionMethod(Enum):
+    """قاعدة فضّ التعارض — resolution method (Article 13)."""
+
+    RANK_DISTINCTION = auto()        # تمييز الرتبة
+    CONTEXT_DISTINCTION = auto()     # تمييز المقام
+    ORIGIN_VS_FOLLOWER = auto()      # تمييز الأصل من التابع
+    REDUCE_TO_FIGURATIVE = auto()    # ردّ إلى المجاز أو النقل
+    BLOCK_COMPOSITION = auto()       # منع الانتقال التركيبي
+
+
+class TransferType(Enum):
+    """أنواع النقل — types of semantic transfer (Article 15)."""
+
+    INTERNAL_LINGUISTIC = auto()     # نقل لغوي داخلي
+    CONVENTIONAL = auto()            # نقل عرفي
+    TERMINOLOGICAL = auto()          # نقل اصطلاحي
+    DESCRIPTIVE_TO_REFERENTIAL = auto()  # نقل وصفي إلى مرجعي
+    EVENT_TO_NOMINAL = auto()        # نقل حدثي إلى اسمي
+    ESSENTIAL_TO_RELATIONAL = auto() # نقل ذاتي إلى علائقي
+
+
+class TruthType(Enum):
+    """نوع الحقيقة — truth-type classification (Articles 18–21)."""
+
+    LINGUISTIC_ORIGINAL = auto()     # حقيقة لغوية
+    CONVENTIONAL = auto()            # حقيقة عرفية
+    CONTROLLED_TRANSFER = auto()     # نقل مضبوط
+
+
+class CompositionRelationType(Enum):
+    """العلاقات الكبرى — major composition relations (Articles 36–37)."""
+
+    PREDICATION = auto()             # علاقة إسناد
+    RESTRICTION = auto()             # علاقة تقييد
+    DEPENDENCY = auto()              # علاقة تبعية
+    LINKING = auto()                 # علاقة ربط
+    TRANSFORMATION = auto()          # علاقة تحويل
+    EXPLANATION = auto()             # علاقة تفسير
+
+
+class CompositionRoleType(Enum):
+    """الأدوار الكبرى — major composition roles (Article 40)."""
+
+    MUSNAD_ILAYH = auto()            # مسند إليه
+    MUSNAD = auto()                  # مسند
+    QAYD = auto()                    # قيد
+    TABI3 = auto()                   # تابع
+    RABIT = auto()                   # رابط
+    MUFASSIR = auto()                # مفسر/مميز
+
+
+class RoleStatus(Enum):
+    """حالة الدور — role status (Article 41)."""
+
+    CANDIDATE = auto()               # مرشح
+    REALIZED = auto()                # محقق
+
+
+class PropositionType(Enum):
+    """أنواع القضية — proposition types (Article 44)."""
+
+    NOMINAL = auto()                 # قضية اسمية
+    VERBAL = auto()                  # قضية فعلية
+    COPULAR = auto()                 # قضية رابطية/ناسخة
+    CONDITIONAL = auto()             # قضية شرطية أو تحويلية
+
+
+class InterPropositionLinkType(Enum):
+    """الترابط بين القضايا — inter-proposition link types (Article 45)."""
+
+    CONJUNCTION = auto()             # عطف
+    CONDITION = auto()               # شرط
+    CAUSATION = auto()               # تعليل
+    ADVERSATIVE = auto()             # استدراك
+    TEMPORAL = auto()                # زمن
+    OTHER = auto()                   # غير ذلك
+
+
+class CompositionGate(Enum):
+    """البوابات — composition gates (Article 64)."""
+
+    DISAMBIGUATION = auto()          # Gate_Disambiguation
+    REFERENCE_STABILITY = auto()     # Gate_Reference_Stability
+    PREDICATE_READINESS = auto()     # Gate_Predicate_Readiness
+    ROLE_ASSIGNMENT = auto()         # Gate_Role_Assignment
+    RELATION_VALIDITY = auto()       # Gate_Relation_Validity
+    CONFLICT_RESOLUTION = auto()     # Gate_Conflict_Resolution
+    PROPOSITION_CLOSURE = auto()     # Gate_Proposition_Closure
+    INTER_PROPOSITION_LINK = auto()  # Gate_InterProposition_Link
+
+
+class CompositionGateStatus(Enum):
+    """حالة بوابة التركيب — composition gate status."""
+
+    PASSED = auto()
+    BLOCKED = auto()
+    INSUFFICIENT_DATA = auto()
