@@ -1,0 +1,46 @@
+# Syllable Machine — Layer 3
+name: SyllableMachine
+initial_state: Y0_NONE
+accept_states: [Y5_VALIDATED]
+reject_states: [Y6_REJECTED]
+
+valid_shapes: [CV, CVC, CVV, CVVC, CVCC]
+
+transitions:
+  - source: Y0_NONE
+    event: EV_PHONEME_ADDED
+    target: Y1_COLLECTING
+    guard: "—"
+    priority: 1
+
+  - source: Y1_COLLECTING
+    event: EV_NUCLEUS_DETECTED
+    target: Y2_NUCLEUS_FOUND
+    guard: g_nucleus
+    priority: 1
+
+  - source: Y2_NUCLEUS_FOUND
+    event: EV_SHAPE_RESOLVED
+    target: Y3_SHAPE_RESOLVED
+    guard: g_shape
+    priority: 1
+
+  - source: Y3_SHAPE_RESOLVED
+    event: EV_WEIGHT_COMPUTED
+    target: Y4_WEIGHTED
+    guard: g_weight
+    priority: 1
+
+  - source: Y4_WEIGHTED
+    event: EV_SYLLABLE_VALIDATED
+    target: Y5_VALIDATED
+    guard: g_mci_syllable
+    threshold: 0.65
+    priority: 1
+
+  - source: ANY
+    event: EV_CONFIDENCE_FAILED
+    target: Y6_REJECTED
+    guard: failure
+    threshold: 0.45
+    priority: 0

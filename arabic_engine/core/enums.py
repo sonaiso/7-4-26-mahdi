@@ -693,330 +693,60 @@ class RankType(Enum):
       * C ≫ L → CAPACITIVE (سعوي)
       * L ≈ C → TRANSITIONAL (انتقالي)
     """
-
-    LIMITAL = auto()  # حدّي — limit-dominant
-    CAPACITIVE = auto()  # سعوي — capacity-dominant
-    TRANSITIONAL = auto()  # انتقالي — balanced / transitional
-
-
-# ── Signified v2.0 — طبقة المدلول الموسّعة ──────────────────────────
-# The twenty axes below extend the signified layer so that a Concept
-# can encode not just its ontological *type* but also its epistemic
-# standing, normative weight, affective charge, causal role, cultural
-# scope, and every other dimension required to represent the full range
-# of human conceptual knowledge.
+    LIMITAL = auto()        # حدّي — limit-dominant
+    CAPACITIVE = auto()     # سعوي — capacity-dominant
+    TRANSITIONAL = auto()   # انتقالي — balanced / transitional
 
 
-class EpistemicStatus(Enum):
-    """الوضع الإبستيمي — how knowledge of the concept is held (1/20).
+# ── Symbolic Encoding — ترميز الحرف والحركة ─────────────────────────
 
-    Complements :class:`TruthState` (which applies to propositions).
-    ``EpistemicStatus`` applies to the *concept itself* and captures the
-    epistemic grade at which the concept is known or postulated.
+class UnitType(Enum):
+    """نوع الوحدة الرمزية — the type of a symbolic encoding unit.
+
+    Distinguishes letters (consonants/base units) from vowels
+    (operational/diacritical units).
     """
-    CERTAIN = auto()        # يقيني — known with certainty
-    PROBABLE = auto()       # ظني    — probably true / held with high confidence
-    DOUBTFUL = auto()       # مشكوك  — genuinely doubtful
-    IMAGINED = auto()       # متخيَّل — constructed by imagination
-    PRESUMED = auto()       # مفترض  — assumed without full proof
-    NECESSARY = auto()      # ضروري  — necessarily true (cannot be otherwise)
-    POSSIBLE = auto()       # ممكن   — possible but not certain
-    IMPOSSIBLE = auto()     # ممتنع  — logically / ontologically impossible
-    AXIOMATIC = auto()      # بديهي  — self-evident / axiomatic
-    THEORETICAL = auto()    # نظري   — derived by theoretical reasoning
+    LETTER = auto()     # حرف — consonant / base letter
+    VOWEL = auto()      # حركة — short vowel / diacritical modifier
 
 
-class NormativeCategory(Enum):
-    """الجهة المعيارية المستقلة — normative / deontic category (2/20).
+class SymbolicStatus(Enum):
+    """حالة الوحدة الرمزية — the structural status of a symbolic unit.
 
-    Independent of :class:`GuidanceState` (which is a procedural
-    evaluation output).  ``NormativeCategory`` encodes the *intrinsic*
-    normative meaning carried by the concept.
+    Implements the three-stage status model::
+
+        Representable   — Core(X) is well-formed (Slot ∧ Value)
+        Valid           — Core(X) ∧ Ω_X  (constraint satisfied)
+        Promotable      — Valid(X) ∧ P(X)  (ready for layer promotion)
+
+    =============  ===============================================
+    Status          Definition
+    =============  ===============================================
+    REPRESENTABLE   الماهية ثابتة — essence (slot + value) is defined
+    VALID           مُفعَّل — essence + constraint satisfied
+    PROMOTABLE      قابل للترقية — valid + promotion condition met
+    =============  ===============================================
     """
-    OBLIGATORY = auto()     # واجب   — morally / legally required
-    PERMISSIBLE = auto()    # مباح   — allowed without positive recommendation
-    FORBIDDEN = auto()      # محظور  — prohibited
-    RECOMMENDED = auto()    # مستحب  — recommended / praiseworthy
-    DISAPPROVED = auto()    # مكروه  — disapproved / discouraged
-    GOOD = auto()           # حسن    — ethically good
-    BAD = auto()            # قبيح   — ethically bad
-    JUST = auto()           # عادل   — just / fair
-    UNJUST = auto()         # ظالم   — unjust / unfair
-    NEUTRAL = auto()        # محايد  — normatively neutral
+    REPRESENTABLE = auto()  # قابل للترميز — essence is well-formed
+    VALID = auto()          # صالح — essence + constraint satisfied
+    PROMOTABLE = auto()     # قابل للترقية — valid + promotion possible
 
 
-class AffectiveDimension(Enum):
-    """البُعد الوجداني — the affective / emotional dimension (3/20).
+class ConstraintKind(Enum):
+    """نوع القيد — the kind of constraint gating a symbolic unit.
 
-    Concepts carry affective charge that shapes human understanding
-    beyond purely rational classification.
-    """
-    LOVE = auto()           # محبة       — love / affection
-    FEAR = auto()           # خوف        — fear / dread
-    TRANQUILITY = auto()    # طمأنينة    — inner peace / tranquility
-    ANXIETY = auto()        # قلق        — anxiety / worry
-    AWE = auto()            # هيبة       — awe / reverence
-    SHAME = auto()          # حياء/خجل   — shame / modesty
-    HATE = auto()           # كراهية     — hatred / aversion
-    INTIMACY = auto()       # أُنس       — intimacy / familiarity
-    ALIENATION = auto()     # اغتراب     — alienation / estrangement
-    JOY = auto()            # فرح        — joy / happiness
-    GRIEF = auto()          # حزن        — grief / sorrow
-    NEUTRAL = auto()        # محايد      — affectively neutral
+    Constraints are *not* part of the unit's essence; they are
+    activation / acceptance / insertion / promotion conditions.
 
-
-class MentalIntentionalType(Enum):
-    """نوع العقل القصدي الداخلي — intentional mental state type (4/20).
-
-    Covers the inner mental life: concepts that are *about* other
-    states (intentionality) rather than just representing external facts.
-    """
-    BELIEF = auto()         # اعتقاد   — propositional belief
-    DESIRE = auto()         # رغبة     — desire / want
-    INTENTION = auto()      # نية/قصد  — intention / purpose
-    ATTENTION = auto()      # انتباه   — focal attention
-    MEMORY = auto()         # تذكر     — memory / recollection
-    EXPECTATION = auto()    # توقع     — expectation / anticipation
-    DECISION = auto()       # قرار     — decision / resolution
-    IMAGINATION = auto()    # تخيّل    — imagination / mental imagery
-    PERCEPTION = auto()     # إدراك    — perceptual experience
-    AWARENESS = auto()      # وعي      — consciousness / awareness
-
-
-class ModalCategory(Enum):
-    """الجهة المنطقية — alethic modal category (5/20).
-
-    Encodes what is possible, necessary, impossible, or merely
-    hypothetical — including counterfactual reasoning.
-    """
-    POSSIBLE = auto()           # ممكن           — possibly the case
-    NECESSARY = auto()          # ضروري          — necessarily the case
-    IMPOSSIBLE = auto()         # ممتنع          — impossible
-    COUNTERFACTUAL = auto()     # مضاد للواقع    — contrary-to-fact
-    HYPOTHETICAL = auto()       # افتراضي        — supposed for argument's sake
-    ACTUAL = auto()             # واقعي          — actually obtaining
-
-
-class FrameType(Enum):
-    """نوع الإطار المفاهيمي — conceptual frame / scene type (6/20).
-
-    Many concepts are only intelligible within a background frame
-    (Charles Fillmore's frame semantics).  This enum names the most
-    common encyclopaedic frames.
-    """
-    COMMERCIAL = auto()     # تجاري   — buying, selling, price, goods
-    JOURNEY = auto()        # سفر     — traveller, path, destination, vehicle
-    KINSHIP = auto()        # قرابة   — parent, child, sibling, lineage
-    CONFLICT = auto()       # صراع   — adversary, battle, victory, defeat
-    TEACHING = auto()       # تعليم   — teacher, student, lesson, assessment
-    GOVERNANCE = auto()     # حكم    — ruler, law, authority, subject
-    RELIGIOUS = auto()      # ديني   — worship, ritual, sacred, obligation
-    MEDICAL = auto()        # طبي    — patient, symptom, diagnosis, treatment
-    DOMESTIC = auto()       # منزلي  — household, family, dwelling, routine
-    NONE = auto()           # لا إطار — no particular frame
-
-
-class ScriptPhase(Enum):
-    """مرحلة السيناريو الإجرائي — phase within a cognitive script (7/20).
-
-    Schank & Abelson-style scripts: stereotyped event sequences.
-    A concept may be located at a particular phase in such a sequence.
-    """
-    PRECONDITION = auto()   # شرط سابق    — must hold before script begins
-    INITIATION = auto()     # بدء         — script-opening action
-    DEVELOPMENT = auto()    # تطور        — main body of the script
-    CLIMAX = auto()         # ذروة        — peak / pivotal moment
-    RESOLUTION = auto()     # حلّ         — outcome / resolution
-    POSTCONDITION = auto()  # نتيجة لاحقة — state that holds after script
-    NONE = auto()           # لا سيناريو  — not script-bound
-
-
-class CausalRole(Enum):
-    """الدور السببي-التفسيري — causal / explanatory role (8/20).
-
-    Human knowledge is built on causal models.  This enum labels
-    the role a concept plays inside a causal-explanatory chain.
-    """
-    CAUSE = auto()      # سبب       — direct cause
-    CONDITION = auto()  # شرط       — necessary / sufficient condition
-    ENABLER = auto()    # مُمكِّن   — enables without directly causing
-    BLOCKER = auto()    # مانع      — prevents / blocks an effect
-    MECHANISM = auto()  # آلية      — the *how* of causation
-    MEDIATOR = auto()   # وسيط      — intermediary in a causal chain
-    EFFECT = auto()     # أثر/نتيجة — downstream effect
-    GOAL = auto()       # غاية      — final cause / telos
-    LAW = auto()        # قانون     — governing regularity / nomic law
-    NONE = auto()       # لا دور    — no causal role assigned
-
-
-class InstitutionalCategory(Enum):
-    """التصنيف المؤسسي الاجتماعي — social / institutional category (9/20).
-
-    Searle-style institutional facts: realities that exist only through
-    collective acceptance (X counts as Y in context C).
-    """
-    STATE = auto()          # دولة     — state / sovereign entity
-    LAW = auto()            # قانون    — legal rule or statute
-    PROPERTY = auto()       # ملكية    — ownership right
-    CONTRACT = auto()       # عقد      — binding agreement
-    POSITION = auto()       # منصب     — social role / office
-    INSTITUTION = auto()    # مؤسسة   — established organisation
-    CURRENCY = auto()       # عملة     — medium of exchange
-    NORM = auto()           # معيار    — social / conventional norm
-    RITUAL = auto()         # طقس      — ceremonial practice
-    NONE = auto()           # لا تصنيف — not an institutional fact
-
-
-class CategorizationMode(Enum):
-    """نمط التصنيف المفاهيمي — how the concept belongs to its category (10/20).
-
-    Classical categories have crisp boundaries; prototype-based and
-    fuzzy categories admit degrees of membership (Rosch, Zadeh).
-    """
-    CLASSICAL = auto()              # كلاسيكي        — necessary & sufficient conditions
-    PROTOTYPE_BASED = auto()        # نموذجي         — graded membership around prototype
-    FUZZY_BOUNDED = auto()          # ضبابي الحدود   — membership by degree (fuzzy sets)
-    GRADIENT_MEMBERSHIP = auto()    # عضوية متدرجة   — continuous membership scale
-    RADIAL = auto()                 # شعاعي          — radial network of related senses
-
-
-class CulturalScope(Enum):
-    """النطاق الثقافي الحضاري — cultural / civilisational scope (11/20).
-
-    Marks whether a concept is universal or specific to a particular
-    cultural, religious, or domain tradition.
-    """
-    UNIVERSAL = auto()          # كوني         — applies across all cultures
-    CULTURE_SPECIFIC = auto()   # ثقافي خاص    — specific to one culture
-    CIVILIZATIONAL = auto()     # حضاري        — shared within a civilisation
-    DOMAIN_SPECIFIC = auto()    # تخصصي        — confined to a specialised domain
-    RELIGIOUS_SPECIFIC = auto() # ديني خاص     — specific to a religious tradition
-
-
-class DiachronicStatus(Enum):
-    """الوضع التاريخي الدلالي — diachronic / historical semantic status (12/20).
-
-    Tracks whether a concept has drifted, narrowed, broadened, or
-    specialised relative to its original meaning.
-    """
-    ORIGINAL = auto()       # أصلي        — meaning as originally used
-    SHIFTED = auto()        # منتقل       — meaning has shifted
-    NARROWED = auto()       # ضيّق        — meaning has narrowed
-    BROADENED = auto()      # موسَّع      — meaning has broadened
-    SPECIALIZED = auto()    # تخصّص       — moved to technical domain
-    GENERALIZED = auto()    # عمّ         — moved from technical to general use
-    OBSOLETE = auto()       # متقادم      — no longer in active use
-
-
-class ConceptFormationMode(Enum):
-    """طريقة تكوين المفهوم — how the concept was formed (13/20).
-
-    Distinguishes primitive atomic concepts from derived, composed,
-    blended, or metaphorically extended ones.
-    """
-    PRIMITIVE = auto()              # أصلي بسيط       — irreducible primitive
-    DERIVED = auto()                # مشتق            — derived from another concept
-    COMPOSED = auto()               # مركّب           — composed from parts
-    BLENDED = auto()                # ممزوج           — conceptual blend (Fauconnier)
-    ANALOGICALLY_EXTENDED = auto()  # تمديد قياسي     — extended by analogy
-    METAPHORICAL = auto()           # مجازي           — grounded in metaphor
-
-
-class MetaConceptualLevel(Enum):
-    """المستوى فوق المفاهيمي — meta-conceptual order (14/20).
-
-    First-order concepts are *about* the world; second-order concepts
-    are about first-order concepts; third-order are about the system
-    of concepts itself.
-    """
-    FIRST_ORDER = auto()    # مستوى أول  — concepts about entities / events
-    SECOND_ORDER = auto()   # مستوى ثان  — concepts about first-order concepts
-    THIRD_ORDER = auto()    # مستوى ثالث — concepts about the conceptual system
-
-
-class InterpretiveStability(Enum):
-    """استقرار التفسير — interpretive stability / polysemy status (15/20).
-
-    Some concepts have a single stable reading; others are ambiguous,
-    polysemous, or actively contested.
-    """
-    STABLE = auto()             # ثابت           — single, stable interpretation
-    AMBIGUOUS = auto()          # ملتبس          — genuinely ambiguous
-    POLYSEMOUS = auto()         # متعدد المعاني  — multiple related senses
-    CONTEXT_RESOLVED = auto()   # محدَّد بالسياق — disambiguation requires context
-    CONTESTED = auto()          # متنازع عليه    — meaning is socially contested
-
-
-class SalienceLevel(Enum):
-    """مستوى البروز الإدراكي — cognitive salience / prominence level (16/20).
-
-    In human cognition not all features / concepts are equally salient.
-    This enum captures the prominence profile of a concept.
-    """
-    CENTRAL = auto()        # مركزي    — highly salient, prototype-like
-    PERIPHERAL = auto()     # هامشي    — low salience, atypical
-    FOREGROUNDED = auto()   # بارز     — brought to focal attention
-    BACKGROUNDED = auto()   # خلفي     — presupposed, not in focus
-    UNEXPECTED = auto()     # مفاجئ    — surprises the interpreter
-    EXPECTED = auto()       # متوقع    — predicted by context
-
-
-class EmbodiedDomain(Enum):
-    """المجال الإدراكي المتجسد — embodied / perceptual domain (17/20).
-
-    Lakoff & Johnson: many abstract concepts are grounded in
-    embodied sensorimotor experience.  This enum names the source
-    domain of that grounding.
-    """
-    VISUAL = auto()         # بصري       — sight / visual experience
-    AUDITORY = auto()       # سمعي       — hearing / sound
-    TACTILE = auto()        # لمسي       — touch / texture
-    BALANCE = auto()        # توازن      — bodily balance / equilibrium
-    MOTION = auto()         # حركة       — kinesthetic / movement
-    FORCE = auto()          # قوة/جهد    — force / effort / resistance
-    CONTAINMENT = auto()    # احتواء     — in/out container schema
-    PROXIMITY = auto()      # قرب/بُعد   — near/far spatial experience
-    VERTICAL_AXIS = auto()  # محور عمودي — up/down orientation
-    NONE = auto()           # لا تجسيد   — not grounded in embodied experience
-
-
-class SelfModelAspect(Enum):
-    """جانب النموذج الذاتي — aspect of the self-model (18/20).
-
-    Concepts involved in self-awareness, personal identity, and
-    first-person perspective.
-    """
-    EGO = auto()                    # الأنا              — the ego / subjective centre
-    SELF_IMAGE = auto()             # صورة الذات        — self-conception / self-image
-    SELF_AWARENESS = auto()         # وعي الذات         — reflective self-awareness
-    OTHER_DISTINCTION = auto()      # تمييز الذات من الغير — self vs. other
-    PERSONAL_CONTINUITY = auto()    # الاستمرار الشخصي  — identity over time
-    FIRST_PERSON = auto()           # منظور أول         — first-person perspective
-    NONE = auto()                   # لا جانب ذاتي      — not self-related
-
-
-class OperationalCapacity(Enum):
-    """القدرة الإجرائية — operational / performative capacity (19/20).
-
-    Some concepts not only *mean* something but also *do* something:
-    they enable actions, issue commands, create obligations, etc.
-    (Austin / Searle speech-act inspired).
-    """
-    ENABLES = auto()    # يُمكِّن   — grants ability or access
-    COMMANDS = auto()   # يأمر     — directive / command
-    PROMISES = auto()   # يَعِد    — commissive / promise
-    PERMITS = auto()    # يأذن     — declarative permission
-    RESTRICTS = auto()  # يُقيِّد  — restricts / prohibits
-    ACTIVATES = auto()  # يُنشِّط  — triggers a process or state
-    NONE = auto()       # لا قدرة  — no operational capacity
-
-
-class ConceptRelationType(Enum):
-    """نوع العلاقة بين المفاهيم — inter-concept relation type (20/20).
-
-    The top-level relation vocabulary for building a concept network.
-    These relations are used in :class:`~arabic_engine.core.types.ConceptRelation`
-    to wire concept nodes together into a full knowledge graph.
+    ===========  ==============================================
+    Kind          Description
+    ===========  ==============================================
+    POSITIONAL   قيد موضعي — position within the chain
+    ADJACENCY    قيد تجاوري — neighbour compatibility
+    CARRIER      قيد الحامل — requires a host consonant
+    SYLLABIC     قيد مقطعي — syllable-structure compatibility
+    LAYER        قيد طبقي — layer-promotion guard
+    ===========  ==============================================
     """
     IS_A = auto()           # هو نوع من       — taxonomic (hyponymy)
     PART_OF = auto()        # جزء من          — meronymy / part–whole
