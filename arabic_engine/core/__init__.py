@@ -187,6 +187,9 @@ from .enums import (
     GuidanceState as GuidanceState,
 )
 from .enums import (
+    HarakaState as HarakaState,
+)
+from .enums import (
     HypothesisStatus as HypothesisStatus,
 )
 from .enums import (
@@ -217,10 +220,10 @@ from .enums import (
     JudgementType as JudgementType,
 )
 from .enums import (
-    JudgmentCategory as JudgmentCategory,
+    JudgmentState as JudgmentState,
 )
 from .enums import (
-    LayerEdgeType as LayerEdgeType,
+    LayerEvent as LayerEvent,
 )
 from .enums import (
     LinkKind as LinkKind,
@@ -229,7 +232,7 @@ from .enums import (
     MafhumType as MafhumType,
 )
 from .enums import (
-    MentalEdgeType as MentalEdgeType,
+    MCIDecision as MCIDecision,
 )
 from .enums import (
     MentalIntentionalType as MentalIntentionalType,
@@ -328,7 +331,7 @@ from .enums import (
     RevisionType as RevisionType,
 )
 from .enums import (
-    RoleStatus as RoleStatus,
+    RootRankState as RootRankState,
 )
 from .enums import (
     SalienceLevel as SalienceLevel,
@@ -361,6 +364,9 @@ from .enums import (
     SlotState as SlotState,
 )
 from .enums import (
+    SoundState as SoundState,
+)
+from .enums import (
     SpaceRef as SpaceRef,
 )
 from .enums import (
@@ -376,6 +382,9 @@ from .enums import (
     SyllablePosition as SyllablePosition,
 )
 from .enums import (
+    SyllableState as SyllableState,
+)
+from .enums import (
     TimeRef as TimeRef,
 )
 from .enums import (
@@ -385,10 +394,10 @@ from .enums import (
     TraceQuality as TraceQuality,
 )
 from .enums import (
-    TransferType as TransferType,
+    TransformJudgment as TransformJudgment,
 )
 from .enums import (
-    TransformationNode as TransformationNode,
+    TransformState as TransformState,
 )
 from .enums import (
     TransitionCondition as TransitionCondition,
@@ -504,6 +513,20 @@ from .kernel import (
     validate_kernel_graph as validate_kernel_graph,
 )
 
+# ── State-machine engine re-exports ────────────────────────────────
+from .state_machine import (
+    MachineSnapshot as MachineSnapshot,
+)
+from .state_machine import (
+    StateMachine as StateMachine,
+)
+from .state_machine import (
+    StateMachineConfig as StateMachineConfig,
+)
+from .state_machine import (
+    StateTransition as StateTransition,
+)
+
 # ── Trace module re-exports ─────────────────────────────────────────
 from .trace import (
     DecisionState as DecisionState,
@@ -556,6 +579,9 @@ from .types import (
 )
 from .types import (
     ConceptRelation as ConceptRelation,
+)
+from .types import (
+    ConceptSeed as ConceptSeed,
 )
 from .types import (
     ConflictEdge as ConflictEdge,
@@ -630,6 +656,9 @@ from .types import (
     ExchangeStyleRecord as ExchangeStyleRecord,
 )
 from .types import (
+    FinalApprovalComponents as FinalApprovalComponents,
+)
+from .types import (
     GapNode as GapNode,
 )
 from .types import (
@@ -643,6 +672,9 @@ from .types import (
 )
 from .types import (
     Grapheme as Grapheme,
+)
+from .types import (
+    HarakaUnit as HarakaUnit,
 )
 from .types import (
     HypothesisNode as HypothesisNode,
@@ -693,7 +725,10 @@ from .types import (
     LinkingTraceRecord as LinkingTraceRecord,
 )
 from .types import (
-    MentalFoundationRecord as MentalFoundationRecord,
+    MCIResult as MCIResult,
+)
+from .types import (
+    MCIScores as MCIScores,
 )
 from .types import (
     MethodNode as MethodNode,
@@ -714,7 +749,10 @@ from .types import (
     OpinionTraceRecord as OpinionTraceRecord,
 )
 from .types import (
-    PredicationRecord as PredicationRecord,
+    PhonemeCandidate as PhonemeCandidate,
+)
+from .types import (
+    PhoneticEvent as PhoneticEvent,
 )
 from .types import (
     PriorInfoNode as PriorInfoNode,
@@ -735,7 +773,7 @@ from .types import (
     Proposition as Proposition,
 )
 from .types import (
-    PropositionRecord as PropositionRecord,
+    RankScoreComponents as RankScoreComponents,
 )
 from .types import (
     RationalSelfRecord as RationalSelfRecord,
@@ -763,6 +801,9 @@ from .types import (
 )
 from .types import (
     RootPattern as RootPattern,
+)
+from .types import (
+    RootSlot as RootSlot,
 )
 from .types import (
     SelfNode as SelfNode,
@@ -795,6 +836,9 @@ from .types import (
     Syllable as Syllable,
 )
 from .types import (
+    SyllableUnit as SyllableUnit,
+)
+from .types import (
     SyntaxNode as SyntaxNode,
 )
 from .types import (
@@ -804,13 +848,7 @@ from .types import (
     TimeSpaceTag as TimeSpaceTag,
 )
 from .types import (
-    TransferRecord as TransferRecord,
-)
-from .types import (
-    TransformationProfileRecord as TransformationProfileRecord,
-)
-from .types import (
-    TransitionGate as TransitionGate,
+    TransformCandidate as TransformCandidate,
 )
 from .types import (
     TriadicBlockRecord as TriadicBlockRecord,
@@ -835,6 +873,9 @@ from .types import (
 )
 from .types import (
     UtteranceRecord as UtteranceRecord,
+)
+from .types import (
+    ValidatedJudgment as ValidatedJudgment,
 )
 from .types import (
     ValidationResult as ValidationResult,
@@ -888,6 +929,7 @@ __all__ = [
     "FunctionRole",
     "GapSeverity",
     "GuidanceState",
+    "HarakaState",
     "InfoKind",
     "InsertionPolicy",
     "InstitutionalCategory",
@@ -896,7 +938,10 @@ __all__ = [
     "IrabCase",
     "IrabRole",
     "JudgementType",
+    "JudgmentState",
     "LinkKind",
+    "LayerEvent",
+    "MCIDecision",
     "MafhumType",
     "MentalIntentionalType",
     "MetaConceptualLevel",
@@ -942,6 +987,8 @@ __all__ = [
     "TransitionCondition",
     "TransitionLaw",
     "TransitionType",
+    "TransformJudgment",
+    "TransformState",
     "TriadType",
     "TrustBasis",
     "TrustLevel",
@@ -958,7 +1005,10 @@ __all__ = [
     "ConstraintStrength",
     "HypothesisStatus",
     "RevisionType",
+    "RootRankState",
     "SignalType",
+    "SoundState",
+    "SyllableState",
     # ── kernel ──────────────────────────────────────────────────────
     "KERNEL_RELATION_PAIRS",
     "KERNEL_REQUIRED_FIELDS",
@@ -985,6 +1035,7 @@ __all__ = [
     "Concept",
     "ConceptRelation",
     "ConflictRuleNode",
+    "ConceptSeed",
     "CouplingRecord",
     "DalalaLink",
     "DiscourseCarrierRecord",
@@ -998,12 +1049,14 @@ __all__ = [
     "EpistemicConceptNode",
     "EssenceConditionPair",
     "EvalResult",
+    "FinalApprovalComponents",
     "EvidenceNode",
     "ExchangePurposeRecord",
     "ExchangeStyleRecord",
     "GapNode",
     "GapRecord",
     "Grapheme",
+    "HarakaUnit",
     "InferenceResult",
     "InterpretiveOutcomeRecord",
     "JudgementNode",
@@ -1013,6 +1066,8 @@ __all__ = [
     "KnowledgeEpisodeNode",
     "LayerPromotionRule",
     "LexicalClosure",
+    "MCIResult",
+    "MCIScores",
     "LinguisticCarrierNode",
     "LinguisticCarrierRecord",
     "LinkingTraceNode",
@@ -1029,6 +1084,8 @@ __all__ = [
     "ProofPathNode",
     "ProofPathRecord",
     "Proposition",
+    "PhonemeCandidate",
+    "PhoneticEvent",
     "RationalSelfRecord",
     "RealityAnchorNode",
     "RealityAnchorRecord",
@@ -1036,6 +1093,8 @@ __all__ = [
     "ReceptionRecord",
     "ReceptionStateRecord",
     "RootPattern",
+    "RankScoreComponents",
+    "RootSlot",
     "SelfNode",
     "SenderRoleRecord",
     "SenseTraceNode",
@@ -1043,14 +1102,17 @@ __all__ = [
     "SignifiedNode",
     "SignifierNode",
     "Syllable",
+    "SyllableUnit",
     "SyntaxNode",
     "TheoremRecord",
+    "TransformCandidate",
     "TimeSpaceTag",
     "TriadicBlockRecord",
     "TrustProfileRecord",
     "UtteranceNode",
     "UtteranceRecord",
     "ValidationResult",
+    "ValidatedJudgment",
     "WorldFact",
     "ZeroSlotRecord",
     # ── Fractal Kernel types ───────────────────────────────────────
@@ -1067,35 +1129,9 @@ __all__ = [
     "HypothesisState",
     "KernelRuntimeState",
     "SignalState",
-    # ── Strict 7-Layer System enums ────────────────────────────────
-    "AuditoryNode",
-    "GenerativeNode",
-    "JudgmentCategory",
-    "LayerEdgeType",
-    "MentalEdgeType",
-    "MentalPrimitive",
-    "RepresentationNode",
-    "StrictLayerID",
-    "StructuralNode",
-    "TransformationNode",
-    "TransitionGateStatus",
-    # ── Strict 7-Layer System types ────────────────────────────────
-    "AuditoryMinimumRecord",
-    "GenerativeProfileRecord",
-    "JudgmentRecordL5",
-    "LayerTraceRecord",
-    "MentalFoundationRecord",
-    "RepresentationRecord",
-    "StructuralProfileRecord",
-    "TransformationProfileRecord",
-    "TransitionGate",
-    # ── Universal / Particular Constitution v1 enums ───────────────
-    "BoundaryType",
-    "UPConstitutionOutcome",
-    "UniversalParticularDomain",
-    "UniversalityScope",
-    # ── Universal / Particular Constitution v1 types ───────────────
-    "BoundaryRecord",
-    "UPConstitutionResult",
-    "UniversalParticularRecord",
+    # ── State-machine engine ──────────────────────────────────────
+    "MachineSnapshot",
+    "StateMachine",
+    "StateMachineConfig",
+    "StateTransition",
 ]
