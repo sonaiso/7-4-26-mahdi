@@ -26,6 +26,7 @@ from arabic_engine.core.types import (
     InferenceResult,
     LexicalClosure,
     Proposition,
+    SignifiedRecord,
     SyntaxNode,
     TimeSpaceTag,
 )
@@ -59,6 +60,8 @@ class PipelineResult:
             Empty list when no inference engine was provided.
         world_adjustment: Confidence multiplier from the world model (L10).
             Defaults to ``0.5`` when no world model was provided.
+        signified_records: Rich signified ontology records (L4b).
+            Populated only when ``analyze_signified=True``.
     """
 
     raw: str
@@ -73,6 +76,7 @@ class PipelineResult:
     eval_result: EvalResult
     inferences: List[InferenceResult] = field(default_factory=list)
     world_adjustment: float = 0.5
+    signified_records: List[SignifiedRecord] = field(default_factory=list)
 
 
 # ── Pipeline ────────────────────────────────────────────────────────
@@ -82,16 +86,19 @@ def run(
     *,
     world: Optional[WorldModel] = None,
     inference_engine: Optional[InferenceEngine] = None,
+    analyze_signified: bool = False,
 ) -> PipelineResult:
     """Execute the full v2 pipeline on *text*.
 
-    The pipeline runs eleven sequential layers (L0–L10):
+    The pipeline runs eleven sequential layers (L0–L10), with an optional
+    L4b signified ontology analysis:
 
     * L0  — Unicode normalisation
     * L1  — Tokenisation
     * L2  — Lexical closure (root/pattern extraction)
     * L3  — Syntax (i'rāb assignment and dependency linking)
     * L4  — Ontological mapping (signifier → signified)
+    * L4b — Signified ontology analysis (optional)
     * L5  — Dalāla validation (signification links)
     * L6  — Judgment / proposition construction
     * L7  — Time/space anchoring
@@ -105,6 +112,9 @@ def run(
             When ``None``, the world-adjustment factor defaults to 0.5.
         inference_engine: A rule engine for deriving new propositions.
             When ``None``, the ``inferences`` list in the result is empty.
+        analyze_signified: When ``True``, populates
+            :attr:`PipelineResult.signified_records` with rich
+            :class:`SignifiedRecord` instances for each closure.
 
     Returns:
         A :class:`PipelineResult` containing the outputs of all pipeline
@@ -124,6 +134,13 @@ def run(
 
     # L4 — Ontological Mapping
     concepts = batch_map(closures)
+
+    # L4b — Signified Ontology analysis (optional)
+    sig_records: List[SignifiedRecord] = []
+    if analyze_signified:
+        from arabic_engine.signified.signified_record import batch_signified
+
+        sig_records = batch_signified(closures)
 
     # L5 — Dalāla Validation
     links = full_validation(closures, concepts)
@@ -164,4 +181,5 @@ def run(
         eval_result=eval_result,
         inferences=inferences,
         world_adjustment=adjustment,
+        signified_records=sig_records,
     )
