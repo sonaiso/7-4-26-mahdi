@@ -135,6 +135,9 @@ from .enums import (
     ExplicitnessLevel as ExplicitnessLevel,
 )
 from .enums import (
+    FractalStage as FractalStage,
+)
+from .enums import (
     FrameType as FrameType,
 )
 from .enums import (
@@ -163,6 +166,9 @@ from .enums import (
 )
 from .enums import (
     InstitutionalCategory as InstitutionalCategory,
+)
+from .enums import (
+    InterpretationSource as InterpretationSource,
 )
 from .enums import (
     InterpretiveOutcomeType as InterpretiveOutcomeType,
@@ -228,6 +234,9 @@ from .enums import (
     PathKind as PathKind,
 )
 from .enums import (
+    PerceptualGapReason as PerceptualGapReason,
+)
+from .enums import (
     PhonCategory as PhonCategory,
 )
 from .enums import (
@@ -253,6 +262,12 @@ from .enums import (
 )
 from .enums import (
     RationalSelfKind as RationalSelfKind,
+)
+from .enums import (
+    ReadinessLevel as ReadinessLevel,
+)
+from .enums import (
+    ReadinessStatus as ReadinessStatus,
 )
 from .enums import (
     RealityKind as RealityKind,
@@ -313,6 +328,12 @@ from .enums import (
 )
 from .enums import (
     SpaceRef as SpaceRef,
+)
+from .enums import (
+    StockComponent as StockComponent,
+)
+from .enums import (
+    StockSufficiency as StockSufficiency,
 )
 from .enums import (
     StrictLayerID as StrictLayerID,
@@ -472,6 +493,9 @@ from .types import (
     AxiomRecord as AxiomRecord,
 )
 from .types import (
+    CompositionalReadinessResult as CompositionalReadinessResult,
+)
+from .types import (
     Concept as Concept,
 )
 from .types import (
@@ -556,6 +580,9 @@ from .types import (
     InferenceResult as InferenceResult,
 )
 from .types import (
+    InformationalStockRecord as InformationalStockRecord,
+)
+from .types import (
     InterpretiveOutcomeRecord as InterpretiveOutcomeRecord,
 )
 from .types import (
@@ -619,10 +646,16 @@ from .types import (
     OpinionTraceRecord as OpinionTraceRecord,
 )
 from .types import (
+    PerceptualReadinessResult as PerceptualReadinessResult,
+)
+from .types import (
     PriorInfoNode as PriorInfoNode,
 )
 from .types import (
     PriorInfoRecord as PriorInfoRecord,
+)
+from .types import (
+    PriorInformationalStock as PriorInformationalStock,
 )
 from .types import (
     ProofDependencyGraph as ProofDependencyGraph,
@@ -638,6 +671,9 @@ from .types import (
 )
 from .types import (
     RationalSelfRecord as RationalSelfRecord,
+)
+from .types import (
+    ReadinessGate as ReadinessGate,
 )
 from .types import (
     RealityAnchorNode as RealityAnchorNode,
@@ -680,6 +716,9 @@ from .types import (
 )
 from .types import (
     SignifierNode as SignifierNode,
+)
+from .types import (
+    StockEntry as StockEntry,
 )
 from .types import (
     StructuralProfileRecord as StructuralProfileRecord,
@@ -768,6 +807,7 @@ __all__ = [
     "ExchangeType",
     "ExplicitnessLevel",
     "FrameType",
+    "FractalStage",
     "FuncTransitionClass",
     "FunctionRole",
     "GapSeverity",
@@ -775,6 +815,7 @@ __all__ = [
     "InfoKind",
     "InsertionPolicy",
     "InstitutionalCategory",
+    "InterpretationSource",
     "InterpretiveOutcomeType",
     "InterpretiveStability",
     "IrabCase",
@@ -792,6 +833,7 @@ __all__ = [
     "OntologicalMode",
     "OperationalCapacity",
     "PathKind",
+    "PerceptualGapReason",
     "PhonCategory",
     "PhonFeature",
     "PhonGroup",
@@ -807,6 +849,8 @@ __all__ = [
     "ReceiverState",
     "ReceptionMode",
     "ReceptionStateType",
+    "ReadinessLevel",
+    "ReadinessStatus",
     "ReversibleValue",
     "SalienceLevel",
     "ScriptPhase",
@@ -818,6 +862,8 @@ __all__ = [
     "SignifierClass",
     "SlotState",
     "SpaceRef",
+    "StockComponent",
+    "StockSufficiency",
     "StyleKind",
     "SyllablePosition",
     "TimeRef",
@@ -868,6 +914,7 @@ __all__ = [
     "AxiomRecord",
     "Concept",
     "ConceptRelation",
+    "CompositionalReadinessResult",
     "ConflictRuleNode",
     "CouplingRecord",
     "DalalaLink",
@@ -889,6 +936,7 @@ __all__ = [
     "GapRecord",
     "Grapheme",
     "InferenceResult",
+    "InformationalStockRecord",
     "InterpretiveOutcomeRecord",
     "JudgementNode",
     "JudgementRecord",
@@ -907,8 +955,10 @@ __all__ = [
     "OntologyV1Record",
     "OpinionTraceNode",
     "OpinionTraceRecord",
+    "PerceptualReadinessResult",
     "PriorInfoNode",
     "PriorInfoRecord",
+    "PriorInformationalStock",
     "ProofDependencyGraph",
     "ProofPathNode",
     "ProofPathRecord",
@@ -916,6 +966,7 @@ __all__ = [
     "RationalSelfRecord",
     "RealityAnchorNode",
     "RealityAnchorRecord",
+    "ReadinessGate",
     "ReceiverRoleRecord",
     "ReceptionRecord",
     "ReceptionStateRecord",
@@ -926,6 +977,7 @@ __all__ = [
     "SenseTraceRecord",
     "SignifiedNode",
     "SignifierNode",
+    "StockEntry",
     "Syllable",
     "SyntaxNode",
     "TheoremRecord",

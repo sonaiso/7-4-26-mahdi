@@ -56,6 +56,7 @@ from .enums import (
     InfoKind,
     InsertionPolicy,
     InstitutionalCategory,
+    InterpretationSource,
     InterpretiveOutcomeType,
     InterpretiveStability,
     IrabCase,
@@ -83,6 +84,8 @@ from .enums import (
     PurposeType,
     RankType,
     RationalSelfKind,
+    ReadinessLevel,
+    ReadinessStatus,
     RealityKind,
     ReceiverExpectedAction,
     ReceiverRoleType,
@@ -102,6 +105,8 @@ from .enums import (
     SignifierClass,
     SlotState,
     SpaceRef,
+    StockComponent,
+    StockSufficiency,
     StrictLayerID,
     StyleKind,
     SyllablePosition,
@@ -2585,3 +2590,128 @@ class LayerTraceRecord:
     layer_6: Optional[RepresentationRecord] = None
     gates: Tuple[TransitionGate, ...] = ()
     final_gate_status: TransitionGateStatus = TransitionGateStatus.INSUFFICIENT_DATA
+
+
+# ── Prior Informational Stock (المخزون المعلوماتي السابق) ───────────
+
+
+@dataclass(frozen=True)
+class StockEntry:
+    """مُدخَل مخزوني — a single piece of prior informational stock.
+
+    Fields
+    ------
+    entry_id    unique identifier for this entry
+    component   which of the 7 stock components this belongs to
+    content     the information content
+    source      interpretation channel (reality, utterance, etc.)
+    weight      importance weight in [0, 1]; default 1.0
+    """
+
+    entry_id: str
+    component: StockComponent
+    content: str
+    source: InterpretationSource
+    weight: float = 1.0
+
+
+@dataclass(frozen=True)
+class PriorInformationalStock:
+    """المخزون المعلوماتي السابق — the full stock tuple (Article 4).
+
+    Fields
+    ------
+    stock_id     unique identifier
+    entries      tuple of StockEntry items
+    sufficiency  overall sufficiency evaluation
+    """
+
+    stock_id: str
+    entries: Tuple[StockEntry, ...]
+    sufficiency: StockSufficiency = StockSufficiency.UNDETERMINED
+
+
+@dataclass(frozen=True)
+class ReadinessGate:
+    """بوابة الجاهزية — result of evaluating one readiness level.
+
+    Fields
+    ------
+    level        which readiness tier (perceptual / compositional / propositional)
+    status       MET / UNMET / PARTIAL
+    score        computed score in [0, 1]
+    threshold    minimum score required for MET
+    gap_reasons  human-readable reasons if status is not MET
+    """
+
+    level: ReadinessLevel
+    status: ReadinessStatus
+    score: float
+    threshold: float
+    gap_reasons: Tuple[str, ...] = ()
+
+
+@dataclass(frozen=True)
+class PerceptualReadinessResult:
+    """نتيجة الجاهزية الإدراكية — Ready₁ output (Article 9).
+
+    Fields
+    ------
+    percept_id          identifier of the percept being evaluated
+    gate                the readiness gate result
+    interpreted_concept concept label if Ready₁ is met
+    """
+
+    percept_id: str
+    gate: ReadinessGate
+    interpreted_concept: Optional[str] = None
+
+
+@dataclass(frozen=True)
+class CompositionalReadinessResult:
+    """نتيجة الجاهزية التركيبية — Ready₂ output (Article 14).
+
+    Fields
+    ------
+    percept_id         identifier of the percept
+    gate               the readiness gate result
+    assigned_role      role assigned if Ready₂ is met
+    reference_resolved whether reference was resolved
+    """
+
+    percept_id: str
+    gate: ReadinessGate
+    assigned_role: Optional[str] = None
+    reference_resolved: bool = False
+
+
+@dataclass(frozen=True)
+class InformationalStockRecord:
+    """سجل البرهان الكامل — the full IS 9-tuple from Article 48.
+
+    IS = (X, K, Cl, Ln, Ref, Role, Ready₁, Ready₂, Ready₃)
+
+    Fields
+    ------
+    record_id            unique record identifier
+    percept_id           X  — the percept / datum
+    stock                K  — prior informational stock
+    classification       Cl — classification / interpretation result
+    linguistic_direction Ln — linguistic / semantic direction
+    reference            Ref — reference / predication
+    candidate_role       Role — candidate role
+    ready_1              Ready₁ — perceptual readiness gate
+    ready_2              Ready₂ — compositional readiness gate
+    ready_3              Ready₃ — propositional readiness gate
+    """
+
+    record_id: str
+    percept_id: str
+    stock: PriorInformationalStock
+    classification: str
+    linguistic_direction: str
+    reference: str
+    candidate_role: str
+    ready_1: ReadinessGate
+    ready_2: ReadinessGate
+    ready_3: ReadinessGate
