@@ -2020,3 +2020,136 @@ class CompositionVerdict(Enum):
     ACCEPTED = auto()  # مقبول
     REJECTED = auto()  # مرفوض
     PENDING = auto()   # معلّق
+
+
+# ── Informational Stock Governance (ISG) Constitution v1 ────────────
+
+
+class KnowledgeAtomType(Enum):
+    """نوع الذرة المعرفية — kind of knowledge atom (المادة 8)."""
+
+    LEXICAL = auto()         # ذرة لفظية
+    SEMANTIC = auto()        # ذرة دلالية
+    CLASSIFICATORY = auto()  # ذرة تصنيفية
+    REFERENTIAL = auto()     # ذرة إحالية
+    RELATIONAL = auto()      # ذرة علائقية
+    NORMATIVE_RULE = auto()  # ذرة قاعدية
+    CONTEXTUAL = auto()      # ذرة سياقية
+    CRITERION = auto()       # ذرة معيارية
+    SYMBOLIC = auto()        # ذرة ترميزية
+    MATHEMATICAL = auto()    # ذرة رياضية
+
+
+class PriorKnowledgeType(Enum):
+    """نوع المعرفة السابقة — type of prior knowledge (المادة 11)."""
+
+    DEFINITIONAL = auto()    # معرفة تعريفية
+    CLASSIFICATORY = auto()  # معرفة تصنيفية
+    RELATIONAL = auto()      # معرفة علائقية
+    LINGUISTIC = auto()      # معرفة لغوية
+    CONVENTIONAL = auto()    # معرفة عرفية/استعمالية
+    INTERPRETIVE = auto()    # معرفة تفسيرية
+    RULE_BASED = auto()      # معرفة قاعدية
+    NORMATIVE = auto()       # معرفة معيارية
+    SYMBOLIC = auto()        # معرفة ترميزية
+    MATHEMATICAL = auto()    # معرفة رياضية
+
+
+class EpistemicEntryKind(Enum):
+    """صنف المدخل المعرفي — separates information from opinions (المادة 21)."""
+
+    INFORMATION = auto()     # معلومة — verified, sourceable
+    OPINION = auto()         # رأي — interpretive stance
+    HYPOTHESIS = auto()      # فرضية — testable proposal
+    ESTIMATE = auto()        # تقدير — approximation
+    PRIOR_POSITION = auto()  # موقف مسبق — pre-existing stance
+
+
+class ConfirmationRank(Enum):
+    """رتبة الثبوت — certitude level of a knowledge atom (المادة 36)."""
+
+    ESTABLISHED = auto()     # ثابتة
+    PREPONDERANT = auto()    # راجحة
+    PROBABLE = auto()        # محتملة
+    SUSPENDED = auto()       # معلقة
+    REJECTED = auto()        # مردودة
+
+
+class SourceType(Enum):
+    """نوع المصدر — classification of knowledge source (المادة 35)."""
+
+    PRIMARY = auto()            # مصدر أصلي
+    SECONDARY = auto()          # مصدر ثانوي
+    DERIVED = auto()            # مصدر مشتق
+    CONTEXTUAL_SOURCE = auto()  # مصدر سياقي
+    INFERENTIAL = auto()        # مصدر استنباطي
+    TERMINOLOGICAL = auto()     # مصدر اصطلاحي
+
+
+class LevelMatchStatus(Enum):
+    """حالة مطابقة المستوى — epistemological level matching (المادة 30)."""
+
+    MATCHED = auto()                       # مطابقة
+    EXCESSIVELY_BROAD = auto()             # أوسع من المدخل توسعًا مضللًا
+    EXCESSIVELY_NARROW = auto()            # أضيق من المدخل تضييقًا مخلًا
+    WRONG_LAYER = auto()                   # من طبقة غير مناسبة
+    DIFFERENT_DOMAIN = auto()              # من مجال مباين
+    UNJUSTIFIED_GENERALISATION = auto()    # تعميم بلا مبرر
+    UNJUSTIFIED_PARTICULARISATION = auto() # تخصيص بلا مبرر
+
+
+class CallabilityStatus(Enum):
+    """حالة صلاحية الاستدعاء — whether atom may be summoned (المادة 40–41)."""
+
+    CALLABLE = auto()     # صالحة للاستدعاء
+    BLOCKED = auto()      # ممنوعة
+    CONDITIONAL = auto()  # مشروطة
+
+
+class InternalConflictType(Enum):
+    """نوع التعارض الداخلي — conflict within the stock itself (المادة 45)."""
+
+    INFO_VS_INFO = auto()              # تعارض بين معلومتين
+    RULE_VS_RULE = auto()              # تعارض بين قاعدتين
+    USAGE_VS_USAGE = auto()            # تعارض بين استعمالين
+    LITERAL_VS_CONVENTIONAL = auto()   # تعارض بين حقيقة وعرف
+    NARRATION_VS_NARRATION = auto()    # تعارض بين نقلين
+    CONTEXT_VS_CONTEXT = auto()        # تعارض بين سياقين
+
+
+class ISGConflictResolution(Enum):
+    """آلية فضّ التعارض — resolution method for internal conflicts (المادة 47)."""
+
+    BY_CONFIRMATION_RANK = auto()  # بحسب رتبة الثبوت
+    BY_DOMAIN = auto()             # بحسب نوع المجال
+    BY_INPUT_RELEVANCE = auto()    # بحسب قوة الصلة بالمدخل
+    BY_CONTEXT_PRIORITY = auto()   # بحسب أولوية السياق
+    BY_RULE_RANK = auto()          # بحسب رتبة القاعدة
+    BY_SPECIALISATION = auto()     # بحسب التخصيص والتقييد
+    SUSPENDED_UNRESOLVED = auto()  # تعليق غير المحسوم
+
+
+class GateDecision(Enum):
+    """قرار البوابة — governance gate outcome (المادة 73/78)."""
+
+    PASS = auto()      # عبور — entry to lexeme system
+    REJECT = auto()    # رد
+    SUSPEND = auto()   # تعليق
+    COMPLETE = auto()  # استكمال — request more data
+
+
+class ReadinessLevel(Enum):
+    """مستوى الجاهزية — readiness level achieved (المادة 62–66)."""
+
+    FIRST = auto()   # الجاهزية الأولى — raw → interpreted percept
+    SECOND = auto()  # الجاهزية الثانية — lexeme → concept community
+    THIRD = auto()   # الجاهزية الثالثة — organised output → composition
+
+
+class VerificationStatus(Enum):
+    """حالة التحقق — verification state of the source record (المادة 34)."""
+
+    VERIFIED = auto()      # محقق
+    UNVERIFIED = auto()    # غير محقق
+    UNDER_REVIEW = auto()  # قيد المراجعة
+    DISQUALIFIED = auto()  # غير مؤهل
