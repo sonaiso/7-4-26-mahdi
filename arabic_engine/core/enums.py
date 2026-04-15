@@ -1643,3 +1643,139 @@ class ActivationStage(Enum):
     FACTOR = auto()         # عامل
     CASE = auto()           # حالة إعرابية
     JUDGEMENT = auto()      # حكم
+
+
+# ── State-machine states ────────────────────────────────────────────
+
+
+class SoundState(Enum):
+    """حالات آلة الصوت — Sound machine states (Layer 1–2)."""
+    S0_UNOBSERVED = auto()   # غير مُلاحَظ
+    S1_DETECTED = auto()     # مُكتشَف
+    S2_BOUNDED = auto()      # محدود
+    S3_SEGMENTED = auto()    # مُجزّأ
+    S4_COHERENT = auto()     # متماسك
+    S5_STABLE_UNIT = auto()  # وحدة مستقرة
+    S6_REJECTED = auto()     # مرفوض
+
+
+class HarakaState(Enum):
+    """حالات آلة الحركة — Haraka (vowel-mark) machine states (Layer 2.5)."""
+    H0_UNKNOWN = auto()      # مجهول
+    H1_CANDIDATE = auto()    # مرشح
+    H2_ATTACHED = auto()     # مُلحق
+    H3_OPERATIONAL = auto()  # تشغيلي
+    H4_LENGTHENED = auto()   # ممدود
+    H5_DELETED = auto()      # محذوف
+    H6_REJECTED = auto()     # مرفوض
+
+
+class SyllableState(Enum):
+    """حالات آلة المقطع — Syllable machine states (Layer 3)."""
+    Y0_NONE = auto()           # لا شيء
+    Y1_COLLECTING = auto()     # تجميع
+    Y2_NUCLEUS_FOUND = auto()  # نواة مكتشفة
+    Y3_SHAPE_RESOLVED = auto() # شكل محلول
+    Y4_WEIGHTED = auto()       # موزون
+    Y5_VALIDATED = auto()      # مصادق عليه
+    Y6_REJECTED = auto()       # مرفوض
+
+
+class RootRankState(Enum):
+    """حالات آلة الرتبة الجذرية — Root-rank machine states (Layer 4)."""
+    R0_UNRANKED = auto()        # غير مرتّب
+    R1_RANK_CANDIDATE = auto()  # مرشح رتبة
+    R2_FA_CANDIDATE = auto()    # مرشح فاء
+    R3_AYN_CANDIDATE = auto()   # مرشح عين
+    R4_LAM_CANDIDATE = auto()   # مرشح لام
+    R5_RANK_VALIDATED = auto()  # رتبة مصادق عليها
+    R6_RANK_DEFERRED = auto()   # رتبة مؤجلة
+
+
+class TransformState(Enum):
+    """حالات آلة التحول — Transform machine states (Layer 5)."""
+    T0_NONE = auto()          # لا شيء
+    T1_ORIGINAL = auto()      # أصل
+    T2_AUGMENT = auto()       # زائد
+    T3_SUBSTITUTION = auto()  # مبدل
+    T4_DELETION = auto()      # محذوف
+    T5_ILLAL = auto()         # معلول
+    T6_IDGHAM = auto()        # مدغم
+    T7_VALIDATED = auto()     # تحول مصادق عليه
+
+
+class JudgmentState(Enum):
+    """حالات آلة الحكم النهائي — Final judgment machine states (Layer 6)."""
+    J0_NONE = auto()            # لا شيء
+    J1_NOMINATED = auto()       # مرشح
+    J2_SCORED = auto()          # مُقيّم
+    J3_REALITY_CHECKED = auto() # تحقق واقعي
+    J4_APPROVED = auto()        # معتمد
+    J5_REJECTED = auto()        # مرفوض
+    J6_DEFERRED = auto()        # مؤجل
+
+
+class LayerEvent(Enum):
+    """أحداث الطبقات — Events that drive state-machine transitions."""
+    # Layer 0 – identity
+    EV_IDENTITY_REQUEST = auto()
+    # Layer 1 – sound
+    EV_SIGNAL_DETECTED = auto()
+    EV_BOUNDARY_CONFIRMED = auto()
+    EV_PHASE_SEGMENTED = auto()
+    EV_COHESION_PASSED = auto()
+    EV_UNITY_PASSED = auto()
+    EV_CONFIDENCE_FAILED = auto()
+    # Layer 2.5 – haraka
+    EV_VOCALIC_TRACE_FOUND = auto()
+    EV_ATTACHED_TO_PHONEME = auto()
+    EV_SYLLABLE_ROLE_CONFIRMED = auto()
+    EV_LENGTHENING_DETECTED = auto()
+    EV_HARAKA_DELETED = auto()
+    EV_HARAKA_INVALID = auto()
+    # Layer 3 – syllable
+    EV_PHONEME_ADDED = auto()
+    EV_NUCLEUS_DETECTED = auto()
+    EV_SHAPE_RESOLVED = auto()
+    EV_WEIGHT_COMPUTED = auto()
+    EV_SYLLABLE_VALIDATED = auto()
+    # Layer 4 – root rank
+    EV_ROOT_CONTEXT_FOUND = auto()
+    EV_FA_SCORE_MAX = auto()
+    EV_AYN_SCORE_MAX = auto()
+    EV_LAM_SCORE_MAX = auto()
+    EV_RANK_CONFIRMED = auto()
+    EV_RANK_AMBIGUOUS = auto()
+    # Layer 5 – transform
+    EV_ASSIMILATION_DETECTED = auto()
+    EV_WEAKNESS_PATTERN_DETECTED = auto()
+    EV_MATERIAL_CHANGED = auto()
+    EV_SURFACE_ABSENT = auto()
+    EV_DEPENDENT_FUNCTIONAL = auto()
+    EV_CONSTITUTIVE_STABLE = auto()
+    EV_TRANSFORM_VALIDATED = auto()
+    # Layer 6 – judgment
+    EV_JUDGMENT_NOMINATED = auto()
+    EV_SCORE_COMPUTED = auto()
+    EV_REALITY_EVIDENCE_FOUND = auto()
+    EV_REALITY_MATCH_PASSED = auto()
+    EV_REALITY_MATCH_FAILED = auto()
+    EV_INSUFFICIENT_EVIDENCE = auto()
+
+
+class TransformJudgment(Enum):
+    """الأحكام الستة — The six morphological transform judgments."""
+    ORIGINAL = auto()     # أصل
+    AUGMENTED = auto()    # زائد
+    SUBSTITUTED = auto()  # مبدل
+    DELETED = auto()      # محذوف
+    WEAKENED = auto()     # معلول (إعلال)
+    ASSIMILATED = auto()  # مدغم (إدغام)
+
+
+class MCIDecision(Enum):
+    """قرار مؤشر الحد الأدنى المكتمل — MCI classification outcome."""
+    REJECTED = auto()           # رفض (< 0.45)
+    SUSPENDED = auto()          # تعليق / إعادة فحص (0.45–0.65)
+    ANALYTICALLY_ACCEPTED = auto()  # قبول تحليلي (0.65–0.80)
+    DIRECTLY_ACCEPTED = auto()  # قبول مباشر (≥ 0.80)
