@@ -19,10 +19,19 @@ from .enums import (
     CombinationType as CombinationType,
 )
 from .enums import (
+    CompositionDegree as CompositionDegree,
+)
+from .enums import (
     ConstraintType as ConstraintType,
 )
 from .enums import (
+    ContextRequirement as ContextRequirement,
+)
+from .enums import (
     DalalaType as DalalaType,
+)
+from .enums import (
+    DependencyDegree as DependencyDegree,
 )
 from .enums import (
     ElementClass as ElementClass,
@@ -34,6 +43,12 @@ from .enums import (
     ElementLayer as ElementLayer,
 )
 from .enums import (
+    ExistenceMode as ExistenceMode,
+)
+from .enums import (
+    FunctionalSubtype as FunctionalSubtype,
+)
+from .enums import (
     GuidanceState as GuidanceState,
 )
 from .enums import (
@@ -43,10 +58,22 @@ from .enums import (
     IrabRole as IrabRole,
 )
 from .enums import (
+    LogicalStatus as LogicalStatus,
+)
+from .enums import (
+    LogicalSubtype as LogicalSubtype,
+)
+from .enums import (
     MafhumType as MafhumType,
 )
 from .enums import (
+    Modality as Modality,
+)
+from .enums import (
     OntologicalLayer as OntologicalLayer,
+)
+from .enums import (
+    OntologicalSubtype as OntologicalSubtype,
 )
 from .enums import (
     PhonCategory as PhonCategory,
@@ -61,16 +88,46 @@ from .enums import (
     PhonTransform as PhonTransform,
 )
 from .enums import (
+    Polarity as Polarity,
+)
+from .enums import (
+    PragmaticSubtype as PragmaticSubtype,
+)
+from .enums import (
+    PrimarySignifiedType as PrimarySignifiedType,
+)
+from .enums import (
     ProofStatus as ProofStatus,
 )
 from .enums import (
+    PropositionalSubtype as PropositionalSubtype,
+)
+from .enums import (
+    ReferentialSubtype as ReferentialSubtype,
+)
+from .enums import (
+    RelationalSubtype as RelationalSubtype,
+)
+from .enums import (
+    RhetoricalStatus as RhetoricalStatus,
+)
+from .enums import (
+    RhetoricalSubtype as RhetoricalSubtype,
+)
+from .enums import (
     SemanticType as SemanticType,
+)
+from .enums import (
+    SignifiedTemporalStatus as SignifiedTemporalStatus,
 )
 from .enums import (
     SlotState as SlotState,
 )
 from .enums import (
     SpaceRef as SpaceRef,
+)
+from .enums import (
+    SpecificityDegree as SpecificityDegree,
 )
 from .enums import (
     TimeRef as TimeRef,
@@ -115,13 +172,31 @@ from .types import (
     LexicalClosure as LexicalClosure,
 )
 from .types import (
+    OntologicalSignified as OntologicalSignified,
+)
+from .types import (
     ProofDependencyGraph as ProofDependencyGraph,
 )
 from .types import (
     Proposition as Proposition,
 )
 from .types import (
+    PropositionalSignified as PropositionalSignified,
+)
+from .types import (
+    ReferentialSignified as ReferentialSignified,
+)
+from .types import (
+    RelationalSignified as RelationalSignified,
+)
+from .types import (
+    RhetoricalSignified as RhetoricalSignified,
+)
+from .types import (
     RootPattern as RootPattern,
+)
+from .types import (
+    SignifiedRecord as SignifiedRecord,
 )
 from .types import (
     Syllable as Syllable,
@@ -149,24 +224,43 @@ __all__ = [
     # enums
     "POS",
     "CombinationType",
+    "CompositionDegree",
     "ConstraintType",
+    "ContextRequirement",
     "DalalaType",
+    "DependencyDegree",
     "ElementClass",
     "ElementFunction",
     "ElementLayer",
+    "ExistenceMode",
+    "FunctionalSubtype",
     "GuidanceState",
     "IrabCase",
     "IrabRole",
+    "LogicalStatus",
+    "LogicalSubtype",
     "MafhumType",
+    "Modality",
     "OntologicalLayer",
+    "OntologicalSubtype",
     "PhonCategory",
     "PhonFeature",
     "PhonGroup",
     "PhonTransform",
+    "Polarity",
+    "PragmaticSubtype",
+    "PrimarySignifiedType",
     "ProofStatus",
+    "PropositionalSubtype",
+    "ReferentialSubtype",
+    "RelationalSubtype",
+    "RhetoricalStatus",
+    "RhetoricalSubtype",
     "SemanticType",
+    "SignifiedTemporalStatus",
     "SlotState",
     "SpaceRef",
+    "SpecificityDegree",
     "TimeRef",
     "TruthState",
     "UnicodeProfileType",
@@ -180,8 +274,14 @@ __all__ = [
     "InferenceResult",
     "LayerPromotionRule",
     "LexicalClosure",
+    "OntologicalSignified",
     "Proposition",
+    "PropositionalSignified",
+    "ReferentialSignified",
+    "RelationalSignified",
+    "RhetoricalSignified",
     "RootPattern",
+    "SignifiedRecord",
     "Syllable",
     "SyntaxNode",
     "TimeSpaceTag",

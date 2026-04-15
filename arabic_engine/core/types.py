@@ -14,31 +14,44 @@ from .enums import (
     POS,
     CellType,
     CombinationType,
+    CompositionDegree,
     ConditionToken,
     ConstraintType,
+    ContextRequirement,
     DalalaType,
+    DependencyDegree,
     ElementClass,
     ElementFunction,
     ElementLayer,
     EvidenceType,
+    ExistenceMode,
     FunctionRole,
     FuncTransitionClass,
     GuidanceState,
     IrabCase,
     IrabRole,
+    LogicalStatus,
     MafhumType,
+    Modality,
     OntologicalLayer,
     OntologicalMode,
+    OntologicalSubtype,
     PhonCategory,
     PhonFeature,
     PhonGroup,
     PhonTransform,
+    Polarity,
+    PrimarySignifiedType,
     ProofStatus,
     RankType,
+    ReferentialSubtype,
     ReversibleValue,
+    RhetoricalStatus,
     SemanticType,
+    SignifiedTemporalStatus,
     SlotState,
     SpaceRef,
+    SpecificityDegree,
     SyllablePosition,
     TimeRef,
     TransitionCondition,
@@ -1155,3 +1168,96 @@ class EssenceConditionPair:
     def has_constraint(self) -> bool:
         """True when a realisation condition is attached."""
         return self.constraint is not None
+
+
+# ── Signified Ontology v1.0 — المدلول ────────────────────────────────
+
+@dataclass(frozen=True)
+class SignifiedRecord:
+    """سجل المدلول — the central record of the Arabic Signified Ontology.
+
+    Every signified in the language is represented as a 17-field frozen
+    record covering its type, subtype, and seven cross-cutting descriptive
+    axes.
+
+    Mirrors the JSON representation defined in §6 of the ontology spec.
+    """
+
+    id: str                                        # e.g. "SIG-000124"
+    label_ar: str                                  # التسمية بالعربية
+    label_en: str                                  # English label
+    definition: str                                # التعريف
+    primary_type: PrimarySignifiedType
+    secondary_type: str                            # dotted path, e.g. "EntityMeaning.GenericEntity"
+    dependency_degree: DependencyDegree
+    existence_mode: ExistenceMode
+    specificity_degree: SpecificityDegree
+    composition_degree: CompositionDegree
+    context_requirement: ContextRequirement
+    logical_status: LogicalStatus
+    rhetorical_status: RhetoricalStatus
+    temporal_status: SignifiedTemporalStatus
+    referential_status: Optional[ReferentialSubtype] = None
+    examples: Tuple[str, ...] = ()
+    constraints: Tuple[str, ...] = ()
+
+
+@dataclass(frozen=True)
+class OntologicalSignified(SignifiedRecord):
+    """سجل المدلول الوجودي — signified with ontological-subtype detail.
+
+    Extends :class:`SignifiedRecord` for EntityMeaning, PropertyMeaning,
+    and EventMeaning branches.
+    """
+
+    ontological_subtype: Optional[OntologicalSubtype] = None
+    # Entity branch
+    is_countable: bool = True
+    is_individuated: bool = True
+    is_named: bool = False
+    # Property branch
+    requires_bearer: bool = False
+    property_persistence: str = ""      # "stable" | "transient"
+    # Event branch
+    event_time: str = ""                # free-form temporal note
+    transitivity: str = ""              # "transitive" | "intransitive"
+    agency: str = ""                    # "agentive" | "non-agentive"
+    intentionality: str = ""            # "intentional" | "non-intentional"
+
+
+@dataclass(frozen=True)
+class RelationalSignified(SignifiedRecord):
+    """سجل المدلول العلائقي — signified with relational detail."""
+
+    arity: int = 2
+    relation_direction: str = ""        # e.g. "source→target"
+    symmetry: bool = False
+
+
+@dataclass(frozen=True)
+class PropositionalSignified(SignifiedRecord):
+    """سجل المدلول القضوي — signified with propositional detail."""
+
+    truth_evaluable: bool = False
+    polarity: Polarity = Polarity.NEUTRAL_POL
+    modality: Modality = Modality.CERTAIN_MOD
+
+
+@dataclass(frozen=True)
+class ReferentialSignified(SignifiedRecord):
+    """سجل المدلول الإحالي — signified with referential detail."""
+
+    reference_source: str = ""          # "text" | "context" | "situation" | "shared_knowledge"
+    deixis_type: str = ""               # "person" | "place" | "time" | "discourse"
+    definiteness: bool = False
+    anaphora_direction: str = ""        # "backward" | "forward"
+
+
+@dataclass(frozen=True)
+class RhetoricalSignified(SignifiedRecord):
+    """سجل المدلول البلاغي — signified with rhetorical detail."""
+
+    literal_base: str = ""
+    figurative_projection: str = ""
+    deviation_degree: float = 0.0
+    aesthetic_effect: str = ""
