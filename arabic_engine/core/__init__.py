@@ -571,16 +571,23 @@ from .kernel import (
 from .kernel import (
     derive_utterance_from_carrier as derive_utterance_from_carrier,
 )
-from .kernel import (
-    validate_kernel_graph as validate_kernel_graph,
+from .enums import (
+    CompositionDegree as CompositionDegree,
 )
-
-# ── State-machine engine re-exports ────────────────────────────────
-from .state_machine import (
-    MachineSnapshot as MachineSnapshot,
+from .enums import (
+    ConstraintType as ConstraintType,
 )
-from .state_machine import (
-    StateMachine as StateMachine,
+from .enums import (
+    ContextRequirement as ContextRequirement,
+)
+from .enums import (
+    DalalaType as DalalaType,
+)
+from .enums import (
+    DependencyDegree as DependencyDegree,
+)
+from .enums import (
+    ElementClass as ElementClass,
 )
 from .state_machine import (
     StateMachineConfig as StateMachineConfig,
@@ -588,10 +595,14 @@ from .state_machine import (
 from .state_machine import (
     StateTransition as StateTransition,
 )
-
-# ── Trace module re-exports ─────────────────────────────────────────
-from .trace import (
-    DecisionState as DecisionState,
+from .enums import (
+    ExistenceMode as ExistenceMode,
+)
+from .enums import (
+    FunctionalSubtype as FunctionalSubtype,
+)
+from .enums import (
+    GuidanceState as GuidanceState,
 )
 from .trace import (
     HypothesisState as HypothesisState,
@@ -643,13 +654,25 @@ from .enums import (
     LinguisticZeroType as LinguisticZeroType,
 )
 from .enums import (
+    LogicalStatus as LogicalStatus,
+)
+from .enums import (
+    LogicalSubtype as LogicalSubtype,
+)
+from .enums import (
     MafhumType as MafhumType,
 )
-from .types import (
-    ConceptSeed as ConceptSeed,
+from .enums import (
+    Modality as Modality,
 )
-from .types import (
-    ConflictEdge as ConflictEdge,
+from .enums import (
+    OntologicalLayer as OntologicalLayer,
+)
+from .enums import (
+    OntologicalSubtype as OntologicalSubtype,
+)
+from .enums import (
+    PhonCategory as PhonCategory,
 )
 from .types import (
     ConflictRecord as ConflictRecord,
@@ -660,26 +683,50 @@ from .types import (
 from .types import (
     ConflictRuleRecord as ConflictRuleRecord,
 )
-from .types import (
-    ConstraintEdge as ConstraintEdge,
+from .enums import (
+    Polarity as Polarity,
 )
-from .types import (
-    CouplingRecord as CouplingRecord,
+from .enums import (
+    PragmaticSubtype as PragmaticSubtype,
 )
-from .types import (
-    DalalaLink as DalalaLink,
+from .enums import (
+    PrimarySignifiedType as PrimarySignifiedType,
+)
+from .enums import (
+    ProofStatus as ProofStatus,
+)
+from .enums import (
+    PropositionalSubtype as PropositionalSubtype,
+)
+from .enums import (
+    ReferentialSubtype as ReferentialSubtype,
+)
+from .enums import (
+    RelationalSubtype as RelationalSubtype,
+)
+from .enums import (
+    RhetoricalStatus as RhetoricalStatus,
+)
+from .enums import (
+    RhetoricalSubtype as RhetoricalSubtype,
+)
+from .enums import (
+    SemanticType as SemanticType,
+)
+from .enums import (
+    SignifiedTemporalStatus as SignifiedTemporalStatus,
+)
+from .enums import (
+    SlotState as SlotState,
 )
 from .types import (
     DecisionTrace as DecisionTrace,
 )
-from .types import (
-    DependencyRecord as DependencyRecord,
+from .enums import (
+    SpecificityDegree as SpecificityDegree,
 )
-from .types import (
-    DisambiguationResult as DisambiguationResult,
-)
-from .types import (
-    DiscourseCarrierRecord as DiscourseCarrierRecord,
+from .enums import (
+    TimeRef as TimeRef,
 )
 from .enums import (
     WordClass as WordClass,
@@ -805,66 +852,7 @@ from .types import (
     LexicalClosure as LexicalClosure,
 )
 from .types import (
-    LinguisticCarrierNode as LinguisticCarrierNode,
-)
-from .types import (
-    LinguisticCarrierRecord as LinguisticCarrierRecord,
-)
-from .types import (
-    LinkingTraceNode as LinkingTraceNode,
-)
-from .types import (
-    LinkingTraceRecord as LinkingTraceRecord,
-)
-from .types import (
-    MCIResult as MCIResult,
-)
-from .types import (
-    MCIScores as MCIScores,
-)
-from .types import (
-    MethodNode as MethodNode,
-)
-from .types import (
-    MethodRecord as MethodRecord,
-)
-from .types import (
-    OntologicalConstraintRecord as OntologicalConstraintRecord,
-)
-from .types import (
-    OntologyV1Record as OntologyV1Record,
-)
-from .types import (
-    OpinionTraceNode as OpinionTraceNode,
-)
-from .types import (
-    OpinionTraceRecord as OpinionTraceRecord,
-)
-
-# ── Particle Fractal Constitution v1 type re-exports ────────────────
-from .types import (
-    ParticleFractalTrace as ParticleFractalTrace,
-)
-from .types import (
-    ParticleMinimum as ParticleMinimum,
-)
-from .types import (
-    ParticleRecord as ParticleRecord,
-)
-from .types import (
-    ParticleValidation as ParticleValidation,
-)
-from .types import (
-    PatternCandidate as PatternCandidate,
-)
-from .types import (
-    PredicationReadinessScore as PredicationReadinessScore,
-)
-from .types import (
-    PriorInfoNode as PriorInfoNode,
-)
-from .types import (
-    PriorInfoRecord as PriorInfoRecord,
+    OntologicalSignified as OntologicalSignified,
 )
 from .types import (
     ProofDependencyGraph as ProofDependencyGraph,
@@ -879,87 +867,22 @@ from .types import (
     Proposition as Proposition,
 )
 from .types import (
-    RankScoreComponents as RankScoreComponents,
+    PropositionalSignified as PropositionalSignified,
 )
 from .types import (
-    RationalSelfRecord as RationalSelfRecord,
+    ReferentialSignified as ReferentialSignified,
 )
 from .types import (
-    RealityAnchorNode as RealityAnchorNode,
+    RelationalSignified as RelationalSignified,
 )
 from .types import (
-    RealityAnchorRecord as RealityAnchorRecord,
-)
-from .types import (
-    ReceiverRoleRecord as ReceiverRoleRecord,
-)
-from .types import (
-    ReceptionRecord as ReceptionRecord,
-)
-from .types import (
-    ReceptionStateRecord as ReceptionStateRecord,
-)
-from .types import (
-    ReferenceRecord as ReferenceRecord,
-)
-from .types import (
-    ReferenceTransition as ReferenceTransition,
-)
-from .types import (
-    RepresentationRecord as RepresentationRecord,
-)
-from .types import (
-    RootCandidate as RootCandidate,
+    RhetoricalSignified as RhetoricalSignified,
 )
 from .types import (
     RootPattern as RootPattern,
 )
 from .types import (
-    RootSlot as RootSlot,
-)
-from .types import (
-    SelfNode as SelfNode,
-)
-from .types import (
-    SenderRoleRecord as SenderRoleRecord,
-)
-from .types import (
-    SenseTraceNode as SenseTraceNode,
-)
-from .types import (
-    SenseTraceRecord as SenseTraceRecord,
-)
-from .types import (
-    SignalUnit as SignalUnit,
-)
-from .types import (
-    SignifiedNode as SignifiedNode,
-)
-from .types import (
-    SignifierNode as SignifierNode,
-)
-
-# ── Single Concept Constitution v1 type re-exports ──────────────────
-from .types import (
-    SingleConceptDalala as SingleConceptDalala,
-)
-from .types import (
-    SingleConceptGateResult as SingleConceptGateResult,
-)
-from .types import (
-    SingleConceptIsomorphism as SingleConceptIsomorphism,
-)
-from .types import (
-    SingleConceptRecord as SingleConceptRecord,
-)
-from .types import (
-    SourceRecord as SourceRecord,
-)
-from .types import (
-    StructuralProfileRecord as StructuralProfileRecord,
-)
-from .types import (
-    SupportEdge as SupportEdge,
+    SignifiedRecord as SignifiedRecord,
 )
 from .types import (
     Syllable as Syllable,
@@ -1012,36 +935,16 @@ __all__ = [
     "CausalRole",
     "CellType",
     "CombinationType",
-    "ConceptFormationMode",
-    "ConceptRelationType",
-    "ConceptualSignifiedClass",
-    "ConditionToken",
+    "CompositionDegree",
     "ConstraintType",
-    "ContaminationLevel",
-    "CouplingRelationType",
-    "CulturalScope",
-    "DalaalaKind",
+    "ContextRequirement",
     "DalalaType",
-    "DecisionCode",
-    "DiachronicStatus",
-    "DiscourseGapType",
-    "DiscourseValidationOutcome",
+    "DependencyDegree",
     "ElementClass",
     "ElementFunction",
     "ElementLayer",
-    "EmbodiedDomain",
-    "EpistemicRank",
-    "EpistemicStatus",
-    "EvidenceType",
-    "ExchangeStatus",
-    "ExchangePurposeType",
-    "ExchangeStyleType",
-    "ExchangeType",
-    "ExplicitnessLevel",
-    "FrameType",
-    "FuncTransitionClass",
-    "FunctionRole",
-    "GapSeverity",
+    "ExistenceMode",
+    "FunctionalSubtype",
     "GuidanceState",
     "HarakaState",
     "InfoKind",
@@ -1051,50 +954,30 @@ __all__ = [
     "InterpretiveStability",
     "IrabCase",
     "IrabRole",
-    "JudgementType",
-    "JudgmentState",
-    "LinkKind",
-    "LayerEvent",
-    "MCIDecision",
+    "LogicalStatus",
+    "LogicalSubtype",
     "MafhumType",
-    "MentalIntentionalType",
-    "MetaConceptualLevel",
-    "MethodFamily",
-    "ModalCategory",
-    "NormativeCategory",
-    "OntologicalConstraintType",
+    "Modality",
     "OntologicalLayer",
-    "OntologicalMode",
-    "OperationalCapacity",
-    "PathKind",
+    "OntologicalSubtype",
     "PhonCategory",
     "PhonFeature",
     "PhonGroup",
     "PhonTransform",
-    "ProofPathKind",
+    "Polarity",
+    "PragmaticSubtype",
+    "PrimarySignifiedType",
     "ProofStatus",
-    "PurposeType",
-    "RankType",
-    "RationalSelfKind",
-    "RealityKind",
-    "ReceiverExpectedAction",
-    "ReceiverRoleType",
-    "ReceiverState",
-    "ReceptionMode",
-    "ReceptionStateType",
-    "ReversibleValue",
-    "SalienceLevel",
-    "ScriptPhase",
-    "SelfModelAspect",
+    "PropositionalSubtype",
+    "ReferentialSubtype",
+    "RelationalSubtype",
+    "RhetoricalStatus",
+    "RhetoricalSubtype",
     "SemanticType",
-    "SenderRoleType",
-    "SenseModality",
-    "SignifiedClass",
-    "SignifierClass",
+    "SignifiedTemporalStatus",
     "SlotState",
     "SpaceRef",
-    "StyleKind",
-    "SyllablePosition",
+    "SpecificityDegree",
     "TimeRef",
     "TraceMode",
     "TraceQuality",
@@ -1188,41 +1071,14 @@ __all__ = [
     "KnowledgeEpisodeNode",
     "LayerPromotionRule",
     "LexicalClosure",
-    "MCIResult",
-    "MCIScores",
-    "LinguisticCarrierNode",
-    "LinguisticCarrierRecord",
-    "LinkingTraceNode",
-    "LinkingTraceRecord",
-    "MethodNode",
-    "MethodRecord",
-    "OntologicalConstraintRecord",
-    "OntologyV1Record",
-    "OpinionTraceNode",
-    "OpinionTraceRecord",
-    "PriorInfoNode",
-    "PriorInfoRecord",
-    "ProofDependencyGraph",
-    "ProofPathNode",
-    "ProofPathRecord",
+    "OntologicalSignified",
     "Proposition",
-    "PhonemeCandidate",
-    "PhoneticEvent",
-    "RationalSelfRecord",
-    "RealityAnchorNode",
-    "RealityAnchorRecord",
-    "ReceiverRoleRecord",
-    "ReceptionRecord",
-    "ReceptionStateRecord",
+    "PropositionalSignified",
+    "ReferentialSignified",
+    "RelationalSignified",
+    "RhetoricalSignified",
     "RootPattern",
-    "RankScoreComponents",
-    "RootSlot",
-    "SelfNode",
-    "SenderRoleRecord",
-    "SenseTraceNode",
-    "SenseTraceRecord",
-    "SignifiedNode",
-    "SignifierNode",
+    "SignifiedRecord",
     "Syllable",
     "SyllableUnit",
     "SyntaxNode",

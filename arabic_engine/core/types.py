@@ -24,14 +24,7 @@ from .enums import (
     CausalRole,
     CellType,
     CombinationType,
-    ConceptClosureStatus,
-    ConceptEntityAttribute,
-    ConceptFormationMode,
-    ConceptGateID,
-    ConceptIndependence,
-    ConceptRelationType,
-    ConceptualSignifiedClass,
-    ConceptUniversalParticular,
+    CompositionDegree,
     ConditionToken,
     ConfirmationRank,
     ConflictResolutionMethod,
@@ -39,16 +32,9 @@ from .enums import (
     ConflictType,
     ConstraintStrength,
     ConstraintType,
-    ContaminationLevel,
-    CouplingRelationType,
-    CulturalScope,
-    DalaalaKind,
+    ContextRequirement,
     DalalaType,
-    DecisionCode,
-    DefinitenessRole,
-    DiachronicStatus,
-    DiscourseGapType,
-    DiscourseValidationOutcome,
+    DependencyDegree,
     ElementClass,
     ElementFunction,
     ElementLayer,
@@ -57,10 +43,7 @@ from .enums import (
     EpistemicRank,
     EpistemicStatus,
     EvidenceType,
-    ExchangeStatus,
-    ExchangeType,
-    ExplicitnessLevel,
-    FrameType,
+    ExistenceMode,
     FunctionRole,
     FuncTransitionClass,
     GapSeverity,
@@ -76,63 +59,31 @@ from .enums import (
     InterPropositionLink,
     IrabCase,
     IrabRole,
-    LinguisticZeroType,
+    LogicalStatus,
     MafhumType,
-    MentalIntentionalType,
-    MetaConceptualLevel,
-    MethodFamily,
-    ModalCategory,
-    NormativeCategory,
-    OntologicalConstraintType,
+    Modality,
     OntologicalLayer,
     OntologicalMode,
-    OperationalCapacity,
-    ParticleDirection,
-    ParticleEffect,
-    ParticleKind,
-    ParticleReadiness,
-    ParticleScope,
-    PathKind,
+    OntologicalSubtype,
     PhonCategory,
     PhonFeature,
     PhonGroup,
     PhonTransform,
-    PredicationBasis,
-    ProofPathKind,
+    Polarity,
+    PrimarySignifiedType,
     ProofStatus,
     PropositionType,
     PurposeType,
     RankType,
-    RationalSelfKind,
-    ReadinessLevel,
-    RealityKind,
-    ReceiverExpectedAction,
-    ReceiverRoleType,
-    ReceiverState,
-    ReceptionMode,
-    ReceptionStateType,
-    ReferenceDegree,
-    ReferenceOrigin,
-    ReferenceToolKind,
-    ReferenceType,
+    ReferentialSubtype,
     ReversibleValue,
-    RevisionType,
-    RoleStatus,
-    SalienceLevel,
-    ScriptPhase,
-    SelfModelAspect,
+    RhetoricalStatus,
     SemanticType,
-    SenderRoleType,
-    SenseModality,
-    SignalType,
-    SignifiedClass,
-    SignifierClass,
-    SingleConceptType,
+    SignifiedTemporalStatus,
     SlotState,
     SourceType,
     SpaceRef,
-    StrictLayerID,
-    StyleKind,
+    SpecificityDegree,
     SyllablePosition,
     SymbolicStatus,
     TimeRef,
@@ -1711,56 +1662,94 @@ class ProofPathRecord:
         return self.constraint is not None
 
 
-# ── Linguistic-Zero Coverage types ──────────────────────────────────
+# ── Signified Ontology v1.0 — المدلول ────────────────────────────────
+
+@dataclass(frozen=True)
+class SignifiedRecord:
+    """سجل المدلول — the central record of the Arabic Signified Ontology.
+
+    Every signified in the language is represented as a 17-field frozen
+    record covering its type, subtype, and seven cross-cutting descriptive
+    axes.
+
+    Mirrors the JSON representation defined in §6 of the ontology spec.
+    """
+
+    id: str                                        # e.g. "SIG-000124"
+    label_ar: str                                  # التسمية بالعربية
+    label_en: str                                  # English label
+    definition: str                                # التعريف
+    primary_type: PrimarySignifiedType
+    secondary_type: str                            # dotted path, e.g. "EntityMeaning.GenericEntity"
+    dependency_degree: DependencyDegree
+    existence_mode: ExistenceMode
+    specificity_degree: SpecificityDegree
+    composition_degree: CompositionDegree
+    context_requirement: ContextRequirement
+    logical_status: LogicalStatus
+    rhetorical_status: RhetoricalStatus
+    temporal_status: SignifiedTemporalStatus
+    referential_status: Optional[ReferentialSubtype] = None
+    examples: Tuple[str, ...] = ()
+    constraints: Tuple[str, ...] = ()
 
 
 @dataclass(frozen=True)
-class ZeroCoverageDetail:
-    """تفصيل تغطية الصفر — coverage status for a single zero-type axis.
+class OntologicalSignified(SignifiedRecord):
+    """سجل المدلول الوجودي — signified with ontological-subtype detail.
 
-    Fields
-    ------
-    zero_type   the linguistic-zero axis (Z1–Z20)
-    coverage    whether the word covers, partially covers, or misses this axis
+    Extends :class:`SignifiedRecord` for EntityMeaning, PropertyMeaning,
+    and EventMeaning branches.
     """
 
-    zero_type: LinguisticZeroType
-    coverage: ZeroCoverage
-
-    @property
-    def zero_code(self) -> str:
-        """Return the Z-code string, e.g. ``'Z1'``."""
-        return self.zero_type.name
-
-    @property
-    def zero_name(self) -> str:
-        """Return the Arabic name of this zero axis."""
-        return self.zero_type.arabic_name
+    ontological_subtype: Optional[OntologicalSubtype] = None
+    # Entity branch
+    is_countable: bool = True
+    is_individuated: bool = True
+    is_named: bool = False
+    # Property branch
+    requires_bearer: bool = False
+    property_persistence: str = ""      # "stable" | "transient"
+    # Event branch
+    event_time: str = ""                # free-form temporal note
+    transitivity: str = ""              # "transitive" | "intransitive"
+    agency: str = ""                    # "agentive" | "non-agentive"
+    intentionality: str = ""            # "intentional" | "non-intentional"
 
 
 @dataclass(frozen=True)
-class WordZeroCoverageReport:
-    """تقرير تغطية الصفر اللغوي — full zero-coverage analysis for one word.
+class RelationalSignified(SignifiedRecord):
+    """سجل المدلول العلائقي — signified with relational detail."""
 
-    Fields
-    ------
-    word        surface form of the word (may be empty string for pure analysis)
-    word_class  morpho-semantic class (:class:`WordClass`)
-    pattern     morphological pattern string, e.g. ``'فاعل'`` (or ``''``)
-    root        tuple of root letters, e.g. ``('ك', 'ت', 'ب')`` (or empty)
-    covers      tuple of Z-codes fully covered by this word
-    partial     tuple of Z-codes partially covered
-    uncovered   tuple of Z-codes not covered at all
-    details     one :class:`ZeroCoverageDetail` per axis (Z1–Z20, in order)
-    notes       explanatory notes produced during analysis
-    """
+    arity: int = 2
+    relation_direction: str = ""        # e.g. "source→target"
+    symmetry: bool = False
 
-    word: str
-    word_class: WordClass
-    pattern: str
-    root: Tuple[str, ...]
-    covers: Tuple[str, ...]
-    partial: Tuple[str, ...]
-    uncovered: Tuple[str, ...]
-    details: Tuple[ZeroCoverageDetail, ...]
-    notes: Tuple[str, ...]
+
+@dataclass(frozen=True)
+class PropositionalSignified(SignifiedRecord):
+    """سجل المدلول القضوي — signified with propositional detail."""
+
+    truth_evaluable: bool = False
+    polarity: Polarity = Polarity.NEUTRAL_POL
+    modality: Modality = Modality.CERTAIN_MOD
+
+
+@dataclass(frozen=True)
+class ReferentialSignified(SignifiedRecord):
+    """سجل المدلول الإحالي — signified with referential detail."""
+
+    reference_source: str = ""          # "text" | "context" | "situation" | "shared_knowledge"
+    deixis_type: str = ""               # "person" | "place" | "time" | "discourse"
+    definiteness: bool = False
+    anaphora_direction: str = ""        # "backward" | "forward"
+
+
+@dataclass(frozen=True)
+class RhetoricalSignified(SignifiedRecord):
+    """سجل المدلول البلاغي — signified with rhetorical detail."""
+
+    literal_base: str = ""
+    figurative_projection: str = ""
+    deviation_degree: float = 0.0
+    aesthetic_effect: str = ""

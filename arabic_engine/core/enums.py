@@ -698,85 +698,242 @@ class RankType(Enum):
     TRANSITIONAL = auto()   # انتقالي — balanced / transitional
 
 
-# ── Linguistic-Zero Coverage enums ──────────────────────────────────
+# ── Signified Ontology v1.0 ─────────────────────────────────────────
+# The following enums encode the Arabic Signified Ontology across
+# 8 top-level axes and 7 cross-cutting descriptive dimensions.
+
+class PrimarySignifiedType(Enum):
+    """النوع الأعلى للمدلول — the 8 top-level signified classes."""
+    ONTOLOGICAL = auto()      # وجودي — entity / property / event
+    RELATIONAL = auto()       # علائقي — relation between terms
+    PROPOSITIONAL = auto()    # قضوي — proposition-level meaning
+    REFERENTIAL = auto()      # إحالي — reference / deixis
+    FUNCTIONAL = auto()       # وظيفي — structural / functional
+    PRAGMATIC = auto()        # تداولي — pragmatic / speech-act
+    LOGICAL = auto()          # منطقي — logical entailment
+    RHETORICAL = auto()       # بلاغي — figurative / rhetorical
 
 
-class WordClass(Enum):
-    """صنف الكلمة — morpho-semantic word class for zero-coverage analysis.
+class OntologicalSubtype(Enum):
+    """الأنواع الفرعية الوجودية — subtypes under OntologicalType."""
+    # EntityMeaning — الذات
+    INDIVIDUAL_ENTITY = auto()      # ذات فردية
+    GENERIC_ENTITY = auto()         # ذات نوعية
+    GENUS_ENTITY = auto()           # ذات جنسية
+    PROPER_NAMED_ENTITY = auto()    # ذات مسماة بعلم
+    COLLECTIVE_ENTITY = auto()      # ذات جمعية
+    MASS_ENTITY = auto()            # ذات مادية
+    MENTAL_ENTITY = auto()          # ذات ذهنية
+    EXTERNAL_ENTITY = auto()        # ذات خارجية
+    # PropertyMeaning — الصفة
+    STABLE_PROPERTY = auto()        # صفة ثابتة
+    ACCIDENTAL_PROPERTY = auto()    # صفة عرضية
+    STATE_PROPERTY = auto()         # صفة حالية
+    QUANTITY_PROPERTY = auto()      # صفة كمية
+    QUALITY_PROPERTY = auto()       # صفة كيفية
+    EVALUATIVE_PROPERTY = auto()    # صفة تقييمية
+    COMPARATIVE_PROPERTY = auto()   # صفة مقارنة
+    # EventMeaning — الحدث
+    ACTION_EVENT = auto()           # حدث فعلي
+    ABSTRACT_EVENT = auto()         # حدث مجرد
+    CHANGE_OF_STATE_EVENT = auto()  # حدث تغير حالة
+    CAUSATIVE_EVENT = auto()        # حدث سببي
+    AFFECTED_EVENT = auto()         # حدث انفعالي
+    MOTION_EVENT = auto()           # حدث حركي
+    STATIC_EVENT = auto()           # حدث سكوني
+    MENTAL_EVENT = auto()           # حدث ذهني
+    EMOTIONAL_EVENT = auto()        # حدث وجداني
+    SPEECH_EVENT = auto()           # حدث كلامي
 
-    Used by the linguistic-zero decision matrix to select the base
-    coverage profile for a word before pattern hints are applied.
+
+class RelationalSubtype(Enum):
+    """الأنواع الفرعية العلائقية — subtypes under RelationalType."""
+    SPATIAL = auto()            # مكاني
+    TEMPORAL_REL = auto()       # زماني
+    CAUSAL = auto()             # سببي
+    FINAL = auto()              # غائي
+    ACCOMPANIMENT = auto()      # معيّة
+    INSTRUMENTAL = auto()       # أدائي
+    POSSESSIVE = auto()         # ملكية
+    CONDITIONAL = auto()        # شرطي
+    EXCEPTIONAL = auto()        # استثنائي
+    COMPARATIVE_REL = auto()    # مقارن
+    PART_WHOLE = auto()         # جزئي-كلي
+    ATTRIBUTIVE = auto()        # وصفي
+    PREDICATIVE = auto()        # إسنادي
+    DEPENDENCY = auto()         # تبعي
+
+
+class PropositionalSubtype(Enum):
+    """الأنواع الفرعية القضوية — subtypes under PropositionalType."""
+    ASSERTION = auto()                  # إثبات
+    NEGATION = auto()                   # نفي
+    INTERROGATIVE = auto()              # استفهام
+    PROBABILITY = auto()                # احتمال
+    EMPHASIS = auto()                   # توكيد
+    CONDITIONAL_PROP = auto()           # شرط قضوي
+    RESTRICTION = auto()                # تقييد / حصر
+    CORRECTION = auto()                 # تصحيح / استدراك
+    REPORTIVE_CONFIRMATION = auto()     # تأكيد خبري
+
+
+class ReferentialSubtype(Enum):
+    """الأنواع الفرعية الإحالية — subtypes under ReferentialType."""
+    PRONOUN = auto()            # ضمير
+    DEICTIC = auto()            # إشاري
+    RELATIVE = auto()           # موصول
+    INTERROGATIVE_REF = auto()  # استفهامي
+    VOCATIVE = auto()           # ندائي
+    DEFINITE = auto()           # معرّف
+    INDEFINITE = auto()         # نكرة
+    ANAPHORIC = auto()          # عائد نصي
+    CATAPHORIC = auto()         # عائد قبلي
+    PRESENCE = auto()           # حضوري
+    DISTANCE = auto()           # بعدي
+
+
+class FunctionalSubtype(Enum):
+    """الأنواع الفرعية الوظيفية — subtypes under FunctionalType."""
+    CONNECTOR = auto()          # رابط
+    SEPARATOR = auto()          # فاصل
+    INITIALIZER = auto()        # مبتدئ
+    STRUCTURAL_OP = auto()      # عامل بنيوي
+    CASE_FUNC = auto()          # وظيفة إعرابية
+    GOVERNANCE = auto()         # عمل نحوي
+    ABROGATIVE = auto()         # ناسخ
+    RANK_SHIFT = auto()         # تحويل رتبي
+    DISCOURSE_LINKER = auto()   # رابط خطابي
+
+
+class PragmaticSubtype(Enum):
+    """الأنواع الفرعية التداولية — subtypes under PragmaticType."""
+    INTENTIONAL = auto()                # قصدي
+    CONTEXTUAL = auto()                 # مقامي
+    INTERACTIONAL = auto()              # تفاعلي
+    SPEECH_ACT = auto()                 # فعل كلامي
+    PRESUPPOSITIONAL = auto()           # افتراضي
+    CONVERSATIONAL_IMPLICATURE = auto() # استلزام حواري
+    SOCIAL = auto()                     # اجتماعي
+
+
+class LogicalSubtype(Enum):
+    """الأنواع الفرعية المنطقية — subtypes under LogicalType."""
+    DENOTATIVE = auto()             # دلالة مطابقة
+    INCLUSIVE = auto()              # دلالة تضمن
+    ENTAILED = auto()               # دلالة التزام
+    PRESUPPOSED_LOGICAL = auto()    # اقتضاء منطقي
+    CONDITIONAL_LOGICAL = auto()    # شرط منطقي
+    NECESSARY = auto()              # لزوم
+    CONTRADICTORY = auto()          # تناقض
+    CONTRARY = auto()               # تضاد
+    UNIVERSAL = auto()              # عموم
+    PARTICULAR = auto()             # خصوص
+    RESTRICTIVE = auto()            # تقييدي
+    PREDICATIVE_LOGICAL = auto()    # حملي
+
+
+class RhetoricalSubtype(Enum):
+    """الأنواع الفرعية البلاغية — subtypes under RhetoricalType."""
+    METAPHORICAL = auto()   # استعاري
+    METONYMIC = auto()      # مجازي مرسل
+    SYMBOLIC = auto()        # رمزي
+    KINAYAH = auto()        # كنائي
+    ALLUSIVE = auto()       # تلميحي
+    IMAGISTIC = auto()      # تصويري
+    AFFECTIVE = auto()      # انفعالي / وجداني
+    AESTHETIC = auto()      # جمالي
+
+
+# ── Cross-cutting axes (§3 — السمات العابرة المشتركة) ────────────────
+
+class DependencyDegree(Enum):
+    """درجة الاستقلال — how dependent a signified is on other elements."""
+    INDEPENDENT = auto()                # مستقل
+    BEARER_DEPENDENT = auto()           # محتاج لمحل
+    REFERENT_DEPENDENT = auto()         # محتاج لمرجع
+    RELATIONALLY_DEPENDENT = auto()     # محتاج لأطراف نسبة
+    CONTEXT_DEPENDENT = auto()          # محتاج لسياق
+    PROPOSITION_DEPENDENT = auto()      # محتاج لقضية
+
+
+class ExistenceMode(Enum):
+    """نمط الوجود — the mode of existence for the signified."""
+    MENTAL = auto()             # ذهني
+    EXTERNAL = auto()           # خارجي
+    CONVENTIONAL = auto()       # عرفي
+    INSTITUTIONAL = auto()      # مؤسسي
+    IMAGINED = auto()           # متخيل
+    FIGURATIVE = auto()         # مجازي
+
+
+class SpecificityDegree(Enum):
+    """درجة التعيين — how specific / determined the signified is."""
+    UNDEFINED = auto()              # غير محدد
+    INDEFINITE_SPEC = auto()        # نكرة
+    DEFINITE_SPEC = auto()          # معرفة
+    DEICTICALLY_FIXED = auto()      # معيّن إشاريًا
+    ANAPHORICALLY_FIXED = auto()    # معيّن عائديًا
+    PROPERLY_NAMED = auto()         # معيّن بالعلمية
+
+
+class CompositionDegree(Enum):
+    """درجة التركيب — structural complexity of the signified."""
+    SIMPLE = auto()             # بسيط
+    COMPOSITE = auto()          # مركب
+    PREDICATIVE_COMP = auto()   # إسنادي
+    NETWORKED = auto()          # شبكي
+
+
+class SignifiedTemporalStatus(Enum):
+    """الوضع الزمني للمدلول — temporal aspect of the signified.
+
+    Prefixed with 'SIG' variants to avoid clashes with TimeRef.
     """
-    JAMID = auto()                 # جامد — frozen nominal
-    MASDAR = auto()                # مصدر — verbal noun / gerund
-    DERIVED = auto()               # مشتق — derived form (اسم فاعل، مفعول …)
-    REFERENTIAL_BUILTINS = auto()  # مبنيات إحالية — pronouns / demonstratives
-    RELATIONAL_TOOLS = auto()      # أدوات ربط — particles / prepositions
-    NOMINAL_COMPETENT = auto()     # متمكن اسمي — fully declined noun
-    VERBAL_COMPETENT = auto()      # متمكن فعلي — finite verb
-    VERBAL_COPULAR = auto()        # ناسخ فعلي — verbal copula (كان وأخواتها)
-    NOMINAL_COPULAR = auto()       # ناسخ اسمي — nominal copula (إن وأخواتها)
+    ATEMPORAL = auto()      # لا زمني
+    PAST_SIG = auto()       # ماضٍ
+    PRESENT_SIG = auto()    # حاضر
+    FUTURE_SIG = auto()     # مستقبل
+    INSTANTANEOUS = auto()  # آني
+    DURATIVE = auto()       # ممتد
+    ITERATIVE = auto()      # تكراري
 
 
-class LinguisticZeroType(Enum):
-    """نوع الصفر اللغوي — the twenty axes of linguistic zero coverage.
-
-    Each member encodes one semantic/syntactic dimension that a word
-    may *cover*, *partially cover*, or *leave uncovered*.
-
-    Integer values are stable identifiers matching the Z-codes Z1–Z20.
-    """
-    Z1  = 1   # هوية اسمية
-    Z2  = 2   # كلي/جزئي
-    Z3  = 3   # معرفة/نكرة
-    Z4  = 4   # إحالة
-    Z5  = 5   # ربط
-    Z6  = 6   # حدث
-    Z7  = 7   # زمن
-    Z8  = 8   # مكان
-    Z9  = 9   # فاعلية
-    Z10 = 10  # مفعولية
-    Z11 = 11  # سببية
-    Z12 = 12  # مسببية
-    Z13 = 13  # تحول اشتقاقي
-    Z14 = 14  # وحدة/كثرة
-    Z15 = 15  # عد/معدود
-    Z16 = 16  # تذكير/تأنيث
-    Z17 = 17  # تمكن اسمي
-    Z18 = 18  # تمكن فعلي
-    Z19 = 19  # تحويل إسنادي
-    Z20 = 20  # توكيد/استدراك/ترجٍّ/تمنٍّ
-
-    @property
-    def arabic_name(self) -> str:
-        """Return the Arabic label for this zero type."""
-        _names = {
-            1: "هوية اسمية",
-            2: "كلي/جزئي",
-            3: "معرفة/نكرة",
-            4: "إحالة",
-            5: "ربط",
-            6: "حدث",
-            7: "زمن",
-            8: "مكان",
-            9: "فاعلية",
-            10: "مفعولية",
-            11: "سببية",
-            12: "مسببية",
-            13: "تحول اشتقاقي",
-            14: "وحدة/كثرة",
-            15: "عد/معدود",
-            16: "تذكير/تأنيث",
-            17: "تمكن اسمي",
-            18: "تمكن فعلي",
-            19: "تحويل إسنادي",
-            20: "توكيد/استدراك/ترجٍّ/تمنٍّ",
-        }
-        return _names[self.value]
+class LogicalStatus(Enum):
+    """الحالة المنطقية — logical status of the signified."""
+    NON_PROPOSITIONAL = auto()  # غير قضوي
+    TRUTH_APT = auto()          # قابل للصدق والكذب
+    INFERENTIAL = auto()        # استدلالي
+    QUANTIFIED = auto()         # كمّي
+    RESTRICTIVE_LOG = auto()    # تقييدي
 
 
-class ZeroCoverage(Enum):
-    """درجة التغطية — how well a word covers a linguistic-zero axis."""
-    COVERS = auto()     # يغطي — full coverage
-    PARTIAL = auto()    # جزئي — partial coverage
-    UNCOVERED = auto()  # لا يغطي — not covered
+class RhetoricalStatus(Enum):
+    """الوضع البلاغي — rhetorical status of the signified."""
+    LITERAL = auto()            # حقيقي
+    FIGURATIVE_RHET = auto()    # مجازي
+    TRANSFERRED = auto()        # منقول
+    IDIOMATIC = auto()          # اصطلاحي
+    ALLUSIVE_RHET = auto()      # تلميحي
+
+
+class ContextRequirement(Enum):
+    """درجة الحاجة إلى السياق — context dependence level."""
+    NONE = auto()       # لا يحتاج
+    LOW = auto()        # منخفض
+    MEDIUM = auto()     # متوسط
+    HIGH = auto()       # عالٍ
+
+
+class Polarity(Enum):
+    """القطبية — assertion polarity."""
+    POSITIVE = auto()       # إيجابي
+    NEGATIVE = auto()       # سلبي
+    NEUTRAL_POL = auto()    # محايد
+
+
+class Modality(Enum):
+    """الجهة — epistemic modality of a proposition."""
+    CERTAIN_MOD = auto()    # قطعي
+    PROBABLE_MOD = auto()   # راجح
+    POSSIBLE_MOD = auto()   # ممكن
+    DOUBTFUL_MOD = auto()   # مشكوك
