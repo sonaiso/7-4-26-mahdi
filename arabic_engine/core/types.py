@@ -12,52 +12,278 @@ from typing import FrozenSet, List, Optional, Tuple
 
 from .enums import (
     POS,
+    ActivationStage,
+    AffectiveDimension,
+    AmbiguityResolution,
+    AmbiguityType,
+    AuthorityLevel,
+    BoundaryType,
+    CarrierClass,
+    CarrierType,
+    CategorizationMode,
+    CausalRole,
     CellType,
     CombinationType,
+    CompositionGate,
+    CompositionRelation,
+    CompositionRole,
+    CompositionVerdict,
+    ConceptFormationMode,
+    ConceptRelationType,
+    ConceptualSignifiedClass,
     ConditionToken,
     ConstraintKind,
     ConstraintType,
+    ContaminationLevel,
+    CouplingRelationType,
+    CulturalScope,
+    DalaalaKind,
     DalalaType,
+    DecisionCode,
+    DependencyType,
+    DiachronicStatus,
+    DiscourseGapType,
+    DiscourseValidationOutcome,
     ElementClass,
     ElementFunction,
     ElementLayer,
+    EmbodiedDomain,
+    EpistemicRank,
+    EpistemicStatus,
     EvidenceType,
+    ExchangeStatus,
+    ExchangeType,
+    ExplicitnessLevel,
+    FrameType,
     FunctionRole,
     FuncTransitionClass,
+    GapSeverity,
     GuidanceState,
+    HypothesisStatus,
+    InfoKind,
+    InsertionPolicy,
+    InstitutionalCategory,
+    InterpretiveOutcomeType,
+    InterpretiveStability,
+    InterPropositionLink,
     IrabCase,
     IrabRole,
+    JudgementType,
+    JudgmentCategory,
+    LinkKind,
     MafhumType,
+    MentalIntentionalType,
+    MetaConceptualLevel,
+    MethodFamily,
+    ModalCategory,
+    NormativeCategory,
+    OntologicalConstraintType,
     OntologicalLayer,
     OntologicalMode,
+    OperationalCapacity,
+    ParticleDirection,
+    ParticleEffect,
+    ParticleKind,
+    ParticleReadiness,
+    ParticleScope,
+    PathKind,
     PhonCategory,
     PhonFeature,
     PhonGroup,
     PhonTransform,
+    PredicationType,
+    ProofPathKind,
     ProofStatus,
+    PropositionType,
+    PurposeType,
     RankType,
+    RationalSelfKind,
+    RealityKind,
+    ReceiverExpectedAction,
+    ReceiverRoleType,
+    ReceiverState,
+    ReceptionMode,
+    ReceptionStateType,
+    RestrictionType,
     ReversibleValue,
+    RevisionType,
+    RoleStatus,
+    SalienceLevel,
+    ScriptPhase,
+    SelfModelAspect,
     SemanticType,
+    SenderRoleType,
+    SenseModality,
+    SignalType,
+    SignifiedClass,
+    SignifierClass,
     SlotState,
     SpaceRef,
+    StrictLayerID,
+    StyleKind,
     SyllablePosition,
     SymbolicStatus,
     TimeRef,
+    TraceMode,
+    TraceQuality,
+    TransferType,
     TransitionCondition,
+    TransitionGateStatus,
     TransitionLaw,
     TransitionType,
     TriadType,
+    TrustBasis,
+    TrustLevel,
+    TruthCategory,
     TruthState,
     UnicodeProfileType,
     UnitType,
 )
 
+# ── State-machine layer types ──────────────────────────────────────
+
+
+@dataclass(frozen=True)
+class MCIScores:
+    """Component scores for the Minimum-Completeness Index.
+
+    Each score is a float in [0, 1].
+    """
+
+    boundary: float = 0.0       # B — Boundary Score
+    unity: float = 0.0          # U — Unity Score
+    cohesion: float = 0.0       # C — Cohesion Score
+    extension: float = 0.0      # E — Extension Score
+    phase_order: float = 0.0    # P — Phase Order Score
+    orderliness: float = 0.0    # O — Orderliness Score
+
+
+@dataclass(frozen=True)
+class MCIResult:
+    """Result of MCI (Minimum-Completeness Index) evaluation."""
+
+    scores: MCIScores
+    mci_value: float
+    decision: str               # human-readable decision label
+
+
+@dataclass(frozen=True)
+class ConceptSeed:
+    """Layer 0 output — initial concept seed from the foundational machine."""
+
+    seed_id: str
+    unit_label: str = ""
+    identity_score: float = 0.0
+    rank_hint: str = ""
+
+
+@dataclass(frozen=True)
+class PhoneticEvent:
+    """Layer 1 output — a detected phonetic event."""
+
+    event_id: str
+    energy: float = 0.0
+    boundary_score: float = 0.0
+    position: int = 0
+    interception_type: str = ""
+
+
+@dataclass(frozen=True)
+class PhonemeCandidate:
+    """Layer 2 output — a phoneme candidate that passed MCI."""
+
+    candidate_id: str
+    mci_result: Optional[MCIResult] = None
+    phonetic_event_ref: str = ""
+    symbol: str = ""
+
+
+@dataclass(frozen=True)
+class HarakaUnit:
+    """Layer 2.5 output — an operational vowel-mark (حركة)."""
+
+    unit_id: str
+    sonority_score: float = 0.0
+    attachment_target: Optional[str] = None
+    mobility_score: float = 0.0
+    is_lengthened: bool = False
+    is_deleted: bool = False
+
+
+@dataclass(frozen=True)
+class SyllableUnit:
+    """Layer 3 output — a validated syllable unit."""
+
+    unit_id: str
+    pattern_shape: str = ""     # e.g. "CV", "CVC", "CVV", "CVVC", "CVCC"
+    weight_class: int = 0       # 1=light, 2=heavy, 3=super-heavy
+    nucleus_ref: str = ""
+    syllable_score: float = 0.0
+
+
+@dataclass(frozen=True)
+class RankScoreComponents:
+    """Components for the root-rank score formula."""
+
+    position_fit: float = 0.0           # P — Position Fit
+    constitutiveness: float = 0.0       # C — Constitutiveness
+    inflection_stability: float = 0.0   # I — Inflection Stability
+    syllable_compatibility: float = 0.0 # S — Syllable Compatibility
+    recoverability: float = 0.0         # R — Recoverability
+
+
+@dataclass(frozen=True)
+class RootSlot:
+    """Layer 4 output — a root position with rank score."""
+
+    slot_id: str
+    root_ref: str = ""
+    position: str = ""          # "fa", "ayn", or "lam"
+    rank_score: float = 0.0
+    components: Optional[RankScoreComponents] = None
+
+
+@dataclass(frozen=True)
+class TransformCandidate:
+    """Layer 5 output — a validated morphological transform."""
+
+    candidate_id: str
+    transform_type: str = ""    # matches TransformJudgment name
+    confidence: float = 0.0
+    source_root_ref: str = ""
+    recoverability_score: float = 0.0
+
+
+@dataclass(frozen=True)
+class FinalApprovalComponents:
+    """Components for the final-approval score formula."""
+
+    judgment_score: float = 0.0         # J
+    reality_match_score: float = 0.0    # R
+    recoverability_score: float = 0.0   # Rec
+    trace_clarity: float = 0.0          # T
+
+
+@dataclass(frozen=True)
+class ValidatedJudgment:
+    """Layer 6 output — a judgment that passed reality matching."""
+
+    judgment_id: str
+    final_approval: float = 0.0
+    reality_match_score: float = 0.0
+    components: Optional[FinalApprovalComponents] = None
+    is_approved: bool = False
+    evidence_refs: Tuple[str, ...] = ()
+
+
 # ── Signifier layer ─────────────────────────────────────────────────
+
 
 @dataclass(frozen=True)
 class Grapheme:
     """A single grapheme cluster: base code-point + diacritics."""
-    base: int               # Unicode code-point of the consonant/vowel letter
+
+    base: int  # Unicode code-point of the consonant/vowel letter
     marks: Tuple[int, ...]  # code-points of combining marks (tashkīl)
 
     @property
@@ -68,6 +294,7 @@ class Grapheme:
 @dataclass(frozen=True)
 class Syllable:
     """Phonological syllable: onset, nucleus, coda, weight."""
+
     onset: Tuple[int, ...]
     nucleus: Tuple[int, ...]
     coda: Tuple[int, ...]
@@ -77,17 +304,125 @@ class Syllable:
 @dataclass(frozen=True)
 class RootPattern:
     """Extracted root and morphological pattern."""
-    root: Tuple[str, ...]        # e.g. ('ك','ت','ب')
-    pattern: str                 # e.g. 'فَعَلَ'
+
+    root: Tuple[str, ...]  # e.g. ('ك','ت','ب')
+    pattern: str  # e.g. 'فَعَلَ'
     root_id: int = 0
     pattern_id: int = 0
 
 
+# ── Enriched signifier models ──────────────────────────────────────
+
+
+@dataclass(frozen=True)
+class CombiningMarkDetail:
+    """Metadata for a single combining mark attached to a grapheme."""
+
+    char: str
+    codepoint: str          # e.g. "U+064E"
+    type: str               # haraka | sukun | shadda | tanween
+
+
+@dataclass(frozen=True)
+class EnrichedGrapheme:
+    """Extended grapheme cluster with phonetic metadata.
+
+    Wraps the basic :class:`Grapheme` concept with additional fields
+    loaded from ``arabic_letters.csv`` and ``unicode_marks.csv``.
+    The ``role`` field remains ``None`` until the pattern layer
+    resolves ambiguity for ا/و/ي.
+    """
+
+    id: str
+    layer: int                                  # always 1
+    surface: str
+    base_char: str
+    base_codepoint: str                         # e.g. "U+0628"
+    combining_marks: Tuple[CombiningMarkDetail, ...] = ()
+    phonetic_code: str = ""
+    place_code: int = 0
+    manner_code: int = 0
+    voicing_code: int = 0
+    stiffness_code: int = 0
+    entity_score: float = 0.0
+    role: Optional[str] = None                  # consonant | long_vowel | ambiguous
+
+
+@dataclass(frozen=True)
+class EnrichedSyllable:
+    """Syllable with shape and weight metadata from ``syllable_shapes.csv``."""
+
+    id: str
+    layer: int                                  # always 3
+    surface: str
+    chars: Tuple[str, ...] = ()                 # EnrichedGrapheme ids
+    vowels: Tuple[str, ...] = ()                # vowel ids
+    shape: str = ""                             # e.g. "CV"
+    shape_code: str = ""                        # e.g. "3.1.1.0.1"
+    nucleus_type: int = 0
+    closure_type: int = 0
+    weight_code: int = 0
+    completion_score: float = 0.0
+    weightability_score: float = 0.0
+
+
+@dataclass(frozen=True)
+class PatternCandidate:
+    """A candidate morphological pattern with confidence score."""
+
+    pattern_code: str
+    pattern_label: str = ""
+    pattern_type: str = ""
+    augment_count: int = 0
+    root_candidate: Tuple[str, ...] = ()
+    confidence: float = 0.0
+    reality_match_score: float = 0.0
+
+
+@dataclass(frozen=True)
+class CliticRecord:
+    """A clitic (proclitic/enclitic) stripped from a token."""
+
+    surface: str
+    type: str               # connector | relation_marker | definite_article
+    confidence: float = 0.0
+
+
+@dataclass(frozen=True)
+class RootCandidate:
+    """A candidate root with confidence score."""
+
+    root: Tuple[str, ...]
+    confidence: float = 0.0
+
+
+@dataclass(frozen=True)
+class TokenAnalysis:
+    """Full word-level analysis record (تحليل الكلمة الكاملة).
+
+    Produced by the 8-step diacritised-word analysis pipeline.
+    """
+
+    id: str
+    surface: str
+    normalized_form: str
+    unicode_form: str = "NFC"
+    graphemes: Tuple[EnrichedGrapheme, ...] = ()
+    clitics: Tuple[CliticRecord, ...] = ()
+    core_surface: str = ""
+    syllables: Tuple[EnrichedSyllable, ...] = ()
+    root_candidates: Tuple[RootCandidate, ...] = ()
+    pattern_candidates: Tuple[PatternCandidate, ...] = ()
+    final_status: str = "structural_analysis_only"
+
+
 # ── Lexical Closure ─────────────────────────────────────────────────
+
 
 @dataclass
 class LexicalClosure:
     """Full morphological + lexical record for a token (التعريف 4)."""
+
     surface: str
     lemma: str
     root: Tuple[str, ...]
@@ -108,20 +443,103 @@ class LexicalClosure:
 
 # ── Signified layer ─────────────────────────────────────────────────
 
+
 @dataclass
 class Concept:
-    """An ontological node — the *signified* (التعريف 5)."""
+    """An ontological node — the *signified* (التعريف 5).
+
+    The v2 expansion adds nineteen optional axes that together cover
+    the full range of human conceptual knowledge.  All new fields
+    default to ``None`` so that existing callers require no changes.
+
+    Core fields (v1)
+    ----------------
+    concept_id      unique integer identifier
+    label           human-readable Arabic label
+    semantic_type   primary ontological type (entity / event / …)
+    properties      free-form property dict for ad-hoc extensions
+
+    Descriptive axes (v2)
+    ---------------------
+    epistemic_status       how knowledge of the concept is held
+    normative_category     intrinsic normative / deontic value
+    affective_dimension    affective / emotional charge
+    mental_intentional_type intentional mental state category
+    modal_category         alethic modal standing
+    frame_type             encyclopaedic frame membership
+    script_phase           phase within a cognitive script
+    causal_role            role in a causal-explanatory chain
+    institutional_category social / institutional fact category
+    categorization_mode    crisp / prototype / fuzzy membership
+    cultural_scope         cultural / civilisational reach
+    diachronic_status      semantic shift / historical status
+    formation_mode         how the concept was formed
+    meta_level             meta-conceptual order (1st / 2nd / 3rd)
+    interpretive_stability single reading vs. polysemy / contested
+    salience               cognitive salience / prominence
+    embodied_domain        embodied sensorimotor grounding domain
+    self_model_aspect      aspect of the self-model (if any)
+    operational_capacity   performative / operational capacity
+    """
+
+    # ── v1 core fields ───────────────────────────────────────────────
     concept_id: int
     label: str
     semantic_type: SemanticType
     properties: dict = field(default_factory=dict)
 
+    # ── v2 descriptive axes ──────────────────────────────────────────
+    epistemic_status: Optional[EpistemicStatus] = None
+    normative_category: Optional[NormativeCategory] = None
+    affective_dimension: Optional[AffectiveDimension] = None
+    mental_intentional_type: Optional[MentalIntentionalType] = None
+    modal_category: Optional[ModalCategory] = None
+    frame_type: Optional[FrameType] = None
+    script_phase: Optional[ScriptPhase] = None
+    causal_role: Optional[CausalRole] = None
+    institutional_category: Optional[InstitutionalCategory] = None
+    categorization_mode: Optional[CategorizationMode] = None
+    cultural_scope: Optional[CulturalScope] = None
+    diachronic_status: Optional[DiachronicStatus] = None
+    formation_mode: Optional[ConceptFormationMode] = None
+    meta_level: Optional[MetaConceptualLevel] = None
+    interpretive_stability: Optional[InterpretiveStability] = None
+    salience: Optional[SalienceLevel] = None
+    embodied_domain: Optional[EmbodiedDomain] = None
+    self_model_aspect: Optional[SelfModelAspect] = None
+    operational_capacity: Optional[OperationalCapacity] = None
+
+
+@dataclass
+class ConceptRelation:
+    """A directed relation between two concept nodes (شبكة المفاهيم).
+
+    Used to wire :class:`Concept` nodes into a knowledge graph via
+    :class:`~arabic_engine.signified.signified_v2.ConceptNetwork`.
+
+    Fields
+    ------
+    source_id       ``concept_id`` of the origin node
+    target_id       ``concept_id`` of the destination node
+    relation_type   the semantic relation linking source → target
+    weight          relation strength ∈ (0, 1] (default 1.0)
+    notes           optional free-text annotation
+    """
+
+    source_id: int
+    target_id: int
+    relation_type: ConceptRelationType
+    weight: float = 1.0
+    notes: str = ""
+
 
 # ── Linkage layer ───────────────────────────────────────────────────
+
 
 @dataclass
 class DalalaLink:
     """A validated signification link (التعريف 6)."""
+
     source_lemma: str
     target_concept_id: int
     dalala_type: DalalaType
@@ -131,9 +549,11 @@ class DalalaLink:
 
 # ── Cognition layer ─────────────────────────────────────────────────
 
+
 @dataclass
 class Proposition:
     """A structured judgment / proposition (التعريف 7)."""
+
     subject: str
     predicate: str
     obj: str
@@ -145,17 +565,73 @@ class Proposition:
 @dataclass
 class EvalResult:
     """Final evaluation vector (التعريف 8)."""
+
     proposition: Proposition
     truth_state: TruthState
     guidance_state: GuidanceState
     confidence: float
 
 
+@dataclass(frozen=True)
+class PerceptTrace:
+    """Perception trace for a sentence-level episode."""
+
+    raw_text: str
+    normalized_text: str
+    tokens: Tuple[str, ...]
+    trace_quality: float = 1.0
+
+
+@dataclass(frozen=True)
+class PriorKnowledgeUnit:
+    """Prior knowledge unit used during linking and judgement."""
+
+    unit_id: str
+    content: str
+    source: str = "pipeline"
+    weight: float = 0.5
+
+
+@dataclass(frozen=True)
+class LinkOperation:
+    """A single linking operation between signifier-side and concept-side data."""
+
+    operation_id: str
+    operation_type: DalalaType
+    source: str
+    target: str
+    accepted: bool
+    confidence: float
+
+
+@dataclass(frozen=True)
+class ConceptNode:
+    """Explicit concept node for v3 explainable episode payloads."""
+
+    concept_id: str
+    label: str
+    semantic_type: SemanticType
+    properties: dict = field(default_factory=dict)
+
+
+@dataclass(frozen=True)
+class EvaluationResult:
+    """v3 evaluation payload: truth, rank, confidence, and validity."""
+
+    truth_state: TruthState
+    epistemic_rank: Optional[EpistemicRank]
+    confidence: float
+    validation_state: ValidationState
+    consistency: str = ""
+
+
 # ── Syntax layer (v2) ───────────────────────────────────────────────
+
 
 @dataclass
 class SyntaxNode:
     """A node in the i'rāb (syntactic) tree."""
+
     token: str
     lemma: str
     pos: POS
@@ -167,20 +643,24 @@ class SyntaxNode:
 
 # ── Time / Space tag (v2) ───────────────────────────────────────────
 
+
 @dataclass
 class TimeSpaceTag:
     """Temporal and spatial anchoring for a proposition."""
+
     time_ref: TimeRef
     space_ref: SpaceRef
-    time_detail: str = ""   # e.g. "أمس", "غدًا"
+    time_detail: str = ""  # e.g. "أمس", "غدًا"
     space_detail: str = ""  # e.g. "المدينة"
 
 
 # ── World model fact (v2) ───────────────────────────────────────────
 
+
 @dataclass
 class WorldFact:
     """A fact held in the world-model knowledge base."""
+
     fact_id: int
     subject: str
     predicate: str
@@ -191,17 +671,25 @@ class WorldFact:
 
 # ── Inference result (v2) ───────────────────────────────────────────
 
+
 @dataclass
 class InferenceResult:
     """Result of applying an inference rule."""
+
     rule_name: str
     premises: List[Proposition]
     conclusion: Proposition
     confidence: float
     valid: bool
+    rule_category: str = ""
+    conditions: Tuple[str, ...] = ()
+    outcome: str = ""
+    strength: float = 0.0
+    explanation: str = ""
 
 
 # ── Mafhūm layer (Ch. 21) ──────────────────────────────────────────
+
 
 @dataclass
 class MafhumPillar:
@@ -213,6 +701,7 @@ class MafhumPillar:
       3. mental_counterpart — a mental counterpart can be formed (مقابل ذهني)
       4. transition_rule — a transition rule applies (قاعدة انتقال)
     """
+
     closed_mantuq: bool
     constraint_type: ConstraintType
     mental_counterpart: str
@@ -226,18 +715,20 @@ class MafhumResult:
     Captures the derivation of an implied concept from the explicit
     text (Manṭūq) via one of the five minimal Mafhūm types.
     """
+
     mafhum_type: MafhumType
     constraint_type: ConstraintType
     pillars: MafhumPillar
-    source_text: str           # the original Manṭūq fragment
-    constraint_value: str      # the specific constraint detected
-    counterpart: str           # the mental counterpart (المقابل الذهني)
-    derived_meaning: str       # the derived implied meaning
-    valid: bool                # whether all four pillars hold
-    confidence: float          # confidence in [0, 1]
+    source_text: str  # the original Manṭūq fragment
+    constraint_value: str  # the specific constraint detected
+    counterpart: str  # the mental counterpart (المقابل الذهني)
+    derived_meaning: str  # the derived implied meaning
+    valid: bool  # whether all four pillars hold
+    confidence: float  # confidence in [0, 1]
 
 
 # ── D_min — Minimal Complete Phonological Representation ────────────
+
 
 @dataclass(frozen=True)
 class DMin:
@@ -321,6 +812,7 @@ class DMin:
 
 # ── Transition Engine — قانون الانتقال بين الخانات ──────────────────
 
+
 @dataclass(frozen=True)
 class TransitionContext:
     """السياق الذي يحكم الانتقال — contextual inputs to the transition function.
@@ -344,11 +836,11 @@ class TransitionContext:
 
     position: SyllablePosition
     function_role: FunctionRole
-    left_neighbor: Optional["DMin"] = None   # type: ignore[name-defined]
+    left_neighbor: Optional["DMin"] = None  # type: ignore[name-defined]
     right_neighbor: Optional["DMin"] = None  # type: ignore[name-defined]
-    pattern: str = ""                        # e.g. "فَعَلَ", "اسْتَفْعَلَ"
-    economy_pressure: float = 0.0            # 0 = none, 1 = maximum
-    architecture: str = ""                   # e.g. "مجرد", "مزيد", "مشتق"
+    pattern: str = ""  # e.g. "فَعَلَ", "اسْتَفْعَلَ"
+    economy_pressure: float = 0.0  # 0 = none, 1 = maximum
+    architecture: str = ""  # e.g. "مجرد", "مزيد", "مشتق"
 
 
 @dataclass(frozen=True)
@@ -368,14 +860,14 @@ class TransitionRule:
 
     law: TransitionLaw
     transition_type: TransitionType
-    from_category: Optional[PhonCategory]                # None = any category
-    required_features: FrozenSet[PhonFeature]            # features element must have
-    to_category: PhonCategory                            # target cell category
-    resulting_transform: PhonTransform                   # transform that fires
+    from_category: Optional[PhonCategory]  # None = any category
+    required_features: FrozenSet[PhonFeature]  # features element must have
+    to_category: PhonCategory  # target cell category
+    resulting_transform: PhonTransform  # transform that fires
     conditions: FrozenSet[TransitionCondition]
-    priority: int                                        # lower = higher precedence
-    description_ar: str                                  # Arabic description
-    example: str                                         # canonical Arabic example
+    priority: int  # lower = higher precedence
+    description_ar: str  # Arabic description
+    example: str  # canonical Arabic example
 
 
 @dataclass
@@ -388,20 +880,21 @@ class TransitionResult:
         subject to: E_new ∈ Nearest_Valid_Functional_Cell
     """
 
-    source_unicode: int               # codepoint of the original element
+    source_unicode: int  # codepoint of the original element
     applied_rule: Optional[TransitionRule]  # the winning rule (None = stable)
-    stable: bool                      # True if no transition occurred
+    stable: bool  # True if no transition occurred
     target_category: Optional[PhonCategory]  # new cell category (None = deleted)
-    surface_form: str                 # resulting surface character(s)
-    loss_root: float                  # cost: root integrity loss ∈ [0, 1]
-    loss_pattern: float               # cost: pattern integrity loss ∈ [0, 1]
-    phonetic_burden: float            # cost: articulatory burden ∈ [0, 1]
-    total_cost: float                 # = loss_root + loss_pattern + phonetic_burden
+    surface_form: str  # resulting surface character(s)
+    loss_root: float  # cost: root integrity loss ∈ [0, 1]
+    loss_pattern: float  # cost: pattern integrity loss ∈ [0, 1]
+    phonetic_burden: float  # cost: articulatory burden ∈ [0, 1]
+    total_cost: float  # = loss_root + loss_pattern + phonetic_burden
     conditions_met: FrozenSet[TransitionCondition]
-    notes: str = ""                   # optional diagnostic string
+    notes: str = ""  # optional diagnostic string
 
 
 # ── Functional Transition Schema types ──────────────────────────────
+
 
 @dataclass(frozen=True)
 class FunctionalTransitionRecord:
@@ -437,7 +930,7 @@ class FunctionalTransitionRecord:
     transition_class: FuncTransitionClass
     preconditions: FrozenSet[ConditionToken]
     blocking_conditions: FrozenSet[ConditionToken]
-    priority: int                        # 1 = critical … 5 = fallback
+    priority: int  # 1 = critical … 5 = fallback
     reversible: ReversibleValue
     surface_form: str
     deep_form: str
@@ -446,6 +939,7 @@ class FunctionalTransitionRecord:
 
 
 # ── AEU — Alphabetic Encoding Unit ─────────────────────────────────
+
 
 @dataclass(frozen=True)
 class AEU:
@@ -461,17 +955,17 @@ class AEU:
     The ``math_form`` is an 8-position binary vector ``{0,1}⁸``.
     """
 
-    element_id: str                            # e.g. "AE_001"
-    element_name: str                          # e.g. "Hamza"
+    element_id: str  # e.g. "AE_001"
+    element_name: str  # e.g. "Hamza"
     element_class: ElementClass
     element_function: ElementFunction
-    referent: str                              # الدلالة الوظيفية
-    boundary: str                              # الحد الفاصل
-    necessity: str                             # الضرورة
-    governing_role: str                        # الدور الحاكم
+    referent: str  # الدلالة الوظيفية
+    boundary: str  # الحد الفاصل
+    necessity: str  # الضرورة
+    governing_role: str  # الدور الحاكم
     layer: ElementLayer
     combination_type: CombinationType
-    math_form: Tuple[int, ...]                 # 8-bit binary vector
+    math_form: Tuple[int, ...]  # 8-bit binary vector
     unicode_codepoint: int
     unicode_profile: UnicodeProfileType
     depends_on: Tuple[str, ...] = ()
@@ -525,6 +1019,7 @@ class AEU:
 # ── Axiom Types — الأصول الخمسة ─────────────────────────────────────
 
 # A1/A2 — أصل الموضع الصفري والتحقق الموجب الأول
+
 
 @dataclass(frozen=True)
 class ZeroSlotRecord:
@@ -584,6 +1079,7 @@ class ZeroSlotRecord:
 
 # A3 — أصل التمييز الثلاثي
 
+
 @dataclass(frozen=True)
 class TriadicBlockRecord:
     """كتلة ثلاثية — a triadic distinction block (A3).
@@ -639,6 +1135,7 @@ class TriadicBlockRecord:
 
 # A4 — أصل الترقية الطبقية
 
+
 @dataclass(frozen=True)
 class LayerPromotionRule:
     """قاعدة الترقية الطبقية — a layer-promotion rule (A4).
@@ -690,6 +1187,7 @@ class LayerPromotionRule:
 
 
 # ── Structural Slot — الموضع البنيوي الحقيقي ────────────────────────
+
 
 @dataclass(frozen=True)
 class StructuralSlot:
@@ -743,6 +1241,7 @@ class StructuralSlot:
 
 # ── Vocalic Zero — الصفر الحركي المخصوص ─────────────────────────────
 
+
 @dataclass(frozen=True)
 class VocalicZero:
     """الصفر الحركي المخصوص — sukun as a specific vocalic-zero mark.
@@ -786,6 +1285,7 @@ class VocalicZero:
 
 
 # ── Triad Record — سجل الثلاثية ──────────────────────────────────────
+
 
 @dataclass(frozen=True)
 class TriadRecord:
@@ -842,6 +1342,7 @@ class TriadRecord:
 
 
 # ── Rank Decision — قرار الرتبة ──────────────────────────────────────
+
 
 @dataclass(frozen=True)
 class RankDecision:
