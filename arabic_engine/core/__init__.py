@@ -25,6 +25,14 @@ from .enums import (
     AffectiveDimension as AffectiveDimension,
 )
 
+# ── Composition / Syntax Constitution v1 enum re-exports ────────────
+from .enums import (
+    AmbiguityResolution as AmbiguityResolution,
+)
+from .enums import (
+    AmbiguityType as AmbiguityType,
+)
+
 # ── Strict 7-Layer System enum re-exports ─────────────────────────
 from .enums import (
     AuditoryNode as AuditoryNode,
@@ -51,6 +59,18 @@ from .enums import (
     CombinationType as CombinationType,
 )
 from .enums import (
+    CompositionGate as CompositionGate,
+)
+from .enums import (
+    CompositionGateStatus as CompositionGateStatus,
+)
+from .enums import (
+    CompositionRelationType as CompositionRelationType,
+)
+from .enums import (
+    CompositionRoleType as CompositionRoleType,
+)
+from .enums import (
     ConceptFormationMode as ConceptFormationMode,
 )
 from .enums import (
@@ -63,7 +83,13 @@ from .enums import (
     ConditionToken as ConditionToken,
 )
 from .enums import (
+    ConflictResolutionMethod as ConflictResolutionMethod,
+)
+from .enums import (
     ConflictState as ConflictState,
+)
+from .enums import (
+    ConflictType as ConflictType,
 )
 from .enums import (
     ConstraintStrength as ConstraintStrength,
@@ -171,6 +197,9 @@ from .enums import (
     InterpretiveStability as InterpretiveStability,
 )
 from .enums import (
+    InterPropositionLinkType as InterPropositionLinkType,
+)
+from .enums import (
     IrabCase as IrabCase,
 )
 from .enums import (
@@ -246,6 +275,9 @@ from .enums import (
     ProofStatus as ProofStatus,
 )
 from .enums import (
+    PropositionType as PropositionType,
+)
+from .enums import (
     PurposeType as PurposeType,
 )
 from .enums import (
@@ -280,6 +312,9 @@ from .enums import (
 )
 from .enums import (
     RevisionType as RevisionType,
+)
+from .enums import (
+    RoleStatus as RoleStatus,
 )
 from .enums import (
     SalienceLevel as SalienceLevel,
@@ -336,6 +371,9 @@ from .enums import (
     TraceQuality as TraceQuality,
 )
 from .enums import (
+    TransferType as TransferType,
+)
+from .enums import (
     TransformationNode as TransformationNode,
 )
 from .enums import (
@@ -363,6 +401,9 @@ from .enums import (
     TruthState as TruthState,
 )
 from .enums import (
+    TruthType as TruthType,
+)
+from .enums import (
     UnicodeProfileType as UnicodeProfileType,
 )
 from .enums import (
@@ -379,47 +420,6 @@ from .enums import (
 )
 from .enums import (
     ValidationState as ValidationState,
-)
-
-# ── Composition / Syntax Constitution v1 enum re-exports ────────────
-from .enums import (
-    AmbiguityResolution as AmbiguityResolution,
-)
-from .enums import (
-    AmbiguityType as AmbiguityType,
-)
-from .enums import (
-    CompositionGate as CompositionGate,
-)
-from .enums import (
-    CompositionGateStatus as CompositionGateStatus,
-)
-from .enums import (
-    CompositionRelationType as CompositionRelationType,
-)
-from .enums import (
-    CompositionRoleType as CompositionRoleType,
-)
-from .enums import (
-    ConflictResolutionMethod as ConflictResolutionMethod,
-)
-from .enums import (
-    ConflictType as ConflictType,
-)
-from .enums import (
-    InterPropositionLinkType as InterPropositionLinkType,
-)
-from .enums import (
-    PropositionType as PropositionType,
-)
-from .enums import (
-    RoleStatus as RoleStatus,
-)
-from .enums import (
-    TransferType as TransferType,
-)
-from .enums import (
-    TruthType as TruthType,
 )
 
 # ── Kernel re-exports ───────────────────────────────────────────────
@@ -512,6 +512,26 @@ from .types import (
 from .types import (
     AxiomRecord as AxiomRecord,
 )
+
+# ── Composition / Syntax Constitution v1 type re-exports ────────────
+from .types import (
+    CompositionGateResult as CompositionGateResult,
+)
+from .types import (
+    CompositionProposition as CompositionProposition,
+)
+from .types import (
+    CompositionRelation as CompositionRelation,
+)
+from .types import (
+    CompositionRole as CompositionRole,
+)
+from .types import (
+    CompositionStructure as CompositionStructure,
+)
+from .types import (
+    CompositionUnit as CompositionUnit,
+)
 from .types import (
     Concept as Concept,
 )
@@ -535,6 +555,12 @@ from .types import (
 )
 from .types import (
     DecisionTrace as DecisionTrace,
+)
+from .types import (
+    DependencyRecord as DependencyRecord,
+)
+from .types import (
+    DisambiguationRecord as DisambiguationRecord,
 )
 from .types import (
     DiscourseCarrierRecord as DiscourseCarrierRecord,
@@ -600,6 +626,9 @@ from .types import (
     InterpretiveOutcomeRecord as InterpretiveOutcomeRecord,
 )
 from .types import (
+    InterPropositionLink as InterPropositionLink,
+)
+from .types import (
     JudgementNode as JudgementNode,
 )
 from .types import (
@@ -660,6 +689,9 @@ from .types import (
     OpinionTraceRecord as OpinionTraceRecord,
 )
 from .types import (
+    PredicationRecord as PredicationRecord,
+)
+from .types import (
     PriorInfoNode as PriorInfoNode,
 )
 from .types import (
@@ -699,10 +731,16 @@ from .types import (
     RepresentationRecord as RepresentationRecord,
 )
 from .types import (
+    RestrictionRecord as RestrictionRecord,
+)
+from .types import (
     RootPattern as RootPattern,
 )
 from .types import (
     SelfNode as SelfNode,
+)
+from .types import (
+    SemanticConflictRecord as SemanticConflictRecord,
 )
 from .types import (
     SenderRoleRecord as SenderRoleRecord,
@@ -741,6 +779,9 @@ from .types import (
     TimeSpaceTag as TimeSpaceTag,
 )
 from .types import (
+    TransferRecord as TransferRecord,
+)
+from .types import (
     TransformationProfileRecord as TransformationProfileRecord,
 )
 from .types import (
@@ -751,6 +792,9 @@ from .types import (
 )
 from .types import (
     TrustProfileRecord as TrustProfileRecord,
+)
+from .types import (
+    TruthRecord as TruthRecord,
 )
 from .types import (
     UnicodeAtom as UnicodeAtom,
@@ -769,50 +813,6 @@ from .types import (
 )
 from .types import (
     ZeroSlotRecord as ZeroSlotRecord,
-)
-
-# ── Composition / Syntax Constitution v1 type re-exports ────────────
-from .types import (
-    CompositionGateResult as CompositionGateResult,
-)
-from .types import (
-    CompositionProposition as CompositionProposition,
-)
-from .types import (
-    CompositionRelation as CompositionRelation,
-)
-from .types import (
-    CompositionRole as CompositionRole,
-)
-from .types import (
-    CompositionStructure as CompositionStructure,
-)
-from .types import (
-    CompositionUnit as CompositionUnit,
-)
-from .types import (
-    DependencyRecord as DependencyRecord,
-)
-from .types import (
-    DisambiguationRecord as DisambiguationRecord,
-)
-from .types import (
-    InterPropositionLink as InterPropositionLink,
-)
-from .types import (
-    PredicationRecord as PredicationRecord,
-)
-from .types import (
-    RestrictionRecord as RestrictionRecord,
-)
-from .types import (
-    SemanticConflictRecord as SemanticConflictRecord,
-)
-from .types import (
-    TransferRecord as TransferRecord,
-)
-from .types import (
-    TruthRecord as TruthRecord,
 )
 
 __all__ = [
