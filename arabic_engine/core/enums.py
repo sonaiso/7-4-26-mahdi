@@ -1854,3 +1854,342 @@ class MCIDecision(Enum):
     SUSPENDED = auto()          # تعليق / إعادة فحص (0.45–0.65)
     ANALYTICALLY_ACCEPTED = auto()  # قبول تحليلي (0.65–0.80)
     DIRECTLY_ACCEPTED = auto()  # قبول مباشر (≥ 0.80)
+
+
+# ── Missing stub enums (referenced by __init__.py / types.py) ───────
+
+
+class RoleStatus(Enum):
+    """حالة الدور — role assignment status."""
+    ASSIGNED = auto()
+    UNASSIGNED = auto()
+    CONTESTED = auto()
+
+
+class TransferType(Enum):
+    """نوع النقل — semantic transfer type."""
+    METAPHORICAL = auto()
+    METONYMICAL = auto()
+    LITERAL = auto()
+
+
+class JudgmentCategory(Enum):
+    """فئة الحكم — judgment classification category."""
+    GRAMMATICAL = auto()
+    SEMANTIC = auto()
+    PRAGMATIC = auto()
+
+
+class AmbiguityResolution(Enum):
+    """استراتيجية حل الغموض — ambiguity resolution strategy."""
+    UNRESOLVED = auto()
+    RESOLVED = auto()
+
+
+class AmbiguityType(Enum):
+    """نوع الغموض — type of ambiguity."""
+    LEXICAL = auto()
+    SYNTACTIC = auto()
+    SEMANTIC = auto()
+
+
+class AuditoryNode(Enum):
+    """عقدة سمعية — auditory processing node type."""
+    ONSET = auto()
+    NUCLEUS = auto()
+    CODA = auto()
+
+
+class BoundaryType(Enum):
+    """نوع الحد — universal/particular boundary type."""
+    GENUS = auto()
+    SPECIES = auto()
+    INDIVIDUAL = auto()
+    GENUS_SPECIES = auto()
+    SPECIES_INDIVIDUAL = auto()
+    UNIVERSAL_PARTICULAR = auto()
+    ENTITY_ATTRIBUTE = auto()
+    GENERAL_DESCRIPTION_SPECIFIC_FORM = auto()
+
+
+class CompositionGate(Enum):
+    """بوابة التركيب — composition gate verdict."""
+    OPEN = auto()
+    CLOSED = auto()
+    CONDITIONAL = auto()
+
+
+class CompositionRelation(Enum):
+    """علاقة التركيب — syntactic composition relation type."""
+    PREDICATION = auto()
+    QUALIFICATION = auto()
+    ANNEXATION = auto()
+
+
+class CompositionRole(Enum):
+    """دور التركيب — role within a syntactic composition."""
+    HEAD = auto()
+    DEPENDENT = auto()
+    MODIFIER = auto()
+
+
+class CompositionVerdict(Enum):
+    """حكم التركيب — composition evaluation verdict."""
+    VALID = auto()
+    INVALID = auto()
+    PARTIAL = auto()
+
+
+class ConflictResolutionMethod(Enum):
+    """طريقة حل التعارض — conflict resolution method."""
+    OVERRIDE = auto()
+    MERGE = auto()
+    REJECT = auto()
+
+
+class ConflictType(Enum):
+    """نوع التعارض — type of conflict."""
+    SEMANTIC = auto()
+    SYNTACTIC = auto()
+    PRAGMATIC = auto()
+
+
+class DependencyType(Enum):
+    """نوع التبعية — syntactic dependency type."""
+    OBLIGATORY = auto()
+    OPTIONAL = auto()
+    CONTEXTUAL = auto()
+
+
+class GenerativeNode(Enum):
+    """عقدة توليدية — generative layer node type."""
+    ROOT = auto()
+    PATTERN = auto()
+    AFFIX = auto()
+
+
+class InterPropositionLink(Enum):
+    """ربط بين القضايا — inter-proposition link type."""
+    CAUSAL = auto()
+    TEMPORAL = auto()
+    CONDITIONAL = auto()
+
+
+class MentalPrimitive(Enum):
+    """بدائي ذهني — mental foundation primitive."""
+    IDENTITY = auto()
+    DIFFERENCE = auto()
+    RANK = auto()
+
+
+class PredicationType(Enum):
+    """نوع الإسناد — predication type."""
+    VERBAL = auto()
+    NOMINAL = auto()
+    ADVERBIAL = auto()
+
+
+class PropositionType(Enum):
+    """نوع القضية — proposition type."""
+    ASSERTIVE = auto()
+    INTERROGATIVE = auto()
+    IMPERATIVE = auto()
+
+
+class RepresentationNode(Enum):
+    """عقدة تمثيلية — representation layer node type."""
+    SURFACE = auto()
+    DEEP = auto()
+    ABSTRACT = auto()
+
+
+class RestrictionType(Enum):
+    """نوع التقييد — restriction type."""
+    ADJECTIVAL = auto()
+    GENITIVAL = auto()
+    APPOSITIONAL = auto()
+
+
+class StrictLayerID(Enum):
+    """معرف الطبقة الصارم — strict 7-layer ID."""
+    LAYER_0 = auto()
+    LAYER_1 = auto()
+    LAYER_2 = auto()
+    LAYER_3 = auto()
+    LAYER_4 = auto()
+    LAYER_5 = auto()
+    LAYER_6 = auto()
+
+
+class StructuralNode(Enum):
+    """عقدة بنيوية — structural layer node type."""
+    SYLLABLE = auto()
+    MORPHEME = auto()
+    WORD = auto()
+
+
+class TransitionGateStatus(Enum):
+    """حالة بوابة الانتقال — transition gate status."""
+    OPEN = auto()
+    BLOCKED = auto()
+    PENDING = auto()
+    INSUFFICIENT_DATA = auto()
+
+
+class TruthCategory(Enum):
+    """فئة الحقيقة — truth category for propositions."""
+    NECESSARY = auto()
+    CONTINGENT = auto()
+    IMPOSSIBLE = auto()
+
+
+class UPConstitutionOutcome(Enum):
+    """نتيجة دستور الكلي والجزئي — universal/particular outcome."""
+    VALID = auto()
+    INVALID = auto()
+    PARTIAL = auto()
+    ACCEPTED = auto()
+    REJECTED = auto()
+    INCOMPLETE = auto()
+
+
+class UniversalParticularDomain(Enum):
+    """مجال الكلي والجزئي — domain of universal/particular analysis."""
+    ONTOLOGICAL = auto()
+    LOGICAL = auto()
+    LINGUISTIC = auto()
+    ENTITY = auto()
+    ATTRIBUTE = auto()
+
+
+class UniversalityScope(Enum):
+    """نطاق الكلية — scope of universality."""
+    ABSOLUTE = auto()
+    RELATIVE = auto()
+    CONTEXTUAL = auto()
+    GENUS = auto()
+    SPECIES = auto()
+    INDIVIDUAL = auto()
+    UNRESOLVED = auto()
+
+
+# ── Strict 7-Layer System stub enums ────────────────────────────────
+
+
+class LayerEdgeType(Enum):
+    """نوع حافة الطبقة — inter-layer edge type (29 members)."""
+    L0_IDENTITY = auto()
+    L0_DIFFERENCE = auto()
+    L0_RANK = auto()
+    L0_CONSTITUTIVE = auto()
+    L0_COMPOSITE = auto()
+    L1_ONSET = auto()
+    L1_NUCLEUS = auto()
+    L1_CODA = auto()
+    L1_FEATURE = auto()
+    L1_BOUNDARY = auto()
+    L2_ROOT = auto()
+    L2_PATTERN = auto()
+    L2_AFFIX = auto()
+    L2_STEM = auto()
+    L2_MORPH = auto()
+    L3_SURFACE = auto()
+    L3_DEEP = auto()
+    L3_MAPPING = auto()
+    L3_LEXICAL = auto()
+    L3_CONTEXTUAL = auto()
+    L4_SYLLABLE = auto()
+    L4_WORD = auto()
+    L4_PHRASE = auto()
+    L4_CLAUSE = auto()
+    L4_SENTENCE = auto()
+    L5_JUDGMENT = auto()
+    L5_CASE = auto()
+    L5_ROLE = auto()
+    L6_TRANSFORM = auto()
+
+
+class MentalEdgeType(Enum):
+    """نوع حافة ذهنية — mental foundation edge type (7 members)."""
+    IDENTITY_LINK = auto()
+    DIFFERENCE_LINK = auto()
+    RANK_LINK = auto()
+    CONSTITUTIVE_LINK = auto()
+    COMPOSITE_LINK = auto()
+    PRIORITY_LINK = auto()
+    DEPENDENCY_LINK = auto()
+
+
+class TransformationNode(Enum):
+    """عقدة تحويلية — transformation node type (8 members)."""
+    ORIGINAL = auto()
+    AUGMENTED = auto()
+    SUBSTITUTED = auto()
+    DELETED = auto()
+    WEAKENED = auto()
+    ASSIMILATED = auto()
+    MERGED = auto()
+    SPLIT = auto()
+
+
+# ══════════════════════════════════════════════════════════════════════
+# Unicode Atom Constitution v1 — دستور الذرة اليونيكودية
+# ══════════════════════════════════════════════════════════════════════
+
+
+class AtomType(Enum):
+    """نوع الذرة اليونيكودية — constitutional atom classification (المادة 10).
+
+    Every Unicode atom must be classified into exactly one of these
+    seven constitutional types before it may proceed to normalization.
+    """
+
+    LITERAL = auto()         # ذرة حرفية (المادة 11)
+    DIACRITICAL = auto()     # ذرة حركية / تشكيلية (المادة 12)
+    MARKER = auto()          # ذرة علامية (المادة 13)
+    SEPARATOR = auto()       # ذرة فصلية (المادة 14)
+    SPECIAL_SYMBOL = auto()  # ذرة رمزية خاصة (المادة 15)
+    COMPOSITE = auto()       # ذرة مركبة (المادة 16)
+    ANOMALOUS = auto()       # ذرة غير معتمدة أو شاذة (المادة 17)
+
+
+class AtomFunction(Enum):
+    """وظيفة الذرة التشغيلية الأولى — primary operational function (المادة 19).
+
+    Assigned after classification; each atom receives exactly one
+    function that governs its role in the pre-normalization layer.
+    """
+
+    REPRESENTATION = auto()  # وظيفة التمثيل (المادة 20)
+    DISTINCTION = auto()     # وظيفة التمييز (المادة 21)
+    BINDING = auto()         # وظيفة الربط الأولي (المادة 22)
+    CONSTRAINT = auto()      # وظيفة التقييد (المادة 23)
+    SEPARATION = auto()      # وظيفة الفصل (المادة 24)
+    ALERT = auto()           # وظيفة التنبيه (المادة 25)
+    CORRUPTION = auto()      # وظيفة المنع أو الإفساد (المادة 26)
+
+
+class AtomGate(Enum):
+    """قرار العبور أو الرد — gate decision for normalization entry (المادة 69).
+
+    The final verdict on whether an atom may cross into the
+    normalization phase.
+    """
+
+    PASS = auto()      # عبور إلى التطبيع
+    SUSPEND = auto()   # تعليق
+    COMPLETE = auto()  # استكمال
+    REJECT = auto()    # رد
+
+
+class AtomReadiness(Enum):
+    """الجاهزية الدستورية — constitutional readiness level (المواد 57–60).
+
+    Tracks which pipeline stage the atom has successfully cleared.
+    No transition from one level to the next without its precondition.
+    """
+
+    READY_1 = auto()  # صالحة للتعيين ذرة (المادة 57)
+    READY_2 = auto()  # صالحة للتصنيف والوظيفة (المادة 58)
+    READY_3 = auto()  # صالحة للتشاكل (المادة 59)
+    READY_4 = auto()  # صالحة للدخول في التطبيع (المادة 60)

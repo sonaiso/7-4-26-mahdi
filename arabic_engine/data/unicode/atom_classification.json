@@ -1,0 +1,54 @@
+{
+  "_doc": "Unicode Atom Constitution v1 — classification registry (المادة 56 extensibility).",
+  "category_mapping": {
+    "Lo": "LITERAL",
+    "Ll": "LITERAL",
+    "Lu": "LITERAL",
+    "Lt": "LITERAL",
+    "Lm": "LITERAL",
+    "Mn": "DIACRITICAL",
+    "Mc": "DIACRITICAL",
+    "Me": "DIACRITICAL",
+    "Po": "MARKER",
+    "Pi": "MARKER",
+    "Pf": "MARKER",
+    "Ps": "MARKER",
+    "Pe": "MARKER",
+    "Pd": "MARKER",
+    "Sm": "MARKER",
+    "Sk": "MARKER",
+    "So": "MARKER",
+    "Sc": "MARKER",
+    "Zs": "SEPARATOR",
+    "Zl": "SEPARATOR",
+    "Zp": "SEPARATOR",
+    "Cc": "SEPARATOR",
+    "Cf": "SEPARATOR",
+    "Nd": "SPECIAL_SYMBOL",
+    "Nl": "SPECIAL_SYMBOL",
+    "No": "SPECIAL_SYMBOL",
+    "Cs": "ANOMALOUS",
+    "Cn": "ANOMALOUS"
+  },
+  "codepoint_overrides": {
+    "U+0640": {
+      "name": "ARABIC TATWEEL",
+      "type": "COMPOSITE",
+      "reason": "dual letter/separator nature (المادة 37)"
+    }
+  },
+  "arabic_blocks": {
+    "letters": {
+      "range": "U+0621–U+064A",
+      "type": "LITERAL"
+    },
+    "combining_marks": {
+      "range": "U+064B–U+0670",
+      "type": "DIACRITICAL"
+    },
+    "indic_digits": {
+      "range": "U+0660–U+0669",
+      "type": "SPECIAL_SYMBOL"
+    }
+  }
+}

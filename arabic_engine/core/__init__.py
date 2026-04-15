@@ -37,6 +37,21 @@ from .enums import (
 from .enums import (
     AuditoryNode as AuditoryNode,
 )
+
+# ── Unicode Atom Constitution v1 enum re-exports ────────────────────
+from .enums import (
+    AtomFunction as AtomFunction,
+)
+from .enums import (
+    AtomGate as AtomGate,
+)
+from .enums import (
+    AtomReadiness as AtomReadiness,
+)
+from .enums import (
+    AtomType as AtomType,
+)
+
 from .enums import (
     AuthorityLevel as AuthorityLevel,
 )
@@ -556,6 +571,17 @@ from .types import (
     AmbiguityRecord as AmbiguityRecord,
 )
 
+# ── Unicode Atom Constitution v1 type re-exports ────────────────────
+from .types import (
+    AtomBinding as AtomBinding,
+)
+from .types import (
+    AtomConstitutionResult as AtomConstitutionResult,
+)
+from .types import (
+    ConstitutionalAtom as ConstitutionalAtom,
+)
+
 # ── Strict 7-Layer System type re-exports ─────────────────────────
 from .types import (
     AuditoryMinimumRecord as AuditoryMinimumRecord,
@@ -897,6 +923,10 @@ __all__ = [
     # ── enums ───────────────────────────────────────────────────────
     "POS",
     "AffectiveDimension",
+    "AtomFunction",
+    "AtomGate",
+    "AtomReadiness",
+    "AtomType",
     "AuthorityLevel",
     "CarrierClass",
     "CarrierType",
@@ -1037,11 +1067,14 @@ __all__ = [
     "validate_kernel_graph",
     # ── types ───────────────────────────────────────────────────────
     "AEU",
+    "AtomBinding",
+    "AtomConstitutionResult",
     "AxiomRecord",
     "Concept",
     "ConceptRelation",
     "ConflictRuleNode",
     "ConceptSeed",
+    "ConstitutionalAtom",
     "CouplingRecord",
     "DalalaLink",
     "DiscourseCarrierRecord",

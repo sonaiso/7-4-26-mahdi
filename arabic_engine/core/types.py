@@ -25,9 +25,9 @@ from .enums import (
     CellType,
     CombinationType,
     CompositionGate,
-    CompositionRelation,
-    CompositionRole,
-    CompositionVerdict,
+    CompositionRelation,  # noqa: F401
+    CompositionRole,  # noqa: F401
+    CompositionVerdict,  # noqa: F401
     ConceptFormationMode,
     ConceptRelationType,
     ConceptualSignifiedClass,
@@ -68,7 +68,7 @@ from .enums import (
     InstitutionalCategory,
     InterpretiveOutcomeType,
     InterpretiveStability,
-    InterPropositionLink,
+    InterPropositionLink,  # noqa: F401
     IrabCase,
     IrabRole,
     JudgementType,
@@ -89,10 +89,10 @@ from .enums import (
     PhonFeature,
     PhonGroup,
     PhonTransform,
-    PredicationType,
+    PredicationType,  # noqa: F401
     ProofPathKind,
     ProofStatus,
-    PropositionType,
+    PropositionType,  # noqa: F401
     PurposeType,
     RankType,
     RationalSelfKind,
@@ -102,10 +102,10 @@ from .enums import (
     ReceiverState,
     ReceptionMode,
     ReceptionStateType,
-    RestrictionType,
+    RestrictionType,  # noqa: F401
     ReversibleValue,
     RevisionType,
-    RoleStatus,
+    RoleStatus,  # noqa: F401
     SalienceLevel,
     ScriptPhase,
     SelfModelAspect,
@@ -123,7 +123,7 @@ from .enums import (
     TimeRef,
     TraceMode,
     TraceQuality,
-    TransferType,
+    TransferType,  # noqa: F401
     TransitionCondition,
     TransitionGateStatus,
     TransitionLaw,
@@ -142,6 +142,12 @@ from .enums import (
     UtteredFormClass,
     ValidationOutcome,
     ValidationState,
+)
+from .enums import (
+    AtomFunction,
+    AtomGate,
+    AtomReadiness,
+    AtomType,
 )
 
 # ── State-machine layer types ──────────────────────────────────────
@@ -2914,3 +2920,154 @@ class UPConstitutionResult:
     outcome: UPConstitutionOutcome
     fractal_depth_max: int = 0
     errors: Tuple[str, ...] = ()
+
+
+# ══════════════════════════════════════════════════════════════════════
+# Missing stub types (referenced by __init__.py)
+# ══════════════════════════════════════════════════════════════════════
+
+
+@dataclass(frozen=True)
+class AmbiguityRecord:
+    """سجل الغموض — record of an ambiguity instance."""
+
+    record_id: str
+    ambiguity_type: AmbiguityType
+    resolution: AmbiguityResolution = AmbiguityResolution.UNRESOLVED
+    description: str = ""
+
+
+@dataclass(frozen=True)
+class ConflictRecord:
+    """سجل التعارض — record of a conflict instance."""
+
+    record_id: str
+    conflict_type: ConflictType
+    resolution_method: ConflictResolutionMethod = ConflictResolutionMethod.REJECT
+    description: str = ""
+
+
+@dataclass(frozen=True)
+class DependencyRecord:
+    """سجل التبعية — record of a syntactic dependency."""
+
+    record_id: str
+    dependency_type: DependencyType
+    head_ref: str = ""
+    dependent_ref: str = ""
+
+
+@dataclass(frozen=True)
+class DisambiguationResult:
+    """نتيجة إزالة الغموض — disambiguation result."""
+
+    result_id: str
+    chosen_reading: str = ""
+    confidence: float = 0.0
+    alternatives: Tuple[str, ...] = ()
+
+
+@dataclass(frozen=True)
+class GateResult:
+    """نتيجة البوابة — gate evaluation result."""
+
+    gate_id: str
+    gate: CompositionGate = CompositionGate.CLOSED
+    reason: str = ""
+
+
+@dataclass(frozen=True)
+class TruthRecord:
+    """سجل الحقيقة — truth evaluation record."""
+
+    record_id: str
+    category: TruthCategory = TruthCategory.CONTINGENT
+    justification: str = ""
+
+
+# ══════════════════════════════════════════════════════════════════════
+# Unicode Atom Constitution v1 — دستور الذرة اليونيكودية
+# ══════════════════════════════════════════════════════════════════════
+
+
+@dataclass(frozen=True)
+class AtomBinding:
+    """التشاكل الأولي — initial operational binding of a Unicode atom (المادة 27).
+
+    Links the atom to its operational identity before normalization.
+
+    Attributes
+    ----------
+    atom_type : AtomType
+        Constitutional classification (المادة 28.1).
+    atom_function : AtomFunction
+        Primary operational function (المادة 28.2).
+    combinable : bool
+        Whether the atom can combine with neighbours (المادة 28.3).
+    approved : bool
+        Whether the atom is constitutionally approved (المادة 28.4).
+    """
+
+    atom_type: AtomType
+    atom_function: AtomFunction
+    combinable: bool
+    approved: bool
+
+
+@dataclass(frozen=True)
+class ConstitutionalAtom:
+    """الذرة اليونيكودية المعتمدة تشغيلًا — constitutionally processed atom (المادة 70).
+
+    Wraps a raw :class:`UnicodeAtom` with the full constitution tuple:
+
+    UA = (u, cls, fn, sh, pos, rel, valid, gate)
+
+    Attributes
+    ----------
+    raw : UnicodeAtom
+        The original raw atom — preserved unconditionally (المادة 53).
+    atom_type : AtomType
+        Constitutional classification (``cls``).
+    atom_function : AtomFunction
+        Primary operational function (``fn``).
+    binding : AtomBinding
+        Initial binding record (``sh`` — التشاكل الأولي).
+    position : int
+        Position in the input sequence (``pos``).
+    neighbor_rel : str
+        Preliminary neighbor relation description (``rel``).
+    valid : bool
+        Whether the atom passed validity checks (``valid``).
+    gate : AtomGate
+        Gate decision — pass / suspend / complete / reject (``gate``).
+    readiness : AtomReadiness
+        Current readiness level achieved.
+    gate_reason : str
+        Explicit justification for the gate decision (المادة 55).
+    """
+
+    raw: UnicodeAtom
+    atom_type: AtomType
+    atom_function: AtomFunction
+    binding: AtomBinding
+    position: int
+    neighbor_rel: str
+    valid: bool
+    gate: AtomGate
+    readiness: AtomReadiness
+    gate_reason: str
+
+
+@dataclass(frozen=True)
+class AtomConstitutionResult:
+    """نتيجة المعالجة الدستورية — full output of the constitution pipeline.
+
+    Partitions all processed atoms into *passed*, *suspended*, and
+    *rejected* groups and includes decision traces for auditability.
+    """
+
+    atoms: Tuple[ConstitutionalAtom, ...]
+    passed: Tuple[ConstitutionalAtom, ...]
+    suspended: Tuple[ConstitutionalAtom, ...]
+    rejected: Tuple[ConstitutionalAtom, ...]
+    traces: Tuple[DecisionTrace, ...] = ()
