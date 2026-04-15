@@ -17,6 +17,23 @@ from .enums import (
     POS as POS,
 )
 
+# ── Lexeme Admission enum re-exports ────────────────────────────────
+from .enums import (
+    AdmissionGate as AdmissionGate,
+)
+from .enums import (
+    AdmissionVerdict as AdmissionVerdict,
+)
+from .enums import (
+    AtomOperationalType as AtomOperationalType,
+)
+from .enums import (
+    InputKind as InputKind,
+)
+from .enums import (
+    RejectionReason as RejectionReason,
+)
+
 # ── Fractal Kernel enum re-exports ──────────────────────────────────
 from .enums import (
     ActivationStage as ActivationStage,
@@ -546,6 +563,29 @@ from .types import (  # noqa: F401 -- intentional re-exports
     AEU as AEU,
 )
 
+# ── Lexeme Admission type re-exports ────────────────────────────────
+from .types import (
+    AdmissionResult as AdmissionResult,
+)
+from .types import (
+    DesignationRecord as DesignationRecord,
+)
+from .types import (
+    GateTrace as GateTrace,
+)
+from .types import (
+    IsomorphismRecord as IsomorphismRecord,
+)
+from .types import (
+    PreliminaryInterpretation as PreliminaryInterpretation,
+)
+from .types import (
+    RecallResult as RecallResult,
+)
+from .types import (
+    RecognitionCandidate as RecognitionCandidate,
+)
+
 # ── Fractal Kernel type re-exports ──────────────────────────────────
 from .types import (
     ActivationRecord as ActivationRecord,
@@ -1037,6 +1077,7 @@ __all__ = [
     "validate_kernel_graph",
     # ── types ───────────────────────────────────────────────────────
     "AEU",
+    "AdmissionResult",
     "AxiomRecord",
     "Concept",
     "ConceptRelation",
@@ -1044,6 +1085,7 @@ __all__ = [
     "ConceptSeed",
     "CouplingRecord",
     "DalalaLink",
+    "DesignationRecord",
     "DiscourseCarrierRecord",
     "DiscourseConceptRecord",
     "DiscourseExchangeNode",
@@ -1061,6 +1103,7 @@ __all__ = [
     "ExchangeStyleRecord",
     "GapNode",
     "GapRecord",
+    "GateTrace",
     "Grapheme",
     "HarakaUnit",
     "InferenceResult",

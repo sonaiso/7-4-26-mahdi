@@ -2914,3 +2914,153 @@ class UPConstitutionResult:
     outcome: UPConstitutionOutcome
     fractal_depth_max: int = 0
     errors: Tuple[str, ...] = ()
+
+
+# ── Composition / Syntax Constitution v1 stub types ─────────────────
+# These stubs satisfy forward-declared imports until the full
+# Composition Constitution is implemented.
+
+
+@dataclass(frozen=True)
+class AmbiguityRecord:
+    """Stub for ambiguity analysis record."""
+
+    record_id: str = ""
+    ambiguity_type: str = ""
+    resolution: str = ""
+
+
+@dataclass(frozen=True)
+class ConflictRecord:
+    """Stub for conflict record between competing analyses."""
+
+    record_id: str = ""
+    conflict_type: str = ""
+    resolution_method: str = ""
+
+
+@dataclass(frozen=True)
+class DependencyRecord:
+    """Stub for syntactic dependency record."""
+
+    record_id: str = ""
+    head: str = ""
+    dependent: str = ""
+    relation: str = ""
+
+
+@dataclass(frozen=True)
+class DisambiguationResult:
+    """Stub for disambiguation outcome."""
+
+    result_id: str = ""
+    chosen: str = ""
+    confidence: float = 0.0
+
+
+@dataclass(frozen=True)
+class GateResult:
+    """Stub for composition gate evaluation result."""
+
+    gate_id: str = ""
+    passed: bool = False
+    score: float = 0.0
+
+
+@dataclass(frozen=True)
+class TruthRecord:
+    """Stub for truth-value analysis record."""
+
+    record_id: str = ""
+    category: str = ""
+    value: float = 0.0
+
+
+# ── Lexeme Admission types ──────────────────────────────────────────
+
+
+@dataclass(frozen=True)
+class GateTrace:
+    """سجل تتبع لكل بوابة — يحفظ ما دخل وما خرج ولماذا."""
+
+    gate: str
+    passed: bool
+    input_snapshot: str
+    output_snapshot: str
+    reason: str
+    timestamp: str
+
+
+@dataclass(frozen=True)
+class IsomorphismRecord:
+    """سجل التشاكل الأولي لذرة واحدة."""
+
+    atom_id: str
+    codepoint: int
+    operational_type: str
+    encoding_type: str
+    operational_layer: str
+    processable: bool
+
+
+@dataclass(frozen=True)
+class DesignationRecord:
+    """سجل التعيين الأولي للمدخل."""
+
+    input_kind: str
+    is_linguistic: bool
+    is_arabic: bool
+    is_separable: bool
+    has_blocking_marks: bool
+    details: Tuple[str, ...] = ()
+
+
+@dataclass(frozen=True)
+class RecognitionCandidate:
+    """وحدة مرشحة للترشيح المفردي."""
+
+    candidate_id: str
+    surface: str
+    normalized: str
+    atom_ids: Tuple[str, ...] = ()
+    boundary_valid: bool = True
+    divisible: bool = True
+
+
+@dataclass(frozen=True)
+class RecallResult:
+    """نتيجة الاستدعاء المعرفي الأولي."""
+
+    candidate_id: str
+    linguistic_layer: str
+    lemma_probability: float
+    graphemic_validity: float
+    interpretation_path: str
+
+
+@dataclass(frozen=True)
+class PreliminaryInterpretation:
+    """التفسير الأولي للمرشح المفردي."""
+
+    candidate_id: str
+    boundaries: Tuple[int, ...] = ()
+    is_valid_utterance: bool = False
+    homonymy_count: int = 0
+    graphemic_function: str = ""
+    linguistic_domain: str = ""
+
+
+@dataclass(frozen=True)
+class AdmissionResult:
+    """النتيجة الكلية لمسار القبول المفردي."""
+
+    input_raw: str
+    input_normalized: str
+    verdict: str
+    admitted_lexemes: Tuple[str, ...] = ()
+    rejected_candidates: Tuple[str, ...] = ()
+    suspended_candidates: Tuple[str, ...] = ()
+    completable_candidates: Tuple[str, ...] = ()
+    gate_traces: Tuple[GateTrace, ...] = ()
+    minimum_completeness: float = 0.0
+    la_vector: Tuple[float, ...] = ()
