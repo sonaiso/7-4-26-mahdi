@@ -112,6 +112,39 @@ from .enums import (
     EpistemicRank as EpistemicRank,
 )
 from .enums import (
+    EpistemicStatus as EpistemicStatus,
+)
+from .enums import (
+    EvidenceType as EvidenceType,
+)
+from .enums import (
+    ExchangePurposeType as ExchangePurposeType,
+)
+from .enums import (
+    ExchangeStatus as ExchangeStatus,
+)
+from .enums import (
+    ExchangeStyleType as ExchangeStyleType,
+)
+from .enums import (
+    ExchangeType as ExchangeType,
+)
+from .enums import (
+    ExplicitnessLevel as ExplicitnessLevel,
+)
+from .enums import (
+    FractalStage as FractalStage,
+)
+from .enums import (
+    FrameType as FrameType,
+)
+from .enums import (
+    FunctionRole as FunctionRole,
+)
+from .enums import (
+    FuncTransitionClass as FuncTransitionClass,
+)
+from .enums import (
     GapSeverity as GapSeverity,
 )
 from .enums import (
@@ -133,7 +166,7 @@ from .enums import (
     InstitutionalCategory as InstitutionalCategory,
 )
 from .enums import (
-    InternalConflictType as InternalConflictType,
+    InterpretationSource as InterpretationSource,
 )
 from .enums import (
     InterpretiveOutcomeType as InterpretiveOutcomeType,
@@ -201,6 +234,9 @@ from .enums import (
     PathKind as PathKind,
 )
 from .enums import (
+    PerceptualGapReason as PerceptualGapReason,
+)
+from .enums import (
     PhonCategory as PhonCategory,
 )
 from .enums import (
@@ -228,7 +264,13 @@ from .enums import (
     SenseModality as SenseModality,
 )
 from .enums import (
-    SignifiedClass as SignifiedClass,
+    ReadinessLevel as ReadinessLevel,
+)
+from .enums import (
+    ReadinessStatus as ReadinessStatus,
+)
+from .enums import (
+    RealityKind as RealityKind,
 )
 from .enums import (
     SignifierClass as SignifierClass,
@@ -287,8 +329,14 @@ from .enums import (
 from .enums import (
     ValidationState as ValidationState,
 )
-from .types import (  # noqa: F401 -- intentional re-exports
-    AEU as AEU,
+from .enums import (
+    StockComponent as StockComponent,
+)
+from .enums import (
+    StockSufficiency as StockSufficiency,
+)
+from .enums import (
+    StrictLayerID as StrictLayerID,
 )
 
 # ── Fractal Kernel type re-exports ──────────────────────────────────
@@ -423,8 +471,11 @@ from .enums import (
 from .enums import (
     RhetoricalStatus as RhetoricalStatus,
 )
-from .enums import (
-    RhetoricalSubtype as RhetoricalSubtype,
+from .types import (
+    CompositionalReadinessResult as CompositionalReadinessResult,
+)
+from .types import (
+    Concept as Concept,
 )
 from .enums import (
     SemanticType as SemanticType,
@@ -502,6 +553,15 @@ from .types import (
     InferenceResult as InferenceResult,
 )
 from .types import (
+    InformationalStockRecord as InformationalStockRecord,
+)
+from .types import (
+    InterpretiveOutcomeRecord as InterpretiveOutcomeRecord,
+)
+from .types import (
+    JudgementNode as JudgementNode,
+)
+from .types import (
     JudgementRecord as JudgementRecord,
 )
 from .types import (
@@ -538,7 +598,16 @@ from .types import (
     OpinionTraceRecord as OpinionTraceRecord,
 )
 from .types import (
+    PerceptualReadinessResult as PerceptualReadinessResult,
+)
+from .types import (
+    PriorInfoNode as PriorInfoNode,
+)
+from .types import (
     PriorInfoRecord as PriorInfoRecord,
+)
+from .types import (
+    PriorInformationalStock as PriorInformationalStock,
 )
 from .types import (
     ProofDependencyGraph as ProofDependencyGraph,
@@ -548,6 +617,15 @@ from .types import (
 )
 from .types import (
     Proposition as Proposition,
+)
+from .types import (
+    RationalSelfRecord as RationalSelfRecord,
+)
+from .types import (
+    ReadinessGate as ReadinessGate,
+)
+from .types import (
+    RealityAnchorNode as RealityAnchorNode,
 )
 from .types import (
     RealityAnchorRecord as RealityAnchorRecord,
@@ -565,7 +643,13 @@ from .types import (
     SignifiedNode as SignifiedNode,
 )
 from .types import (
-    SignifiedRecord as SignifiedRecord,
+    SignifierNode as SignifierNode,
+)
+from .types import (
+    StockEntry as StockEntry,
+)
+from .types import (
+    StructuralProfileRecord as StructuralProfileRecord,
 )
 from .types import (
     Syllable as Syllable,
@@ -647,13 +731,26 @@ __all__ = [
     "ElementClass",
     "ElementFunction",
     "ElementLayer",
-    "ExistenceMode",
-    "FunctionalSubtype",
+    "EmbodiedDomain",
+    "EpistemicRank",
+    "EpistemicStatus",
+    "EvidenceType",
+    "ExchangeStatus",
+    "ExchangePurposeType",
+    "ExchangeStyleType",
+    "ExchangeType",
+    "ExplicitnessLevel",
+    "FrameType",
+    "FractalStage",
+    "FuncTransitionClass",
+    "FunctionRole",
+    "GapSeverity",
     "GuidanceState",
     "HarakaState",
     "InfoKind",
     "InsertionPolicy",
     "InstitutionalCategory",
+    "InterpretationSource",
     "InterpretiveOutcomeType",
     "InterpretiveStability",
     "IrabCase",
@@ -663,7 +760,10 @@ __all__ = [
     "MafhumType",
     "Modality",
     "OntologicalLayer",
-    "OntologicalSubtype",
+    "OntologicalMode",
+    "OperationalCapacity",
+    "PathKind",
+    "PerceptualGapReason",
     "PhonCategory",
     "PhonFeature",
     "PhonGroup",
@@ -672,16 +772,29 @@ __all__ = [
     "PragmaticSubtype",
     "PrimarySignifiedType",
     "ProofStatus",
-    "PropositionalSubtype",
-    "ReferentialSubtype",
-    "RelationalSubtype",
-    "RhetoricalStatus",
-    "RhetoricalSubtype",
+    "PurposeType",
+    "RankType",
+    "RationalSelfKind",
+    "RealityKind",
+    "ReceiverExpectedAction",
+    "ReceiverRoleType",
+    "ReceiverState",
+    "ReceptionMode",
+    "ReceptionStateType",
+    "ReadinessLevel",
+    "ReadinessStatus",
+    "ReversibleValue",
+    "SalienceLevel",
+    "ScriptPhase",
+    "SelfModelAspect",
     "SemanticType",
     "SignifiedTemporalStatus",
     "SlotState",
     "SpaceRef",
-    "SpecificityDegree",
+    "StockComponent",
+    "StockSufficiency",
+    "StyleKind",
+    "SyllablePosition",
     "TimeRef",
     "TraceMode",
     "TraceQuality",
@@ -756,6 +869,7 @@ __all__ = [
     "AxiomRecord",
     "Concept",
     "ConceptRelation",
+    "CompositionalReadinessResult",
     "ConflictRuleNode",
     "ConceptSeed",
     "CouplingRecord",
@@ -780,6 +894,7 @@ __all__ = [
     "Grapheme",
     "HarakaUnit",
     "InferenceResult",
+    "InformationalStockRecord",
     "InterpretiveOutcomeRecord",
     "JudgementNode",
     "JudgementRecord",
@@ -788,14 +903,39 @@ __all__ = [
     "KnowledgeEpisodeNode",
     "LayerPromotionRule",
     "LexicalClosure",
-    "OntologicalSignified",
+    "LinguisticCarrierNode",
+    "LinguisticCarrierRecord",
+    "LinkingTraceNode",
+    "LinkingTraceRecord",
+    "MethodNode",
+    "MethodRecord",
+    "OntologicalConstraintRecord",
+    "OntologyV1Record",
+    "OpinionTraceNode",
+    "OpinionTraceRecord",
+    "PerceptualReadinessResult",
+    "PriorInfoNode",
+    "PriorInfoRecord",
+    "PriorInformationalStock",
+    "ProofDependencyGraph",
+    "ProofPathNode",
+    "ProofPathRecord",
     "Proposition",
-    "PropositionalSignified",
-    "ReferentialSignified",
-    "RelationalSignified",
-    "RhetoricalSignified",
+    "RationalSelfRecord",
+    "RealityAnchorNode",
+    "RealityAnchorRecord",
+    "ReadinessGate",
+    "ReceiverRoleRecord",
+    "ReceptionRecord",
+    "ReceptionStateRecord",
     "RootPattern",
-    "SignifiedRecord",
+    "SelfNode",
+    "SenderRoleRecord",
+    "SenseTraceNode",
+    "SenseTraceRecord",
+    "SignifiedNode",
+    "SignifierNode",
+    "StockEntry",
     "Syllable",
     "SyllableUnit",
     "SyntaxNode",

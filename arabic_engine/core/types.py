@@ -42,7 +42,7 @@ from .enums import (
     InfoKind,
     InsertionPolicy,
     InstitutionalCategory,
-    InternalConflictType,
+    InterpretationSource,
     InterpretiveOutcomeType,
     InterpretiveStability,
     InterPropositionLink,
@@ -68,6 +68,9 @@ from .enums import (
     PropositionType,
     PurposeType,
     RankType,
+    RationalSelfKind,
+    ReadinessLevel,
+    ReadinessStatus,
     RealityKind,
     ReversibleValue,
     RhetoricalStatus,
@@ -78,7 +81,10 @@ from .enums import (
     SlotState,
     SourceType,
     SpaceRef,
-    SpecificityDegree,
+    StockComponent,
+    StockSufficiency,
+    StrictLayerID,
+    StyleKind,
     SyllablePosition,
     SymbolicStatus,
     TimeRef,
@@ -2566,79 +2572,126 @@ class LayerTraceRecord:
     final_gate_status: TransitionGateStatus = TransitionGateStatus.INSUFFICIENT_DATA
 
 
-# ── Verb Fractal Constitution v1 types ──────────────────────────────
+# ── Prior Informational Stock (المخزون المعلوماتي السابق) ───────────
 
 
 @dataclass(frozen=True)
-class VerbInflection:
-    """البنية التصريفية الكاملة للفعل — full inflectional state (Art. 11–19)."""
+class StockEntry:
+    """مُدخَل مخزوني — a single piece of prior informational stock.
 
-    surface: str                            # الصيغة السطحية
-    root: Tuple[str, ...]                   # الجذر
-    bab: VerbBab                            # الباب
-    tense: VerbTense                        # الزمن
-    person: VerbPerson                      # الشخص
-    number: VerbNumber                      # العدد
-    gender: VerbGender                      # الجنس
-    voice: VerbVoice                        # المبني
-    transitivity: VerbTransitivity          # اللزوم/التعدي
-    mode: VerbMode                          # المجرد/المزيد/الناسخ
-    augmentation: VerbAugmentation          # باب المزيد
-    nasikh_type: Optional[NasikhType] = None  # نوع الناسخ
+    Fields
+    ------
+    entry_id    unique identifier for this entry
+    component   which of the 7 stock components this belongs to
+    content     the information content
+    source      interpretation channel (reality, utterance, etc.)
+    weight      importance weight in [0, 1]; default 1.0
+    """
 
-
-@dataclass(frozen=True)
-class VerbEventRecord:
-    """سجل الحدث في الفعل — verb event record (Art. 20–24)."""
-
-    event_type: VerbEventType       # نوع الحدث
-    has_causality: bool = False     # سببية
-    has_musha_raka: bool = False    # مشاركة
-    has_mutawa3a: bool = False      # مطاوعة
+    entry_id: str
+    component: StockComponent
+    content: str
+    source: InterpretationSource
+    weight: float = 1.0
 
 
 @dataclass(frozen=True)
-class VerbDerivativeRecord:
-    """سجل مشتق فعلي — verb derivative entry (Art. 43–45)."""
+class PriorInformationalStock:
+    """المخزون المعلوماتي السابق — the full stock tuple (Article 4).
 
-    derivative_type: VerbDerivativeType   # نوع المشتق
-    form: str                              # الصيغة المشتقة
-    notes: str = ""
+    Fields
+    ------
+    stock_id     unique identifier
+    entries      tuple of StockEntry items
+    sufficiency  overall sufficiency evaluation
+    """
 
-
-@dataclass(frozen=True)
-class VerbMasdarRecord:
-    """سجل المصدر — masdar record (Art. 40–42)."""
-
-    masdar_form: str        # صيغة المصدر
-    is_qiyasi: bool = True  # قياسي أم سماعي
-    notes: str = ""
+    stock_id: str
+    entries: Tuple[StockEntry, ...]
+    sufficiency: StockSufficiency = StockSufficiency.UNDETERMINED
 
 
 @dataclass(frozen=True)
-class VerbReadinessScore:
-    """درجة جاهزية الفعل للتركيب — readiness score (Art. 62–67)."""
+class ReadinessGate:
+    """بوابة الجاهزية — result of evaluating one readiness level.
 
-    direction_score: float      # جهة الحدث
-    time_score: float           # الزمن
-    person_score: float         # الشخص
-    valence_score: float        # اللزوم/التعدي
-    mode_score: float           # المجرد/المزيد/الناسخ
-    recover_score: float        # قابلية الرد
-    total: float                # المتوسط
-    status: VerbReadiness       # الحالة
+    Fields
+    ------
+    level        which readiness tier (perceptual / compositional / propositional)
+    status       MET / UNMET / PARTIAL
+    score        computed score in [0, 1]
+    threshold    minimum score required for MET
+    gap_reasons  human-readable reasons if status is not MET
+    """
+
+    level: ReadinessLevel
+    status: ReadinessStatus
+    score: float
+    threshold: float
+    gap_reasons: Tuple[str, ...] = ()
 
 
 @dataclass(frozen=True)
-class VerbConstitutionRecord:
-    """السجل الفراكتالي الكامل للفعل — complete verb fractal record (Art. 65–67)."""
+class PerceptualReadinessResult:
+    """نتيجة الجاهزية الإدراكية — Ready₁ output (Article 9).
 
-    record_id: str                                  # المعرّف
-    inflection: VerbInflection                      # البنية التصريفية
-    event: VerbEventRecord                          # سجل الحدث
-    masdar: Optional[VerbMasdarRecord]              # المصدر
-    derivatives: Tuple[VerbDerivativeRecord, ...]   # المشتقات
-    readiness: VerbReadinessScore                   # الجاهزية
-    fractal_cycle: str                              # الدورة الفراكتالية
-    valid: bool                                     # صحة الفعل
-    notes: str = ""
+    Fields
+    ------
+    percept_id          identifier of the percept being evaluated
+    gate                the readiness gate result
+    interpreted_concept concept label if Ready₁ is met
+    """
+
+    percept_id: str
+    gate: ReadinessGate
+    interpreted_concept: Optional[str] = None
+
+
+@dataclass(frozen=True)
+class CompositionalReadinessResult:
+    """نتيجة الجاهزية التركيبية — Ready₂ output (Article 14).
+
+    Fields
+    ------
+    percept_id         identifier of the percept
+    gate               the readiness gate result
+    assigned_role      role assigned if Ready₂ is met
+    reference_resolved whether reference was resolved
+    """
+
+    percept_id: str
+    gate: ReadinessGate
+    assigned_role: Optional[str] = None
+    reference_resolved: bool = False
+
+
+@dataclass(frozen=True)
+class InformationalStockRecord:
+    """سجل البرهان الكامل — the full IS 9-tuple from Article 48.
+
+    IS = (X, K, Cl, Ln, Ref, Role, Ready₁, Ready₂, Ready₃)
+
+    Fields
+    ------
+    record_id            unique record identifier
+    percept_id           X  — the percept / datum
+    stock                K  — prior informational stock
+    classification       Cl — classification / interpretation result
+    linguistic_direction Ln — linguistic / semantic direction
+    reference            Ref — reference / predication
+    candidate_role       Role — candidate role
+    ready_1              Ready₁ — perceptual readiness gate
+    ready_2              Ready₂ — compositional readiness gate
+    ready_3              Ready₃ — propositional readiness gate
+    """
+
+    record_id: str
+    percept_id: str
+    stock: PriorInformationalStock
+    classification: str
+    linguistic_direction: str
+    reference: str
+    candidate_role: str
+    ready_1: ReadinessGate
+    ready_2: ReadinessGate
+    ready_3: ReadinessGate

@@ -1445,3 +1445,74 @@ class TransitionGateStatus(Enum):
     PASSED = auto()
     BLOCKED = auto()
     INSUFFICIENT_DATA = auto()
+
+
+# ── Prior Informational Stock (المخزون المعلوماتي السابق) ───────────
+
+
+class StockComponent(Enum):
+    """المكوِّن المخزوني — component of the prior informational stock (Article 5)."""
+
+    REALITY_INFO = auto()           # معلومات الواقع
+    PRIOR_CLASSIFICATION = auto()   # التصنيفات السابقة
+    PRIMARY_LANGUAGE = auto()       # معارف اللغة الأولية
+    CATEGORY_BOUNDARY = auto()      # فواصل الذات/الصفة/الحدث/النسبة
+    REFERENCE_KNOWLEDGE = auto()    # معارف الإحالة والمرجع
+    PREDICATION_CRITERION = auto()  # معايير الحمل والدور
+    USAGE_MODE_CRITERION = auto()   # معايير الحقيقة والنقل والعرف
+
+
+class ReadinessLevel(Enum):
+    """مستوى الجاهزية — three-tier readiness (Articles 7/11/15)."""
+
+    PERCEPTUAL = auto()      # إدراكي  — Ready₁
+    COMPOSITIONAL = auto()   # تركيبي  — Ready₂
+    PROPOSITIONAL = auto()   # قضوي   — Ready₃
+
+
+class ReadinessStatus(Enum):
+    """حالة الجاهزية — status for each readiness gate."""
+
+    MET = auto()       # مستوفى
+    UNMET = auto()     # غير مستوفى
+    PARTIAL = auto()   # جزئي
+
+
+class PerceptualGapReason(Enum):
+    """سبب الفجوة الإدراكية — why perceptual readiness fails (Article 10)."""
+
+    AMBIGUOUS = auto()              # مبهم
+    POLYSEMOUS = auto()             # مشترك
+    UNCLASSIFIED = auto()           # غير مصنف
+    UNFIT_FOR_COMPOSITION = auto()  # غير قابل للتركيب
+
+
+class InterpretationSource(Enum):
+    """مصدر التفسير — channel through which the stock interprets (Article 4)."""
+
+    REALITY = auto()            # واقع
+    UTTERANCE = auto()          # لفظ
+    CONCEPT = auto()            # مفهوم
+    REFERENCE = auto()          # إحالة
+    ROLE = auto()               # دور
+    TRUTH_OR_TRANSFER = auto()  # حقيقة أو نقل
+    CONVENTION = auto()         # عرف
+
+
+class FractalStage(Enum):
+    """المرحلة الفراكتالية — 6-stage fractal law cycle (Article 41)."""
+
+    DESIGNATION = auto()   # تعيين
+    PRESERVATION = auto()  # حفظ
+    LINKING = auto()       # ربط
+    JUDGMENT = auto()      # حكم
+    TRANSITION = auto()    # انتقال
+    RETURN = auto()        # رد
+
+
+class StockSufficiency(Enum):
+    """كفاية المخزون — evaluation of stock completeness (Article 40)."""
+
+    SUFFICIENT = auto()    # كافٍ
+    INSUFFICIENT = auto()  # قاصر
+    UNDETERMINED = auto()  # غير محدد
