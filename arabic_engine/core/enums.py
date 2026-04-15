@@ -1860,3 +1860,61 @@ class TransitionGateStatus(Enum):
     PASSED = auto()
     BLOCKED = auto()
     INSUFFICIENT_DATA = auto()
+
+
+# ── Universal / Particular Constitution v1 ──────────────────────────
+
+
+class UniversalityScope(Enum):
+    """نطاق الكلية والجزئية — scope/level of universality or particularity.
+
+    Encodes the classical Arabic logical hierarchy:
+      جنس (genus) → نوع (species) → فرد (individual)
+    """
+
+    GENUS = auto()       # جنس  — highest universal: "animal", "body"
+    SPECIES = auto()     # نوع  — intermediate: "human", "horse"
+    INDIVIDUAL = auto()  # فرد  — particular: "Zayd", "this horse"
+    UNRESOLVED = auto()  # غير محدد — not yet classified
+
+
+class UniversalParticularDomain(Enum):
+    """مجال الكلي والجزئي — whether the UP analysis applies to entity or attribute.
+
+    Every concept is analysed for universality in one of two domains:
+      ذات (entity / substance) or صفة (quality / attribute).
+    """
+
+    ENTITY = auto()     # ذات — substance / entity domain
+    ATTRIBUTE = auto()  # صفة — quality / attribute domain
+
+
+class BoundaryType(Enum):
+    """نوع الفاصل الحدّي — type of conceptual boundary.
+
+    Five critical boundaries that the constitution enforces:
+      1. ذات ↔ صفة           (entity vs attribute)
+      2. كلي ↔ جزئي          (universal vs particular)
+      3. جنس ↔ نوع           (genus vs species)
+      4. نوع ↔ فرد           (species vs individual)
+      5. الوصف العام ↔ الهيئة الخاصة (general description vs specific form)
+    """
+
+    ENTITY_ATTRIBUTE = auto()                  # ذات ↔ صفة
+    UNIVERSAL_PARTICULAR = auto()              # كلي ↔ جزئي
+    GENUS_SPECIES = auto()                     # جنس ↔ نوع
+    SPECIES_INDIVIDUAL = auto()                # نوع ↔ فرد
+    GENERAL_DESCRIPTION_SPECIFIC_FORM = auto()  # الوصف العام ↔ الهيئة الخاصة
+
+
+class UPConstitutionOutcome(Enum):
+    """نتيجة الدستور — verdict of the constitutional check.
+
+    ACCEPTED   — meets minimum completeness, no boundary violations
+    REJECTED   — violates a boundary or missing required structure
+    INCOMPLETE — structurally valid but not yet fully resolved
+    """
+
+    ACCEPTED = auto()    # مقبول     — meets minimum completeness
+    REJECTED = auto()    # مرفوض     — violates a boundary
+    INCOMPLETE = auto()  # غير مكتمل — structurally valid but unresolved

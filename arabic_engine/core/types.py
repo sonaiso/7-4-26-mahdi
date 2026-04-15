@@ -15,6 +15,7 @@ from .enums import (
     ActivationStage,
     AffectiveDimension,
     AuthorityLevel,
+    BoundaryType,
     CarrierClass,
     CarrierType,
     CategorizationMode,
@@ -117,6 +118,9 @@ from .enums import (
     TrustLevel,
     TruthState,
     UnicodeProfileType,
+    UniversalityScope,
+    UniversalParticularDomain,
+    UPConstitutionOutcome,
     UtteranceMode,
     UtteranceToConceptConstraint,
     UtteredFormClass,
@@ -2585,3 +2589,71 @@ class LayerTraceRecord:
     layer_6: Optional[RepresentationRecord] = None
     gates: Tuple[TransitionGate, ...] = ()
     final_gate_status: TransitionGateStatus = TransitionGateStatus.INSUFFICIENT_DATA
+
+
+# ── Universal / Particular Constitution v1 ──────────────────────────
+
+
+@dataclass(frozen=True)
+class UniversalParticularRecord:
+    """سجل الكلي والجزئي — constitutional record for a single concept.
+
+    Captures the universality classification of a concept within
+    either the entity (ذات) or attribute (صفة) domain, together
+    with its position in the genus → species → individual hierarchy
+    and its fractal depth in the conceptual tree.
+
+    Mathematical formulation::
+
+        U(x) = 1  iff  scope ∈ {GENUS, SPECIES}
+        P(x) = 1  iff  scope = INDIVIDUAL
+    """
+
+    record_id: str
+    concept_id: int
+    label: str
+    domain: UniversalParticularDomain
+    scope: UniversalityScope
+    is_universal: bool
+    boundary_markers: Tuple[BoundaryType, ...] = ()
+    genus_id: Optional[int] = None
+    species_id: Optional[int] = None
+    fractal_depth: int = 0
+    notes: str = ""
+
+
+@dataclass(frozen=True)
+class BoundaryRecord:
+    """سجل الفاصل الحدّي — formal boundary assertion between two concepts.
+
+    A boundary is valid when the pair of concepts respects the
+    constitutional separation encoded by *boundary_type*.  If invalid,
+    *violation_reason* carries a human-readable explanation.
+    """
+
+    boundary_id: str
+    boundary_type: BoundaryType
+    left_concept_id: int
+    right_concept_id: int
+    is_valid: bool
+    violation_reason: Optional[str] = None
+
+
+@dataclass(frozen=True)
+class UPConstitutionResult:
+    """نتيجة دستور الكلي والجزئي — overall constitutional verdict.
+
+    Aggregates all :class:`UniversalParticularRecord` entries and
+    :class:`BoundaryRecord` checks, then derives the final
+    :class:`UPConstitutionOutcome`.
+
+    *fractal_depth_max* is the maximum depth observed across all
+    records (0 = only genera, 1 = genera + species, 2+ = full tree).
+    """
+
+    result_id: str
+    records: Tuple[UniversalParticularRecord, ...]
+    boundaries: Tuple[BoundaryRecord, ...]
+    outcome: UPConstitutionOutcome
+    fractal_depth_max: int = 0
+    errors: Tuple[str, ...] = ()

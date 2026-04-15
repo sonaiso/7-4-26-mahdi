@@ -32,6 +32,11 @@ from .enums import (
 from .enums import (
     AuthorityLevel as AuthorityLevel,
 )
+
+# ── Universal / Particular Constitution v1 enum re-exports ──────────
+from .enums import (
+    BoundaryType as BoundaryType,
+)
 from .enums import (
     CarrierClass as CarrierClass,
 )
@@ -366,6 +371,15 @@ from .enums import (
     UnicodeProfileType as UnicodeProfileType,
 )
 from .enums import (
+    UniversalityScope as UniversalityScope,
+)
+from .enums import (
+    UniversalParticularDomain as UniversalParticularDomain,
+)
+from .enums import (
+    UPConstitutionOutcome as UPConstitutionOutcome,
+)
+from .enums import (
     UtteranceMode as UtteranceMode,
 )
 from .enums import (
@@ -470,6 +484,11 @@ from .types import (
 )
 from .types import (
     AxiomRecord as AxiomRecord,
+)
+
+# ── Universal / Particular Constitution v1 type re-exports ──────────
+from .types import (
+    BoundaryRecord as BoundaryRecord,
 )
 from .types import (
     Concept as Concept,
@@ -713,6 +732,12 @@ from .types import (
 )
 from .types import (
     UnicodeAtom as UnicodeAtom,
+)
+from .types import (
+    UniversalParticularRecord as UniversalParticularRecord,
+)
+from .types import (
+    UPConstitutionResult as UPConstitutionResult,
 )
 from .types import (
     UtteranceNode as UtteranceNode,
@@ -973,4 +998,13 @@ __all__ = [
     "StructuralProfileRecord",
     "TransformationProfileRecord",
     "TransitionGate",
+    # ── Universal / Particular Constitution v1 enums ───────────────
+    "BoundaryType",
+    "UPConstitutionOutcome",
+    "UniversalParticularDomain",
+    "UniversalityScope",
+    # ── Universal / Particular Constitution v1 types ───────────────
+    "BoundaryRecord",
+    "UPConstitutionResult",
+    "UniversalParticularRecord",
 ]
