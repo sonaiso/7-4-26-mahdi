@@ -436,8 +436,8 @@ def compute_readiness(gates: Tuple[SingleConceptGateResult, ...]) -> float:
 
     ``Ready_C = count(PASSED gates) / total_gates``
 
-    The constitution (المادة 80) uses 7 components in its formula; this
-    implementation counts all gates provided (typically 8).
+    This implementation computes readiness over all supplied gates. In this
+    single-concept constitution model, that is typically all 8 gates.
     """
     if not gates:
         return 0.0
