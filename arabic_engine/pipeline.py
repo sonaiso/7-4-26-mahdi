@@ -88,6 +88,7 @@ class PipelineResult:
     world_update: Dict[str, object] = field(default_factory=dict)
     explanation: Dict[str, object] = field(default_factory=dict)
     layer_traces: List[LayerTraceRecord] = field(default_factory=list)
+    noun_fractals: list = field(default_factory=list)
 
 
 def _to_validation_state(outcome: ValidationOutcome) -> ValidationState:
@@ -192,6 +193,7 @@ def run(
     world: Optional[WorldModel] = None,
     inference_engine: Optional[InferenceEngine] = None,
     analyze_layers: bool = False,
+    analyze_nouns: bool = False,
 ) -> PipelineResult:
     """Execute the full v3 pipeline on *text*."""
     # L0 — Normalise
@@ -219,6 +221,13 @@ def run(
 
     # L4 — Ontological Mapping
     concepts = batch_map(closures)
+
+    # L4b — Optional noun fractal analysis
+    noun_fractals: list = []
+    if analyze_nouns:
+        from arabic_engine.noun.constitution_v1 import batch_build as _noun_batch
+
+        noun_fractals = _noun_batch(closures, concepts)
 
     # L5 — Dalāla Validation
     links = full_validation(closures, concepts)
@@ -358,4 +367,5 @@ def run(
         world_update=world_update,
         explanation=explanation,
         layer_traces=layer_traces,
+        noun_fractals=noun_fractals,
     )

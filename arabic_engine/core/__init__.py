@@ -209,8 +209,52 @@ from .enums import (
 from .enums import (
     ModalCategory as ModalCategory,
 )
+
+# ── Noun Fractal Constitution v1 enum re-exports ─────────────────────
+from .enums import (
+    NominalAttributeKind as NominalAttributeKind,
+)
 from .enums import (
     NormativeCategory as NormativeCategory,
+)
+from .enums import (
+    NounComposition as NounComposition,
+)
+from .enums import (
+    NounDefiniteness as NounDefiniteness,
+)
+from .enums import (
+    NounDirection as NounDirection,
+)
+from .enums import (
+    NounExistentialAspect as NounExistentialAspect,
+)
+from .enums import (
+    NounFractalStage as NounFractalStage,
+)
+from .enums import (
+    NounGender as NounGender,
+)
+from .enums import (
+    NounGenusLevel as NounGenusLevel,
+)
+from .enums import (
+    NounNumber as NounNumber,
+)
+from .enums import (
+    NounOrigin as NounOrigin,
+)
+from .enums import (
+    NounPatternType as NounPatternType,
+)
+from .enums import (
+    NounReadiness as NounReadiness,
+)
+from .enums import (
+    NounSignificationType as NounSignificationType,
+)
+from .enums import (
+    NounUniversality as NounUniversality,
 )
 from .enums import (
     OntologicalConstraintType as OntologicalConstraintType,
@@ -244,6 +288,9 @@ from .enums import (
 )
 from .enums import (
     ProofStatus as ProofStatus,
+)
+from .enums import (
+    ProperNounKind as ProperNounKind,
 )
 from .enums import (
     PurposeType as PurposeType,
@@ -606,6 +653,35 @@ from .types import (
 from .types import (
     MethodRecord as MethodRecord,
 )
+
+# ── Noun Fractal Constitution v1 type re-exports ─────────────────────
+from .types import (
+    NounAttributeRecord as NounAttributeRecord,
+)
+from .types import (
+    NounClassificationRecord as NounClassificationRecord,
+)
+from .types import (
+    NounCompositionRecord as NounCompositionRecord,
+)
+from .types import (
+    NounFractalRecord as NounFractalRecord,
+)
+from .types import (
+    NounInflectionRecord as NounInflectionRecord,
+)
+from .types import (
+    NounMinimumRecord as NounMinimumRecord,
+)
+from .types import (
+    NounMorphologyRecord as NounMorphologyRecord,
+)
+from .types import (
+    NounSignificationRecord as NounSignificationRecord,
+)
+from .types import (
+    NounValidationResult as NounValidationResult,
+)
 from .types import (
     OntologicalConstraintRecord as OntologicalConstraintRecord,
 )
@@ -963,6 +1039,22 @@ __all__ = [
     "StructuralNode",
     "TransformationNode",
     "TransitionGateStatus",
+    # ── Noun Fractal Constitution v1 enums ────────────────────────
+    "NominalAttributeKind",
+    "NounComposition",
+    "NounDefiniteness",
+    "NounDirection",
+    "NounExistentialAspect",
+    "NounFractalStage",
+    "NounGender",
+    "NounGenusLevel",
+    "NounNumber",
+    "NounOrigin",
+    "NounPatternType",
+    "NounReadiness",
+    "NounSignificationType",
+    "NounUniversality",
+    "ProperNounKind",
     # ── Strict 7-Layer System types ────────────────────────────────
     "AuditoryMinimumRecord",
     "GenerativeProfileRecord",
@@ -973,4 +1065,14 @@ __all__ = [
     "StructuralProfileRecord",
     "TransformationProfileRecord",
     "TransitionGate",
+    # ── Noun Fractal Constitution v1 types ─────────────────────────
+    "NounAttributeRecord",
+    "NounClassificationRecord",
+    "NounCompositionRecord",
+    "NounFractalRecord",
+    "NounInflectionRecord",
+    "NounMinimumRecord",
+    "NounMorphologyRecord",
+    "NounSignificationRecord",
+    "NounValidationResult",
 ]

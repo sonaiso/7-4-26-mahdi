@@ -68,7 +68,20 @@ from .enums import (
     MetaConceptualLevel,
     MethodFamily,
     ModalCategory,
+    NominalAttributeKind,
     NormativeCategory,
+    NounComposition,
+    NounDefiniteness,
+    NounDirection,
+    NounExistentialAspect,
+    NounFractalStage,
+    NounGender,
+    NounGenusLevel,
+    NounNumber,
+    NounOrigin,
+    NounPatternType,
+    NounReadiness,
+    NounUniversality,
     OntologicalConstraintType,
     OntologicalLayer,
     OntologicalMode,
@@ -80,6 +93,7 @@ from .enums import (
     PhonTransform,
     ProofPathKind,
     ProofStatus,
+    ProperNounKind,
     PurposeType,
     RankType,
     RationalSelfKind,
@@ -2585,3 +2599,106 @@ class LayerTraceRecord:
     layer_6: Optional[RepresentationRecord] = None
     gates: Tuple[TransitionGate, ...] = ()
     final_gate_status: TransitionGateStatus = TransitionGateStatus.INSUFFICIENT_DATA
+
+
+# ═══════════════════════════════════════════════════════════════════════
+# Noun Fractal Constitution v1 — دستور الاسم الفراكتالي
+# ═══════════════════════════════════════════════════════════════════════
+
+
+@dataclass(frozen=True)
+class NounMinimumRecord:
+    """الحد الأدنى المكتمل — minimum completeness conditions (Art. 11-19)."""
+
+    thubut: bool                # الثبوت
+    hadd: bool                  # الحد
+    imtidad: bool               # الامتداد
+    muqawwim: bool              # المقوِّم
+    alaqa_binaiyya: bool        # العلاقة البنائية
+    intizam: bool               # الانتظام
+    wahda: bool                 # الوحدة
+    qabiliyyat_ta3yin: bool     # قابلية التعيين
+
+
+@dataclass(frozen=True)
+class NounMorphologyRecord:
+    """المادة والوزن — morphological substrate (Art. 15, 56-58)."""
+
+    material: str                        # المادة
+    pattern_type: NounPatternType        # نوع الوزن
+    pattern: str                         # الوزن / القالب
+    root: Tuple[str, ...]                # الجذر
+
+
+@dataclass(frozen=True)
+class NounClassificationRecord:
+    """التصنيف — universality + genus level (Art. 24-33)."""
+
+    universality: NounUniversality               # كلي / جزئي
+    genus_level: NounGenusLevel                  # جنس / نوع / فرد
+    proper_noun_kind: Optional[ProperNounKind]    # نوع العلم (if applicable)
+
+
+@dataclass(frozen=True)
+class NounAttributeRecord:
+    """الصفة الاسمية — nominal-attribute classification (Art. 38-40)."""
+
+    attribute_kind: Optional[NominalAttributeKind]   # نوع الصفة
+    is_nominal_attribute: bool                       # هل هو صفة اسمية
+
+
+@dataclass(frozen=True)
+class NounInflectionRecord:
+    """الوحدة والكثرة + التذكير والتأنيث + المعرفة والنكرة (Art. 41-50)."""
+
+    number: NounNumber               # العدد
+    gender: NounGender               # الجنس
+    definiteness: NounDefiniteness   # التعريف
+
+
+@dataclass(frozen=True)
+class NounCompositionRecord:
+    """المركب والمقترض (Art. 51-55)."""
+
+    composition: NounComposition   # بسيط / مركب اسمي / مركب مزجي
+    origin: NounOrigin             # أصيل / مقترض
+
+
+@dataclass(frozen=True)
+class NounSignificationRecord:
+    """المطابقة والتضمن والالتزام في الاسم (Art. 59-62)."""
+
+    mutabaqa: str                # ما يطابقه
+    tadammun: Tuple[str, ...]    # ما يتضمنه
+    iltizam: Tuple[str, ...]     # ما يلتزمه
+
+
+@dataclass(frozen=True)
+class NounFractalRecord:
+    """البنية الفراكتالية المكتملة — N = (M, WT, D, T, Ref, Num, Gen, Def, Ready) (Art. 73-75)."""
+
+    noun_id: str
+    lemma: str
+    surface: str
+    direction: NounDirection                     # D  — الجهة الاسمية
+    conceptual_type: SemanticType                # T  — النوع المفهومي
+    morphology: NounMorphologyRecord             # M + WT
+    classification: NounClassificationRecord     # Ref
+    attribute: NounAttributeRecord
+    inflection: NounInflectionRecord             # Num + Gen + Def
+    composition: NounCompositionRecord
+    signification: NounSignificationRecord
+    minimum: NounMinimumRecord
+    fractal_stage: NounFractalStage
+    readiness: NounReadiness                     # Ready
+    readiness_score: float                       # Ready_N
+    existential_aspect: NounExistentialAspect
+
+
+@dataclass(frozen=True)
+class NounValidationResult:
+    """القبول والرفض — acceptance / rejection verdict (Art. 76-77)."""
+
+    valid: bool
+    errors: Tuple[str, ...]
+    readiness_score: float
