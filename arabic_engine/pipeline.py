@@ -9,17 +9,23 @@ from arabic_engine.cognition.epistemic_v1 import validate_episode
 from arabic_engine.cognition.evaluation import build_proposition, evaluate
 from arabic_engine.cognition.explanation import build_explanation
 from arabic_engine.cognition.inference_rules import InferenceEngine
+from arabic_engine.cognition.isg_v1 import govern as isg_govern
+from arabic_engine.cognition.isg_v1 import identify_atom as _isg_identify
 from arabic_engine.cognition.time_space import tag as time_space_tag
 from arabic_engine.cognition.world_model import WorldModel
 from arabic_engine.core.contracts import verify_contracts  # noqa: F401 — re-export
 from arabic_engine.core.enums import (
     CarrierType,
+    ConfirmationRank,
+    EpistemicEntryKind,
     JudgementType,
+    KnowledgeAtomType,
     LinkKind,
     MethodFamily,
     ProofPathKind,
     RealityKind,
     SenseModality,
+    SourceType,
     TraceMode,
     ValidationOutcome,
     ValidationState,
@@ -33,6 +39,7 @@ from arabic_engine.core.types import (
     EvalResult,
     EvaluationResult,
     InferenceResult,
+    ISGValidationResult,
     JudgementRecord,
     KnowledgeEpisode,
     KnowledgeEpisodeInput,
@@ -89,7 +96,7 @@ class PipelineResult:
     world_update: Dict[str, object] = field(default_factory=dict)
     explanation: Dict[str, object] = field(default_factory=dict)
     layer_traces: List[LayerTraceRecord] = field(default_factory=list)
-    reference_records: List["ReferenceRecord"] = field(default_factory=list)
+    isg_result: Optional[ISGValidationResult] = None
 
 
 def _to_validation_state(outcome: ValidationOutcome) -> ValidationState:
@@ -345,6 +352,33 @@ def run(
         trace_quality=1.0 if tokens else 0.0,
     )
 
+    # L-ISG — Informational Stock Governance (ISG Constitution v1)
+    isg_atoms = []
+    for pk in prior_knowledge:
+        try:
+            atom = _isg_identify(
+                label=pk.content,
+                atom_type=KnowledgeAtomType.LEXICAL,
+                knowledge_level="token",
+                domain="linguistic",
+                source=pk.source,
+                source_type=SourceType.PRIMARY,
+                confirmation_rank=ConfirmationRank.ESTABLISHED,
+                context=normalised,
+                entry_kind=EpistemicEntryKind.INFORMATION,
+            )
+            isg_atoms.append(atom)
+        except ValueError:
+            pass
+    isg_result: Optional[ISGValidationResult] = None
+    if isg_atoms:
+        isg_result = isg_govern(
+            isg_atoms,
+            input_id=f"pipeline:{normalised[:40]}",
+            input_level="token",
+            input_domain="linguistic",
+        )
+
     return PipelineResult(
         raw=text,
         normalised=normalised,
@@ -368,5 +402,5 @@ def run(
         world_update=world_update,
         explanation=explanation,
         layer_traces=layer_traces,
-        reference_records=reference_records,
+        isg_result=isg_result,
     )

@@ -17,7 +17,7 @@ from .enums import (
     AmbiguityResolution,
     AmbiguityType,
     AuthorityLevel,
-    CandidateRole,
+    CallabilityStatus,
     CarrierClass,
     CarrierType,
     CategorizationMode,
@@ -33,7 +33,11 @@ from .enums import (
     ConceptualSignifiedClass,
     ConceptUniversalParticular,
     ConditionToken,
-    ConstraintKind,
+    ConfirmationRank,
+    ConflictResolutionMethod,
+    ConflictState,
+    ConflictType,
+    ConstraintStrength,
     ConstraintType,
     ContaminationLevel,
     CouplingRelationType,
@@ -49,6 +53,7 @@ from .enums import (
     ElementFunction,
     ElementLayer,
     EmbodiedDomain,
+    EpistemicEntryKind,
     EpistemicRank,
     EpistemicStatus,
     EvidenceType,
@@ -59,18 +64,23 @@ from .enums import (
     FunctionRole,
     FuncTransitionClass,
     GapSeverity,
+    GateDecision,
     GuidanceState,
     HypothesisStatus,
     InfoKind,
     InsertionPolicy,
     InstitutionalCategory,
+    InternalConflictType,
     InterpretiveOutcomeType,
     InterpretiveStability,
     InterPropositionLink,
     IrabCase,
     IrabRole,
+    ISGConflictResolution,
     JudgementType,
     JudgmentCategory,
+    KnowledgeAtomType,
+    LevelMatchStatus,
     LinkKind,
     MafhumType,
     MentalIntentionalType,
@@ -99,6 +109,7 @@ from .enums import (
     PurposeType,
     RankType,
     RationalSelfKind,
+    ReadinessLevel,
     RealityKind,
     ReceiverExpectedAction,
     ReceiverRoleType,
@@ -123,6 +134,7 @@ from .enums import (
     SignifierClass,
     SingleConceptType,
     SlotState,
+    SourceType,
     SpaceRef,
     StrictLayerID,
     StyleKind,
@@ -148,6 +160,7 @@ from .enums import (
     UtteredFormClass,
     ValidationOutcome,
     ValidationState,
+    VerificationStatus,
 )
 
 # ── State-machine layer types ──────────────────────────────────────
@@ -2552,8 +2565,108 @@ class ReferenceTransition:
     Tracks when an attribute transitions from predication to reference.
     """
 
-    source_concept_id: int               # معرّف المفهوم المصدر
-    from_basis: PredicationBasis         # PREDICATION
-    to_basis: PredicationBasis           # REFERENCE
-    reason: str                          # سبب الانتقال
-    resulting_degree: ReferenceDegree    # الدرجة الناتجة
+    composition_id: str                                  # معرّف التركيب
+    units: Tuple[str, ...] = ()                          # الوحدات الداخلة
+    gates: Tuple[GateResult, ...] = ()                   # البوابات
+    relations: Tuple[CompositionRelation, ...] = ()      # العلاقات
+    roles: Tuple[CompositionRoleRecord, ...] = ()        # الأدوار
+    propositions: Tuple[PropositionRecord, ...] = ()     # القضايا
+    links: Tuple[InterPropositionLink, ...] = ()         # الروابط
+    verdict: CompositionVerdict = CompositionVerdict.PENDING
+    readiness: float = 0.0                               # الجاهزية
+
+
+# ── Informational Stock Governance (ISG) Constitution v1 ────────────
+
+
+@dataclass(frozen=True)
+class KnowledgeAtom:
+    """الذرة المعرفية — smallest independent knowledge unit (المادة 5–7)."""
+
+    atom_id: str                                              # معرف فريد
+    atom_type: KnowledgeAtomType                              # نوع معرفي
+    label: str                                                # تسمية أو تمثيل
+    knowledge_level: str                                      # مستوى معرفي
+    domain: str                                               # مجال استعمال
+    source: str                                               # مصدر
+    source_type: SourceType                                   # نوع المصدر
+    confirmation_rank: ConfirmationRank                        # رتبة ثبوت
+    context: str                                              # سياق
+    relations: Tuple[str, ...] = ()                           # علاقات بنائية
+    entry_kind: EpistemicEntryKind = EpistemicEntryKind.INFORMATION
+    verification: VerificationStatus = VerificationStatus.UNVERIFIED
+
+
+@dataclass(frozen=True)
+class SourceRecord:
+    """سجل المصدر — verification metadata for a knowledge source (المادة 34)."""
+
+    source_id: str                                            # معرّف المصدر
+    source_type: SourceType                                   # نوع المصدر
+    transmitter: str                                          # جهة النقل
+    confirmation_rank: ConfirmationRank                        # رتبة الثبوت
+    trust_degree: float = 1.0                                 # درجة الوثوق 0.0–1.0
+    authority_scope: str = ""                                 # مجال الحجية
+    approval_date: str = ""                                   # تاريخ الاعتماد (ISO)
+    review_status: VerificationStatus = VerificationStatus.UNVERIFIED
+
+
+@dataclass(frozen=True)
+class LevelMatchResult:
+    """نتيجة مطابقة المستوى — result of level matching (المادة 28–32)."""
+
+    atom_id: str
+    input_id: str
+    status: LevelMatchStatus
+    reason: str = ""
+
+
+@dataclass(frozen=True)
+class CallabilityResult:
+    """نتيجة صلاحية الاستدعاء — callability evaluation result (المادة 39–43)."""
+
+    atom_id: str
+    input_id: str
+    status: CallabilityStatus
+    priority: int = 0                                         # ترتيب الاستدعاء
+    reason: str = ""
+
+
+@dataclass(frozen=True)
+class InternalConflictRecord:
+    """سجل التعارض الداخلي — internal conflict record (المادة 44–48)."""
+
+    conflict_id: str
+    atom_a_id: str
+    atom_b_id: str
+    conflict_type: InternalConflictType
+    resolution: Optional[ISGConflictResolution] = None
+    resolved: bool = False
+    winner_id: Optional[str] = None
+
+
+@dataclass(frozen=True)
+class GovernanceGateResult:
+    """نتيجة بوابة الحوكمة — final gate decision (المادة 73/78)."""
+
+    atom_id: str
+    input_id: str
+    decision: GateDecision
+    readiness: Optional[ReadinessLevel] = None
+    level_match: Optional[LevelMatchResult] = None
+    callability: Optional[CallabilityResult] = None
+    conflict: Optional[InternalConflictRecord] = None
+    reason: str = ""
+
+
+@dataclass(frozen=True)
+class ISGValidationResult:
+    """نتيجة حوكمة المخزون — overall ISG validation result for one batch."""
+
+    input_id: str
+    gate_results: Tuple[GovernanceGateResult, ...] = ()
+    passed: int = 0
+    rejected: int = 0
+    suspended: int = 0
+    completing: int = 0
+    overall_ready: bool = False

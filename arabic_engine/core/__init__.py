@@ -41,9 +41,9 @@ from .enums import (
     AuthorityLevel as AuthorityLevel,
 )
 
-# ── Single Concept Constitution v1 enum re-exports ──────────────────
+# ── Informational Stock Governance (ISG) Constitution v1 enum re-exports ──
 from .enums import (
-    CandidateRole as CandidateRole,
+    CallabilityStatus as CallabilityStatus,
 )
 from .enums import (
     CarrierClass as CarrierClass,
@@ -89,6 +89,9 @@ from .enums import (
 )
 from .enums import (
     ConditionToken as ConditionToken,
+)
+from .enums import (
+    ConfirmationRank as ConfirmationRank,
 )
 from .enums import (
     ConflictResolutionMethod as ConflictResolutionMethod,
@@ -148,6 +151,9 @@ from .enums import (
     EmbodiedDomain as EmbodiedDomain,
 )
 from .enums import (
+    EpistemicEntryKind as EpistemicEntryKind,
+)
+from .enums import (
     EpistemicRank as EpistemicRank,
 )
 from .enums import (
@@ -184,6 +190,9 @@ from .enums import (
     GapSeverity as GapSeverity,
 )
 from .enums import (
+    GateDecision as GateDecision,
+)
+from .enums import (
     GenerativeNode as GenerativeNode,
 )
 from .enums import (
@@ -205,6 +214,9 @@ from .enums import (
     InstitutionalCategory as InstitutionalCategory,
 )
 from .enums import (
+    InternalConflictType as InternalConflictType,
+)
+from .enums import (
     InterpretiveOutcomeType as InterpretiveOutcomeType,
 )
 from .enums import (
@@ -220,13 +232,22 @@ from .enums import (
     IrabRole as IrabRole,
 )
 from .enums import (
+    ISGConflictResolution as ISGConflictResolution,
+)
+from .enums import (
     JudgementType as JudgementType,
 )
 from .enums import (
     JudgmentState as JudgmentState,
 )
 from .enums import (
-    LayerEvent as LayerEvent,
+    KnowledgeAtomType as KnowledgeAtomType,
+)
+from .enums import (
+    LayerEdgeType as LayerEdgeType,
+)
+from .enums import (
+    LevelMatchStatus as LevelMatchStatus,
 )
 from .enums import (
     LinkKind as LinkKind,
@@ -306,6 +327,9 @@ from .enums import (
     PredicationBasis as PredicationBasis,
 )
 from .enums import (
+    PriorKnowledgeType as PriorKnowledgeType,
+)
+from .enums import (
     ProofPathKind as ProofPathKind,
 )
 from .enums import (
@@ -322,6 +346,9 @@ from .enums import (
 )
 from .enums import (
     RationalSelfKind as RationalSelfKind,
+)
+from .enums import (
+    ReadinessLevel as ReadinessLevel,
 )
 from .enums import (
     RealityKind as RealityKind,
@@ -402,7 +429,7 @@ from .enums import (
     SlotState as SlotState,
 )
 from .enums import (
-    SoundState as SoundState,
+    SourceType as SourceType,
 )
 from .enums import (
     SpaceRef as SpaceRef,
@@ -484,6 +511,9 @@ from .enums import (
 )
 from .enums import (
     ValidationState as ValidationState,
+)
+from .enums import (
+    VerificationStatus as VerificationStatus,
 )
 
 # ── Kernel re-exports ───────────────────────────────────────────────
@@ -596,7 +626,10 @@ from .types import (
     AxiomRecord as AxiomRecord,
 )
 
-# ── Enriched signifier model re-exports ─────────────────────────────
+# ── Informational Stock Governance (ISG) Constitution v1 type re-exports ──
+from .types import (
+    CallabilityResult as CallabilityResult,
+)
 from .types import (
     CliticRecord as CliticRecord,
 )
@@ -706,6 +739,9 @@ from .types import (
     GenerativeProfileRecord as GenerativeProfileRecord,
 )
 from .types import (
+    GovernanceGateResult as GovernanceGateResult,
+)
+from .types import (
     Grapheme as Grapheme,
 )
 from .types import (
@@ -718,7 +754,13 @@ from .types import (
     InferenceResult as InferenceResult,
 )
 from .types import (
+    InternalConflictRecord as InternalConflictRecord,
+)
+from .types import (
     InterpretiveOutcomeRecord as InterpretiveOutcomeRecord,
+)
+from .types import (
+    ISGValidationResult as ISGValidationResult,
 )
 from .types import (
     JudgementNode as JudgementNode,
@@ -728,6 +770,9 @@ from .types import (
 )
 from .types import (
     JudgmentRecordL5 as JudgmentRecordL5,
+)
+from .types import (
+    KnowledgeAtom as KnowledgeAtom,
 )
 from .types import (
     KnowledgeEpisode as KnowledgeEpisode,
@@ -743,6 +788,9 @@ from .types import (
 )
 from .types import (
     LayerTraceRecord as LayerTraceRecord,
+)
+from .types import (
+    LevelMatchResult as LevelMatchResult,
 )
 from .types import (
     LexicalClosure as LexicalClosure,
@@ -894,6 +942,9 @@ from .types import (
 )
 from .types import (
     SingleConceptRecord as SingleConceptRecord,
+)
+from .types import (
+    SourceRecord as SourceRecord,
 )
 from .types import (
     StructuralProfileRecord as StructuralProfileRecord,
@@ -1241,8 +1292,55 @@ __all__ = [
     "StructuralProfileRecord",
     "TransformationProfileRecord",
     "TransitionGate",
-    # ── Reference Constitution v1 types ───────────────────────────
-    "PredicationReadinessScore",
-    "ReferenceRecord",
-    "ReferenceTransition",
+    # ── Composition / Syntax Constitution v1 enums ─────────────────
+    "AmbiguityResolution",
+    "AmbiguityType",
+    "CompositionGate",
+    "CompositionRelation",
+    "CompositionRole",
+    "CompositionVerdict",
+    "ConflictResolutionMethod",
+    "ConflictType",
+    "DependencyType",
+    "InterPropositionLink",
+    "PredicationType",
+    "PropositionType",
+    "RestrictionType",
+    "RoleStatus",
+    "TransferType",
+    "TruthCategory",
+    # ── Composition / Syntax Constitution v1 types ─────────────────
+    "AmbiguityRecord",
+    "CompositionRecord",
+    "CompositionRoleRecord",
+    "ConflictRecord",
+    "DependencyRecord",
+    "DisambiguationResult",
+    "GateResult",
+    "PredicationRecord",
+    "PropositionRecord",
+    "RestrictionRecord",
+    "TransferRecord",
+    "TruthRecord",
+    # ── Informational Stock Governance (ISG) Constitution v1 enums ──
+    "CallabilityStatus",
+    "ConfirmationRank",
+    "EpistemicEntryKind",
+    "GateDecision",
+    "InternalConflictType",
+    "ISGConflictResolution",
+    "KnowledgeAtomType",
+    "LevelMatchStatus",
+    "PriorKnowledgeType",
+    "ReadinessLevel",
+    "SourceType",
+    "VerificationStatus",
+    # ── Informational Stock Governance (ISG) Constitution v1 types ──
+    "CallabilityResult",
+    "GovernanceGateResult",
+    "InternalConflictRecord",
+    "ISGValidationResult",
+    "KnowledgeAtom",
+    "LevelMatchResult",
+    "SourceRecord",
 ]
