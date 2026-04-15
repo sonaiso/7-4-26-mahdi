@@ -14,18 +14,27 @@ from .enums import (
     POS,
     ActivationStage,
     AffectiveDimension,
+    AmbiguityResolution,
+    AmbiguityType,
     AuthorityLevel,
+    BoundaryType,
     CarrierClass,
     CarrierType,
     CategorizationMode,
     CausalRole,
     CellType,
     CombinationType,
+    CompositionGate,
+    CompositionRelation,
+    CompositionRole,
+    CompositionVerdict,
     ConceptFormationMode,
     ConceptRelationType,
     ConceptualSignifiedClass,
     ConditionToken,
+    ConflictResolutionMethod,
     ConflictState,
+    ConflictType,
     ConstraintStrength,
     ConstraintType,
     ContaminationLevel,
@@ -34,6 +43,7 @@ from .enums import (
     DalaalaKind,
     DalalaType,
     DecisionCode,
+    DependencyType,
     DiachronicStatus,
     DiscourseGapType,
     DiscourseValidationOutcome,
@@ -58,9 +68,11 @@ from .enums import (
     InstitutionalCategory,
     InterpretiveOutcomeType,
     InterpretiveStability,
+    InterPropositionLink,
     IrabCase,
     IrabRole,
     JudgementType,
+    JudgmentCategory,
     LinkKind,
     MafhumType,
     MentalIntentionalType,
@@ -77,8 +89,10 @@ from .enums import (
     PhonFeature,
     PhonGroup,
     PhonTransform,
+    PredicationType,
     ProofPathKind,
     ProofStatus,
+    PropositionType,
     PurposeType,
     RankType,
     RationalSelfKind,
@@ -88,8 +102,10 @@ from .enums import (
     ReceiverState,
     ReceptionMode,
     ReceptionStateType,
+    RestrictionType,
     ReversibleValue,
     RevisionType,
+    RoleStatus,
     SalienceLevel,
     ScriptPhase,
     SelfModelAspect,
@@ -101,19 +117,26 @@ from .enums import (
     SignifierClass,
     SlotState,
     SpaceRef,
+    StrictLayerID,
     StyleKind,
     SyllablePosition,
     TimeRef,
     TraceMode,
     TraceQuality,
+    TransferType,
     TransitionCondition,
+    TransitionGateStatus,
     TransitionLaw,
     TransitionType,
     TriadType,
     TrustBasis,
     TrustLevel,
+    TruthCategory,
     TruthState,
     UnicodeProfileType,
+    UniversalityScope,
+    UniversalParticularDomain,
+    UPConstitutionOutcome,
     UtteranceMode,
     UtteranceToConceptConstraint,
     UtteredFormClass,
@@ -2549,3 +2572,240 @@ class DecisionTrace:
     justification: str = ""
     confidence: float = 1.0
     parent_trace_refs: Tuple[str, ...] = ()
+
+
+# ══════════════════════════════════════════════════════════════════════
+# Strict 7-Layer Analysis System Records
+# النموذج الطبقي الصارم — سجلات الطبقات
+# ══════════════════════════════════════════════════════════════════════
+
+
+@dataclass(frozen=True)
+class MentalFoundationRecord:
+    """سجل الطبقة العقلية المؤسسة — Layer 0 mental foundation record.
+
+    Captures the epistemic primitives that must hold before any element
+    can be classified: identity, difference, rank, constitutiveness,
+    dependency, stability, transformation, causality, reality-match.
+    """
+
+    identity_strength: float        # قوة الهوية  [0, 1]
+    distinctiveness: float          # التمايز     [0, 1]
+    rank_position: float            # الرتبة      [0, 1]
+    is_constitutive: bool           # مقوّم؟
+    is_dependent: bool              # تابع؟
+    stability_score: float          # ثبات        [0, 1]
+    transformation_type: str = ""   # نوع التحول
+    causal_source: str = ""         # مصدر العلية
+    reality_match_score: float = 0.0  # مطابقة الواقع [0, 1]
+
+
+@dataclass(frozen=True)
+class GenerativeProfileRecord:
+    """سجل القوام التوليدي — Layer 1 generative phonetic profile.
+
+    Records how a sound is physically produced: vocal fold state,
+    articulation place and mode, closure degree, resonance.
+    """
+
+    voicedness: bool                # مجهور / مهموس
+    air_pressure: float             # ضغط الهواء     [0, 1]
+    place_class: str                # صنف الموضع
+    manner_class: str               # صنف نوع الاعتراض
+    closure_value: float            # درجة الانغلاق  [0, 1]
+    release_type: str = ""          # نوع الانفراج
+    nasality: bool = False          # أنفي؟
+    continuancy: bool = False       # استمراري؟
+    sonority_level: float = 0.0     # مستوى الرنة   [0, 1]
+
+
+@dataclass(frozen=True)
+class AuditoryMinimumRecord:
+    """سجل القوام السمعي الأدنى — Layer 2 auditory minimum record.
+
+    Proves that the perceived element is a complete auditory unit
+    with sufficient presence, boundary, cohesion, and unity.
+    """
+
+    audibility_score: float         # الحضور السمعي  [0, 1]
+    temporal_span: float            # الامتداد الزمني [0, 1]
+    phase_count: int                # عدد الأطوار
+    order_score: float              # الانتظام       [0, 1]
+    cohesion_score: float           # التماسك        [0, 1]
+    unity_score: float              # الوحدة         [0, 1]
+
+
+@dataclass(frozen=True)
+class StructuralProfileRecord:
+    """سجل القوام البنيوي — Layer 3 structural profile.
+
+    Locates the unit within the syllable, the root, and the
+    morphological pattern, scoring constitutiveness vs. dependency.
+    """
+
+    syllable_slot: str              # موضع مقطعي (onset / nucleus / coda)
+    root_slot: str                  # موضع جذري (fa / ayn / lam / none)
+    constitutiveness_score: float   # المقومية  [0, 1]
+    dependency_score: float         # التبعية   [0, 1]
+    attachment_score: float         # الإلصاق   [0, 1]
+    augmentation_score: float       # الزيادة   [0, 1]
+    fa_fitness: float = 0.0         # ملاءمة فاء [0, 1]
+    ayn_fitness: float = 0.0        # ملاءمة عين [0, 1]
+    lam_fitness: float = 0.0        # ملاءمة لام [0, 1]
+
+
+@dataclass(frozen=True)
+class TransformationProfileRecord:
+    """سجل طبقة التحول — Layer 4 transformation record.
+
+    Documents what changes affected the element while keeping
+    structural analysis recoverable.
+    """
+
+    inflection_stability_score: float   # الثبات عبر التصريف [0, 1]
+    recoverability_score: float         # إمكان الرد [0, 1]
+    surface_presence: bool              # حاضر سطحيًا؟
+    underlying_presence: bool           # حاضر عميقًا؟
+    substitution_confidence: float = 0.0  # ثقة الإبدال [0, 1]
+    deletion_confidence: float = 0.0    # ثقة الحذف   [0, 1]
+    illal_confidence: float = 0.0       # ثقة الإعلال  [0, 1]
+    idgham_confidence: float = 0.0      # ثقة الإدغام  [0, 1]
+
+
+@dataclass(frozen=True)
+class JudgmentRecordL5:
+    """سجل الوظيفة العليا والحكم — Layer 5 judgment record.
+
+    The final non-arbitrary judgment about an element's functional
+    classification: original, augmented, substituted, deleted, etc.
+    """
+
+    final_judgment: JudgmentCategory    # الحكم النهائي
+    judgment_confidence: float          # ثقة الحكم     [0, 1]
+    functional_class: str               # الصنف الوظيفي
+    deictic_score: float = 0.0          # إشارية       [0, 1]
+    relational_score: float = 0.0       # علائقية      [0, 1]
+    identity_preservation_score: float = 0.0  # حفظ الهوية [0, 1]
+
+
+@dataclass(frozen=True)
+class RepresentationRecord:
+    """سجل التمثيل البرمجي — Layer 6 representation record.
+
+    Converts the theoretical model into a codeable structure with
+    full traceability back through all layers.
+    """
+
+    entity_id: str                      # معرّف الكيان
+    layer_trace: Tuple[StrictLayerID, ...]  # مسار الطبقات
+    feature_hash: str                   # بصمة الخصائص
+    root_mapping: str = ""              # تقابل جذري
+    rule_set: Tuple[str, ...] = ()      # مجموعة القواعد
+    validation_status: bool = False     # صحة التحقق
+    confidence_chain: Tuple[float, ...] = ()  # سلسلة الثقة
+    graph_target: str = ""              # هدف الرسم البياني
+
+
+@dataclass(frozen=True)
+class TransitionGate:
+    """بوابة الانتقال — transition gate between strict layers.
+
+    Each gate enforces the conditions that must hold before an
+    element can advance from one layer to the next.
+    """
+
+    source_layer: StrictLayerID         # الطبقة المصدر
+    target_layer: StrictLayerID         # الطبقة الهدف
+    conditions_met: Tuple[bool, ...]    # الشروط المستوفاة
+    gate_status: TransitionGateStatus   # حالة البوابة
+    failure_reasons: Tuple[str, ...] = ()  # أسباب الفشل
+
+
+@dataclass(frozen=True)
+class LayerTraceRecord:
+    """سجل التتبع الطبقي — full trace of an element through all layers.
+
+    Collects the results from each layer (if reached) plus the
+    final gate status.  ``layer_results`` maps each
+    :class:`StrictLayerID` to the corresponding record produced
+    by that layer (the concrete type depends on the layer).
+    """
+
+    element_id: str                     # معرّف العنصر
+    layer_0: Optional[MentalFoundationRecord] = None
+    layer_1: Optional[GenerativeProfileRecord] = None
+    layer_2: Optional[AuditoryMinimumRecord] = None
+    layer_3: Optional[StructuralProfileRecord] = None
+    layer_4: Optional[TransformationProfileRecord] = None
+    layer_5: Optional[JudgmentRecordL5] = None
+    layer_6: Optional[RepresentationRecord] = None
+    gates: Tuple[TransitionGate, ...] = ()
+    final_gate_status: TransitionGateStatus = TransitionGateStatus.INSUFFICIENT_DATA
+
+
+# ── Universal / Particular Constitution v1 ──────────────────────────
+
+
+@dataclass(frozen=True)
+class UniversalParticularRecord:
+    """سجل الكلي والجزئي — constitutional record for a single concept.
+
+    Captures the universality classification of a concept within
+    either the entity (ذات) or attribute (صفة) domain, together
+    with its position in the genus → species → individual hierarchy
+    and its fractal depth in the conceptual tree.
+
+    Mathematical formulation::
+
+        U(x) = 1  iff  scope ∈ {GENUS, SPECIES}
+        P(x) = 1  iff  scope = INDIVIDUAL
+    """
+
+    record_id: str
+    concept_id: int
+    label: str
+    domain: UniversalParticularDomain
+    scope: UniversalityScope
+    is_universal: bool
+    boundary_markers: Tuple[BoundaryType, ...] = ()
+    genus_id: Optional[int] = None
+    species_id: Optional[int] = None
+    fractal_depth: int = 0
+    notes: str = ""
+
+
+@dataclass(frozen=True)
+class BoundaryRecord:
+    """سجل الفاصل الحدّي — formal boundary assertion between two concepts.
+
+    A boundary is valid when the pair of concepts respects the
+    constitutional separation encoded by *boundary_type*.  If invalid,
+    *violation_reason* carries a human-readable explanation.
+    """
+
+    boundary_id: str
+    boundary_type: BoundaryType
+    left_concept_id: int
+    right_concept_id: int
+    is_valid: bool
+    violation_reason: Optional[str] = None
+
+
+@dataclass(frozen=True)
+class UPConstitutionResult:
+    """نتيجة دستور الكلي والجزئي — overall constitutional verdict.
+
+    Aggregates all :class:`UniversalParticularRecord` entries and
+    :class:`BoundaryRecord` checks, then derives the final
+    :class:`UPConstitutionOutcome`.
+
+    *fractal_depth_max* is the maximum depth observed across all
+    records (0 = only genera, 1 = genera + species, 2+ = full tree).
+    """
+
+    result_id: str
+    records: Tuple[UniversalParticularRecord, ...]
+    boundaries: Tuple[BoundaryRecord, ...]
+    outcome: UPConstitutionOutcome
+    fractal_depth_max: int = 0
+    errors: Tuple[str, ...] = ()
