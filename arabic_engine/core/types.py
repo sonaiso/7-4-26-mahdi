@@ -53,8 +53,20 @@ from .enums import (
     MafhumType,
     MethodFamily,
     ModalCategory,
-    NasikhType,
+    NominalAttributeKind,
     NormativeCategory,
+    NounComposition,
+    NounDefiniteness,
+    NounDirection,
+    NounExistentialAspect,
+    NounFractalStage,
+    NounGender,
+    NounGenusLevel,
+    NounNumber,
+    NounOrigin,
+    NounPatternType,
+    NounReadiness,
+    NounUniversality,
     OntologicalConstraintType,
     OntologicalLayer,
     OntologicalMode,
@@ -65,7 +77,7 @@ from .enums import (
     PhonTransform,
     ProofPathKind,
     ProofStatus,
-    PropositionType,
+    ProperNounKind,
     PurposeType,
     RankType,
     RationalSelfKind,
@@ -2572,126 +2584,104 @@ class LayerTraceRecord:
     final_gate_status: TransitionGateStatus = TransitionGateStatus.INSUFFICIENT_DATA
 
 
-# ── Prior Informational Stock (المخزون المعلوماتي السابق) ───────────
+# ═══════════════════════════════════════════════════════════════════════
+# Noun Fractal Constitution v1 — دستور الاسم الفراكتالي
+# ═══════════════════════════════════════════════════════════════════════
 
 
 @dataclass(frozen=True)
-class StockEntry:
-    """مُدخَل مخزوني — a single piece of prior informational stock.
+class NounMinimumRecord:
+    """الحد الأدنى المكتمل — minimum completeness conditions (Art. 11-19)."""
 
-    Fields
-    ------
-    entry_id    unique identifier for this entry
-    component   which of the 7 stock components this belongs to
-    content     the information content
-    source      interpretation channel (reality, utterance, etc.)
-    weight      importance weight in [0, 1]; default 1.0
-    """
-
-    entry_id: str
-    component: StockComponent
-    content: str
-    source: InterpretationSource
-    weight: float = 1.0
+    thubut: bool                # الثبوت
+    hadd: bool                  # الحد
+    imtidad: bool               # الامتداد
+    muqawwim: bool              # المقوِّم
+    alaqa_binaiyya: bool        # العلاقة البنائية
+    intizam: bool               # الانتظام
+    wahda: bool                 # الوحدة
+    qabiliyyat_ta3yin: bool     # قابلية التعيين
 
 
 @dataclass(frozen=True)
-class PriorInformationalStock:
-    """المخزون المعلوماتي السابق — the full stock tuple (Article 4).
+class NounMorphologyRecord:
+    """المادة والوزن — morphological substrate (Art. 15, 56-58)."""
 
-    Fields
-    ------
-    stock_id     unique identifier
-    entries      tuple of StockEntry items
-    sufficiency  overall sufficiency evaluation
-    """
-
-    stock_id: str
-    entries: Tuple[StockEntry, ...]
-    sufficiency: StockSufficiency = StockSufficiency.UNDETERMINED
+    material: str                        # المادة
+    pattern_type: NounPatternType        # نوع الوزن
+    pattern: str                         # الوزن / القالب
+    root: Tuple[str, ...]                # الجذر
 
 
 @dataclass(frozen=True)
-class ReadinessGate:
-    """بوابة الجاهزية — result of evaluating one readiness level.
+class NounClassificationRecord:
+    """التصنيف — universality + genus level (Art. 24-33)."""
 
-    Fields
-    ------
-    level        which readiness tier (perceptual / compositional / propositional)
-    status       MET / UNMET / PARTIAL
-    score        computed score in [0, 1]
-    threshold    minimum score required for MET
-    gap_reasons  human-readable reasons if status is not MET
-    """
-
-    level: ReadinessLevel
-    status: ReadinessStatus
-    score: float
-    threshold: float
-    gap_reasons: Tuple[str, ...] = ()
+    universality: NounUniversality               # كلي / جزئي
+    genus_level: NounGenusLevel                  # جنس / نوع / فرد
+    proper_noun_kind: Optional[ProperNounKind]    # نوع العلم (if applicable)
 
 
 @dataclass(frozen=True)
-class PerceptualReadinessResult:
-    """نتيجة الجاهزية الإدراكية — Ready₁ output (Article 9).
+class NounAttributeRecord:
+    """الصفة الاسمية — nominal-attribute classification (Art. 38-40)."""
 
-    Fields
-    ------
-    percept_id          identifier of the percept being evaluated
-    gate                the readiness gate result
-    interpreted_concept concept label if Ready₁ is met
-    """
-
-    percept_id: str
-    gate: ReadinessGate
-    interpreted_concept: Optional[str] = None
+    attribute_kind: Optional[NominalAttributeKind]   # نوع الصفة
+    is_nominal_attribute: bool                       # هل هو صفة اسمية
 
 
 @dataclass(frozen=True)
-class CompositionalReadinessResult:
-    """نتيجة الجاهزية التركيبية — Ready₂ output (Article 14).
+class NounInflectionRecord:
+    """الوحدة والكثرة + التذكير والتأنيث + المعرفة والنكرة (Art. 41-50)."""
 
-    Fields
-    ------
-    percept_id         identifier of the percept
-    gate               the readiness gate result
-    assigned_role      role assigned if Ready₂ is met
-    reference_resolved whether reference was resolved
-    """
-
-    percept_id: str
-    gate: ReadinessGate
-    assigned_role: Optional[str] = None
-    reference_resolved: bool = False
+    number: NounNumber               # العدد
+    gender: NounGender               # الجنس
+    definiteness: NounDefiniteness   # التعريف
 
 
 @dataclass(frozen=True)
-class InformationalStockRecord:
-    """سجل البرهان الكامل — the full IS 9-tuple from Article 48.
+class NounCompositionRecord:
+    """المركب والمقترض (Art. 51-55)."""
 
-    IS = (X, K, Cl, Ln, Ref, Role, Ready₁, Ready₂, Ready₃)
+    composition: NounComposition   # بسيط / مركب اسمي / مركب مزجي
+    origin: NounOrigin             # أصيل / مقترض
 
-    Fields
-    ------
-    record_id            unique record identifier
-    percept_id           X  — the percept / datum
-    stock                K  — prior informational stock
-    classification       Cl — classification / interpretation result
-    linguistic_direction Ln — linguistic / semantic direction
-    reference            Ref — reference / predication
-    candidate_role       Role — candidate role
-    ready_1              Ready₁ — perceptual readiness gate
-    ready_2              Ready₂ — compositional readiness gate
-    ready_3              Ready₃ — propositional readiness gate
-    """
 
-    record_id: str
-    percept_id: str
-    stock: PriorInformationalStock
-    classification: str
-    linguistic_direction: str
-    reference: str
-    candidate_role: str
-    ready_1: ReadinessGate
-    ready_2: ReadinessGate
-    ready_3: ReadinessGate
+@dataclass(frozen=True)
+class NounSignificationRecord:
+    """المطابقة والتضمن والالتزام في الاسم (Art. 59-62)."""
+
+    mutabaqa: str                # ما يطابقه
+    tadammun: Tuple[str, ...]    # ما يتضمنه
+    iltizam: Tuple[str, ...]     # ما يلتزمه
+
+
+@dataclass(frozen=True)
+class NounFractalRecord:
+    """البنية الفراكتالية المكتملة — N = (M, WT, D, T, Ref, Num, Gen, Def, Ready) (Art. 73-75)."""
+
+    noun_id: str
+    lemma: str
+    surface: str
+    direction: NounDirection                     # D  — الجهة الاسمية
+    conceptual_type: SemanticType                # T  — النوع المفهومي
+    morphology: NounMorphologyRecord             # M + WT
+    classification: NounClassificationRecord     # Ref
+    attribute: NounAttributeRecord
+    inflection: NounInflectionRecord             # Num + Gen + Def
+    composition: NounCompositionRecord
+    signification: NounSignificationRecord
+    minimum: NounMinimumRecord
+    fractal_stage: NounFractalStage
+    readiness: NounReadiness                     # Ready
+    readiness_score: float                       # Ready_N
+    existential_aspect: NounExistentialAspect
+
+
+@dataclass(frozen=True)
+class NounValidationResult:
+    """القبول والرفض — acceptance / rejection verdict (Art. 76-77)."""
+
+    valid: bool
+    errors: Tuple[str, ...]
+    readiness_score: float

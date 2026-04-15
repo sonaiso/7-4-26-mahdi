@@ -114,7 +114,104 @@ class PipelineResult:
     evaluation_result: EvaluationResult
     inferences: List[InferenceResult] = field(default_factory=list)
     world_adjustment: float = 0.5
-    signified_records: List[SignifiedRecord] = field(default_factory=list)
+    world_update: Dict[str, object] = field(default_factory=dict)
+    explanation: Dict[str, object] = field(default_factory=dict)
+    layer_traces: List[LayerTraceRecord] = field(default_factory=list)
+    noun_fractals: list = field(default_factory=list)
+
+
+def _to_validation_state(outcome: ValidationOutcome) -> ValidationState:
+    if outcome == ValidationOutcome.VALID:
+        return ValidationState.VALID
+    if outcome == ValidationOutcome.PENDING:
+        return ValidationState.PENDING
+    return ValidationState.INVALID
+
+
+def _build_knowledge_episode(
+    text: str,
+    proposition: Proposition,
+    semantic_roles: Dict[str, str],
+) -> KnowledgeEpisode:
+    judgement_type = (
+        JudgementType.EXISTENCE
+        if proposition.predicate is not None and proposition.predicate != ""
+        else JudgementType.INTERPRETIVE
+    )
+    reality_anchor = RealityAnchorRecord(
+        anchor_id="RA_pipeline",
+        kind=RealityKind.MATERIAL,
+        description=f"Sentence reality anchor from input: {text}",
+    )
+    sense_trace = SenseTraceRecord(
+        trace_id="ST_pipeline",
+        modality=SenseModality.VISUAL,
+        mode=TraceMode.DIRECT,
+        description="Direct textual perception from input sentence.",
+    )
+    prior_infos = (
+        PriorInfoRecord(
+            info_id="PI_pipeline_syntax",
+            content=f"Semantic roles observed: {semantic_roles}",
+            source="pipeline.syntax.semantic_roles",
+        ),
+    )
+    linking_trace = LinkingTraceRecord(
+        link_id="LT_pipeline",
+        kind=LinkKind.CONTEXTUAL,
+        description="Linked morphology + syntax + dalala into proposition.",
+    )
+    judgement = JudgementRecord(
+        judgement_id="JD_pipeline",
+        judgement_type=judgement_type,
+        content=(
+            f"subject={proposition.subject};"
+            f"predicate={proposition.predicate};"
+            f"object={proposition.obj}"
+        ),
+    )
+    method = MethodRecord(
+        method_id="M_pipeline",
+        family=MethodFamily.RATIONAL,
+        name="Pipeline Rational Method",
+        domain_fit=(
+            JudgementType.EXISTENCE,
+            JudgementType.ESSENCE,
+            JudgementType.ATTRIBUTE,
+            JudgementType.RELATION,
+            JudgementType.INTERPRETIVE,
+        ),
+    )
+    carrier = LinguisticCarrierRecord(
+        carrier_id="LC_pipeline",
+        carrier_type=CarrierType.BOTH,
+        utterance=UtteranceRecord(utterance_id="UT_pipeline", text=text),
+        concept=ConceptRecord(concept_record_id="CR_pipeline", label=text),
+    )
+    proof_path = ProofPathRecord(
+        path_id="PP_pipeline",
+        kind=ProofPathKind.DIRECT_PROOF,
+        steps=("normalize", "morphology", "syntax", "dalala", "judgement"),
+        method_fit=MethodFamily.RATIONAL,
+    )
+    conflict_rule = ConflictRuleRecord(
+        rule_id="CF_pipeline_default",
+        prefer_concept=True,
+        rationale="Prefer concept when utterance/concept mismatch appears.",
+    )
+    return KnowledgeEpisode(
+        episode_id="KE_pipeline",
+        reality_anchor=reality_anchor,
+        sense_trace=sense_trace,
+        prior_infos=prior_infos,
+        opinion_traces=(),
+        linking_trace=linking_trace,
+        judgement=judgement,
+        method=method,
+        carrier=carrier,
+        proof_path=proof_path,
+        conflict_rule=conflict_rule,
+    )
 
 
 # ── Pipeline ────────────────────────────────────────────────────────
@@ -124,7 +221,8 @@ def run(
     *,
     world: Optional[WorldModel] = None,
     inference_engine: Optional[InferenceEngine] = None,
-    analyze_signified: bool = False,
+    analyze_layers: bool = False,
+    analyze_nouns: bool = False,
 ) -> PipelineResult:
     """Execute the full v2 pipeline on *text*.
 
@@ -185,12 +283,12 @@ def run(
     # L4 — Ontological Mapping
     concepts = batch_map(closures)
 
-    # L4b — Signified Ontology analysis (optional)
-    sig_records: List[SignifiedRecord] = []
-    if analyze_signified:
-        from arabic_engine.signified.signified_record import batch_signified
+    # L4b — Optional noun fractal analysis
+    noun_fractals: list = []
+    if analyze_nouns:
+        from arabic_engine.noun.constitution_v1 import batch_build as _noun_batch
 
-        sig_records = batch_signified(closures)
+        noun_fractals = _noun_batch(closures, concepts)
 
     # L5 — Dalāla Validation
     links = full_validation(closures, concepts)
@@ -359,5 +457,8 @@ def run(
         evaluation_result=evaluation_result,
         inferences=inferences,
         world_adjustment=adjustment,
-        signified_records=sig_records,
+        world_update=world_update,
+        explanation=explanation,
+        layer_traces=layer_traces,
+        noun_fractals=noun_fractals,
     )

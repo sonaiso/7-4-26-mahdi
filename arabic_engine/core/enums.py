@@ -1447,72 +1447,167 @@ class TransitionGateStatus(Enum):
     INSUFFICIENT_DATA = auto()
 
 
-# ── Prior Informational Stock (المخزون المعلوماتي السابق) ───────────
+# ═══════════════════════════════════════════════════════════════════════
+# Noun Fractal Constitution v1 — دستور الاسم الفراكتالي
+# ═══════════════════════════════════════════════════════════════════════
 
 
-class StockComponent(Enum):
-    """المكوِّن المخزوني — component of the prior informational stock (Article 5)."""
+class NounDirection(Enum):
+    """الجهة الاسمية — primary nominal direction (Art. 4, 12, 14)."""
 
-    REALITY_INFO = auto()           # معلومات الواقع
-    PRIOR_CLASSIFICATION = auto()   # التصنيفات السابقة
-    PRIMARY_LANGUAGE = auto()       # معارف اللغة الأولية
-    CATEGORY_BOUNDARY = auto()      # فواصل الذات/الصفة/الحدث/النسبة
-    REFERENCE_KNOWLEDGE = auto()    # معارف الإحالة والمرجع
-    PREDICATION_CRITERION = auto()  # معايير الحمل والدور
-    USAGE_MODE_CRITERION = auto()   # معايير الحقيقة والنقل والعرف
-
-
-class ReadinessLevel(Enum):
-    """مستوى الجاهزية — three-tier readiness (Articles 7/11/15)."""
-
-    PERCEPTUAL = auto()      # إدراكي  — Ready₁
-    COMPOSITIONAL = auto()   # تركيبي  — Ready₂
-    PROPOSITIONAL = auto()   # قضوي   — Ready₃
+    DHAT = auto()           # ذات
+    MARJI3 = auto()         # مرجع
+    KULLI = auto()          # كلي
+    JUZ2I = auto()          # جزئي
+    JINS = auto()           # جنس
+    NAW3 = auto()           # نوع
+    FARD = auto()           # فرد
+    SIFA_ISMIYYA = auto()   # صفة اسمية
+    MAFHUM_ISMI = auto()    # مفهوم اسمي
+    UNKNOWN = auto()
 
 
-class ReadinessStatus(Enum):
-    """حالة الجاهزية — status for each readiness gate."""
+class NounUniversality(Enum):
+    """الكلي والجزئي — universal vs. particular (Art. 24-28)."""
 
-    MET = auto()       # مستوفى
-    UNMET = auto()     # غير مستوفى
-    PARTIAL = auto()   # جزئي
-
-
-class PerceptualGapReason(Enum):
-    """سبب الفجوة الإدراكية — why perceptual readiness fails (Article 10)."""
-
-    AMBIGUOUS = auto()              # مبهم
-    POLYSEMOUS = auto()             # مشترك
-    UNCLASSIFIED = auto()           # غير مصنف
-    UNFIT_FOR_COMPOSITION = auto()  # غير قابل للتركيب
+    KULLI = auto()   # كلي — applies to many
+    JUZ2I = auto()   # جزئي — particular / individual
+    UNKNOWN = auto()
 
 
-class InterpretationSource(Enum):
-    """مصدر التفسير — channel through which the stock interprets (Article 4)."""
+class NounGenusLevel(Enum):
+    """الجنس والنوع والفرد — genus / species / individual (Art. 29-33)."""
 
-    REALITY = auto()            # واقع
-    UTTERANCE = auto()          # لفظ
-    CONCEPT = auto()            # مفهوم
-    REFERENCE = auto()          # إحالة
-    ROLE = auto()               # دور
-    TRUTH_OR_TRANSFER = auto()  # حقيقة أو نقل
-    CONVENTION = auto()         # عرف
+    JINS = auto()    # جنس — genus
+    NAW3 = auto()    # نوع — species
+    FARD = auto()    # فرد — individual
+    UNKNOWN = auto()
 
 
-class FractalStage(Enum):
-    """المرحلة الفراكتالية — 6-stage fractal law cycle (Article 41)."""
+class ProperNounKind(Enum):
+    """أنواع العلم — proper-noun sub-types (Art. 34-37)."""
 
-    DESIGNATION = auto()   # تعيين
-    PRESERVATION = auto()  # حفظ
-    LINKING = auto()       # ربط
-    JUDGMENT = auto()      # حكم
-    TRANSITION = auto()    # انتقال
-    RETURN = auto()        # رد
+    SHAKHSI = auto()    # شخصي
+    MAKAN = auto()      # مكان
+    ZAMAN = auto()      # زمان
+    LAQAB = auto()      # لقب
+    KUNYA = auto()      # كنية
+    MANQUL = auto()     # منقول
+    MURAKKAB = auto()   # مركب
+    MUQTARAD = auto()   # مقترض
+    UNKNOWN = auto()
 
 
-class StockSufficiency(Enum):
-    """كفاية المخزون — evaluation of stock completeness (Article 40)."""
+class NominalAttributeKind(Enum):
+    """نوع الصفة الاسمية — nominal-attribute sub-types (Art. 38-40)."""
 
-    SUFFICIENT = auto()    # كافٍ
-    INSUFFICIENT = auto()  # قاصر
-    UNDETERMINED = auto()  # غير محدد
+    SIFA_MUSHABBAHA = auto()  # صفة مشبهة
+    ISM_FA3IL = auto()        # اسم فاعل
+    ISM_MAF3UL = auto()       # اسم مفعول
+    WASF_JAMID = auto()       # وصف جامد
+    NISBA = auto()            # نسبة
+    LAWN = auto()             # لون
+    AYB = auto()              # عيب
+    QABILIYYA = auto()        # قابلية
+    UNKNOWN = auto()
+
+
+class NounNumber(Enum):
+    """الوحدة والكثرة — number (Art. 41-44)."""
+
+    MUFRAD = auto()          # مفرد
+    MUTHANNA = auto()        # مثنى
+    JAM3 = auto()            # جمع
+    ISM_JAM3 = auto()        # اسم جمع
+    ISM_JINS_JAM3I = auto()  # اسم جنس جمعي
+    UNKNOWN = auto()
+
+
+class NounGender(Enum):
+    """التذكير والتأنيث — gender (Art. 45-47)."""
+
+    MUDHAKKAR = auto()         # مذكر
+    MU2ANNATH_HAQIQI = auto()  # مؤنث حقيقي
+    MU2ANNATH_MAJAZI = auto()  # مؤنث مجازي
+    MU2ANNATH_LAFZI = auto()   # مؤنث لفظي
+    MU2ANNATH_MA3NAWI = auto() # مؤنث معنوي
+    UNKNOWN = auto()
+
+
+class NounDefiniteness(Enum):
+    """المعرفة والنكرة — definiteness (Art. 48-50)."""
+
+    MA3RIFA_3ALAM = auto()   # معرفة بعلم
+    MA3RIFA_DAMIR = auto()   # معرفة بضمير
+    MA3RIFA_ISHARA = auto()  # معرفة بإشارة
+    MA3RIFA_MAWSUL = auto()  # معرفة بموصول
+    MA3RIFA_IDAFA = auto()   # معرفة بإضافة
+    MA3RIFA_3AHD = auto()    # معرفة بعهد
+    NAKIRA = auto()          # نكرة
+    UNKNOWN = auto()
+
+
+class NounComposition(Enum):
+    """المركب الاسمي والمزجي — composition type (Art. 51-53)."""
+
+    BASIT = auto()           # بسيط
+    MURAKKAB_ISMI = auto()   # مركب اسمي
+    MURAKKAB_MAZJI = auto()  # مركب مزجي
+    UNKNOWN = auto()
+
+
+class NounOrigin(Enum):
+    """المقترض — origin / borrowing status (Art. 54-55)."""
+
+    ASIL = auto()                       # أصيل — native Arabic
+    MUQTARAD_MUSTAQIRR = auto()         # مقترض مستقر — settled loan
+    MUQTARAD_GHAYR_MUSTAQIRR = auto()   # مقترض غير مستقر — unsettled loan
+    UNKNOWN = auto()
+
+
+class NounPatternType(Enum):
+    """الوزن الجامد — pattern type (Art. 56-58)."""
+
+    WAZN_JAMID = auto()      # وزن جامد
+    WAZN_MUSHTAQQ = auto()   # وزن مشتق
+    QALIB_THABIT = auto()    # قالب ثابت
+    UNKNOWN = auto()
+
+
+class NounSignificationType(Enum):
+    """المطابقة والتضمن والالتزام — noun-internal signification (Art. 59-62)."""
+
+    MUTABAQA = auto()   # مطابقة
+    TADAMMUN = auto()   # تضمن
+    ILTIZAM = auto()    # التزام
+
+
+class NounFractalStage(Enum):
+    """القانون الفراكتالي — fractal law cycle (Art. 63-69)."""
+
+    TA3YIN = auto()    # تعيين
+    HIFZ = auto()      # حفظ
+    RABT = auto()      # ربط
+    HUKM = auto()      # حكم
+    INTIQAL = auto()   # انتقال
+    RADD = auto()      # رد
+
+
+class NounReadiness(Enum):
+    """الجاهزية الاسمية — compositional readiness (Art. 70-72)."""
+
+    READY = auto()       # جاهز
+    PARTIAL = auto()     # جزئي
+    NOT_READY = auto()   # غير جاهز
+
+
+class NounExistentialAspect(Enum):
+    """جهة الموجود — existential aspect of the noun (Art. 21-23)."""
+
+    DHAT = auto()         # ذات
+    SHAY2 = auto()        # شيء
+    MAWDI3 = auto()       # موضع
+    ZAMAN_JAMID = auto()  # زمان جامد
+    MARJI3 = auto()       # مرجع
+    MIQDAR = auto()       # مقدار
+    UNKNOWN = auto()
