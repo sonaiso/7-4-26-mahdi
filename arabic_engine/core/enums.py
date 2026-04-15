@@ -1707,150 +1707,235 @@ class SignalType(Enum):
     PUNCTUATION = auto()
     UNKNOWN = auto()
 
-class ActivationStage(Enum):
-    """مرحلة التفعيل — which processing stage a hypothesis belongs to."""
-    SIGNAL = auto()         # إشارة
-    MORPHOLOGY = auto()     # صرف
-    CONCEPT = auto()        # مفهوم
-    AXIS = auto()           # محور
-    RELATION = auto()       # علاقة
-    ROLE = auto()           # دور
-    FACTOR = auto()         # عامل
-    CASE = auto()           # حالة إعرابية
-    JUDGEMENT = auto()      # حكم
+
+# ── Strict 7-Layer System enums ──────────────────────────────────────
 
 
-# ── State-machine states ────────────────────────────────────────────
+class StrictLayerID(Enum):
+    """معرّف الطبقة الصارمة — layer identifier in the strict 7-layer system."""
+
+    MENTAL_FOUNDATION = auto()
+    GENERATIVE = auto()
+    AUDITORY_MINIMUM = auto()
+    STRUCTURAL = auto()
+    TRANSFORMATION = auto()
+    HIGHER_FUNCTION = auto()
+    PROGRAMMATIC = auto()
 
 
-class SoundState(Enum):
-    """حالات آلة الصوت — Sound machine states (Layer 1–2)."""
-    S0_UNOBSERVED = auto()   # غير مُلاحَظ
-    S1_DETECTED = auto()     # مُكتشَف
-    S2_BOUNDED = auto()      # محدود
-    S3_SEGMENTED = auto()    # مُجزّأ
-    S4_COHERENT = auto()     # متماسك
-    S5_STABLE_UNIT = auto()  # وحدة مستقرة
-    S6_REJECTED = auto()     # مرفوض
+class AuditoryNode(Enum):
+    """عقدة الطبقة السمعية — node type in the auditory/phonological layer."""
+
+    PHONEME = auto()
+    SYLLABLE = auto()
+    WORD_FORM = auto()
+    PROSODIC = auto()
+    ONSET = auto()
+    NUCLEUS = auto()
+    CODA = auto()
 
 
-class HarakaState(Enum):
-    """حالات آلة الحركة — Haraka (vowel-mark) machine states (Layer 2.5)."""
-    H0_UNKNOWN = auto()      # مجهول
-    H1_CANDIDATE = auto()    # مرشح
-    H2_ATTACHED = auto()     # مُلحق
-    H3_OPERATIONAL = auto()  # تشغيلي
-    H4_LENGTHENED = auto()   # ممدود
-    H5_DELETED = auto()      # محذوف
-    H6_REJECTED = auto()     # مرفوض
+class StructuralNode(Enum):
+    """عقدة بنيوية — structural node type."""
+
+    ROOT = auto()
+    PATTERN = auto()
+    MORPHEME = auto()
+    WORD = auto()
+    AFFIX = auto()
+    PREFIX = auto()
+    SUFFIX = auto()
+    CLITIC = auto()
+    STEM = auto()
 
 
-class SyllableState(Enum):
-    """حالات آلة المقطع — Syllable machine states (Layer 3)."""
-    Y0_NONE = auto()           # لا شيء
-    Y1_COLLECTING = auto()     # تجميع
-    Y2_NUCLEUS_FOUND = auto()  # نواة مكتشفة
-    Y3_SHAPE_RESOLVED = auto() # شكل محلول
-    Y4_WEIGHTED = auto()       # موزون
-    Y5_VALIDATED = auto()      # مصادق عليه
-    Y6_REJECTED = auto()       # مرفوض
+class TransformationNode(Enum):
+    """عقدة التحول — transformation node type."""
+
+    INPUT = auto()
+    RULE = auto()
+    OUTPUT = auto()
+    TRIGGER = auto()
+    CONTEXT = auto()
+    RESULT = auto()
+    INTERMEDIATE = auto()
+    EXCEPTION = auto()
 
 
-class RootRankState(Enum):
-    """حالات آلة الرتبة الجذرية — Root-rank machine states (Layer 4)."""
-    R0_UNRANKED = auto()        # غير مرتّب
-    R1_RANK_CANDIDATE = auto()  # مرشح رتبة
-    R2_FA_CANDIDATE = auto()    # مرشح فاء
-    R3_AYN_CANDIDATE = auto()   # مرشح عين
-    R4_LAM_CANDIDATE = auto()   # مرشح لام
-    R5_RANK_VALIDATED = auto()  # رتبة مصادق عليها
-    R6_RANK_DEFERRED = auto()   # رتبة مؤجلة
+class MentalPrimitive(Enum):
+    """البدائي الذهني — mental primitive type."""
+
+    CONCEPT = auto()
+    RELATION = auto()
+    SCHEMA = auto()
+    SCRIPT = auto()
+    EVENT = auto()
+    PROPERTY = auto()
+    INDIVIDUAL = auto()
+    PROCESS = auto()
+    FRAME = auto()
 
 
-class TransformState(Enum):
-    """حالات آلة التحول — Transform machine states (Layer 5)."""
-    T0_NONE = auto()          # لا شيء
-    T1_ORIGINAL = auto()      # أصل
-    T2_AUGMENT = auto()       # زائد
-    T3_SUBSTITUTION = auto()  # مبدل
-    T4_DELETION = auto()      # محذوف
-    T5_ILLAL = auto()         # معلول
-    T6_IDGHAM = auto()        # مدغم
-    T7_VALIDATED = auto()     # تحول مصادق عليه
+class MentalEdgeType(Enum):
+    """نوع الحافة الذهنية — mental graph edge type."""
+
+    ASSOCIATION = auto()
+    CAUSAL = auto()
+    HIERARCHICAL = auto()
+    TEMPORAL = auto()
+    SPATIAL = auto()
+    INSTRUMENTAL = auto()
+    CONDITIONAL = auto()
 
 
-class JudgmentState(Enum):
-    """حالات آلة الحكم النهائي — Final judgment machine states (Layer 6)."""
-    J0_NONE = auto()            # لا شيء
-    J1_NOMINATED = auto()       # مرشح
-    J2_SCORED = auto()          # مُقيّم
-    J3_REALITY_CHECKED = auto() # تحقق واقعي
-    J4_APPROVED = auto()        # معتمد
-    J5_REJECTED = auto()        # مرفوض
-    J6_DEFERRED = auto()        # مؤجل
+class LayerEdgeType(Enum):
+    """نوع الحافة بين الطبقات — edge type between system layers."""
+
+    PROJECTION = auto()
+    REALIZATION = auto()
+    CONSTRAINT = auto()
+    FEEDBACK = auto()
+    ACTIVATION = auto()
+    INHIBITION = auto()
+    SUPPORT = auto()
+    CONFLICT = auto()
+    INHERITANCE = auto()
+    COMPOSITION = auto()
+    DEPENDENCY = auto()
+    ENTAILMENT = auto()
+    ANALOGY = auto()
+    REVISION = auto()
+    ENDORSEMENT = auto()
+    CONTRADICTION = auto()
+    ELABORATION = auto()
+    SPECIFICATION = auto()
+    GENERALIZATION = auto()
+    INSTANCE = auto()
+    PART_OF = auto()
+    CAUSE = auto()
+    EFFECT = auto()
+    CONDITION = auto()
+    CONCESSION = auto()
+    CONTRAST = auto()
+    PARALLEL = auto()
+    TEMPORAL = auto()
+    SPATIAL = auto()
 
 
-class LayerEvent(Enum):
-    """أحداث الطبقات — Events that drive state-machine transitions."""
-    # Layer 0 – identity
-    EV_IDENTITY_REQUEST = auto()
-    # Layer 1 – sound
-    EV_SIGNAL_DETECTED = auto()
-    EV_BOUNDARY_CONFIRMED = auto()
-    EV_PHASE_SEGMENTED = auto()
-    EV_COHESION_PASSED = auto()
-    EV_UNITY_PASSED = auto()
-    EV_CONFIDENCE_FAILED = auto()
-    # Layer 2.5 – haraka
-    EV_VOCALIC_TRACE_FOUND = auto()
-    EV_ATTACHED_TO_PHONEME = auto()
-    EV_SYLLABLE_ROLE_CONFIRMED = auto()
-    EV_LENGTHENING_DETECTED = auto()
-    EV_HARAKA_DELETED = auto()
-    EV_HARAKA_INVALID = auto()
-    # Layer 3 – syllable
-    EV_PHONEME_ADDED = auto()
-    EV_NUCLEUS_DETECTED = auto()
-    EV_SHAPE_RESOLVED = auto()
-    EV_WEIGHT_COMPUTED = auto()
-    EV_SYLLABLE_VALIDATED = auto()
-    # Layer 4 – root rank
-    EV_ROOT_CONTEXT_FOUND = auto()
-    EV_FA_SCORE_MAX = auto()
-    EV_AYN_SCORE_MAX = auto()
-    EV_LAM_SCORE_MAX = auto()
-    EV_RANK_CONFIRMED = auto()
-    EV_RANK_AMBIGUOUS = auto()
-    # Layer 5 – transform
-    EV_ASSIMILATION_DETECTED = auto()
-    EV_WEAKNESS_PATTERN_DETECTED = auto()
-    EV_MATERIAL_CHANGED = auto()
-    EV_SURFACE_ABSENT = auto()
-    EV_DEPENDENT_FUNCTIONAL = auto()
-    EV_CONSTITUTIVE_STABLE = auto()
-    EV_TRANSFORM_VALIDATED = auto()
-    # Layer 6 – judgment
-    EV_JUDGMENT_NOMINATED = auto()
-    EV_SCORE_COMPUTED = auto()
-    EV_REALITY_EVIDENCE_FOUND = auto()
-    EV_REALITY_MATCH_PASSED = auto()
-    EV_REALITY_MATCH_FAILED = auto()
-    EV_INSUFFICIENT_EVIDENCE = auto()
+class JudgmentCategory(Enum):
+    """فئة الحكم — judgment category in layer 5."""
+
+    ORIGINAL = auto()
+    AUGMENTED = auto()
+    SUBSTITUTED = auto()
+    DELETED = auto()
+    WEAKENED_TRANSFORMED = auto()
+    ASSIMILATED = auto()
+    ATTACHED_MARKER = auto()
+    DEICTIC_BUILDER = auto()
+    RELATIONAL_CONNECTOR = auto()
 
 
-class TransformJudgment(Enum):
-    """الأحكام الستة — The six morphological transform judgments."""
-    ORIGINAL = auto()     # أصل
-    AUGMENTED = auto()    # زائد
-    SUBSTITUTED = auto()  # مبدل
-    DELETED = auto()      # محذوف
-    WEAKENED = auto()     # معلول (إعلال)
-    ASSIMILATED = auto()  # مدغم (إدغام)
+class GenerativeNode(Enum):
+    """عقدة توليدية — generative node type."""
+
+    BASE = auto()
+    DERIVED = auto()
+    COMPOUND = auto()
+    PATTERN = auto()
+    BROKEN_PLURAL = auto()
+    VERBAL_NOUN = auto()
+    PARTICIPLE = auto()
+    DIMINUTIVE = auto()
 
 
-class MCIDecision(Enum):
-    """قرار مؤشر الحد الأدنى المكتمل — MCI classification outcome."""
-    REJECTED = auto()           # رفض (< 0.45)
-    SUSPENDED = auto()          # تعليق / إعادة فحص (0.45–0.65)
-    ANALYTICALLY_ACCEPTED = auto()  # قبول تحليلي (0.65–0.80)
-    DIRECTLY_ACCEPTED = auto()  # قبول مباشر (≥ 0.80)
+class RepresentationNode(Enum):
+    """عقدة تمثيلية — representation node type."""
+
+    LEXICAL = auto()
+    MORPHOLOGICAL = auto()
+    SYNTACTIC = auto()
+    SEMANTIC = auto()
+    PRAGMATIC = auto()
+    PHONOLOGICAL = auto()
+    GRAPHEMIC = auto()
+    DIACRITIC = auto()
+    PROSODIC = auto()
+    DISCOURSE = auto()
+
+
+class TransitionGateStatus(Enum):
+    """حالة بوابة الانتقال — status of a transition gate."""
+
+    PASSED = auto()
+    BLOCKED = auto()
+    INSUFFICIENT_DATA = auto()
+
+
+# ── Particle Fractal Constitution v1 ────────────────────────────────
+
+
+class ParticleKind(Enum):
+    """الباب الحرفي — major particle door (المادة 20)."""
+
+    NISBA = auto()       # نسبة
+    RABT = auto()        # ربط
+    TAQYID = auto()      # تقييد
+    TAHWIL = auto()      # تحويل
+    SHART = auto()       # شرط
+    NAFY = auto()        # نفي
+    ATF = auto()         # عطف
+    ISTIFHAM = auto()    # استفهام
+    TAWKID = auto()      # توكيد
+    GHAYA = auto()       # غاية
+    ISTITHNAA = auto()   # استثناء
+    IBTIDAA = auto()     # ابتداء والجهة
+
+
+class ParticleDirection(Enum):
+    """الجهة العلائقية/التحويلية — relational direction (المادة 24)."""
+
+    ZARFIYYA = auto()      # ظرفية
+    IBTIDAAIYYA = auto()   # ابتدائية
+    INTIHAAIYYA = auto()   # انتهائية
+    SABABIYYA = auto()     # سببية
+    MUSAHABA = auto()      # مصاحبة
+    MULABASA = auto()      # ملابسة
+    RABT_HUKM = auto()     # ربط حكم
+
+
+class ParticleScope(Enum):
+    """مجال العمل — operational scope of a particle (المادة 52)."""
+
+    MUFRAD = auto()     # مفرد — operates on single word
+    JUMLA = auto()      # جملة — operates on clause
+    QADIYYA = auto()    # قضية — operates on proposition
+    JIHA = auto()       # جهة — operates on modality
+    MURAKKAB = auto()   # مركب — operates on compound structure
+
+
+class ParticleEffect(Enum):
+    """الأثر التركيبي المتوقع — expected syntactic effect (المادة 52)."""
+
+    JARR = auto()          # جر — genitive case
+    NASB = auto()          # نصب — accusative
+    JAZM = auto()          # جزم — jussive
+    RABT_WASL = auto()     # ربط وصل — linking
+    TAHWIL_JIHA = auto()   # تحويل جهة — modality change
+    FATH_MAWDI = auto()    # فتح موضع — opening syntactic slot
+
+
+class ParticleReadiness(Enum):
+    """حالة الجاهزية — particle readiness for composition (المادة 49-51)."""
+
+    READY = auto()       # جاهز
+    INCOMPLETE = auto()  # ناقص
+    INVALID = auto()     # مرفوض
+
+
+class ParticleDalala(Enum):
+    """دلالة الحرف — particle signification type (المادة 38-40)."""
+
+    MUTABAQA = auto()   # مطابقة
+    TADAMMUN = auto()   # تضمن
+    ILTIZAM = auto()    # التزام

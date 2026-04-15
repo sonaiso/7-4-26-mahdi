@@ -84,6 +84,11 @@ from .enums import (
     OntologicalLayer,
     OntologicalMode,
     OperationalCapacity,
+    ParticleDirection,
+    ParticleEffect,
+    ParticleKind,
+    ParticleReadiness,
+    ParticleScope,
     PathKind,
     PhonCategory,
     PhonFeature,
@@ -2848,69 +2853,65 @@ class LayerTraceRecord:
     final_gate_status: TransitionGateStatus = TransitionGateStatus.INSUFFICIENT_DATA
 
 
-# ── Universal / Particular Constitution v1 ──────────────────────────
+# ── Particle Fractal Constitution v1 ────────────────────────────────
 
 
 @dataclass(frozen=True)
-class UniversalParticularRecord:
-    """سجل الكلي والجزئي — constitutional record for a single concept.
+class ParticleRecord:
+    """سجل الحرف — core particle record P = (M, D, K, Sc, Ef, Ready).
 
-    Captures the universality classification of a concept within
-    either the entity (ذات) or attribute (صفة) domain, together
-    with its position in the genus → species → individual hierarchy
-    and its fractal depth in the conceptual tree.
-
-    Mathematical formulation::
-
-        U(x) = 1  iff  scope ∈ {GENUS, SPECIES}
-        P(x) = 1  iff  scope = INDIVIDUAL
+    Represents a fully classified particle with its relational direction,
+    kind, operational scope, expected syntactic effect, and readiness for
+    composition (المادة 52).
     """
 
-    record_id: str
-    concept_id: int
-    label: str
-    domain: UniversalParticularDomain
-    scope: UniversalityScope
-    is_universal: bool
-    boundary_markers: Tuple[BoundaryType, ...] = ()
-    genus_id: Optional[int] = None
-    species_id: Optional[int] = None
-    fractal_depth: int = 0
-    notes: str = ""
+    particle_id: str                    # معرّف الحرف
+    material: str                       # M — المادة أو الصورة اللفظية
+    direction: ParticleDirection        # D — الجهة العلائقية/التحويلية
+    kind: ParticleKind                  # K — الباب الحرفي
+    scope: ParticleScope                # Sc — مجال العمل
+    effect: ParticleEffect              # Ef — الأثر التركيبي المتوقع
+    readiness: ParticleReadiness        # Ready — الجاهزية للتركيب
+    readiness_score: float = 0.0        # Ready_P score (0.0–1.0)
 
 
 @dataclass(frozen=True)
-class BoundaryRecord:
-    """سجل الفاصل الحدّي — formal boundary assertion between two concepts.
+class ParticleMinimum:
+    """الحد الأدنى المكتمل للحرف — 8 minimum-completeness checks (المادة 11)."""
 
-    A boundary is valid when the pair of concepts respects the
-    constitutional separation encoded by *boundary_type*.  If invalid,
-    *violation_reason* carries a human-readable explanation.
-    """
-
-    boundary_id: str
-    boundary_type: BoundaryType
-    left_concept_id: int
-    right_concept_id: int
-    is_valid: bool
-    violation_reason: Optional[str] = None
+    thuboot: bool = False            # 1. الثبوت
+    hadd: bool = False               # 2. الحد
+    imtidad: bool = False            # 3. الامتداد
+    muqawwim: bool = False           # 4. المقوِّم
+    alaqa_binyawiyya: bool = False   # 5. العلاقة البنائية
+    intizam: bool = False            # 6. الانتظام
+    wahda: bool = False              # 7. الوحدة
+    qabiliyyat_ta3yin: bool = False  # 8. قابلية التعيين
 
 
 @dataclass(frozen=True)
-class UPConstitutionResult:
-    """نتيجة دستور الكلي والجزئي — overall constitutional verdict.
+class ParticleValidation:
+    """نتيجة قبول أو رفض الحرف — acceptance/rejection result (المادة 53-56)."""
 
-    Aggregates all :class:`UniversalParticularRecord` entries and
-    :class:`BoundaryRecord` checks, then derives the final
-    :class:`UPConstitutionOutcome`.
+    particle_id: str
+    is_valid: bool                             # ParticleValid(P) = 1 or 0
+    minimum: ParticleMinimum                   # الحد الأدنى المكتمل
+    acceptance_score: float = 0.0              # p(M,D,K,Sc,Ef,Ready)
+    rejection_reasons: Tuple[str, ...] = ()    # أسباب الرفض
 
-    *fractal_depth_max* is the maximum depth observed across all
-    records (0 = only genera, 1 = genera + species, 2+ = full tree).
+
+@dataclass(frozen=True)
+class ParticleFractalTrace:
+    """أثر القانون الفراكتالي — fractal law trace (المادة 42-48).
+
+    Records whether each of the six fractal-law steps is satisfied:
+    تعيين → حفظ → ربط → حكم → انتقال → رد
     """
 
-    result_id: str
-    records: Tuple[UniversalParticularRecord, ...]
-    boundaries: Tuple[BoundaryRecord, ...]
-    outcome: UPConstitutionOutcome
-    fractal_depth_max: int = 0
-    errors: Tuple[str, ...] = ()
+    particle_id: str
+    ta3yin: bool = False    # تعيين — assigned type/kind/scope/effect
+    hifz: bool = False      # حفظ — identity preserved
+    rabt: bool = False      # ربط — linking function established
+    hukm: bool = False      # حكم — judgeable as particle
+    intiqal: bool = False   # انتقال — ready for syntactic transition
+    radd: bool = False      # رد — reducible to origin type/kind

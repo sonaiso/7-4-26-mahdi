@@ -264,6 +264,26 @@ from .enums import (
 from .enums import (
     OperationalCapacity as OperationalCapacity,
 )
+
+# ── Particle Fractal Constitution v1 enum re-exports ────────────────
+from .enums import (
+    ParticleDalala as ParticleDalala,
+)
+from .enums import (
+    ParticleDirection as ParticleDirection,
+)
+from .enums import (
+    ParticleEffect as ParticleEffect,
+)
+from .enums import (
+    ParticleKind as ParticleKind,
+)
+from .enums import (
+    ParticleReadiness as ParticleReadiness,
+)
+from .enums import (
+    ParticleScope as ParticleScope,
+)
 from .enums import (
     PathKind as PathKind,
 )
@@ -751,6 +771,20 @@ from .types import (
 from .types import (
     OpinionTraceRecord as OpinionTraceRecord,
 )
+
+# ── Particle Fractal Constitution v1 type re-exports ────────────────
+from .types import (
+    ParticleFractalTrace as ParticleFractalTrace,
+)
+from .types import (
+    ParticleMinimum as ParticleMinimum,
+)
+from .types import (
+    ParticleRecord as ParticleRecord,
+)
+from .types import (
+    ParticleValidation as ParticleValidation,
+)
 from .types import (
     PatternCandidate as PatternCandidate,
 )
@@ -1147,6 +1181,13 @@ __all__ = [
     "StructuralNode",
     "TransformationNode",
     "TransitionGateStatus",
+    # ── Particle Fractal Constitution v1 enums ─────────────────────
+    "ParticleDalala",
+    "ParticleDirection",
+    "ParticleEffect",
+    "ParticleKind",
+    "ParticleReadiness",
+    "ParticleScope",
     # ── Strict 7-Layer System types ────────────────────────────────
     "AuditoryMinimumRecord",
     "GenerativeProfileRecord",
@@ -1157,12 +1198,9 @@ __all__ = [
     "StructuralProfileRecord",
     "TransformationProfileRecord",
     "TransitionGate",
-    # ── Enriched signifier models ─────────────────────────────────
-    "CliticRecord",
-    "CombiningMarkDetail",
-    "EnrichedGrapheme",
-    "EnrichedSyllable",
-    "PatternCandidate",
-    "RootCandidate",
-    "TokenAnalysis",
+    # ── Particle Fractal Constitution v1 types ─────────────────────
+    "ParticleFractalTrace",
+    "ParticleMinimum",
+    "ParticleRecord",
+    "ParticleValidation",
 ]
