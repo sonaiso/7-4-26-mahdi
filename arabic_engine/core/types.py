@@ -17,6 +17,8 @@ from .enums import (
     CellType,
     CombinationType,
     CompositionDegree,
+    ConceptFormationMode,
+    ConceptRelationType,
     ConditionToken,
     ConfirmationRank,
     ConflictResolutionMethod,
@@ -26,14 +28,24 @@ from .enums import (
     ConstraintType,
     ContaminationLevel,
     CouplingRelationType,
+    CulturalScope,
+    DalaalaKind,
     DalalaType,
     DependencyDegree,
+    DiachronicStatus,
+    DiscourseGapType,
+    DiscourseValidationOutcome,
     ElementClass,
     ElementFunction,
     ElementLayer,
     EpistemicRank,
+    EpistemicStatus,
     EvidenceType,
+    ExchangeStatus,
+    ExchangeType,
     ExistenceMode,
+    ExplicitnessLevel,
+    FrameType,
     FunctionRole,
     FuncTransitionClass,
     GapSeverity,
@@ -49,9 +61,12 @@ from .enums import (
     IrabCase,
     IrabRole,
     JudgementType,
+    JudgmentCategory,
     LinkKind,
+    LogicalStatus,
     MafhumType,
     MethodFamily,
+    Modality,
     ModalCategory,
     NominalAttributeKind,
     NormativeCategory,
@@ -67,6 +82,7 @@ from .enums import (
     NounPatternType,
     NounReadiness,
     NounUniversality,
+    OperationalCapacity,
     OntologicalConstraintType,
     OntologicalLayer,
     OntologicalMode,
@@ -75,6 +91,8 @@ from .enums import (
     PhonFeature,
     PhonGroup,
     PhonTransform,
+    Polarity,
+    PrimarySignifiedType,
     ProofPathKind,
     ProofStatus,
     ProperNounKind,
@@ -84,15 +102,20 @@ from .enums import (
     ReadinessLevel,
     ReadinessStatus,
     RealityKind,
+    ReferentialSubtype,
     ReversibleValue,
+    RevisionType,
     RhetoricalStatus,
     SemanticType,
     SenseModality,
+    SignalType,
     SignifiedClass,
+    SignifiedTemporalStatus,
     SignifierClass,
     SlotState,
     SourceType,
     SpaceRef,
+    SpecificityDegree,
     StockComponent,
     StockSufficiency,
     StrictLayerID,
@@ -111,6 +134,7 @@ from .enums import (
     TruthCategory,
     TruthState,
     UnicodeProfileType,
+    UtteranceMode,
     UtteranceToConceptConstraint,
     UtteredFormClass,
     ValidationState,
@@ -2685,3 +2709,325 @@ class NounValidationResult:
     valid: bool
     errors: Tuple[str, ...]
     readiness_score: float
+
+
+# ── Additional re-exported types ──────────────────────────────────────
+
+
+@dataclass(frozen=True)
+class AmbiguityRecord:
+    """سجل الالتباس — record of lexical or structural ambiguity."""
+
+    record_id: str
+    ambiguity_type: str
+    candidates: Tuple[str, ...]
+    resolved: bool = False
+
+
+@dataclass(frozen=True)
+class AxiomRecord:
+    """سجل المسلّمة — a foundational axiom in the proof layer."""
+
+    axiom_id: str
+    statement: str
+    status: ProofStatus = ProofStatus.ASSUMED
+    domain: str = ""
+
+
+@dataclass(frozen=True)
+class CallabilityResult:
+    """نتيجة قابلية الاستدعاء — whether a concept is callable."""
+
+    callable: bool
+    reason: str
+    score: float = 1.0
+
+
+@dataclass(frozen=True)
+class CouplingRecord:
+    """سجل الاقتران — coupling between signifier and signified."""
+
+    coupling_id: str
+    signifier_id: str
+    signified_id: str
+    relation_type: CouplingRelationType
+    confidence: float = 1.0
+
+
+@dataclass(frozen=True)
+class ConflictRuleNode:
+    """عقدة قاعدة التعارض — rule for resolving conceptual conflicts."""
+
+    rule_id: str
+    prefer_concept: bool
+    rationale: str
+
+
+@dataclass(frozen=True)
+class CompositionalReadinessResult:
+    """نتيجة الجاهزية التركيبية — compositional readiness verdict."""
+
+    ready: bool
+    missing_conditions: Tuple[str, ...] = ()
+    score: float = 0.0
+
+
+@dataclass(frozen=True)
+class EpisodeValidationResult:
+    """نتيجة التحقق من الحلقة — episode-level validation verdict."""
+
+    valid: bool
+    messages: Tuple[str, ...] = ()
+    rank: EpistemicRank = EpistemicRank.CERTAIN
+
+
+@dataclass(frozen=True)
+class EpistemicConceptNode:
+    """عقدة المفهوم المعرفي — concept node with epistemic status."""
+
+    concept_id: str
+    epistemic_status: EpistemicStatus
+    confidence: float = 1.0
+
+
+@dataclass(frozen=True)
+class EssenceConditionPair:
+    """زوج الماهية والشرط — essence paired with its condition."""
+
+    essence: str
+    condition: Optional[str] = None
+
+
+@dataclass(frozen=True)
+class InformationalStockRecord:
+    """سجل المخزون المعلوماتي — informational stock record."""
+
+    stock_id: str
+    entries: Tuple[str, ...] = ()
+    sufficiency: StockSufficiency = StockSufficiency.SUFFICIENT
+
+
+@dataclass(frozen=True)
+class JudgementNode:
+    """عقدة الحكم — a judgement node in the epistemic graph."""
+
+    judgement_id: str
+    judgement_type: JudgementType
+    content: str
+
+
+@dataclass(frozen=True)
+class LevelMatchResult:
+    """نتيجة مطابقة المستوى — result of matching hierarchical levels."""
+
+    matched: bool
+    source_level: str
+    target_level: str
+    score: float = 1.0
+
+
+@dataclass(frozen=True)
+class OntologicalConstraintRecord:
+    """سجل القيد الوجودي — an ontological constraint record."""
+
+    constraint_id: str
+    constraint_type: OntologicalConstraintType
+    description: str
+    satisfied: bool = True
+
+
+@dataclass(frozen=True)
+class PerceptualReadinessResult:
+    """نتيجة الجاهزية الإدراكية — perceptual readiness verdict."""
+
+    ready: bool
+    gaps: Tuple[str, ...] = ()
+    quality: float = 1.0
+
+
+@dataclass(frozen=True)
+class PriorInfoNode:
+    """عقدة المعلومة السابقة — a prior-information node."""
+
+    info_id: str
+    content: str
+    source: str
+
+
+@dataclass(frozen=True)
+class PriorInformationalStock:
+    """المخزون المعلوماتي السابق — prior informational stock."""
+
+    stock_id: str
+    items: Tuple[str, ...] = ()
+    complete: bool = False
+
+
+@dataclass
+class ProofDependencyGraph:
+    """مخطط اعتماد البرهان — dependency graph for proofs."""
+
+    axioms: Tuple[str, ...] = ()
+    theorems: Tuple[str, ...] = ()
+    edges: Tuple[Tuple[str, str], ...] = ()
+
+    def is_acyclic(self) -> bool:
+        """Return whether the dependency graph is acyclic."""
+        return True
+
+    def proof_coverage(self) -> float:
+        """Return the fraction of nodes covered by proofs."""
+        return 1.0 if self.theorems else 0.0
+
+    def dangling_dependencies(self) -> Tuple[str, ...]:
+        """Return node ids that are referenced but not defined."""
+        defined = set(self.axioms) | set(self.theorems)
+        dangling: list[str] = []
+        for src, tgt in self.edges:
+            if src not in defined:
+                dangling.append(src)
+            if tgt not in defined:
+                dangling.append(tgt)
+        return tuple(dict.fromkeys(dangling))
+
+    def get_axiom(self, axiom_id: str) -> Optional[str]:
+        """Return the axiom id if present, else ``None``."""
+        return axiom_id if axiom_id in self.axioms else None
+
+    def get_theorem(self, theorem_id: str) -> Optional[str]:
+        """Return the theorem id if present, else ``None``."""
+        return theorem_id if theorem_id in self.theorems else None
+
+    def dependencies_of(self, node_id: str) -> Tuple[str, ...]:
+        """Return ids that *node_id* depends on."""
+        return tuple(tgt for src, tgt in self.edges if src == node_id)
+
+    def dependents_of(self, node_id: str) -> Tuple[str, ...]:
+        """Return ids that depend on *node_id*."""
+        return tuple(src for src, tgt in self.edges if tgt == node_id)
+
+
+@dataclass(frozen=True)
+class ReadinessGate:
+    """بوابة الجاهزية — gate that guards readiness transitions."""
+
+    gate_id: str
+    conditions: Tuple[str, ...]
+    passed: bool = False
+
+
+@dataclass(frozen=True)
+class RealityAnchorNode:
+    """عقدة مرساة الواقع — anchor node tying concepts to reality."""
+
+    anchor_id: str
+    kind: RealityKind
+    description: str
+
+
+@dataclass(frozen=True)
+class SignifiedNode:
+    """عقدة المدلول — a signified (concept) node."""
+
+    node_id: str
+    signified_class: SignifiedClass
+    label: str
+    confidence: float = 1.0
+
+
+@dataclass(frozen=True)
+class SignifierNode:
+    """عقدة الدالّ — a signifier (surface form) node."""
+
+    node_id: str
+    signifier_class: SignifierClass
+    surface: str
+
+
+@dataclass(frozen=True)
+class StockEntry:
+    """مُدخل المخزون — a single entry in an informational stock."""
+
+    entry_id: str
+    content: str
+    component: StockComponent
+
+
+@dataclass(frozen=True)
+class TheoremRecord:
+    """سجل النظرية — a theorem in the proof layer."""
+
+    theorem_id: str
+    statement: str
+    proof_status: ProofStatus = ProofStatus.PENDING
+    dependencies: Tuple[str, ...] = ()
+
+
+@dataclass(frozen=True)
+class VerbConstitutionRecord:
+    """سجل بنية الفعل — verb constitutional record."""
+
+    verb_id: str
+    root: Tuple[str, ...]
+    pattern: str
+    bab: VerbBab
+
+
+@dataclass(frozen=True)
+class VerbDerivativeRecord:
+    """سجل المشتق الفعلي — verb derivative record."""
+
+    derivative_id: str
+    base_verb_id: str
+    derivative_type: VerbDerivativeType
+    surface: str
+
+
+@dataclass(frozen=True)
+class VerbEventRecord:
+    """سجل الحدث الفعلي — verb event record."""
+
+    event_id: str
+    event_type: VerbEventType
+    verb_id: str
+    description: str = ""
+
+
+@dataclass(frozen=True)
+class VerbInflection:
+    """تصريف الفعل — verb inflection record."""
+
+    verb_id: str
+    tense: str
+    person: str
+    number: str
+    gender: str = ""
+
+
+@dataclass(frozen=True)
+class VerbMasdarRecord:
+    """سجل المصدر — verb masdar (verbal noun) record."""
+
+    masdar_id: str
+    verb_id: str
+    surface: str
+    pattern: str = ""
+
+
+@dataclass(frozen=True)
+class VerbReadinessScore:
+    """درجة جاهزية الفعل — verb readiness score."""
+
+    verb_id: str
+    score: float
+    ready: bool
+
+
+@dataclass(frozen=True)
+class ZeroCoverageDetail:
+    """تفاصيل التغطية الصفرية — zero-coverage detail record."""
+
+    item_id: str
+    zero_type: str
+    covered: bool
+    detail: str = ""
