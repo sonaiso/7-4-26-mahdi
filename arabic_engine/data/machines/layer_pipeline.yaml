@@ -1,0 +1,65 @@
+# Layer Pipeline — full sequence from identity to judgment
+pipeline:
+  - layer: 0
+    machine: identity_seed
+    input: candidate_unit
+    event: ev_identity_request
+    threshold: 0.60
+    output: ConceptSeed
+    next: 1
+
+  - layer: 1
+    machine: SoundMachine
+    input: raw_signal
+    event: ev_signal_detected
+    threshold: 0.30
+    output: PhoneticEvent
+    next: 2
+
+  - layer: 2
+    machine: mci_gate
+    input: PhoneticEvent
+    event: ev_unity_passed
+    threshold: 0.65
+    output: PhonemeCandidate
+    next: 2.5
+
+  - layer: 2.5
+    machine: HarakaMachine
+    input: vocalic_trace
+    event: ev_vocalic_trace_found
+    threshold: 0.50
+    output: HarakaUnit
+    next: 3
+
+  - layer: 3
+    machine: SyllableMachine
+    input: phonemes + harakaat
+    event: ev_shape_resolved
+    threshold: 0.60
+    output: SyllableUnit
+    next: 4
+
+  - layer: 4
+    machine: RootRankMachine
+    input: syllable + pattern + root_candidate
+    event: ev_rank_confirmed
+    threshold: 0.65
+    output: RootSlot
+    next: 5
+
+  - layer: 5
+    machine: TransformMachine
+    input: RootSlot + morphological_comparison
+    event: ev_transform_validated
+    threshold: 0.60
+    output: TransformCandidate
+    next: 6
+
+  - layer: 6
+    machine: JudgmentMachine
+    input: judgment_candidate + arabic_witness
+    event: ev_reality_match_passed
+    threshold: 0.75
+    output: ValidatedJudgment
+    next: null  # terminal
