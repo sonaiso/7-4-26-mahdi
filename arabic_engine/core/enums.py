@@ -1445,8 +1445,8 @@ class TransitionGateStatus(Enum):
     PASSED = auto()
     BLOCKED = auto()
     INSUFFICIENT_DATA = auto()
-    SUSPEND = auto()
-    COMPLETE = auto()
+    SUSPEND = auto()    # تعليق — suspend for further review
+    COMPLETE = auto()   # استكمال — request completion of missing data
 
 
 # ═══════════════════════════════════════════════════════════════════════
@@ -1616,6 +1616,73 @@ class NounExistentialAspect(Enum):
 
 
 # ═══════════════════════════════════════════════════════════════════════
+# Additional enums required by types.py
+# ═══════════════════════════════════════════════════════════════════════
+
+
+class ModalCategory(Enum):
+    """المقولة المودالية — modal category for propositions."""
+
+    NECESSITY = auto()      # وجوب
+    POSSIBILITY = auto()    # إمكان
+    IMPOSSIBILITY = auto()  # استحالة
+    CONTINGENCY = auto()    # عرضية
+
+
+class RationalSelfKind(Enum):
+    """نوع الذات العاقلة — kind of rational self."""
+
+    AGENT = auto()          # فاعل
+    PATIENT = auto()        # مفعول
+    OBSERVER = auto()       # مراقب
+    REFLECTIVE = auto()     # تأملي
+
+
+class SignifiedClass(Enum):
+    """صنف المدلول — signified class."""
+
+    CONCEPTUAL = auto()     # مفهومي
+    REFERENTIAL = auto()    # إحالي
+    FUNCTIONAL = auto()     # وظيفي
+    RELATIONAL = auto()     # علائقي
+
+
+class SymbolicStatus(Enum):
+    """حالة الترميز — symbolic encoding status."""
+
+    REPRESENTABLE = auto()  # قابل للتمثيل
+    UNREPRESENTABLE = auto()  # غير قابل للتمثيل
+    PARTIAL = auto()        # جزئي
+
+
+class TrustBasis(Enum):
+    """أساس الثقة — basis for trust assessment."""
+
+    TEXTUAL = auto()        # نصي
+    CONTEXTUAL = auto()     # سياقي
+    INSTITUTIONAL = auto()  # مؤسسي
+    EXPERIENTIAL = auto()   # تجريبي
+
+
+class TrustLevel(Enum):
+    """مستوى الثقة — level of trust."""
+
+    HIGH = auto()           # عالي
+    MEDIUM = auto()         # متوسط
+    LOW = auto()            # منخفض
+    NONE = auto()           # معدوم
+
+
+class TruthCategory(Enum):
+    """مقولة الصدق — truth category."""
+
+    NECESSARY = auto()      # ضروري
+    CONTINGENT = auto()     # ممكن
+    IMPOSSIBLE = auto()     # مستحيل
+    INDETERMINATE = auto()  # غير محدد
+
+
+# ═══════════════════════════════════════════════════════════════════════
 # Layer Closure Constitution v1 — دستور الإغلاق الطبقي
 # ═══════════════════════════════════════════════════════════════════════
 
@@ -1715,6 +1782,7 @@ class HypothesisStatus(Enum):
     TESTED = auto()
     CONFIRMED = auto()
     REFUTED = auto()
+    ACTIVE = auto()         # نشط
 
 
 class LogicalStatus(Enum):
@@ -1731,6 +1799,7 @@ class Modality(Enum):
     NECESSITY = auto()      # وجوب
     POSSIBILITY = auto()    # إمكان
     IMPOSSIBILITY = auto()  # استحالة
+    CERTAIN_MOD = auto()    # يقيني
     CONTINGENCY = auto()    # جواز
 
 
@@ -1753,6 +1822,7 @@ class ConflictState(Enum):
     DETECTED = auto()
     RESOLVED = auto()
     UNRESOLVABLE = auto()
+    HARD = auto()           # صلب — hard conflict
 
 
 class ConflictType(Enum):
@@ -1773,6 +1843,7 @@ class ConstraintStrength(Enum):
     OBLIGATORY = auto()    # واجب
     PREFERRED = auto()     # مستحب
     OPTIONAL = auto()      # اختياري
+    MODERATE = auto()      # متوسط
 
 
 class InsertionPolicy(Enum):
@@ -1912,6 +1983,7 @@ class DiscourseValidationOutcome(Enum):
     INVALID = auto()
     PARTIAL = auto()
     PENDING = auto()
+    INCOMPLETE = auto()  # غير مكتمل
 
 
 # ── Exchange (تبادل) ────────────────────────────────────────────────
@@ -2233,6 +2305,7 @@ class Polarity(Enum):
 
     POSITIVE = auto()      # إيجاب
     NEGATIVE = auto()      # سلب
+    NEUTRAL_POL = auto()   # محايد
 
 
 # ── Stock & Sufficiency ──────────────────────────────────────────────
