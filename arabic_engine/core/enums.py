@@ -1445,6 +1445,8 @@ class TransitionGateStatus(Enum):
     PASSED = auto()
     BLOCKED = auto()
     INSUFFICIENT_DATA = auto()
+    SUSPEND = auto()    # تعليق — suspend for further review
+    COMPLETE = auto()   # استكمال — request completion of missing data
 
 
 # ═══════════════════════════════════════════════════════════════════════
@@ -1611,3 +1613,768 @@ class NounExistentialAspect(Enum):
     MARJI3 = auto()       # مرجع
     MIQDAR = auto()       # مقدار
     UNKNOWN = auto()
+
+
+# ═══════════════════════════════════════════════════════════════════════
+# Additional enums required by types.py
+# ═══════════════════════════════════════════════════════════════════════
+
+
+class ModalCategory(Enum):
+    """المقولة المودالية — modal category for propositions."""
+
+    NECESSITY = auto()      # وجوب
+    POSSIBILITY = auto()    # إمكان
+    IMPOSSIBILITY = auto()  # استحالة
+    CONTINGENCY = auto()    # عرضية
+
+
+class RationalSelfKind(Enum):
+    """نوع الذات العاقلة — kind of rational self."""
+
+    AGENT = auto()          # فاعل
+    PATIENT = auto()        # مفعول
+    OBSERVER = auto()       # مراقب
+    REFLECTIVE = auto()     # تأملي
+
+
+class SignifiedClass(Enum):
+    """صنف المدلول — signified class."""
+
+    CONCEPTUAL = auto()     # مفهومي
+    REFERENTIAL = auto()    # إحالي
+    FUNCTIONAL = auto()     # وظيفي
+    RELATIONAL = auto()     # علائقي
+
+
+class SymbolicStatus(Enum):
+    """حالة الترميز — symbolic encoding status."""
+
+    REPRESENTABLE = auto()  # قابل للتمثيل
+    UNREPRESENTABLE = auto()  # غير قابل للتمثيل
+    PARTIAL = auto()        # جزئي
+
+
+class TrustBasis(Enum):
+    """أساس الثقة — basis for trust assessment."""
+
+    TEXTUAL = auto()        # نصي
+    CONTEXTUAL = auto()     # سياقي
+    INSTITUTIONAL = auto()  # مؤسسي
+    EXPERIENTIAL = auto()   # تجريبي
+
+
+class TrustLevel(Enum):
+    """مستوى الثقة — level of trust."""
+
+    HIGH = auto()           # عالي
+    MEDIUM = auto()         # متوسط
+    LOW = auto()            # منخفض
+    NONE = auto()           # معدوم
+
+
+class TruthCategory(Enum):
+    """مقولة الصدق — truth category."""
+
+    NECESSARY = auto()      # ضروري
+    CONTINGENT = auto()     # ممكن
+    IMPOSSIBLE = auto()     # مستحيل
+    INDETERMINATE = auto()  # غير محدد
+
+
+# ═══════════════════════════════════════════════════════════════════════
+# Layer Closure Constitution v1 — دستور الإغلاق الطبقي
+# ═══════════════════════════════════════════════════════════════════════
+
+# ── Concept Formation & Closure ─────────────────────────────────────
+
+
+class ConceptClosureStatus(Enum):
+    """حالة إغلاق المفهوم — whether a concept is fully closed."""
+
+    OPEN = auto()
+    CLOSED = auto()
+    PARTIAL = auto()
+
+
+class ConceptEntityAttribute(Enum):
+    """صفة الكيان المفهومي — attribute kind of a conceptual entity."""
+
+    ESSENTIAL = auto()     # ذاتي
+    ACCIDENTAL = auto()    # عرضي
+    RELATIONAL = auto()    # علائقي
+
+
+class ConceptFormationMode(Enum):
+    """طريقة تكوين المفهوم — how a concept is formed."""
+
+    ABSTRACTION = auto()   # تجريد
+    COMPOSITION = auto()   # تركيب
+    DERIVATION = auto()    # اشتقاق
+
+
+class ConceptGateID(Enum):
+    """معرّف بوابة المفهوم — gate identifiers between concept layers."""
+
+    GATE_LEXEME_TO_CONCEPT = auto()
+    GATE_CONCEPT_TO_COMPOSITION = auto()
+    GATE_COMPOSITION_TO_PROPOSITION = auto()
+
+
+class ConceptIndependence(Enum):
+    """استقلالية المفهوم — degree of conceptual independence."""
+
+    INDEPENDENT = auto()   # مستقل
+    DEPENDENT = auto()     # تابع
+    CONTEXTUAL = auto()    # سياقي
+
+
+class ConceptRelationType(Enum):
+    """نوع العلاقة المفهومية — relation between concepts."""
+
+    IS_A = auto()
+    PART_OF = auto()
+    CAUSES = auto()
+    ENTAILS = auto()
+    OPPOSES = auto()
+
+
+class ConceptualSignifiedClass(Enum):
+    """صنف المدلول التصوري — class of the conceptual signified."""
+
+    UNIVERSAL = auto()     # كلّي
+    PARTICULAR = auto()    # جزئي
+
+
+class ConceptUniversalParticular(Enum):
+    """كلّي وجزئي المفهوم — universal vs particular concept."""
+
+    UNIVERSAL = auto()     # كلّي
+    PARTICULAR = auto()    # جزئي
+
+
+# ── Epistemic & Confirmation ────────────────────────────────────────
+
+
+class ConfirmationRank(Enum):
+    """رتبة التصديق — rank of confirmation / certainty."""
+
+    ESTABLISHED = auto()   # ثابت
+    PROBABLE = auto()      # راجح
+    POSSIBLE = auto()      # ممكن
+    DOUBTFUL = auto()      # مشكوك
+
+
+class EpistemicStatus(Enum):
+    """الحالة المعرفية — epistemic status of a proposition."""
+
+    CERTAIN = auto()       # يقين
+    PROBABLE = auto()      # ظنّ
+    POSSIBLE = auto()      # احتمال
+    DOUBTFUL = auto()      # شكّ
+    UNKNOWN = auto()       # مجهول
+
+
+class HypothesisStatus(Enum):
+    """حالة الفرضية — lifecycle status of a hypothesis."""
+
+    PROPOSED = auto()
+    TESTED = auto()
+    CONFIRMED = auto()
+    REFUTED = auto()
+    ACTIVE = auto()         # نشط
+
+
+class LogicalStatus(Enum):
+    """الحالة المنطقية — logical validity status."""
+
+    VALID = auto()
+    INVALID = auto()
+    CONTINGENT = auto()
+
+
+class Modality(Enum):
+    """الجهة — modal status of a proposition."""
+
+    NECESSITY = auto()      # وجوب
+    POSSIBILITY = auto()    # إمكان
+    IMPOSSIBILITY = auto()  # استحالة
+    CERTAIN_MOD = auto()    # يقيني
+    CONTINGENCY = auto()    # جواز
+
+
+# ── Conflict & Resolution ───────────────────────────────────────────
+
+
+class ConflictResolutionMethod(Enum):
+    """طريقة حل التعارض — method for resolving conflicts."""
+
+    PREFER_CONCEPT = auto()
+    PREFER_UTTERANCE = auto()
+    CONTEXTUAL = auto()
+    REJECT = auto()
+
+
+class ConflictState(Enum):
+    """حالة التعارض — state of a detected conflict."""
+
+    NO_CONFLICT = auto()
+    DETECTED = auto()
+    RESOLVED = auto()
+    UNRESOLVABLE = auto()
+    HARD = auto()           # صلب — hard conflict
+
+
+class ConflictType(Enum):
+    """نوع التعارض — type of conflict."""
+
+    UTTERANCE_CONCEPT = auto()
+    SEMANTIC = auto()
+    SYNTACTIC = auto()
+    PRAGMATIC = auto()
+
+
+# ── Constraint & Policy ─────────────────────────────────────────────
+
+
+class ConstraintStrength(Enum):
+    """قوة القيد — strength of a constraint."""
+
+    OBLIGATORY = auto()    # واجب
+    PREFERRED = auto()     # مستحب
+    OPTIONAL = auto()      # اختياري
+    MODERATE = auto()      # متوسط
+
+
+class InsertionPolicy(Enum):
+    """سياسة الإدراج — policy for inserting data."""
+
+    INSERT = auto()
+    UPDATE = auto()
+    REJECT = auto()
+    DEFER = auto()
+
+
+class DecisionCode(Enum):
+    """رمز القرار — decision outcome code."""
+
+    ACCEPT = auto()
+    REJECT = auto()
+    DEFER = auto()
+    ESCALATE = auto()
+
+
+# ── Coupling & Relation ─────────────────────────────────────────────
+
+
+class CouplingRelationType(Enum):
+    """نوع علاقة الاقتران — coupling relation type."""
+
+    DIRECT = auto()        # مباشر
+    INDIRECT = auto()      # غير مباشر
+    METAPHORICAL = auto()  # استعاري
+    METONYMIC = auto()     # مجازي مرسل
+
+
+class InterPropositionLink(Enum):
+    """رابط بين القضايا — link between propositions."""
+
+    CONJUNCTION = auto()   # عطف
+    DISJUNCTION = auto()   # فصل
+    IMPLICATION = auto()   # لزوم
+    CONTRAST = auto()      # مقابلة
+    ELABORATION = auto()   # تفصيل
+
+
+# ── Cultural & Institutional ────────────────────────────────────────
+
+
+class CulturalScope(Enum):
+    """النطاق الثقافي — cultural scope of applicability."""
+
+    UNIVERSAL = auto()     # عالمي
+    REGIONAL = auto()      # إقليمي
+    LOCAL = auto()         # محلي
+
+
+class InstitutionalCategory(Enum):
+    """الفئة المؤسسية — institutional category."""
+
+    LEGAL = auto()         # قانوني
+    RELIGIOUS = auto()     # ديني
+    CUSTOMARY = auto()     # عرفي
+    SCIENTIFIC = auto()    # علمي
+
+
+class NormativeCategory(Enum):
+    """الحكم الشرعي — normative category (الأحكام الخمسة)."""
+
+    WAJIB = auto()         # واجب
+    MANDUB = auto()        # مندوب
+    MUBAH = auto()         # مباح
+    MAKRUH = auto()        # مكروه
+    HARAM = auto()         # حرام
+
+
+# ── Dalāla & Signification ──────────────────────────────────────────
+
+
+class DalaalaKind(Enum):
+    """نوع الدلالة — kind of signification."""
+
+    LAFZIYYA = auto()      # لفظية
+    AQLIYYA = auto()       # عقلية
+    TABIYYA = auto()        # طبيعية
+
+
+class SignifierClass(Enum):
+    """صنف الدال — class of the signifier."""
+
+    WORD = auto()          # كلمة
+    PHRASE = auto()        # عبارة
+    SENTENCE = auto()      # جملة
+    MORPHEME = auto()      # صرفيم
+
+
+class DefinitenessRole(Enum):
+    """دور التعريف — definiteness role."""
+
+    DEFINITE = auto()      # معرفة
+    INDEFINITE = auto()    # نكرة
+    CONSTRUCT = auto()     # إضافة
+
+
+# ── Diachronic & Source ──────────────────────────────────────────────
+
+
+class DiachronicStatus(Enum):
+    """الحالة التاريخية — diachronic status of a term."""
+
+    ARCHAIC = auto()       # قديم
+    CLASSICAL = auto()     # فصيح
+    MODERN = auto()        # حديث
+    NEOLOGISM = auto()     # مولّد
+
+
+class SourceType(Enum):
+    """نوع المصدر — source type."""
+
+    PRIMARY = auto()
+    SECONDARY = auto()
+    TERTIARY = auto()
+
+
+# ── Discourse ────────────────────────────────────────────────────────
+
+
+class DiscourseGapType(Enum):
+    """نوع الفجوة الخطابية — type of discourse gap."""
+
+    REFERENTIAL = auto()
+    CAUSAL = auto()
+    TEMPORAL = auto()
+    LOGICAL = auto()
+
+
+class DiscourseValidationOutcome(Enum):
+    """نتيجة تحقق الخطاب — outcome of discourse validation."""
+
+    VALID = auto()
+    INVALID = auto()
+    PARTIAL = auto()
+    PENDING = auto()
+    INCOMPLETE = auto()  # غير مكتمل
+
+
+# ── Exchange (تبادل) ────────────────────────────────────────────────
+
+
+class ExchangePurposeType(Enum):
+    """نوع غرض التبادل — purpose type of an exchange."""
+
+    INFORMATIVE = auto()   # إخباري
+    DIRECTIVE = auto()     # توجيهي
+    COMMISSIVE = auto()    # التزامي
+    EXPRESSIVE = auto()    # تعبيري
+    DECLARATIVE = auto()   # إعلاني
+
+
+class ExchangeStatus(Enum):
+    """حالة التبادل — status of an exchange."""
+
+    INITIATED = auto()
+    IN_PROGRESS = auto()
+    COMPLETED = auto()
+    FAILED = auto()
+
+
+class ExchangeStyleType(Enum):
+    """نوع أسلوب التبادل — style type of an exchange."""
+
+    FORMAL = auto()        # رسمي
+    INFORMAL = auto()      # غير رسمي
+    RHETORICAL = auto()    # بلاغي
+
+
+class ExchangeType(Enum):
+    """نوع التبادل — exchange type (خبر / إنشاء)."""
+
+    KHABAR = auto()        # خبر
+    INSHA = auto()         # إنشاء
+
+
+# ── Explicitness & Interpretation ────────────────────────────────────
+
+
+class ExplicitnessLevel(Enum):
+    """مستوى الصراحة — explicitness level."""
+
+    EXPLICIT = auto()      # صريح
+    IMPLICIT = auto()      # ضمني
+    INFERRED = auto()      # مستنبط
+
+
+class InterpretationSource(Enum):
+    """مصدر التأويل — source of interpretation."""
+
+    TEXTUAL = auto()       # نصّي
+    CONTEXTUAL = auto()    # سياقي
+    INTERTEXTUAL = auto()  # تناصّي
+    CULTURAL = auto()      # ثقافي
+
+
+class InterpretiveOutcomeType(Enum):
+    """نوع نتيجة التأويل — type of interpretive outcome."""
+
+    LITERAL = auto()       # حقيقي
+    FIGURATIVE = auto()    # مجازي
+    AMBIGUOUS = auto()     # ملتبس
+    UNDETERMINED = auto()  # غير محدد
+
+
+class InterpretiveStability(Enum):
+    """ثبات التأويل — stability of interpretation."""
+
+    STABLE = auto()
+    VARIABLE = auto()
+    CONTEXT_DEPENDENT = auto()
+
+
+# ── Fractal & Stage ─────────────────────────────────────────────────
+
+
+class FractalStage(Enum):
+    """مرحلة فراكتالية — fractal stage of development."""
+
+    SEED = auto()          # بذرة
+    GROWTH = auto()        # نمو
+    MATURITY = auto()      # نضج
+    DECAY = auto()         # اضمحلال
+
+
+# ── Frame ────────────────────────────────────────────────────────────
+
+
+class FrameType(Enum):
+    """نوع الإطار — type of semantic frame."""
+
+    EVENT = auto()         # حدث
+    STATE = auto()         # حالة
+    PROCESS = auto()       # عملية
+    RELATION = auto()      # علاقة
+
+
+# ── Phonology & Morphology ───────────────────────────────────────────
+
+
+class HarakaState(Enum):
+    """حالة الحركة — diacritical mark state."""
+
+    FATHA = auto()          # فتحة
+    DAMMA = auto()          # ضمة
+    KASRA = auto()          # كسرة
+    SUKUN = auto()          # سكون
+    SHADDA = auto()         # شدّة
+    TANWIN_FATHA = auto()   # تنوين فتح
+    TANWIN_DAMMA = auto()   # تنوين ضم
+    TANWIN_KASRA = auto()   # تنوين كسر
+    NONE = auto()
+
+
+class SyllableState(Enum):
+    """حالة المقطع — syllable state."""
+
+    OPEN = auto()          # مفتوح
+    CLOSED = auto()        # مغلق
+    SUPER_CLOSED = auto()  # مغلق بإحكام
+
+
+# ── Information & Knowledge ──────────────────────────────────────────
+
+
+class InfoKind(Enum):
+    """نوع المعلومة — kind of information."""
+
+    FACTUAL = auto()       # واقعي
+    PROCEDURAL = auto()    # إجرائي
+    CONCEPTUAL = auto()    # مفهومي
+    METACOGNITIVE = auto() # ما وراء معرفي
+
+
+# ── Ontological ──────────────────────────────────────────────────────
+
+
+class OntologicalConstraintType(Enum):
+    """نوع القيد الوجودي — ontological constraint type."""
+
+    EXISTENTIAL = auto()   # وجودي
+    ESSENTIAL = auto()     # ذاتي
+    RELATIONAL = auto()    # علائقي
+    TEMPORAL = auto()      # زماني
+
+
+class OperationalCapacity(Enum):
+    """القدرة التشغيلية — operational capacity."""
+
+    FULL = auto()
+    LIMITED = auto()
+    NONE = auto()
+
+
+# ── Particle (حرف) ──────────────────────────────────────────────────
+
+
+class ParticleDalala(Enum):
+    """دلالة الحرف — signification of a particle."""
+
+    CAUSAL = auto()        # سببي
+    CONDITIONAL = auto()   # شرطي
+    TEMPORAL = auto()      # زماني
+    SPATIAL = auto()       # مكاني
+    MODAL = auto()         # جهوي
+
+
+class ParticleKind(Enum):
+    """نوع الحرف — kind of particle."""
+
+    CONJUNCTION = auto()    # عطف
+    PREPOSITION = auto()    # جر
+    NEGATION = auto()       # نفي
+    INTERROGATIVE = auto()  # استفهام
+    VOCATIVE = auto()       # نداء
+    CONDITIONAL = auto()    # شرط
+
+
+class ParticleReadiness(Enum):
+    """جاهزية الحرف — readiness of a particle."""
+
+    READY = auto()
+    NOT_READY = auto()
+    PARTIAL = auto()
+
+
+class ParticleScope(Enum):
+    """نطاق الحرف — scope of a particle."""
+
+    SENTENCE = auto()      # جملة
+    CLAUSE = auto()        # شبه جملة
+    PHRASE = auto()        # عبارة
+    WORD = auto()          # كلمة
+
+
+# ── Path & Direction ─────────────────────────────────────────────────
+
+
+class PathKind(Enum):
+    """نوع المسار — kind of path."""
+
+    DIRECT = auto()
+    INDIRECT = auto()
+    CIRCULAR = auto()
+
+
+# ── Perception ───────────────────────────────────────────────────────
+
+
+class PerceptualGapReason(Enum):
+    """سبب الفجوة الإدراكية — reason for a perceptual gap."""
+
+    MISSING_DATA = auto()
+    AMBIGUITY = auto()
+    NOISE = auto()
+    UNKNOWN = auto()
+
+
+# ── Purpose & Utterance ──────────────────────────────────────────────
+
+
+class PurposeType(Enum):
+    """نوع الغرض — purpose type of an utterance."""
+
+    DECLARATIVE = auto()    # تقريري
+    INTERROGATIVE = auto()  # استفهامي
+    IMPERATIVE = auto()     # أمري
+    EXCLAMATIVE = auto()    # تعجبي
+
+
+class UtteranceMode(Enum):
+    """صيغة الخطاب — mode of utterance."""
+
+    SPOKEN = auto()        # منطوق
+    WRITTEN = auto()       # مكتوب
+    SIGNED = auto()        # إشاري
+
+
+class UtteranceToConceptConstraint(Enum):
+    """قيد الخطاب إلى المفهوم — constraint from utterance to concept."""
+
+    DIRECT = auto()
+    MEDIATED = auto()
+    CONTEXTUAL = auto()
+
+
+class UtteredFormClass(Enum):
+    """صنف الصيغة الملفوظة — class of the uttered form."""
+
+    NOUN = auto()          # اسم
+    VERB = auto()          # فعل
+    PARTICLE = auto()      # حرف
+    PHRASE = auto()        # عبارة
+
+
+# ── Readiness ────────────────────────────────────────────────────────
+
+
+class ReadinessLevel(Enum):
+    """مستوى الجاهزية — readiness level."""
+
+    FULL = auto()
+    PARTIAL = auto()
+    MINIMAL = auto()
+    NONE = auto()
+
+
+class ReadinessStatus(Enum):
+    """حالة الجاهزية — readiness status."""
+
+    READY = auto()
+    PENDING = auto()
+    BLOCKED = auto()
+
+
+# ── Concept Type ─────────────────────────────────────────────────────
+
+
+class SingleConceptType(Enum):
+    """نوع المفهوم المفرد — type of a single concept."""
+
+    SIMPLE = auto()        # بسيط
+    COMPOUND = auto()      # مركّب
+    DERIVED = auto()       # مشتق
+
+
+class UniversalParticular(Enum):
+    """كلّي وجزئي — universal vs particular."""
+
+    UNIVERSAL = auto()     # كلّي
+    PARTICULAR = auto()    # جزئي
+    SINGULAR = auto()      # مفرد
+
+
+# ── Style & Rhetoric ─────────────────────────────────────────────────
+
+
+class StyleKind(Enum):
+    """نوع الأسلوب — kind of style."""
+
+    PLAIN = auto()         # عادي
+    ORNATE = auto()        # مزخرف
+    TECHNICAL = auto()     # فنّي
+
+
+class RhetoricalStatus(Enum):
+    """الحالة البلاغية — rhetorical status."""
+
+    INFORMATIVE = auto()   # إخباري
+    PERFORMATIVE = auto()  # إنشائي
+    RHETORICAL = auto()    # بلاغي
+
+
+class Polarity(Enum):
+    """القطبية — polarity of a proposition."""
+
+    POSITIVE = auto()      # إيجاب
+    NEGATIVE = auto()      # سلب
+    NEUTRAL_POL = auto()   # محايد
+
+
+# ── Stock & Sufficiency ──────────────────────────────────────────────
+
+
+class StockComponent(Enum):
+    """مكوّن المخزون — component of an axiomatic stock."""
+
+    AXIOM = auto()         # مسلّمة
+    THEOREM = auto()       # مبرهنة
+    DEFINITION = auto()    # تعريف
+    LEMMA = auto()         # مقدّمة
+
+
+class StockSufficiency(Enum):
+    """كفاية المخزون — sufficiency of stock."""
+
+    SUFFICIENT = auto()
+    INSUFFICIENT = auto()
+    EXCESS = auto()
+
+
+# ── Linguistic Zero ─────────────────────────────────────────────────
+
+
+class LinguisticZeroType(Enum):
+    """نوع الصفر اللغوي — types of linguistic zero (Z1–Z20)."""
+
+    Z1 = auto()
+    Z2 = auto()
+    Z3 = auto()
+    Z4 = auto()
+    Z5 = auto()
+    Z6 = auto()
+    Z7 = auto()
+    Z8 = auto()
+    Z9 = auto()
+    Z10 = auto()
+    Z11 = auto()
+    Z12 = auto()
+    Z13 = auto()
+    Z14 = auto()
+    Z15 = auto()
+    Z16 = auto()
+    Z17 = auto()
+    Z18 = auto()
+    Z19 = auto()
+    Z20 = auto()
+
+
+# ── Word Classification ─────────────────────────────────────────────
+
+
+class WordClass(Enum):
+    """تصنيف الكلمة — word class."""
+
+    NOUN = auto()          # اسم
+    VERB = auto()          # فعل
+    PARTICLE = auto()      # حرف
+    ADJECTIVE = auto()     # صفة
+    ADVERB = auto()        # ظرف
+
+
+# ── Zero Coverage ────────────────────────────────────────────────────
+
+
+class ZeroCoverage(Enum):
+    """تغطية الصفر — zero coverage status."""
+
+    COVERED = auto()
+    UNCOVERED = auto()
+    PARTIAL = auto()

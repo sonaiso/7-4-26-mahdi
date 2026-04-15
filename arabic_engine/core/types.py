@@ -17,6 +17,8 @@ from .enums import (
     CellType,
     CombinationType,
     CompositionDegree,
+    ConceptFormationMode,
+    ConceptRelationType,
     ConditionToken,
     ConfirmationRank,
     ConflictResolutionMethod,
@@ -26,14 +28,24 @@ from .enums import (
     ConstraintType,
     ContaminationLevel,
     CouplingRelationType,
+    CulturalScope,
+    DalaalaKind,
     DalalaType,
     DependencyDegree,
+    DiachronicStatus,
+    DiscourseGapType,
+    DiscourseValidationOutcome,
     ElementClass,
     ElementFunction,
     ElementLayer,
     EpistemicRank,
+    EpistemicStatus,
     EvidenceType,
+    ExchangeStatus,
+    ExchangeType,
     ExistenceMode,
+    ExplicitnessLevel,
+    FrameType,
     FunctionRole,
     FuncTransitionClass,
     GapSeverity,
@@ -49,9 +61,12 @@ from .enums import (
     IrabCase,
     IrabRole,
     JudgementType,
+    JudgmentCategory,
     LinkKind,
+    LogicalStatus,
     MafhumType,
     MethodFamily,
+    Modality,
     ModalCategory,
     NominalAttributeKind,
     NormativeCategory,
@@ -67,6 +82,7 @@ from .enums import (
     NounPatternType,
     NounReadiness,
     NounUniversality,
+    OperationalCapacity,
     OntologicalConstraintType,
     OntologicalLayer,
     OntologicalMode,
@@ -75,6 +91,8 @@ from .enums import (
     PhonFeature,
     PhonGroup,
     PhonTransform,
+    Polarity,
+    PrimarySignifiedType,
     ProofPathKind,
     ProofStatus,
     ProperNounKind,
@@ -84,15 +102,20 @@ from .enums import (
     ReadinessLevel,
     ReadinessStatus,
     RealityKind,
+    ReferentialSubtype,
     ReversibleValue,
+    RevisionType,
     RhetoricalStatus,
     SemanticType,
     SenseModality,
+    SignalType,
     SignifiedClass,
+    SignifiedTemporalStatus,
     SignifierClass,
     SlotState,
     SourceType,
     SpaceRef,
+    SpecificityDegree,
     StockComponent,
     StockSufficiency,
     StrictLayerID,
@@ -111,6 +134,7 @@ from .enums import (
     TruthCategory,
     TruthState,
     UnicodeProfileType,
+    UtteranceMode,
     UtteranceToConceptConstraint,
     UtteredFormClass,
     ValidationState,
@@ -2685,3 +2709,480 @@ class NounValidationResult:
     valid: bool
     errors: Tuple[str, ...]
     readiness_score: float
+
+
+# ── Additional re-exported types ──────────────────────────────────────
+
+
+@dataclass(frozen=True)
+class AmbiguityRecord:
+    """سجل الالتباس — record of lexical or structural ambiguity."""
+
+    ambiguity_id: str
+    unit_id: str
+    ambiguity_type: "AmbiguityType"  # forward ref — enum may not exist yet
+    resolution: Optional[object] = None
+    resolved: bool = False
+    details: str = ""
+
+
+@dataclass(frozen=True)
+class AxiomRecord:
+    """سجل المسلّمة — a foundational axiom in the proof layer."""
+
+    axiom_id: str
+    name: str
+    formal_statement: str
+    natural_language: str
+    layer: OntologicalLayer = OntologicalLayer.CELL
+    dependencies: Tuple[str, ...] = ()
+    implemented_by: Tuple[str, ...] = ()
+    status: ProofStatus = ProofStatus.ASSUMED
+
+
+@dataclass(frozen=True)
+class CallabilityResult:
+    """نتيجة قابلية الاستدعاء — whether a concept is callable."""
+
+    callable: bool
+    reason: str
+    score: float = 1.0
+
+
+@dataclass(frozen=True)
+class CouplingRecord:
+    """سجل الاقتران — coupling between signifier and signified."""
+
+    coupling_id: str
+    coupling_type: CouplingRelationType
+    signifier_id: str
+    signified_id: str
+    confidence: float = 1.0
+    evidence: str = ""
+
+
+@dataclass(frozen=True)
+class ConflictRuleNode:
+    """عقدة قاعدة التعارض — rule for resolving conceptual conflicts."""
+
+    node_id: str
+    prefer_concept: bool = True
+    rationale: str = ""
+
+
+@dataclass(frozen=True)
+class CompositionalReadinessResult:
+    """نتيجة الجاهزية التركيبية — compositional readiness verdict."""
+
+    percept_id: str
+    gate: "ReadinessGate" = None  # type: ignore[assignment]
+    assigned_role: Optional[str] = None
+    reference_resolved: bool = False
+
+
+@dataclass(frozen=True)
+class EpisodeValidationResult:
+    """نتيجة التحقق من الحلقة — episode-level validation verdict."""
+
+    episode_id: str
+    validation_state: ValidationState = ValidationState.PENDING
+    epistemic_rank: EpistemicRank = EpistemicRank.CERTAIN
+    errors: Tuple[str, ...] = ()
+    gaps: Tuple[object, ...] = ()
+
+
+@dataclass(frozen=True)
+class EpistemicConceptNode:
+    """عقدة المفهوم المعرفي — concept node with epistemic status."""
+
+    node_id: str
+    concept_name: str = ""
+    dalaala_type: str = ""
+    concept_scope: str = ""
+
+
+@dataclass(frozen=True)
+class EssenceConditionPair:
+    """زوج الماهية والشرط — essence paired with its condition.
+
+    Represents the (slot, value, constraint) triple where constraint
+    is optional.
+    """
+
+    element_id: str
+    slot: str
+    value: str
+    constraint: Optional[ConditionToken] = None
+
+    @property
+    def has_constraint(self) -> bool:
+        """Return True if this pair carries a non-None constraint."""
+        return self.constraint is not None
+
+
+@dataclass(frozen=True)
+class InformationalStockRecord:
+    """سجل المخزون المعلوماتي — informational stock record."""
+
+    record_id: str
+    percept_id: str = ""
+    stock: Optional[object] = None
+    classification: str = ""
+    linguistic_direction: str = ""
+    reference: str = ""
+    candidate_role: str = ""
+    ready_1: Optional[object] = None
+    ready_2: Optional[object] = None
+    ready_3: Optional[object] = None
+
+
+@dataclass(frozen=True)
+class JudgementNode:
+    """عقدة الحكم — a judgement node in the epistemic graph."""
+
+    node_id: str
+    judgement_type: JudgementType = JudgementType.EXISTENCE
+    judgement_text: str = ""
+
+
+@dataclass(frozen=True)
+class LevelMatchResult:
+    """نتيجة مطابقة المستوى — result of matching hierarchical levels."""
+
+    matched: bool
+    source_level: str
+    target_level: str
+    score: float = 1.0
+
+
+@dataclass(frozen=True)
+class OntologicalConstraintRecord:
+    """سجل القيد الوجودي — an ontological constraint record."""
+
+    constraint_id: str
+    constraint_type: OntologicalConstraintType = OntologicalConstraintType.STRUCTURAL
+    utterance_constraint: Optional[UtteranceToConceptConstraint] = None
+    description_ar: str = ""
+    passes: bool = True
+    violated_by: str = ""
+
+
+@dataclass(frozen=True)
+class PerceptualReadinessResult:
+    """نتيجة الجاهزية الإدراكية — perceptual readiness verdict."""
+
+    percept_id: str
+    gate: Optional[object] = None
+    interpreted_concept: Optional[str] = None
+
+
+@dataclass(frozen=True)
+class PriorInfoNode:
+    """عقدة المعلومة السابقة — a prior-information node."""
+
+    node_id: str
+    info_kind: InfoKind = InfoKind.LEXICAL
+    source: str = ""
+
+
+@dataclass(frozen=True)
+class PriorInformationalStock:
+    """المخزون المعلوماتي السابق — prior informational stock."""
+
+    stock_id: str
+    entries: Tuple[object, ...] = ()
+    sufficiency: StockSufficiency = StockSufficiency.UNDETERMINED
+
+
+@dataclass(frozen=True)
+class ProofDependencyGraph:
+    """مخطط اعتماد البرهان — dependency graph for proofs."""
+
+    axioms: Tuple["AxiomRecord", ...] = ()
+    theorems: Tuple["TheoremRecord", ...] = ()
+
+    def is_acyclic(self) -> bool:
+        """Return whether the dependency graph is acyclic."""
+        th_map = {t.theorem_id: t for t in self.theorems}
+        visited: set[str] = set()
+        path: set[str] = set()
+
+        def _has_cycle(tid: str) -> bool:
+            if tid in path:
+                return True
+            if tid in visited:
+                return False
+            visited.add(tid)
+            path.add(tid)
+            th = th_map.get(tid)
+            if th:
+                for dep in getattr(th, "theorem_dependencies", ()):
+                    if _has_cycle(dep):
+                        return True
+            path.discard(tid)
+            return False
+
+        for t in self.theorems:
+            if _has_cycle(t.theorem_id):
+                return False
+        return True
+
+    def proof_coverage(self) -> float:
+        """Return the fraction of theorems that are PROVEN."""
+        if not self.theorems:
+            return 0.0
+        proven = sum(1 for t in self.theorems if t.status is ProofStatus.PROVEN)
+        return proven / len(self.theorems)
+
+    def all_proven(self) -> bool:
+        """Return True if all theorems are PROVEN."""
+        if not self.theorems:
+            return False
+        return all(t.status is ProofStatus.PROVEN for t in self.theorems)
+
+    def dangling_dependencies(self) -> Tuple[str, ...]:
+        """Return dependency ids that are referenced but not defined."""
+        ax_ids = {a.axiom_id for a in self.axioms}
+        th_ids = {t.theorem_id for t in self.theorems}
+        defined = ax_ids | th_ids
+        dangling: list[str] = []
+        for th in self.theorems:
+            for dep in getattr(th, "axiom_dependencies", ()):
+                if dep not in defined:
+                    dangling.append(dep)
+            for dep in getattr(th, "theorem_dependencies", ()):
+                if dep not in defined:
+                    dangling.append(dep)
+        return tuple(dict.fromkeys(dangling))
+
+    def get_axiom(self, axiom_id: str) -> Optional["AxiomRecord"]:
+        """Return the axiom with *axiom_id* if present, else ``None``."""
+        for a in self.axioms:
+            if a.axiom_id == axiom_id:
+                return a
+        return None
+
+    def get_theorem(self, theorem_id: str) -> Optional["TheoremRecord"]:
+        """Return the theorem with *theorem_id* if present, else ``None``."""
+        for t in self.theorems:
+            if t.theorem_id == theorem_id:
+                return t
+        return None
+
+    def dependencies_of(self, node_id: str) -> Tuple[str, ...]:
+        """Return ids that *node_id* depends on."""
+        for t in self.theorems:
+            if t.theorem_id == node_id:
+                ax = tuple(getattr(t, "axiom_dependencies", ()))
+                th = tuple(getattr(t, "theorem_dependencies", ()))
+                return ax + th
+        return ()
+
+    def dependents_of(self, node_id: str) -> Tuple[str, ...]:
+        """Return theorem ids that depend on *node_id*."""
+        result: list[str] = []
+        for t in self.theorems:
+            all_deps = tuple(getattr(t, "axiom_dependencies", ())) + tuple(
+                getattr(t, "theorem_dependencies", ())
+            )
+            if node_id in all_deps:
+                result.append(t.theorem_id)
+        return tuple(result)
+
+
+@dataclass(frozen=True)
+class ReadinessGate:
+    """بوابة الجاهزية — gate that guards readiness transitions."""
+
+    level: ReadinessLevel = ReadinessLevel.PERCEPTUAL
+    status: ReadinessStatus = ReadinessStatus.UNMET
+    score: float = 0.0
+    threshold: float = 0.5
+    gap_reasons: Tuple[str, ...] = ()
+
+
+@dataclass(frozen=True)
+class RealityAnchorNode:
+    """عقدة مرساة الواقع — anchor node tying concepts to reality."""
+
+    node_id: str
+    reality_kind: RealityKind = RealityKind.TEXT_OBJECT
+    source_mode: str = ""
+    anchoring_strength: int = 0
+
+
+@dataclass(frozen=True)
+class SignifiedNode:
+    """عقدة المدلول — a signified (concept) node in the ontology layer."""
+
+    node_id: str
+    signified_class: SignifiedClass = SignifiedClass.CONCEPTUAL
+    label: str = ""
+    semantic_type: Optional[SemanticType] = None
+    conceptual_class: Optional[object] = None
+    properties: Optional[dict] = None
+    notes: str = ""
+
+
+@dataclass(frozen=True)
+class SignifierNode:
+    """عقدة الدالّ — a signifier (surface form) node."""
+
+    node_id: str
+    signifier_class: SignifierClass = SignifierClass.UTTERED_FORM
+    surface: str = ""
+    layer: OntologicalLayer = OntologicalLayer.ROOT
+    uttered_form_class: Optional[UtteredFormClass] = None
+    notes: str = ""
+
+    @property
+    def is_uttered(self) -> bool:
+        """Return True if this signifier is an uttered form."""
+        return self.signifier_class is SignifierClass.UTTERED_FORM
+
+    @property
+    def uttered_form_is_set(self) -> bool:
+        """Return True if the uttered form class has been assigned."""
+        return self.uttered_form_class is not None
+
+
+@dataclass(frozen=True)
+class StockEntry:
+    """مُدخل المخزون — a single entry in an informational stock."""
+
+    entry_id: str
+    component: StockComponent = StockComponent.REALITY_INFO
+    content: str = ""
+    source: Optional[InterpretationSource] = None
+    weight: float = 1.0
+
+
+@dataclass(frozen=True)
+class TheoremRecord:
+    """سجل النظرية — a theorem in the proof layer."""
+
+    theorem_id: str
+    name: str = ""
+    formal_statement: str = ""
+    natural_language: str = ""
+    axiom_dependencies: Tuple[str, ...] = ()
+    theorem_dependencies: Tuple[str, ...] = ()
+    proof_sketch: str = ""
+    status: ProofStatus = ProofStatus.PENDING
+    test_reference: str = ""
+
+    @property
+    def all_dependencies(self) -> Tuple[str, ...]:
+        """Return all axiom and theorem dependencies combined."""
+        return self.axiom_dependencies + self.theorem_dependencies
+
+    @property
+    def is_proven(self) -> bool:
+        """Return True if the theorem status is PROVEN."""
+        return self.status is ProofStatus.PROVEN
+
+
+@dataclass(frozen=True)
+class VerbConstitutionRecord:
+    """سجل بنية الفعل — verb constitutional record."""
+
+    record_id: str
+    inflection: Optional[object] = None
+    event: Optional[object] = None
+    masdar: Optional[object] = None
+    derivatives: Tuple[object, ...] = ()
+    readiness: Optional[object] = None
+    fractal_cycle: str = ""
+    valid: bool = False
+
+
+@dataclass(frozen=True)
+class VerbDerivativeRecord:
+    """سجل المشتق الفعلي — verb derivative record."""
+
+    derivative_type: VerbDerivativeType = VerbDerivativeType.ISM_FA3IL
+    form: str = ""
+
+
+@dataclass(frozen=True)
+class VerbEventRecord:
+    """سجل الحدث الفعلي — verb event record."""
+
+    event_type: VerbEventType = VerbEventType.SIMPLE_OCCURRENCE
+    has_causality: bool = False
+    has_musha_raka: bool = False
+    has_mutawa3a: bool = False
+
+
+@dataclass(frozen=True)
+class VerbInflection:
+    """تصريف الفعل — verb inflection record."""
+
+    surface: str = ""
+    root: Tuple[str, ...] = ()
+    bab: VerbBab = VerbBab.FA3ALA_YAF3ULU
+    tense: VerbTense = VerbTense.MADI
+    person: VerbPerson = VerbPerson.THIRD
+    number: VerbNumber = VerbNumber.SINGULAR
+    gender: VerbGender = VerbGender.MASCULINE
+    voice: VerbVoice = VerbVoice.ACTIVE
+    transitivity: VerbTransitivity = VerbTransitivity.MUTA3ADDI
+    mode: VerbMode = VerbMode.MUJARRAD
+    augmentation: VerbAugmentation = VerbAugmentation.NONE
+    nasikh_type: Optional[object] = None
+
+
+@dataclass(frozen=True)
+class VerbMasdarRecord:
+    """سجل المصدر — verb masdar (verbal noun) record."""
+
+    masdar_form: str = ""
+    is_qiyasi: bool = True
+    notes: str = ""
+
+
+@dataclass(frozen=True)
+class VerbReadinessScore:
+    """درجة جاهزية الفعل — verb readiness score."""
+
+    direction_score: float = 0.0
+    time_score: float = 0.0
+    person_score: float = 0.0
+    valence_score: float = 0.0
+    mode_score: float = 0.0
+    recover_score: float = 0.0
+    total: float = 0.0
+    status: VerbReadiness = VerbReadiness.NOT_READY
+
+
+@dataclass(frozen=True)
+class ZeroCoverageDetail:
+    """تفاصيل التغطية الصفرية — zero-coverage detail record."""
+
+    zero_type: "LinguisticZeroType"  # forward ref
+    coverage: "ZeroCoverage"  # forward ref
+
+    @property
+    def zero_code(self) -> str:
+        """Return the zero type code name (e.g. 'Z6')."""
+        return self.zero_type.name
+
+    @property
+    def zero_name(self) -> str:
+        """Return the Arabic name of the zero type."""
+        return self.zero_type.arabic_name
+
+
+@dataclass(frozen=True)
+class WordZeroCoverageReport:
+    """تقرير التغطية الصفرية — full zero-coverage report for a word."""
+
+    word: str = ""
+    word_class: Optional[object] = None
+    root: Tuple[str, ...] = ()
+    pattern: str = ""
+    details: Tuple[ZeroCoverageDetail, ...] = ()
+    covers: Tuple[str, ...] = ()
+    partial: Tuple[str, ...] = ()
+    uncovered: Tuple[str, ...] = ()
+    notes: Tuple[str, ...] = ()
