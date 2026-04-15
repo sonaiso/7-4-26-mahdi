@@ -32,9 +32,5 @@ __all__ = [
     "world_model",
     "inference_rules",
     "mafhum",
-    "knowledge_graph",
-    "seed_data",
-    "episode_validator",
-    "discourse_exchange",
-    "explanation",
+    "epistemic_v1",
 ]

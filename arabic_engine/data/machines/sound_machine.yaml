@@ -1,0 +1,48 @@
+# Sound Machine — Layer 1/2
+name: SoundMachine
+initial_state: S0_UNOBSERVED
+accept_states: [S5_STABLE_UNIT]
+reject_states: [S6_REJECTED]
+
+transitions:
+  - source: S0_UNOBSERVED
+    event: EV_SIGNAL_DETECTED
+    target: S1_DETECTED
+    guard: g_energy
+    threshold: 0.30
+    priority: 1
+
+  - source: S1_DETECTED
+    event: EV_BOUNDARY_CONFIRMED
+    target: S2_BOUNDED
+    guard: g_boundary
+    threshold: 0.55
+    priority: 1
+
+  - source: S2_BOUNDED
+    event: EV_PHASE_SEGMENTED
+    target: S3_SEGMENTED
+    guard: g_segmentation
+    threshold: 1.0
+    priority: 1
+
+  - source: S3_SEGMENTED
+    event: EV_COHESION_PASSED
+    target: S4_COHERENT
+    guard: g_cohesion
+    threshold: 0.60
+    priority: 1
+
+  - source: S4_COHERENT
+    event: EV_UNITY_PASSED
+    target: S5_STABLE_UNIT
+    guard: g_unity+g_mci
+    threshold: 0.65
+    priority: 1
+
+  - source: ANY
+    event: EV_CONFIDENCE_FAILED
+    target: S6_REJECTED
+    guard: confidence_fail
+    threshold: 0.0
+    priority: 0
