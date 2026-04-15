@@ -471,6 +471,14 @@ from .types import (
 from .types import (
     AxiomRecord as AxiomRecord,
 )
+
+# ── Enriched signifier model re-exports ─────────────────────────────
+from .types import (
+    CliticRecord as CliticRecord,
+)
+from .types import (
+    CombiningMarkDetail as CombiningMarkDetail,
+)
 from .types import (
     Concept as Concept,
 )
@@ -515,6 +523,12 @@ from .types import (
 )
 from .types import (
     DMin as DMin,
+)
+from .types import (
+    EnrichedGrapheme as EnrichedGrapheme,
+)
+from .types import (
+    EnrichedSyllable as EnrichedSyllable,
 )
 from .types import (
     EpisodeValidationResult as EpisodeValidationResult,
@@ -619,6 +633,9 @@ from .types import (
     OpinionTraceRecord as OpinionTraceRecord,
 )
 from .types import (
+    PatternCandidate as PatternCandidate,
+)
+from .types import (
     PriorInfoNode as PriorInfoNode,
 )
 from .types import (
@@ -656,6 +673,9 @@ from .types import (
 )
 from .types import (
     RepresentationRecord as RepresentationRecord,
+)
+from .types import (
+    RootCandidate as RootCandidate,
 )
 from .types import (
     RootPattern as RootPattern,
@@ -698,6 +718,9 @@ from .types import (
 )
 from .types import (
     TimeSpaceTag as TimeSpaceTag,
+)
+from .types import (
+    TokenAnalysis as TokenAnalysis,
 )
 from .types import (
     TransformationProfileRecord as TransformationProfileRecord,
@@ -973,4 +996,12 @@ __all__ = [
     "StructuralProfileRecord",
     "TransformationProfileRecord",
     "TransitionGate",
+    # ── Enriched signifier models ─────────────────────────────────
+    "CliticRecord",
+    "CombiningMarkDetail",
+    "EnrichedGrapheme",
+    "EnrichedSyllable",
+    "PatternCandidate",
+    "RootCandidate",
+    "TokenAnalysis",
 ]

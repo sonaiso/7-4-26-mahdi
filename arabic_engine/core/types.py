@@ -159,6 +159,111 @@ class RootPattern:
     pattern_id: int = 0
 
 
+# ── Enriched signifier models ──────────────────────────────────────
+
+
+@dataclass(frozen=True)
+class CombiningMarkDetail:
+    """Metadata for a single combining mark attached to a grapheme."""
+
+    char: str
+    codepoint: str          # e.g. "U+064E"
+    type: str               # haraka | sukun | shadda | tanween
+
+
+@dataclass(frozen=True)
+class EnrichedGrapheme:
+    """Extended grapheme cluster with phonetic metadata.
+
+    Wraps the basic :class:`Grapheme` concept with additional fields
+    loaded from ``arabic_letters.csv`` and ``unicode_marks.csv``.
+    The ``role`` field remains ``None`` until the pattern layer
+    resolves ambiguity for ا/و/ي.
+    """
+
+    id: str
+    layer: int                                  # always 1
+    surface: str
+    base_char: str
+    base_codepoint: str                         # e.g. "U+0628"
+    combining_marks: Tuple[CombiningMarkDetail, ...] = ()
+    phonetic_code: str = ""
+    place_code: int = 0
+    manner_code: int = 0
+    voicing_code: int = 0
+    stiffness_code: int = 0
+    entity_score: float = 0.0
+    role: Optional[str] = None                  # consonant | long_vowel | ambiguous
+
+
+@dataclass(frozen=True)
+class EnrichedSyllable:
+    """Syllable with shape and weight metadata from ``syllable_shapes.csv``."""
+
+    id: str
+    layer: int                                  # always 3
+    surface: str
+    chars: Tuple[str, ...] = ()                 # EnrichedGrapheme ids
+    vowels: Tuple[str, ...] = ()                # vowel ids
+    shape: str = ""                             # e.g. "CV"
+    shape_code: str = ""                        # e.g. "3.1.1.0.1"
+    nucleus_type: int = 0
+    closure_type: int = 0
+    weight_code: int = 0
+    completion_score: float = 0.0
+    weightability_score: float = 0.0
+
+
+@dataclass(frozen=True)
+class PatternCandidate:
+    """A candidate morphological pattern with confidence score."""
+
+    pattern_code: str
+    pattern_label: str = ""
+    pattern_type: str = ""
+    augment_count: int = 0
+    root_candidate: Tuple[str, ...] = ()
+    confidence: float = 0.0
+    reality_match_score: float = 0.0
+
+
+@dataclass(frozen=True)
+class CliticRecord:
+    """A clitic (proclitic/enclitic) stripped from a token."""
+
+    surface: str
+    type: str               # connector | relation_marker | definite_article
+    confidence: float = 0.0
+
+
+@dataclass(frozen=True)
+class RootCandidate:
+    """A candidate root with confidence score."""
+
+    root: Tuple[str, ...]
+    confidence: float = 0.0
+
+
+@dataclass(frozen=True)
+class TokenAnalysis:
+    """Full word-level analysis record (تحليل الكلمة الكاملة).
+
+    Produced by the 8-step diacritised-word analysis pipeline.
+    """
+
+    id: str
+    surface: str
+    normalized_form: str
+    unicode_form: str = "NFC"
+    graphemes: Tuple[EnrichedGrapheme, ...] = ()
+    clitics: Tuple[CliticRecord, ...] = ()
+    core_surface: str = ""
+    syllables: Tuple[EnrichedSyllable, ...] = ()
+    root_candidates: Tuple[RootCandidate, ...] = ()
+    pattern_candidates: Tuple[PatternCandidate, ...] = ()
+    final_status: str = "structural_analysis_only"
+
+
 # ── Lexical Closure ─────────────────────────────────────────────────
 
 
