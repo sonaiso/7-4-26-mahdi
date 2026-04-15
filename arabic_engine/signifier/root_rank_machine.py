@@ -138,7 +138,7 @@ class RootRankMachine:
         ayn = ctx.get("ayn_fitness", 0.0)
         lam = ctx.get("lam_fitness", 0.0)
         best = max(fa, ayn, lam)
-        if best > 0 and (max(fa, ayn, lam) - sorted([fa, ayn, lam])[-2]) < RANK_AMBIGUITY_THRESHOLD:
+        if best > 0 and (best - sorted([fa, ayn, lam])[-2]) < RANK_AMBIGUITY_THRESHOLD:
             position_event = _E.EV_RANK_AMBIGUOUS
         elif fa == best:
             position_event = _E.EV_FA_SCORE_MAX
