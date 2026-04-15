@@ -32,6 +32,7 @@ from __future__ import annotations
 from dataclasses import replace
 from typing import Dict, Optional, Sequence, Tuple
 
+from arabic_engine.cognition.isg_seed_data import DEFAULT_GOVERNANCE_THRESHOLDS
 from arabic_engine.core.enums import (
     CallabilityStatus,
     ConfirmationRank,
@@ -55,6 +56,11 @@ from arabic_engine.core.types import (
     LevelMatchResult,
     SourceRecord,
 )
+
+# ── Governance thresholds ────────────────────────────────────────────
+
+_MIN_TRUST_DEGREE: float = DEFAULT_GOVERNANCE_THRESHOLDS["min_trust_degree"]
+_MIN_CONTEXT_FIT: float = DEFAULT_GOVERNANCE_THRESHOLDS["min_context_fit"]
 
 # ── Internal counters for auto-generated IDs ─────────────────────────
 
@@ -179,7 +185,7 @@ def verify_source(
         return replace(atom, verification=VerificationStatus.UNDER_REVIEW)
 
     # Trust too low → disqualified
-    if source_record.trust_degree < 0.3:
+    if source_record.trust_degree < _MIN_TRUST_DEGREE:
         return replace(atom, verification=VerificationStatus.DISQUALIFIED)
 
     # Source already reviewed and passed
@@ -324,7 +330,7 @@ def evaluate_callability(
     """
     # Condition 1-2: level and domain match already checked upstream
     # Condition 3: context fit
-    if context_fit < 0.2:
+    if context_fit < _MIN_CONTEXT_FIT:
         return CallabilityResult(
             atom_id=atom.atom_id,
             input_id=input_id,
@@ -489,7 +495,9 @@ def resolve_internal_conflict(
             resolved = False
 
     elif method == ISGConflictResolution.BY_SPECIALISATION:
-        # Prefer the more specific atom (heuristic: shorter domain = more specific)
+        # Heuristic: shorter domain string implies more specific scope.
+        # This is a simplification; a production system would use a proper
+        # domain hierarchy tree for accurate specialisation comparison.
         if len(atom_a.domain) > len(atom_b.domain):
             winner_id = atom_b.atom_id
         elif len(atom_b.domain) > len(atom_a.domain):

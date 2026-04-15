@@ -24,6 +24,8 @@ DEFAULT_GOVERNANCE_THRESHOLDS: dict[str, float] = {
     "theta_0": 0.5,   # Valid_0 ≥ θ₀ → atom eligible (المادة 75)
     "theta_1": 0.6,   # Callable ≥ θ₁ → atom may be summoned (المادة 76)
     "theta_2": 0.7,   # Entry_Lexeme ≥ θ₂ → atom crosses to lexeme (المادة 77)
+    "min_trust_degree": 0.3,  # Minimum trust for source acceptance
+    "min_context_fit": 0.2,   # Minimum context fit for callability
 }
 
 # ── Default conflict priority order (المادة 47) ──────────────────────
